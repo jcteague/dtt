@@ -27,3 +27,4 @@ application.txt
 *.ncrunchproject
 *.ncrunchsolution
 *.swo
+*.vsmdi
