@@ -2,32 +2,7 @@ syntax: glob
 release/
 build/
 log/
-deploy/deployment_psake/deployment/web
-deploy/deployment_psake/deployment/web/app/Scripts
-deploy/deployment_psake/deployment/web/app/Views
-deploy/deployment_psake/deployment/web/app/bin
-deploy/deployment_psake/deployment/web/app/Content
-deploy/deployment_psake/deployment/web/app/Web.config
-deploy/deployment_psake/deployment/web/app/Global.asax
-deploy/deployment_psake/deployment/nservicebus/*
-deploy/deployment_psake/deployment/node_services/*
-deploy/deployment_psake/deployment/pstrami_logs/bootstrap.bat
-deploy/deployment_psake/deployment/dataloader
-deploy/deployment_psake/deployment/migrations
-deploy/deployment_psake/deployment/processors
-deploy/deployment_psake/deployment/dbscripts
-deploy/deployment_psake/deployment/cvs_xml_importer
-deploy/deployment_psake/deployment/fastrack_monitor
-deploy/out
-release
 
-src/WebApp/Logs/
-src/PropertyRegistration.Web.UI/logs/
-src/PropertyRegistration.Web.UI/app.log*
-src/PropertyRegistration.Web.UI/App_Data
-deploy/uat
-deploy/production
-ruby/cvs-test-data-importer/scripts/assemblies/*
 *.suo
 *.TMP
 *.user
@@ -40,7 +15,6 @@ obj
 *.resharper.user
 *.suo
 *.cache
-TestResult.xml
 *.trx
 glob:svninfo.xml
 *.log
@@ -53,16 +27,3 @@ application.txt
 *.ncrunchproject
 *.ncrunchsolution
 *.swo
-
-#-----Begin Raymi's Custom Ignore ----#
-track.bat
-push.bat
-commit.bat
-pull.bat
-status.bat
-mine
-test.bat
-.git
-#-----End Raymi's Custom Ignore ----#
-
-
