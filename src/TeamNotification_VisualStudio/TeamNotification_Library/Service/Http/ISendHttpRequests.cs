@@ -1,6 +1,6 @@
 namespace TeamNotification_Library.Service.Http
 {
-    public interface ICommunicateUsingHttp
+    public interface ISendHttpRequests
     {
         void Get(string uri);
     }

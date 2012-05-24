@@ -9,7 +9,7 @@ using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 
-namespace AvenidaSoftware.TeamNotification
+namespace AvenidaSoftware.TeamNotification_Package
 {
     /// <summary>
     /// Interaction logic for MyControl.xaml

@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace AvenidaSoftware.TeamNotification
+namespace AvenidaSoftware.TeamNotification_Package
 {
     static class GuidList
     {

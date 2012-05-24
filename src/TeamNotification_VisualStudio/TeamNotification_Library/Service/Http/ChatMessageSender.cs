@@ -2,9 +2,9 @@ namespace TeamNotification_Library.Service.Http
 {
     public class ChatMessageSender : ISendChatMessages
     {
-        readonly ICommunicateUsingHttp client;
+        readonly ISendHttpRequests client;
 
-        public ChatMessageSender(ICommunicateUsingHttp client)
+        public ChatMessageSender(ISendHttpRequests client)
         {
             this.client = client;
         }

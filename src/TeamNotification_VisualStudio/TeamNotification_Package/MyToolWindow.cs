@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Container = TeamNotification_Library.Service.Container;
 
-namespace AvenidaSoftware.TeamNotification
+namespace AvenidaSoftware.TeamNotification_Package
 {
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.

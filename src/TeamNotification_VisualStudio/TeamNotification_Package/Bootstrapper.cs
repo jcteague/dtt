@@ -1,7 +1,7 @@
 ﻿using StructureMap;
 using TeamNotification_Library.Application;
 
-namespace AvenidaSoftware.TeamNotification
+namespace AvenidaSoftware.TeamNotification_Package
 {
     public class Bootstrapper
     {

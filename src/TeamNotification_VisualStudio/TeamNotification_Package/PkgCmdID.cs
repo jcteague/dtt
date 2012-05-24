@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h
 using System;
 
-namespace AvenidaSoftware.TeamNotification
+namespace AvenidaSoftware.TeamNotification_Package
 {
     static class PkgCmdIDList
     {
