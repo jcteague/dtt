@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BookSleeve">
+      <HintPath>..\packages\BookSleeve.1.1.0.7\lib\BookSleeve.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
@@ -74,9 +77,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
+    <Compile Include="Service\Http\IListenToMessages.cs" />
+    <Compile Include="Service\Http\IConnectToRedis.cs" />
+    <Compile Include="Service\Http\IRedisConnection.cs" />
     <Compile Include="Service\Http\ISendHttpRequests.cs" />
     <Compile Include="Service\Http\ISendChatMessages.cs" />
     <Compile Include="Service\Http\ChatMessageSender.cs" />
+    <Compile Include="Service\Http\MessageListener.cs" />
+    <Compile Include="Service\Http\MessageReceivedAction.cs" />
+    <Compile Include="Service\Http\RedisClient.cs" />
+    <Compile Include="Service\Http\RedisConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

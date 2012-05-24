@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Windows;
 using System.Windows.Forms;
-using BookSleeve;
 using TeamNotification_Library.Service.Http;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
@@ -16,30 +14,24 @@ namespace AvenidaSoftware.TeamNotification_Package
     /// </summary>
     public partial class MyControl : UserControl
     {
-        readonly ISendChatMessages send_chat_messages;
+        readonly ISendChatMessages message_sender;
 
-        public MyControl(ISendChatMessages send_chat_messages)
+        public MyControl(ISendChatMessages message_sender,IListenToMessages message_listener,IRedisConnection connection)
         {
             InitializeComponent();
+            connection.Open();
 
-            this.send_chat_messages = send_chat_messages;
-            SubscribeToRedis("chat1");
+
+            this.message_sender = message_sender;
+            message_listener.ListenOnChannel("chat1",ChatMessageArrived);
         }
 
-        void SubscribeToRedis(string channel)
+        public void ChatMessageArrived(string channel, string payload)
         {
-            var conn = new RedisConnection("10.0.0.32");
-            conn.Open();
-            var sub = conn.GetOpenSubscriberChannel();
-            sub.Subscribe(channel, ChatMessageArrived);
-        }
-
-        public void ChatMessageArrived(string arg1, byte[] arg2)
-        {
-            var message = new UTF8Encoding().GetString(arg2).Split(new []{'-'});
-            var username = message[0];
-            var payload = message[1];
-            messageList.Dispatcher.Invoke((MethodInvoker)(()=>messageList.Children.Add(new Label {Content = username + " : " + payload})));
+            var splitted_array = payload.Split(new[] {'-'});
+            var userName = splitted_array[0];
+            var userMessage = splitted_array[1];
+            messageList.Dispatcher.Invoke((MethodInvoker)(()=>messageList.Children.Add(new Label {Content = userName + " : " + userMessage})));
         }
 
 
@@ -54,7 +46,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             var message = messageTextBox.Text;
             messageTextBox.Text = "";
-            send_chat_messages.SendMessage(message);
+            message_sender.SendMessage(message);
         }
     }
 }
