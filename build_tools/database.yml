@@ -1,0 +1,21 @@
+development:
+  adapter: postgresql
+  database: dtt_main
+  username: intellisys
+  password: welc0me
+  host: localhost
+
+test:
+  adapter: postgresql
+  database: dtt_main
+  username: intellisys
+  password: welc0me
+  host: test_ip
+
+production:
+  adapter: postgresql
+  database: dtt_main
+  username: intellisys
+  password: welc0me
+  host: production_ip
+
