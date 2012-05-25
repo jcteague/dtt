@@ -1,5 +1,6 @@
 require File.join('./','build_tools','helper.rb')
 
 RestServiceDatabaseConfig = File.join([".","build_tools","database.yml"])
-RestServiceMigrations= File.join(['.','src','TeamNotification_Server','db','migrate'])
+RestServiceRoot = File.join(['.','src','TeamNotification_Server'])
+RestServiceMigrations= File.join([RestServiceRoot,'db','migrate'])
 

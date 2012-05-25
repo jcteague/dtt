@@ -14,7 +14,10 @@ namespace :rest_service do
   end
 
   task :test do
-    puts "running test for rest_service"
+    current_dir = Dir.pwd
+    Dir.chdir(RestServiceRoot)
+    sh "mocha"
+    Dir.chdir(current_dir)
   end
 
   desc "Migrate the database through scripts in db/migrate"
