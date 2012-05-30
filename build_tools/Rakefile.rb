@@ -1,3 +1,6 @@
+require "rubygems"
+require "bundler/setup"
+
 require File.join('./','build_tools','helper.rb')
 require 'erb'
 
