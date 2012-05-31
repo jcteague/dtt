@@ -1,0 +1,13 @@
+div
+  h1 Response Rendered
+  #response_view
+
+  h1 Request
+  p=JSON.stringify(model.request,null,"")
+
+  h1 Response
+  input#response_text(type='hidden',value=JSON.stringify(model.response))
+  pre#response
+
+script(src='/scripts/jquery-1.7.2.min.js')
+script(src='/scripts/api_response_renderer.js')

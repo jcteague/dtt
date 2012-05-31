@@ -28,6 +28,11 @@ app.configure(function(){
     app.use(express.methodOverride());
 
     app.use('/', function(req, res, next){
+        //disable
+        next();
+        return;
+        //disable
+
         var key = req.param('api-key');
         if (!key) return next(error(400, 'api key required'));
         if (!~apiKeys.indexOf(key)) return next(error(401, 'invalid api key'));
