@@ -10,7 +10,7 @@ module.exports = function(app){
 	
 	var name = req.param('name');
 	console.log(name);
-	if(!name){ next( new Error(500,"blah"));}
+	if(!name){ next( new Error(500,"name is require"));}
 	client_db.query("INSERT INTO chat_room(name) VALUES($1)", [name]);
 	res.send('room created');
 
