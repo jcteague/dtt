@@ -1,8 +1,8 @@
 development:
   adapter: postgresql
   database: dtt_main
-  username: intellisys
-  password: welc0me
+  username: postgres
+  password: 1234
   host: localhost
 
 test:
