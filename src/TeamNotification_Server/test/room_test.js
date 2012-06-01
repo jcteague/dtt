@@ -2,6 +2,8 @@ var should = require('should');
 var sinon = require('sinon');
 
 var room = require('../routes/room.js');
+var support = require('support').core;
+
 describe('Room', function(){
     describe('build_routes', function(){
         var app;
@@ -42,6 +44,7 @@ describe('Room', function(){
             var json_data;
             var res;
             var req;
+            var db_client;
 
             beforeEach(function(done){
                 res = { send: sinon.spy()};
@@ -52,12 +55,19 @@ describe('Room', function(){
                     }
                 };
 
+                db_client = {query: sinon.spy()};
+                support.create_db_client = function(){ return db_client; }
                 room.methods.post_room(req,res);
                 done();
             });
 
             it('should notify the user the room was created', function(done){
                 sinon.assert.calledWith(res.send,'room created');
+                done();
+            });
+
+            it('should create the user on the database', function(done){
+                sinon.assert.calledWith(db_client.query,'INSERT INTO chat_room(name) VALUES($1)', [ 'blah name' ]);
                 done();
             });
         });
