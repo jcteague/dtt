@@ -34,7 +34,7 @@ describe('User', function(){
                 done();
             });
 
-            it('', function(done){
+            it('should return the correct links for the user model', function(done){
                 var links = json_data['links'];
                 links['self']['href'].should.equal('/user');
                 links['rooms']['href'].should.equal('/user/rooms');
@@ -55,7 +55,7 @@ describe('User', function(){
                 done();
             });
 
-            it('', function(done){
+            it('should return the correct links for the user rooms model', function(done){
                 var links = json_data['links'];
                 links['self']['href'].should.equal('/user/rooms');
                 links['OpenRoom1']['href'].should.equal('/rooms/1');

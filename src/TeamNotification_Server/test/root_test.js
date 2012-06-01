@@ -33,7 +33,7 @@ describe('Root', function(){
                 done();
             });
 
-            it('', function(done){
+            it('should return as a json all the links for the root path', function(done){
                 var links = json_data['links'];
                 links['self']['href'].should.equal('/');
                 links['user']['href'].should.equal('/user');
