@@ -1,4 +1,9 @@
-var http = require('http');
+module.exports = {
+    methods: {},
+    build_routes: function(app){}
+};
+
+/*var http = require('http');
 var response = http.ServerResponse.prototype;
 
 module.exports = function(app){
@@ -48,3 +53,4 @@ module.exports = function(app){
         this.send.call(this,data);
     };
 }
+*/

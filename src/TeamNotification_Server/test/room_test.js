@@ -1,27 +1,28 @@
 var should = require('should');
 var sinon = require('sinon');
 
-var root = require('../routes/root.js');
+var room = require('../routes/room.js');
 
-describe('Root', function(){
+describe('Room', function(){
     describe('build_routes', function(){
         var app;
 
         beforeEach(function(done){
-            app = { get:sinon.spy() };
+            app = { get:sinon.spy(), post:sinon.spy() };
 
-            root.build_routes(app)
+            room.build_routes(app)
             done();
         });
 
         it('should configure the routes with its corresponding callback', function(done){
-            sinon.assert.calledWith(app.get,'/',root.methods.get_root);
+            sinon.assert.calledWith(app.post,'/room',room.methods.post_room);
+            sinon.assert.calledWith(app.get,'/rooms/:id',room.methods.get_room_by_id);
             done();
         });
     });
 
     describe('methods', function(){
-        describe('get_root', function(){
+        describe('get_room_by_id', function(){
             var app;
             var json_data;
 
@@ -29,14 +30,13 @@ describe('Root', function(){
                 var res = { json: function(json){json_data = json}};
                 app = { get:sinon.spy() };
 
-                root.methods.get_root({},res);
+                room.methods.get_room_by_id({},res);
                 done();
             });
 
             it('', function(done){
                 var links = json_data['links'];
-                links['self']['href'].should.equal('/');
-                links['user']['href'].should.equal('/user');
+                links['self']['href'].should.equal('#');
                 done();
             });
 

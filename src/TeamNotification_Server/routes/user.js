@@ -1,24 +1,29 @@
-module.exports = function(app){
-    app.get('/user',function(req, res){
-        var r = {
-            links: {
-                "self" : { href: "/user" },
-                "rooms" : { href: "/user/rooms" }
-            }
-        };
-        res.json(r);
-    });
+var methods = {};
 
-    app.get('/user/rooms',function(req, res){
-        var r = {
-            links: {
-                "self" : { href: "/user/rooms" },
-                "OpenRoom1" : { href: "/rooms/1" },
-                "OpenRoom2" : { href: "/rooms/2" },
-                "OpenRoom2" : { href: "/rooms/3" }
-            }
-        };
-        res.json(r);
-    });
+methods.get_user = function(req, res){
+    var r = {
+        links: {
+            "self" : { href: "/user" },
+            "rooms" : { href: "/user/rooms" }
+        }
+    };
+    res.json(r);
 };
 
+methods.get_user_rooms = function(req, res){
+    var r = {
+        links: {
+            "self" : { href: "/user/rooms" },
+            "OpenRoom1" : { href: "/rooms/1" },
+        }
+    };
+    res.json(r);
+};
+
+module.exports = {
+    methods : methods,
+    build_routes: function(app){
+        app.get('/user',methods.get_user);
+        app.get('/user/rooms',methods.get_user_rooms);
+    }
+};
