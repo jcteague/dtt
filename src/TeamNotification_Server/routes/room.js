@@ -2,12 +2,10 @@ var methods = {};
 var support = require('support').core;
 
 methods.post_room = function(req, res, next){
-    var name = req.param('name');
-    if(!name){ next( new Error(400,"name is require"));}
-    var chat_room= new support.entity.ChatRoom();
-    chat_room.name = name;
-    chat_room.save(function(err,chat_room){
-        if(!err) res.send('room created');
+    var chat_room= support.entity_factory.create('ChatRoom',req.param('chat_room'));
+    chat_room.save(function(err,saved_chat_room){
+        if(!err) res.send('room '+ saved_chat_room.id + ' created');
+        else next(new Error(err.code,err.message));
     });
 };
 
@@ -20,6 +18,6 @@ module.exports = {
     methods: methods,
     build_routes: function(app){
         app.get('/room',methods.post_room);
-        app.get('/rooms/:id',methods.get_room_by_id)
+        app.get('/rooms/:id',methods.get_room_by_id);
     }
 };
