@@ -10,7 +10,11 @@ methods.post_room = function(req, res, next){
 };
 
 methods.get_room_by_id = function(req, res){
-    var r = { links: { "self" : { href: "#" } } };
+    var r = { 
+        links: [ 
+            {"rel":"self", "href": "/rooms/1" } 
+        ] 
+    };
     res.json(r);
 };
 

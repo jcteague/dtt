@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router'], (Backbone, ClientRouter) ->
+define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (Backbone, ClientRouter, FormTemplateRenderer) ->
 
     class ClientView extends Backbone.View
 

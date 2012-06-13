@@ -7,9 +7,9 @@
       'jquery': 'jquery-1.7.2.min',
       'underscore': 'underscore-min',
       'backbone': 'backbone-min',
-      'form_renderer': 'FormRenderer',
       'client_view': 'client_view',
-      'client_router': 'client_router'
+      'client_router': 'client_router',
+      'form_template_renderer': 'form_template_renderer'
     },
     shim: {
       'backbone': {
