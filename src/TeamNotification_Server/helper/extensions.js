@@ -34,7 +34,7 @@ module.exports = function(app){
             var expansion_url = get_expansion_url(data_to_expand,expand);
             if(!expansion_url) return data_to_expand;
 
-            var expansion_callback = get_expansion_callback(expansion_url);
+            var  expansion_callback = get_expansion_callback(expansion_url);
             if(!expansion_callback) return data_to_expand;
 
             var expansion;
