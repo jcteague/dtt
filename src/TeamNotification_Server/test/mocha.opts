@@ -1,4 +1,4 @@
 --require should
 -R min
 --ui bdd
-
+--compilers coffee:coffee-script

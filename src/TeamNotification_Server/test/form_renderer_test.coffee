@@ -12,11 +12,11 @@ FormTemplateRenderer = (collection) ->
         return textFieldBuilder if fieldType is 'string'
     form = $('<form>', {action:collection.uri})
     form_templates = collection.template.data
-    console.log( form_templates)
+    #console.log( form_templates)
     form_templates.forEach (template) ->
         fieldGenerator = generatorSelector(template.type)
         fieldElements = fieldGenerator(template)
-        console.log(fieldElements)
+        #console.log(fieldElements)
         fieldElements.forEach((f) -> form.append(f))
     return form
 
