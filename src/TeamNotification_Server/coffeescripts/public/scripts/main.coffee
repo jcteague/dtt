@@ -5,13 +5,14 @@ require.config
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'form_renderer': 'FormRenderer'
+        'client_view': 'client_view'
+        'client_router': 'client_router'
 
     shim:
         'backbone':
             deps: ['underscore', 'jquery']
             exports: 'Backbone'
-        
 
-require ["jquery"], ($) ->
+require ['jquery', 'client_view'], ($, ClientView) ->
     $ ->
-        alert('hello')
+        new ClientView().render()

@@ -2,20 +2,20 @@ var methods = {};
 
 methods.get_user = function(req, res){
     var r = {
-        links: {
-            "self" : { href: "/user" },
-            "rooms" : { href: "/user/rooms" }
-        }
+        links: [
+            {"rel":"self", "href":"/user"},
+            {"rel":"rooms", "href": "/user/rooms"}
+        ]
     };
     res.json(r);
 };
 
 methods.get_user_rooms = function(req, res){
     var r = {
-        links: {
-            "self" : { href: "/user/rooms" },
-            "OpenRoom1" : { href: "/rooms/1" },
-        }
+        links: [
+            {"rel":"self", "href": "/user/rooms" },
+            {"rel":"OpenRoom1", "href": "/rooms/1"},
+        ]
     };
     res.json(r);
 };

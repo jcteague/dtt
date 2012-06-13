@@ -33,11 +33,12 @@ describe 'User', ->
 
             it 'should return the correct links for the user model', (done) ->
                 links = json_data['links']
-                links['self']['href'].should.equal('/user')
-                links['rooms']['href'].should.equal('/user/rooms')
+                links[0].should.eql {"rel": "self", "href": "/user"}
+                links[1].should.eql {"rel": "rooms", "href": "/user/rooms"}
                 done()
 
         describe 'get_user_rooms', ->
+
             app = null
             json_data = null
 
@@ -51,6 +52,6 @@ describe 'User', ->
 
             it 'should return the correct links for the user rooms model', (done) ->
                 links = json_data['links']
-                links['self']['href'].should.equal('/user/rooms')
-                links['OpenRoom1']['href'].should.equal('/rooms/1')
+                links[0].should.eql {"rel": "self", "href": "/user/rooms"}
+                links[1].should.eql {"rel": "OpenRoom1", "href": "/rooms/1"}
                 done()
