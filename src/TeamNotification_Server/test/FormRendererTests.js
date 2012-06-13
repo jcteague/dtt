@@ -5,6 +5,7 @@
  * Time: 9:57 PM
  * To change this template use File | Settings | File Templates.
  */
+return;
 var mocha = require("mocha")
     $ = require('jquery')
     ,should = require("should")
@@ -18,7 +19,7 @@ var FormTemplateRenderer = function(collection){
             $('<input>',{"type":"text","name":template.name})
         ];
     };
-    var templatedFieldBuilder  function(template){
+    var templatedFieldBuilder = function(template){
         //load a template
     }
     var generatorSelector = function(fieldType){
