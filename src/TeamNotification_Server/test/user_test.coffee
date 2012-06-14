@@ -80,5 +80,5 @@ describe 'User', ->
                 done()
 
             it 'should fetch the entities ordered by ids', (done) ->
-                console.log sinon
-                sinon.assert.calledWith(chat_room_entity.find, '', 'id asc', sinon.match.func)
+                sinon.assert.calledWith(chat_room_entity.find, '', 'id asc')
+                done()
