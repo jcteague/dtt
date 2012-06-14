@@ -4,7 +4,9 @@ var support = require('support').core;
 methods.post_room = function(req, res, next){
     var chat_room= support.entity_factory.create('ChatRoom',req.param('chat_room'));
     chat_room.save(function(err,saved_chat_room){
-        if(!err) res.send('room '+ saved_chat_room.id + ' created');
+        if(!err) {
+            res.send('room '+ saved_chat_room.id + ' created');
+        }
         else next(new Error(err.code,err.message));
     });
 };

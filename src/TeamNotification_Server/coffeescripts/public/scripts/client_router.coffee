@@ -11,3 +11,4 @@ define 'client_router', ['backbone'], (Backbone) ->
 
         render_path: (path) ->
             @trigger 'render', path
+

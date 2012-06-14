@@ -1,17 +1,17 @@
-should = require('should')
+expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
 support_mock = 
     core:
         entity_factory: 
-            create: sinon.spy()
+            create: sinon.stub()
+
 
 sut = module_loader.require('../routes/room.js', {
     requires:
         'support': support_mock
 })
-#sut = require '../routes/room.js'
 
 describe 'Room', () ->
 
@@ -34,17 +34,15 @@ describe 'Room', () ->
             json_data = null
 
             beforeEach (done) ->
-                res = json: (json) -> json_data = json
+                res = json: (json) -> 
+                    json_data = json
 
                 sut.methods.get_room_by_id({},res)
                 done()
 
             it 'should return as a json object all the links for the current room', (done) ->
                 links = json_data['links']
-                console.log links[0], links[0].should, should.equal
-                # For some strange reason obj.should doesn't exist
-                #links[0].should.eql {"rel": "self", "href": "/rooms/1"}
-                #should.eql(links[0], {"rel": "self", "href": "/rooms/1"})
+                expect(links[0]).to.eql {"rel": "self", "href": "/rooms/1"}
                 done()
 
 
@@ -58,13 +56,12 @@ describe 'Room', () ->
 
                 beforeEach (done) ->
                     chat_room = save:sinon.spy()
+                    support_mock.core.entity_factory.create.returns(chat_room)
                     res =  send: sinon.spy()
-                    req = 
-                        param: (param_name) -> 
-                            return 'blah chat_room' if param_name == 'chat_room'
+                    req =
+                        param: sinon.stub()
+                    req.param.withArgs('chat_room').returns('blah chat_room')
 
-                    support_mock.core.entity_factory =  create: (entity_name,params) ->
-                        return chat_room if entity_name is 'ChatRoom' and params is 'blah chat_room'
 
                     sut.methods.post_room(req,res)
                     done()
