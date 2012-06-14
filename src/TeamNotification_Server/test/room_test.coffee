@@ -96,7 +96,7 @@ describe 'Room', ->
             req = null
             template = null
             data = null
-
+            links = null
             beforeEach (done) ->
                 res = 
                     json: (json) ->
@@ -104,7 +104,12 @@ describe 'Room', ->
 
                 sut.methods.get_room(req, res)
                 template = json_data['template']
+                links = json_data['links']
                 data = template.data
+                done()
+
+            it 'should return the list of links', (done) ->
+                expect(links).not.to.be.empty
                 done()
 
             it 'should return the template with the fields', (done) ->
