@@ -3,12 +3,13 @@ define 'client_router', ['backbone'], (Backbone) ->
     class ClientRouter extends Backbone.Router
 
         routes:
-            ':path': 'render_path'
+            ':path*any': 'render_path'
             '*action': 'render_root'
 
         render_root: ->
+            console.log 'root'
             @trigger 'render', '/'
 
-        render_path: (path) ->
-            @trigger 'render', path
+        render_path: (routes...) ->
+            @trigger 'render', routes.join('')
 

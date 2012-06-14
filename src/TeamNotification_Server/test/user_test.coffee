@@ -1,6 +1,16 @@
-should = require('should')
+expect = require('expect.js')
 sinon = require('sinon')
-user = require('../routes/user.js')
+module_loader = require('sandboxed-module')
+
+support_mock =
+    core:
+        entity_factory:
+            get: sinon.stub()
+
+user = module_loader.require('../routes/user.js', {
+    requires:
+        'support': support_mock
+})
 
 describe 'User', ->
 
@@ -33,25 +43,37 @@ describe 'User', ->
 
             it 'should return the correct links for the user model', (done) ->
                 links = json_data['links']
-                links[0].should.eql {"rel": "self", "href": "/user"}
-                links[1].should.eql {"rel": "rooms", "href": "/user/rooms"}
+                expect(links[0]).to.eql {"rel": "self", "href": "/user"}
+                expect(links[1]).to.eql {"rel": "rooms", "href": "/user/rooms"}
                 done()
 
         describe 'get_user_rooms', ->
 
             app = null
             json_data = null
+            chat_rooms = null
 
             beforeEach (done) ->
+                chat_rooms = [
+                    {id: 1, name: 'foo'}
+                    {id: 2, name: 'bar'}
+                ]
+                chat_room_entity =
+                    find: (callback) ->
+                        callback(chat_rooms)
+
+                sinon.spy(chat_room_entity, 'find')
+                support_mock.core.entity_factory.get.withArgs('ChatRoom').returns(chat_room_entity)
                 res = 
                     json: (json) -> json_data = json
-                app = { get:sinon.spy() }
+                app = get: sinon.spy()
 
                 user.methods.get_user_rooms({},res)
                 done()
 
             it 'should return the correct links for the user rooms model', (done) ->
                 links = json_data['links']
-                links[0].should.eql {"rel": "self", "href": "/user/rooms"}
-                links[1].should.eql {"rel": "OpenRoom1", "href": "/rooms/1"}
+                expect(links[0]).to.eql {"rel": "self", "href": "/user/rooms"}
+                expect(links[1]).to.eql {"rel": chat_rooms[0].name, "href": "/rooms/#{chat_rooms[0].id}"}
+                expect(links[2]).to.eql {"rel": chat_rooms[1].name, "href": "/rooms/#{chat_rooms[1].id}"}
                 done()
