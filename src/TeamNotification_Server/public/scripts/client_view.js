@@ -15,6 +15,10 @@
         return ClientView.__super__.constructor.apply(this, arguments);
       }
 
+      ClientView.prototype.events = {
+        'submit': 'submit_form'
+      };
+
       ClientView.prototype.initialize = function() {
         this.setElement('#client-content');
         this.router = new ClientRouter();
@@ -41,7 +45,6 @@
       };
 
       ClientView.prototype.load_json = function(data) {
-        console.log('got this:', data);
         this.data = data;
         return this.render();
       };
@@ -66,6 +69,23 @@
         this.$el.append('<div id="form-container"><h1>Form</h1></div>');
         console.log('rendered template', this.form_template_renderer.render(this.data));
         return this.$el.append(this.form_template_renderer.render(this.data));
+      };
+
+      ClientView.prototype.submit_form = function(event) {
+        var data, url;
+        event.preventDefault();
+        url = _.find(this.data.links, function(item) {
+          return item.rel === 'self';
+        });
+        data = {};
+        $('input').not(':submit').each(function() {
+          var $current;
+          $current = $(this);
+          return data[$current.attr('name')] = $current.val();
+        });
+        return $.post(url.href, data, function(res) {
+          return console.log(res);
+        });
       };
 
       return ClientView;

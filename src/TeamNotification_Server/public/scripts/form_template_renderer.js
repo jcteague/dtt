@@ -13,7 +13,7 @@
           return [
             $('<label>', {
               "for": template.name
-            }), $('<input>', {
+            }).text(template.name), $('<input>', {
               "type": "text",
               "name": template.name
             })
@@ -37,6 +37,9 @@
             return form.append(f);
           });
         });
+        form.append($('<input>', {
+          "type": "submit"
+        }));
         return form;
       };
 

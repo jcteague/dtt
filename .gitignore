@@ -22,6 +22,7 @@ glob:svninfo.xml
 *.orig
 *.swp
 *.idea
+*.iml
 *.dotCover
 application.txt
 *.*~

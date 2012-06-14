@@ -2,6 +2,9 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
 
     class ClientView extends Backbone.View
 
+        events:
+            'submit': 'submit_form'
+
         initialize: ->
             @setElement '#client-content'
             @router = new ClientRouter()
@@ -20,7 +23,6 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
             $.getJSON(path, @load_json)
 
         load_json: (data) =>
-            console.log 'got this:', data
             @data = data
             @render()
 
@@ -40,3 +42,14 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
             console.log 'rendered template', @form_template_renderer.render(@data)
             @$el.append(@form_template_renderer.render(@data))
 
+        submit_form: (event) ->
+            event.preventDefault()
+            url = _.find(@data.links, (item) ->
+                item.rel is 'self'
+            )
+            data = {}
+            $('input').not(':submit').each () ->
+                $current = $(this)
+                data[$current.attr('name')] = $current.val()
+
+            $.post(url.href, data, (res) -> console.log(res))
