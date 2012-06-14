@@ -117,6 +117,12 @@ describe 'Room', ->
                 done()
 
             it 'should contain the name field in the template data', (done) ->
-                fields = (field.name for field in data)
-                expect(fields).to.contain 'name'
+                field = (field for field in data when field.name is 'name')[0]
+                expect(field.name).to.equal 'name'
+                expect(field.type).to.equal 'string'
+                done()
+
+            it 'should contain the fields with name, type and label properties in the template data', (done) ->
+                for field in data
+                    expect(field).to.have.keys(['name', 'label', 'type'])
                 done()

@@ -4,7 +4,6 @@ var express = require('express');
 methods.post_room = function(req, res, next){
     
     var values =req.body;
-    console.log(values);
     var chat_room= support.entity_factory.create('ChatRoom',values);
     chat_room.save(function(err,saved_chat_room){
         if(!err) {
@@ -29,7 +28,9 @@ methods.get_room = function(req, res){
           {'rel':'self', 'href':'/room'}
         ],
         'template':{
-            'data':[{'name':'name'}]
+            'data':[
+                {'name':'name', 'label':'Chatroom Name', 'type':'string'}
+            ]
         }
     };
     res.json(r);
