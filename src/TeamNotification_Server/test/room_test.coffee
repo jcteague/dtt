@@ -53,9 +53,15 @@ describe 'Room', () ->
                 res = null
                 chat_room = null
                 req = null
+                chat_room_id = null
 
                 beforeEach (done) ->
-                    chat_room = save:sinon.spy()
+                    chat_room = 
+                        save: (callback) ->
+                            callback(false, {id: chat_room_id})
+
+                    sinon.spy(chat_room, 'save')
+
                     support_mock.core.entity_factory.create.returns(chat_room)
                     res =  send: sinon.spy()
                     req =
@@ -67,7 +73,7 @@ describe 'Room', () ->
                     done()
 
                 it 'should notify the user the room was created', (done) ->
-                    sinon.assert.calledWith(res.send,'room created')
+                    sinon.assert.calledWith(res.send,"room #{chat_room_id} created")
                     done()
 
                 it 'should create the user on the database', (done) ->
