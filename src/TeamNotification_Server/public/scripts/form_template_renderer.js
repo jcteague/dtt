@@ -13,7 +13,7 @@
           return [
             $('<label>', {
               "for": template.name
-            }).text(template.name), $('<input>', {
+            }).text(template.label), $('<input>', {
               "type": "text",
               "name": template.name
             })

@@ -4,7 +4,7 @@ define 'form_template_renderer', ['jquery'], ($) ->
 
         render: (collection) ->
             textFieldBuilder = (template) ->
-                return [$('<label>', {"for":template.name}).text(template.name), $('<input>',{"type":"text","name":template.name})]
+                return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"text","name":template.name})]
             templateFieldBuilder = (template) ->
                 return
 
