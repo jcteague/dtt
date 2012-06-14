@@ -19,16 +19,19 @@
         this.setElement('#client-content');
         this.router = new ClientRouter();
         this.router.on('render', this.render_path, this);
+        this.form_template_renderer = new FormTemplateRenderer();
         return Backbone.history.start();
       };
 
       ClientView.prototype.render = function() {
         this.$el.empty();
-        if (this.links != null) {
-          this.render_links();
-        }
-        if (this.template != null) {
-          this.render_template();
+        if (this.data != null) {
+          if (this.data.links != null) {
+            this.render_links();
+          }
+          if (this.data.template != null) {
+            this.render_template();
+          }
         }
         return this;
       };
@@ -39,15 +42,14 @@
 
       ClientView.prototype.load_json = function(data) {
         console.log('got this:', data);
-        this.links = data.links;
-        this.template = data.template;
+        this.data = data;
         return this.render();
       };
 
       ClientView.prototype.render_links = function() {
         var link, _i, _len, _ref, _results;
         this.$el.append('<div id="links"><h1>Links</h1></div>');
-        _ref = this.links;
+        _ref = this.data.links;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           link = _ref[_i];
@@ -62,6 +64,8 @@
 
       ClientView.prototype.render_template = function() {
         this.$el.append('<div id="form-container"><h1>Form</h1></div>');
+        console.log('rendered template', this.form_template_renderer.render(this.data));
+        return this.$el.append(this.form_template_renderer.render(this.data));
       };
 
       return ClientView;
