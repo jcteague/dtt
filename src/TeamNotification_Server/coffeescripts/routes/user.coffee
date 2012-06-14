@@ -10,7 +10,7 @@ methods.get_user = (req, res) ->
     res.json(r)
 
 methods.get_user_rooms = (req, res) ->
-    entity_factory.get('ChatRoom').find (entities) ->
+    entity_factory.get('ChatRoom').find '', 'id asc', (entities) ->
         rooms = (rel: room.name, href: "/rooms/#{room.id}" for room in entities)
         links = [{"rel":"self", "href": "/user/rooms" }].concat rooms
         r =

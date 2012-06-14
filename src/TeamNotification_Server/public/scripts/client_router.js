@@ -20,7 +20,6 @@
       };
 
       ClientRouter.prototype.render_root = function() {
-        console.log('root');
         return this.trigger('render', '/');
       };
 

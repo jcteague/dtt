@@ -52,6 +52,7 @@ describe 'User', ->
             app = null
             json_data = null
             chat_rooms = null
+            chat_room_entity = null
 
             beforeEach (done) ->
                 chat_rooms = [
@@ -59,7 +60,7 @@ describe 'User', ->
                     {id: 2, name: 'bar'}
                 ]
                 chat_room_entity =
-                    find: (callback) ->
+                    find: (condition, order, callback) ->
                         callback(chat_rooms)
 
                 sinon.spy(chat_room_entity, 'find')
@@ -77,3 +78,7 @@ describe 'User', ->
                 expect(links[1]).to.eql {"rel": chat_rooms[0].name, "href": "/rooms/#{chat_rooms[0].id}"}
                 expect(links[2]).to.eql {"rel": chat_rooms[1].name, "href": "/rooms/#{chat_rooms[1].id}"}
                 done()
+
+            it 'should fetch the entities ordered by ids', (done) ->
+                console.log sinon
+                sinon.assert.calledWith(chat_room_entity.find, '', 'id asc', sinon.match.func)

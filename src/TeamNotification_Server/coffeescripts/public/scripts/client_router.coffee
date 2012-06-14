@@ -7,7 +7,6 @@ define 'client_router', ['backbone'], (Backbone) ->
             '*action': 'render_root'
 
         render_root: ->
-            console.log 'root'
             @trigger 'render', '/'
 
         render_path: (routes...) ->
