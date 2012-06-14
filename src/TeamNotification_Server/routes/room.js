@@ -1,8 +1,10 @@
 var methods = {};
 var support = require('support').core;
-
+var express = require('express');
 methods.post_room = function(req, res, next){
-    var chat_room= support.entity_factory.create('ChatRoom',req.param('chat_room'));
+    
+    var values =req.body;
+    var chat_room= support.entity_factory.create('ChatRoom',values);
     chat_room.save(function(err,saved_chat_room){
         if(!err) {
             res.send('room '+ saved_chat_room.id + ' created');
@@ -20,10 +22,19 @@ methods.get_room_by_id = function(req, res){
     res.json(r);
 };
 
+methods.get_room = function(req, res){
+    var r = {
+        'template':{
+            'data':[{'name':'name'}]
+        }
+    };
+    res.json(r);
+}
 module.exports = {
     methods: methods,
     build_routes: function(app){
-        app.get('/room',methods.post_room);
+        app.post('/room',express.bodyParser(), methods.post_room);
         app.get('/rooms/:id',methods.get_room_by_id);
+        app.get('/room',methods.get_room);
     }
 };

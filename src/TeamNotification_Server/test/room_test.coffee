@@ -7,25 +7,33 @@ support_mock =
         entity_factory: 
             create: sinon.stub()
 
+express_mock =
+    bodyParser: sinon.stub()
+
 
 sut = module_loader.require('../routes/room.js', {
     requires:
         'support': support_mock
+        'express': express_mock
 })
 
-describe 'Room', () ->
+describe 'Room', ->
 
     describe 'build_routes', ->
         app = null
+        body_parser_result = null
 
         beforeEach (done) ->
             app = get:sinon.spy(), post:sinon.spy()
+            body_parser_result = 'blah'
+            express_mock.bodyParser.returns(body_parser_result)
             sut.build_routes(app)
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/room',sut.methods.post_room)
+            sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.get,'/rooms/:id',sut.methods.get_room_by_id)
+            sinon.assert.calledWith(app.get,'/room',sut.methods.get_room)
             done()
 
     describe 'methods', ->
@@ -45,14 +53,22 @@ describe 'Room', () ->
                 expect(links[0]).to.eql {"rel": "self", "href": "/rooms/1"}
                 done()
 
-
         describe 'post_room', ->
 
+            res = null
+            req = null
+
+            beforeEach (done) ->
+                res =  send: sinon.spy()
+                req =
+                    param: sinon.stub()
+
+                done()
+
             describe 'when all correct parameters where sent to create the room', ->
+
                 json_data = null
-                res = null
                 chat_room = null
-                req = null
                 chat_room_id = null
 
                 beforeEach (done) ->
@@ -61,14 +77,8 @@ describe 'Room', () ->
                             callback(false, {id: chat_room_id})
 
                     sinon.spy(chat_room, 'save')
-
                     support_mock.core.entity_factory.create.returns(chat_room)
-                    res =  send: sinon.spy()
-                    req =
-                        param: sinon.stub()
                     req.param.withArgs('chat_room').returns('blah chat_room')
-
-
                     sut.methods.post_room(req,res)
                     done()
 
@@ -79,3 +89,29 @@ describe 'Room', () ->
                 it 'should create the user on the database', (done) ->
                     sinon.assert.called(chat_room.save)
                     done()
+
+        describe 'get_room', ->
+
+            json_data = null
+            req = null
+            template = null
+            data = null
+
+            beforeEach (done) ->
+                res = 
+                    json: (json) ->
+                        json_data = json
+
+                sut.methods.get_room(req, res)
+                template = json_data['template']
+                data = template.data
+                done()
+
+            it 'should return the template with the fields', (done) ->
+                expect(data).not.to.be.empty
+                done()
+
+            it 'should contain the name field in the template data', (done) ->
+                fields = (field.name for field in data)
+                expect(fields).to.contain 'name'
+                done()
