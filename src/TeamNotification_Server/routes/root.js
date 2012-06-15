@@ -1,10 +1,10 @@
 var methods = {};
 methods.get_root = function(req, res){
     var r = {
-        links: {
-            "self" : { href: "/" },
-            "user" : { href: "/user" }
-        }
+        links: [
+            {"rel": "self", "href": "/" },
+            {"rel": "user", "href": "/user" }
+        ]
     };
     res.json(r);
 };

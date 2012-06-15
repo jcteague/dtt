@@ -5,11 +5,14 @@
   , "dependencies": {
       "express": "2.5.x"
     , "jade": ">= 0.0.1"
+    , "coffee-script": "*"
   }
   ,"devDependencies":{
     "mocha":"*"
     ,"should": ">= 0"
+    ,"expect.js": "*"
     ,"requirejs":"*"
     ,"jquery":"1.7.2"
+    ,"sandboxed-module":"*"
   }
 }
