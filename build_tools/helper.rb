@@ -13,7 +13,6 @@ end
 class String
   def to_camel_case
     words = self.downcase.split("_")
-    words.each {|w| w[0] = w[0].upcase }
-    words.join
+    words.map {|w| w.capitalize }.join
   end
 end
