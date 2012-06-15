@@ -7,7 +7,7 @@ module_loader = require 'sandboxed-module'
 http_mock =
     get: sinon.stub()
 
-sut = require '../routes/client.coffee'
+sut = require '../routes/client.js'
 
 describe 'Client', ->
 
