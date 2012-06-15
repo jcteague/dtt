@@ -18,7 +18,7 @@ var FormTemplateRenderer = function(collection){
             $('<input>',{"type":"text","name":template.name})
         ];
     };
-    var templatedFieldBuilder  function(template){
+    var templatedFieldBuilder = function(template){
         //load a template
     }
     var generatorSelector = function(fieldType){
@@ -33,7 +33,6 @@ var FormTemplateRenderer = function(collection){
         var field_elements = fieldGenerator(template);
         console.log(field_elements);
         field_elements.forEach(function(f){form.append(f)});
-
 
     })
     return form;
