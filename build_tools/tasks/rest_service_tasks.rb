@@ -5,12 +5,17 @@ require 'yaml'
 namespace :rest_service do
   task :build_local =>[
     :dev_environment,
+    :compile_coffeescript,
     :test,
     :migrate
   ]
 
   task :dev_environment do
     ActiveRecord::Base.establish_connection(db_config["development"])
+  end
+
+  task :compile_coffeescript do
+      sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
   end
 
   task :test do
