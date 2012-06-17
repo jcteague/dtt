@@ -6,6 +6,7 @@
       "express": "2.5.x"
     , "jade": ">= 0.0.1"
     , "coffee-script": "*"
+    , "q": "*"
   }
   ,"devDependencies":{
     "mocha":"*"

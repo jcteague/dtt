@@ -4,7 +4,7 @@ express = require('express')
 
 methods.post_room = (req, res, next) ->
     values = req.body
-    chat_room= support.entity_factory.create('ChatRoom',values)
+    chat_room = support.entity_factory.create('ChatRoom',values)
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.send('room '+ saved_chat_room.id + ' created')
