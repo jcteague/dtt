@@ -26,6 +26,7 @@ describe 'Collection Factory', ->
 
     describe 'for', ->
 
+        result = null
         options = null
 
         beforeEach (done) ->

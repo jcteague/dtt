@@ -1,29 +1,23 @@
 entity_factory = require('support').core.entity_factory
-Repository = require('../support/repository')
+build = require('../support/routes_service').build
 methods = {}
 
 methods.get_user = (req, res) ->
-    #new Repository('ChatRoom').find().then((values) -> console.log values)
-    # build('user_collection').for(user_id).fetch_to(callback)
-    r =
-        links: [
-            {"rel":"self", "href":"/user"},
-            {"rel":"rooms", "href": "/user/rooms"}
-        ]
-    res.json(r)
+    user_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection)
+
+    build('user_collection').for(user_id).fetch_to callback
 
 methods.get_user_rooms = (req, res) ->
-    # build('user_collection').for(user_id).to(callback)
-    # fetch('ChatRoom').for(user_id).as('user_collection').to(callback)
-    entity_factory.get('ChatRoom').find '', 'id asc', (entities) ->
-        rooms = (rel: room.name, href: "/rooms/#{room.id}" for room in entities)
-        links = [{"rel":"self", "href": "/user/rooms" }].concat rooms
-        r =
-            links: links
-        res.json(r)
+    user_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection)
+
+    build('user_rooms_collection').for(user_id).fetch_to callback
 
 module.exports =
     methods: methods
     build_routes: (app) ->
-        app.get('/user',methods.get_user)
-        app.get('/user/rooms',methods.get_user_rooms)
+        app.get('/user/:id',methods.get_user)
+        app.get('/user/:id/rooms',methods.get_user_rooms)

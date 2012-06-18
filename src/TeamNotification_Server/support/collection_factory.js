@@ -3,7 +3,8 @@
   var CollectionFactory, mapping;
 
   mapping = {
-    'user_collection': require('./collections/user_collection')
+    user_collection: require('./collections/user_collection'),
+    user_rooms_collection: require('./collections/user_rooms_collection')
   };
 
   CollectionFactory = (function() {

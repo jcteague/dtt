@@ -1,6 +1,8 @@
 define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (Backbone, ClientRouter, FormTemplateRenderer) ->
 
-    class ClientView extends Backbone.View
+    module 'DTT'
+
+    DTT.ClientView = class ClientView extends Backbone.View
 
         events:
             'submit': 'submit_form'

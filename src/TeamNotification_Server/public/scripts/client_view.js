@@ -6,7 +6,8 @@
 
   define('client_view', ['backbone', 'client_router', 'form_template_renderer'], function(Backbone, ClientRouter, FormTemplateRenderer) {
     var ClientView;
-    return ClientView = (function(_super) {
+    module('DTT');
+    return DTT.ClientView = ClientView = (function(_super) {
 
       __extends(ClientView, _super);
 
