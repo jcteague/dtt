@@ -19,7 +19,7 @@ methods.get_room_by_id = (req, res) ->
     callback = (collection) ->
         res.json(collection)
 
-    build('room_members_collection').for(room_id).fetch_to callback
+    build('room_collection').for(room_id).fetch_to callback
 
 methods.get_room = (req, res) ->
     r =
@@ -36,6 +36,7 @@ methods.get_room = (req, res) ->
 module.exports =
     methods: methods,
     build_routes: (app) ->
-        app.post('/room',express.bodyParser(), methods.post_room)
-        app.get('/room/:id',methods.get_room_by_id)
         app.get('/room',methods.get_room)
+        app.get('/room/:id',methods.get_room_by_id)
+        app.get('/room/:id/users',methods.manage_room_members)
+        app.post('/room',express.bodyParser(), methods.post_room)
