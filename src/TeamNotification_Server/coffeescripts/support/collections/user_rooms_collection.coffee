@@ -8,7 +8,7 @@ class UserRoomsCollection
         @collection = @repository.find({owner_id: user_id}).then(@set_collection)
         @user_id = user_id
     
-    set_collection: (chat_rooms) ->
+    set_collection: (chat_rooms) =>
         
         parsed_links = []
         parsed_links.push( {'name':'self', 'rel':'self', 'href':"/user/#{@user_id}/rooms"} )

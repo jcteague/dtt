@@ -7,29 +7,29 @@ q_mock =
 
 repository_class_mock = sinon.stub()
 
-UserRoomsCollection = module_loader.require('../support/collections/user_rooms_collection', {
+RoomMembersCollection = module_loader.require('../support/collections/room_members_collection', {
     requires:
         'q': q_mock
         '../repository': repository_class_mock
 })
 
-describe 'User Rooms Collection', ->
+describe 'Room Members Collection', ->
 
     sut = null
-    user_id = null
-    chat_rooms_repository = null
+    room_id = null
     promise_then = null
+    chat_room_members_repository = null
 
     beforeEach (done) ->
-        user_id = 1
-        chat_rooms_repository =
+        room_id = 1
+        chat_room_members_repository =
             find: sinon.stub()
 
-        repository_class_mock.withArgs('ChatRoom').returns(chat_rooms_repository)
+        repository_class_mock.withArgs('ChatRoom').returns(chat_room_members_repository)
         promise_then =
             then: sinon.stub()
-        chat_rooms_repository.find.withArgs({owner_id: user_id}).returns(promise_then)
-        sut = new UserRoomsCollection user_id
+        chat_room_members_repository.find.withArgs({id: room_id}).returns(promise_then)
+        sut = new RoomMembersCollection(room_id)
         done()
 
     describe 'constructor', ->
@@ -39,41 +39,43 @@ describe 'User Rooms Collection', ->
         beforeEach (done) ->
             collection_promise = 'blah promise'
             promise_then.then.withArgs(sut.set_collection).returns(collection_promise)
-            sut.constructor(user_id)
+            sut.constructor(room_id)
             done()
 
         it 'should have the current user id value set inside the object', (done) ->
-            expect(sut.user_id).to.equal(user_id)
+            expect(sut.room_id).to.equal(room_id)
             done()
 
-        it 'should set the collection with the repository result for the chat rooms of the user', (done) ->
+        it 'should set the collection with the repository result for the chat room members of the room', (done) ->
             expect(sut.collection).to.equal collection_promise
             done()
 
         it 'should initialize a repository for the chat_rooms', (done) ->
             expect(repository_class_mock.calledWithNew()).to.be true
-            expect(sut.repository).to.equal chat_rooms_repository
+            expect(sut.repository).to.equal chat_room_members_repository
             done()
 
     describe 'set_collection', ->
 
-        db_promise = null
         chat_rooms = null
-        results  = null
+        result = null
+        room_id = null
+
         beforeEach (done) ->
-            sut.user_id = 1
-            chat_rooms = [ { id:1, name:'happy place', owner_id:1 },{id:2, name:'somewhere', owner_id:1 }]
-            results = sut.set_collection(chat_rooms)
+            room_id = 10
+            sut.room_id = room_id
+            chat_rooms = [ { id: sut.room_id, name: 'blah room', users: [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}] } ]
+            result = sut.set_collection(chat_rooms)
             done()
         
-        it 'should return the chatroom collection to parsed to json', (done) ->
-            links = results['links']
-            expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/1/rooms"}
-            expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/rooms/#{chat_rooms[0].id}"}
-            expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/rooms/#{chat_rooms[1].id}"}
-
+        it 'should return the chat room members collection parsed as json', (done) ->
+            links = result['links']
+            expect(links[0]).to.eql {"name":"self", "rel": "RoomMembers", "href": "/room/#{room_id}"}
+            users = chat_rooms[0].users
+            expect(links[1]).to.eql {"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}
+            expect(links[2]).to.eql {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}
             done()
-            
+
     describe 'fetch to', ->
 
         callback = null

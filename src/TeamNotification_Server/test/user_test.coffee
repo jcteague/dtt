@@ -12,7 +12,6 @@ routes_service_mock =
 
 user = module_loader.require('../routes/user.js', {
     requires:
-        'support': support_mock
         '../support/routes_service': routes_service_mock
 })
 

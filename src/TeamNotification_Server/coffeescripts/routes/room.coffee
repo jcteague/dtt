@@ -1,6 +1,7 @@
 methods = {}
 support = require('support').core
 express = require('express')
+build = require('../support/routes_service').build
 
 methods.post_room = (req, res, next) ->
     values = req.body
@@ -12,11 +13,11 @@ methods.post_room = (req, res, next) ->
             next(new Error(err.code,err.message))
 
 methods.get_room_by_id = (req, res) ->
-    r =
-        links: [ 
-            {"rel":"self", "href": "/rooms/1" } 
-        ] 
-    res.json(r)
+    room_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection)
+
+    build('room_members_collection').for(room_id).fetch_to callback
 
 methods.get_room = (req, res) ->
     r =
@@ -33,5 +34,5 @@ module.exports =
     methods: methods,
     build_routes: (app) ->
         app.post('/room',express.bodyParser(), methods.post_room)
-        app.get('/rooms/:id',methods.get_room_by_id)
+        app.get('/room/:id',methods.get_room_by_id)
         app.get('/room',methods.get_room)

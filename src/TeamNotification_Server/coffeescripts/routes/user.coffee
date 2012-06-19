@@ -1,4 +1,3 @@
-entity_factory = require('support').core.entity_factory
 build = require('../support/routes_service').build
 methods = {}
 
