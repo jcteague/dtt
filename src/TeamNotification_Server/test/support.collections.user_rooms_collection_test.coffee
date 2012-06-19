@@ -6,10 +6,13 @@ q_mock =
     when: sinon.spy()
 
 repository_class_mock = sinon.stub()
+underscore_mock = 
+    bindAll: sinon.stub()
 
 UserRoomsCollection = module_loader.require('../support/collections/user_rooms_collection', {
     requires:
         'q': q_mock
+        'underscore': underscore_mock
         '../repository': repository_class_mock
 })
 
@@ -46,6 +49,10 @@ describe 'User Rooms Collection', ->
             expect(sut.user_id).to.equal(user_id)
             done()
 
+        it 'should bind all the methods to the sut', (done) ->
+            sinon.assert.calledWith(underscore_mock.bindAll, sut)
+            done()
+
         it 'should set the collection with the repository result for the chat rooms of the user', (done) ->
             expect(sut.collection).to.equal collection_promise
             done()
@@ -59,18 +66,19 @@ describe 'User Rooms Collection', ->
 
         db_promise = null
         chat_rooms = null
-        results  = null
+        result  = null
+
         beforeEach (done) ->
             sut.user_id = 1
             chat_rooms = [ { id:1, name:'happy place', owner_id:1 },{id:2, name:'somewhere', owner_id:1 }]
-            results = sut.set_collection(chat_rooms)
+            result = sut.set_collection(chat_rooms)
             done()
         
         it 'should return the chatroom collection to parsed to json', (done) ->
-            links = results['links']
+            links = result['links']
             expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/1/rooms"}
-            expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/rooms/#{chat_rooms[0].id}"}
-            expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/rooms/#{chat_rooms[1].id}"}
+            expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
+            expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
 
             done()
             

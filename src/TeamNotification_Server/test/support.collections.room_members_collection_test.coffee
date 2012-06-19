@@ -6,10 +6,13 @@ q_mock =
     when: sinon.spy()
 
 repository_class_mock = sinon.stub()
+underscore_mock = 
+    bindAll: sinon.stub()
 
 RoomMembersCollection = module_loader.require('../support/collections/room_members_collection', {
     requires:
         'q': q_mock
+        'underscore': underscore_mock
         '../repository': repository_class_mock
 })
 
@@ -42,8 +45,12 @@ describe 'Room Members Collection', ->
             sut.constructor(room_id)
             done()
 
-        it 'should have the current user id value set inside the object', (done) ->
+        it 'should have the current room id value set inside the object', (done) ->
             expect(sut.room_id).to.equal(room_id)
+            done()
+
+        it 'should bind all the methods to the sut', (done) ->
+            sinon.assert.calledWith(underscore_mock.bindAll, sut)
             done()
 
         it 'should set the collection with the repository result for the chat room members of the room', (done) ->
