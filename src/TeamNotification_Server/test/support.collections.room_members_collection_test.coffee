@@ -75,12 +75,15 @@ describe 'Room Members Collection', ->
             result = sut.set_collection(chat_rooms)
             done()
         
-        it 'should return the chat room members collection parsed as json', (done) ->
-            links = result['links']
-            expect(links[0]).to.eql {"name":"self", "rel": "RoomMembers", "href": "/room/#{room_id}"}
+        it 'should return the chat room members in the data members field', (done) ->
+            members = result['members']
             users = chat_rooms[0].users
-            expect(links[1]).to.eql {"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}
-            expect(links[2]).to.eql {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}
+            expect(members[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].name}]}
+            expect(members[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].name}]}
+            done()
+
+        it 'should return a self link in the collection links', (done) ->
+            expect(result['links']).to.eql {"name": "self", "rel": "RoomMembers", "href": "/room/#{room_id}/users"}
             done()
 
     describe 'fetch to', ->

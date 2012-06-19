@@ -11,10 +11,17 @@ class RoomMembersCollection
         _.bindAll @
 
     set_collection: (chat_rooms) ->
-        self = {"name":"self", "rel": "RoomMembers", "href": "/room/#{@room_id}"}
-        users = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in chat_rooms[0].users)
+        get_data_for = (user) ->
+            return {
+                "href": "/user/#{user.id}"
+                "data": [
+                    {"name": "id", "value": user.id}
+                    {"name": "name", "value": user.name}
+                ]
+            }
         return {
-            links: [self].concat(users)
+            members: (get_data_for user for user in chat_rooms[0].users)
+            links: {"name":"self", "rel": "RoomMembers", "href": "/room/#{@room_id}/users"}
         }
 
     fetch_to: (callback) ->

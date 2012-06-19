@@ -44,35 +44,56 @@ describe 'Room', ->
 
         describe 'for a room with id', ->
 
+            collection_factory = null
+            collection_value = null
+            res = null
+            req = null
+            room_id = null
+
+            beforeEach (done) ->
+                collection_value = 'blah collection'
+                collection_factory =
+                    for: sinon.stub()
+                req =
+                    param: sinon.stub()
+                room_id = 10
+                req.param.withArgs('id').returns(room_id)
+                res = 
+                    json: sinon.spy()
+
+                done()
+
             describe 'get_room_by_id', ->
 
-                collection_value = null
-                res = null
+                beforeEach (done) ->
+                    routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
+                    room_collection =
+                        fetch_to: (callback) ->
+                            callback(collection_value)
+
+                    collection_factory.for.withArgs(room_id).returns(room_collection)
+                    sut.methods.get_room_by_id(req, res)
+                    done()
+
+                it 'should return the built collection for the room model', (done) ->
+                    sinon.assert.calledWith(res.json, collection_value)
+                    done()
+
+            describe 'manage_room_members', ->
 
                 beforeEach (done) ->
-                    collection_value = 'blah collection'
-                    collection_factory =
-                        for: sinon.stub()
-                    req =
-                        param: sinon.stub()
-                    room_id = 10
-                    req.param.withArgs('id').returns(room_id)
-                    res = 
-                        json: sinon.spy()
-
-                    routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
+                    routes_service_mock.build.withArgs('room_members_collection').returns(collection_factory)
                     room_members_collection =
                         fetch_to: (callback) ->
                             callback(collection_value)
 
                     collection_factory.for.withArgs(room_id).returns(room_members_collection)
-                    sut.methods.get_room_by_id(req, res)
+                    sut.methods.manage_room_members(req, res)
                     done()
 
                 it 'should return the built collection for the room members model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
-
 
         describe 'post_room', ->
 

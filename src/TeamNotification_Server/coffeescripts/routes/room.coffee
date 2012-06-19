@@ -21,6 +21,13 @@ methods.get_room_by_id = (req, res) ->
 
     build('room_collection').for(room_id).fetch_to callback
 
+methods.manage_room_members = (req, res) ->
+    room_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection)
+
+    build('room_members_collection').for(room_id).fetch_to callback
+
 methods.get_room = (req, res) ->
     r =
         'links' : [
