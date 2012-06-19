@@ -3,8 +3,8 @@
   var CollectionFactory, mapping;
 
   mapping = {
-    user_collection: require('./collections/user_collection'),
-    user_rooms_collection: require('./collections/user_rooms_collection')
+    user_collection: './collections/user_collection',
+    user_rooms_collection: './collections/user_rooms_collection'
   };
 
   CollectionFactory = (function() {
@@ -14,7 +14,9 @@
     }
 
     CollectionFactory.prototype["for"] = function(options) {
-      return new mapping[this.type](options);
+      var collection;
+      collection = require(mapping[this.type]);
+      return new collection(options);
     };
 
     return CollectionFactory;

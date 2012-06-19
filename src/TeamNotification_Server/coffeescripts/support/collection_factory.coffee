@@ -1,12 +1,13 @@
 mapping =
-    user_collection: require('./collections/user_collection')
-    user_rooms_collection: require('./collections/user_rooms_collection')
+    user_collection: './collections/user_collection'
+    user_rooms_collection: './collections/user_rooms_collection'
 
 class CollectionFactory
 
     constructor: (@type) ->
 
     for: (options) ->
-        new mapping[@type](options)
+        collection = require(mapping[@type])
+        new collection(options)
 
 module.exports = CollectionFactory
