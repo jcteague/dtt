@@ -7,7 +7,7 @@ def get_dirname_for(file)
 end
 
 def generate_timestamp
-  Time.now.getutc.to_s.gsub(/[^\d]/,'')
+  Time.now.to_i
 end
 
 class String
