@@ -6,8 +6,7 @@
 
   define('client_view', ['backbone', 'client_router', 'form_template_renderer'], function(Backbone, ClientRouter, FormTemplateRenderer) {
     var ClientView;
-    module('DTT');
-    return DTT.ClientView = ClientView = (function(_super) {
+    return ClientView = ClientView = (function(_super) {
 
       __extends(ClientView, _super);
 
@@ -63,7 +62,7 @@
       };
 
       ClientView.prototype.append_link = function(link) {
-        return this.$('#links').append("<p>\n    <a href=\"#" + link.href + "\">" + link.rel + "</a>\n</p>");
+        return this.$('#links').append("<p>\n    <a href=\"#" + link.href + "\">" + link.name + "</a>\n</p>");
       };
 
       ClientView.prototype.render_template = function() {

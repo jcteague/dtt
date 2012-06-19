@@ -1,8 +1,6 @@
 define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (Backbone, ClientRouter, FormTemplateRenderer) ->
 
-    module 'DTT'
-
-    DTT.ClientView = class ClientView extends Backbone.View
+    ClientView = class ClientView extends Backbone.View
 
         events:
             'submit': 'submit_form'
@@ -35,7 +33,7 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
         append_link: (link) ->
             @$('#links').append """
                 <p>
-                    <a href="##{link.href}">#{link.rel}</a>
+                    <a href="##{link.href}">#{link.name}</a>
                 </p>
             """
 
