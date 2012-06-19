@@ -41,23 +41,6 @@ describe 'Room', ->
 
     describe 'methods', ->
 
-        ###
-        describe 'get_room_by_id', ->
-            json_data = null
-
-            beforeEach (done) ->
-                res = json: (json) -> 
-                    json_data = json
-
-                sut.methods.get_room_by_id({},res)
-                done()
-
-            it 'should return as a json object all the links for the current room', (done) ->
-                links = json_data['links']
-                expect(links[0]).to.eql {"rel": "self", "href": "/rooms/1"}
-                done()
-        ###
-
         describe 'get_room_by_id', ->
 
             collection_value = null
@@ -110,9 +93,10 @@ describe 'Room', ->
                         save: (callback) ->
                             callback(false, {id: chat_room_id})
 
+                    req.body = {name: 'blah'}
+                    request_values = {name: req.body.name, owner_id: 1}
                     sinon.spy(chat_room, 'save')
-                    support_mock.core.entity_factory.create.returns(chat_room)
-                    req.param.withArgs('chat_room').returns('blah chat_room')
+                    support_mock.core.entity_factory.create.withArgs('ChatRoom', request_values).returns(chat_room)
                     sut.methods.post_room(req,res)
                     done()
 
@@ -143,7 +127,7 @@ describe 'Room', ->
                 done()
 
             it 'should return the list of links', (done) ->
-                expect(links).not.to.be.empty
+                expect(links[0]).to.eql {"name": "self", "rel": "Room", "href": "/room"}
                 done()
 
             it 'should return the template with the fields', (done) ->
@@ -153,7 +137,14 @@ describe 'Room', ->
             it 'should contain the name field in the template data', (done) ->
                 field = (field for field in data when field.name is 'name')[0]
                 expect(field.name).to.equal 'name'
+                expect(field.label).to.equal 'Chatroom Name'
                 expect(field.type).to.equal 'string'
+                done()
+
+            it 'should contain the owner id field in the template data', (done) ->
+                field = (field for field in data when field.name is 'owner_id')[0]
+                expect(field.name).to.equal 'owner_id'
+                expect(field.type).to.equal 'hidden'
                 done()
 
             it 'should contain the fields with name, type and label properties in the template data', (done) ->

@@ -2,8 +2,8 @@ methods = {}
 methods.get_root = (req, res) ->
     r =
         links: [
-            {"rel": "self", "href": "/" },
-            {"rel": "user", "href": "/user" }
+            {"name": "self", "rel": "self", "href": "/" },
+            {"name": "user", "rel": "User", "href": "/user" }
         ]
     res.json(r)
 

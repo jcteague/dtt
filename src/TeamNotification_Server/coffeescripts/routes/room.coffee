@@ -5,7 +5,9 @@ build = require('../support/routes_service').build
 
 methods.post_room = (req, res, next) ->
     values = req.body
-    chat_room = support.entity_factory.create('ChatRoom',values)
+
+    # TODO: Get the owner id value from the actual logged in user
+    chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: 1})
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.send('room '+ saved_chat_room.id + ' created')
@@ -22,11 +24,12 @@ methods.get_room_by_id = (req, res) ->
 methods.get_room = (req, res) ->
     r =
         'links' : [
-          {'rel':'self', 'href':'/room'}
+          {"name": "self", "rel": "Room", 'href':'/room'}
         ]
         'template':
             'data':[
                 {'name':'name', 'label':'Chatroom Name', 'type':'string'}
+                {'name':'owner_id', 'label':'Owner Id', 'type':'hidden'}
             ]
     res.json(r)
 

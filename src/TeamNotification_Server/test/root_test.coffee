@@ -34,6 +34,6 @@ describe 'Root', ->
 
             it 'should return as a json all the links for the root path', (done) ->
                 links = json_data['links'] 
-                links[0].should.eql {"rel": "self", "href": "/"}
-                links[1].should.eql {"rel": "user", "href": "/user"}
+                links[0].should.eql {"name": "self", "rel": "self", "href": "/"}
+                links[1].should.eql {"name": "user", "rel": "User", "href": "/user"}
                 done() 

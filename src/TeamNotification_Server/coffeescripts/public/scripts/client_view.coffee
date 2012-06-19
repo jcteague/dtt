@@ -45,7 +45,7 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
         submit_form: (event) ->
             event.preventDefault()
             url = _.find(@data.links, (item) ->
-                item.rel is 'self'
+                item.name is 'self'
             )
             data = {}
             $('input').not(':submit').each () ->
