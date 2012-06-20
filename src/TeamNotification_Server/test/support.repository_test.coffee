@@ -32,6 +32,37 @@ describe 'Repository', ->
             expect(sut.entity).to.equal entity
             done()
 
+    describe 'get_by_id', ->
+
+        db_entity = null
+        id = null
+        resolve_callback = null
+        result = null
+        expected_result = null
+
+        beforeEach (done) ->
+            db_entity =
+                get: sinon.spy()
+            support_mock.core.entity_factory.get.withArgs(sut.entity).returns(db_entity)
+            deferred =
+                promise: 'q-promise'
+            q_mock.defer.returns deferred
+
+            resolve_callback = 'blah func'
+            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred).returns(resolve_callback)
+            id = 10
+            expected_result = deferred.promise
+            result = sut.get_by_id(id)
+            done()
+
+        it 'should return a promise', (done) ->
+            expect(result).to.equal expected_result
+            done()
+
+        it 'should attemp to find the entity that matches the id', (done) ->
+            sinon.assert.calledWith(db_entity.get, id, resolve_callback)
+            done()
+
     describe 'find', ->
 
         db_entity = null

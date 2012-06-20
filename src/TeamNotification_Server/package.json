@@ -16,5 +16,6 @@
     ,"requirejs":"*"
     ,"jquery":"1.7.2"
     ,"sandboxed-module":"*"
+    ,"sinon":"*"
   }
 }

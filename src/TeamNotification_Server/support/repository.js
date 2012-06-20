@@ -13,6 +13,14 @@
       this.entity = entity;
     }
 
+    Repository.prototype.get_by_id = function(id) {
+      var callback, deferred;
+      deferred = Q.defer();
+      callback = this.get_on_resolve_callback(deferred);
+      entity_factory.get(this.entity).get(id, callback);
+      return deferred.promise;
+    };
+
     Repository.prototype.find = function() {
       var callback, deferred, query_args;
       query_args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];

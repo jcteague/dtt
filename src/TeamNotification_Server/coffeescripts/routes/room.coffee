@@ -1,7 +1,8 @@
 methods = {}
 support = require('support').core
 express = require('express')
-build = require('../support/routes_service').build
+routes_service = require('../support/routes_service')
+build = routes_service.build
 
 methods.post_room = (req, res, next) ->
     values = req.body
@@ -22,7 +23,8 @@ methods.get_room_by_id = (req, res) ->
     build('room_collection').for(room_id).fetch_to callback
 
 methods.post_room_user = (req, res, next) ->
-
+    routes_service.add_user_to_chat_room(req.body.user_id, req.param('id')).then (response) ->
+        res.send(response)
 
 methods.manage_room_members = (req, res) ->
     room_id = req.param('id')

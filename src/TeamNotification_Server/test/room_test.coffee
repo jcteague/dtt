@@ -7,17 +7,20 @@ support_mock =
         entity_factory: 
             create: sinon.stub()
 
+repository_class_mock = sinon.stub()
 express_mock =
     bodyParser: sinon.stub()
 
 routes_service_mock =
     build: sinon.stub()
+    add_user_to_chat_room: sinon.stub()
 
 sut = module_loader.require('../routes/room.js', {
     requires:
         'support': support_mock
         'express': express_mock
         '../support/routes_service': routes_service_mock
+        '../support/repository': repository_class_mock
 })
 
 describe 'Room', ->
@@ -134,6 +137,42 @@ describe 'Room', ->
                     sinon.assert.called(chat_room.save)
                     done()
 
+        describe 'post_room_user', ->
+
+            user_id = null
+            room_id = null
+            req = null
+            res = null
+            promise = null
+            service_message = null
+
+            beforeEach (done) ->
+                user_id = 1
+                req =
+                    body:
+                        user_id: user_id
+                    param: sinon.stub()
+                res =
+                    send: sinon.spy()
+
+                room_id = 10
+                req.param.withArgs('id').returns(room_id)
+                service_message = 'blah for the user'
+                promise =
+                    then: (callback) ->
+                        callback(service_message)
+
+                routes_service_mock.add_user_to_chat_room.returns(promise)
+                sut.methods.post_room_user(req, res)
+                done()
+
+            it 'should call the add user to chat room', (done) ->
+                sinon.assert.calledWith(routes_service_mock.add_user_to_chat_room, user_id, room_id)
+                done()
+
+            it 'should return the user exists response', (done) ->
+                sinon.assert.calledWith(res.send, service_message)
+                done()
 
         describe 'get_room', ->
 
