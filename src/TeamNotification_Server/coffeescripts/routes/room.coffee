@@ -1,5 +1,5 @@
 methods = {}
-support = require('support').core
+support = require('../support/core').core
 express = require('express')
 routes_service = require('../support/routes_service')
 build = routes_service.build

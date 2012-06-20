@@ -3,7 +3,7 @@
   var Q, Repository, entity_factory,
     __slice = [].slice;
 
-  entity_factory = require('support').core.entity_factory;
+  entity_factory = require('./core').core.entity_factory;
 
   Q = require('q');
 

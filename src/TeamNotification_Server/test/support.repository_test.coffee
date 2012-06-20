@@ -12,7 +12,7 @@ q_mock =
 
 Repository = module_loader.require('../support/repository', {
     requires:
-        'support': support_mock
+        './core': support_mock
         'q': q_mock
 })
 

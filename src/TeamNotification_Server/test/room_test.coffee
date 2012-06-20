@@ -17,7 +17,7 @@ routes_service_mock =
 
 sut = module_loader.require('../routes/room.js', {
     requires:
-        'support': support_mock
+        '../support/core': support_mock
         'express': express_mock
         '../support/routes_service': routes_service_mock
         '../support/repository': repository_class_mock
