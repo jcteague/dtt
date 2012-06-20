@@ -7,8 +7,8 @@ class RoomMembersCollection
     constructor: (room_id) ->
         @room_id = room_id
         @repository = new Repository('ChatRoom')
-        @collection = @repository.find(id: room_id).then(@set_collection)
         _.bindAll @
+        @collection = @repository.find(id: room_id).then(@set_collection)
 
     set_collection: (chat_rooms) ->
         get_data_for = (user) ->
@@ -19,9 +19,10 @@ class RoomMembersCollection
                     {"name": "name", "value": user.name}
                 ]
             }
+        room_id = @room_id
         return {
             members: (get_data_for user for user in chat_rooms[0].users)
-            links: {"name":"self", "rel": "RoomMembers", "href": "/room/#{@room_id}/users"}
+            links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room_id}/users"}]
         }
 
     fetch_to: (callback) ->

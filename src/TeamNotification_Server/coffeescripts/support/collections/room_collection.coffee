@@ -6,10 +6,9 @@ class RoomCollection
 
     constructor: (room_id) ->
         @room_id = room_id
-        console.log 'cons', room_id, @room_id
         @repository = new Repository('ChatRoom')
-        @collection = @repository.find({id: room_id}).then(@set_collection)
         _.bindAll @
+        @collection = @repository.find({id: room_id}).then(@set_collection)
 
     set_collection: (chat_rooms) ->
         users = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in chat_rooms[0].users)

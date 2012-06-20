@@ -83,7 +83,7 @@ describe 'Room Members Collection', ->
             done()
 
         it 'should return a self link in the collection links', (done) ->
-            expect(result['links']).to.eql {"name": "self", "rel": "RoomMembers", "href": "/room/#{room_id}/users"}
+            expect(result['links'][0]).to.eql {"name": "self", "rel": "RoomMembers", "href": "/room/#{room_id}/users"}
             done()
 
     describe 'fetch to', ->

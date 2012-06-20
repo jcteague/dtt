@@ -38,6 +38,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/room/:id',sut.methods.get_room_by_id)
             sinon.assert.calledWith(app.get,'/room/:id/users',sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
+            sinon.assert.calledWith(app.post,'/room/:id/users', body_parser_result, sut.methods.post_room_user)
             done()
 
     describe 'methods', ->
@@ -132,6 +133,7 @@ describe 'Room', ->
                 it 'should create the user on the database', (done) ->
                     sinon.assert.called(chat_room.save)
                     done()
+
 
         describe 'get_room', ->
 
