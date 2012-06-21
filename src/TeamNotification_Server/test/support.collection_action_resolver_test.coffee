@@ -90,3 +90,28 @@ describe 'Collection Action Resolver', ->
         it 'should return a collection promise', (done) ->
             expect(result).to.equal expected_result
             done()
+
+    describe 'fetch_to', ->
+
+        callback = null
+        collection_promise = null
+
+        beforeEach (done) ->
+            sut.collection_class = sinon.spy()
+            sut.promise_factory = 
+                get_for: sinon.stub()
+
+            strategy_promise = 'blah strategy result'
+            strategy.returns(strategy_promise)
+
+            collection_promise = 
+                fetch_to: sinon.spy()
+
+            sut.promise_factory.get_for.withArgs(sut.collection_class, strategy_promise).returns(collection_promise)
+
+            sut.fetch_to callback
+            done()
+
+        it 'should call the fetch_to method of the promise created by the promise factory', (done) ->
+            sinon.assert.calledWith(collection_promise.fetch_to, callback)
+            done()
