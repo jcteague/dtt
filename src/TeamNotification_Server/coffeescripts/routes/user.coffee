@@ -15,8 +15,15 @@ methods.get_user_rooms = (req, res) ->
 
     build('user_rooms_collection').for(user_id).fetch_to callback
 
+methods.get_users = (req, res)->
+    username = req.param('username')  
+    callback = (collection) ->
+        res.json(collection)
+    uc = build('users_collection').for().fetch_to callback
+
 module.exports =
     methods: methods
     build_routes: (app) ->
+        app.get('/users/:username?', methods.get_users)
         app.get('/user/:id',methods.get_user)
         app.get('/user/:id/rooms',methods.get_user_rooms)
