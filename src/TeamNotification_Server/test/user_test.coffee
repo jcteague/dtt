@@ -28,6 +28,7 @@ describe 'User', ->
         it 'should configure the routes with its corresponding callback', (done) ->
             sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
             sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
+            sinon.assert.calledWith(app.get,'/users/:username?',user.methods.get_users)
             done()
 
     describe 'methods', ->
@@ -38,6 +39,7 @@ describe 'User', ->
         res = null
         req = null
         user_id = null
+        username = null
 
         beforeEach (done) ->
             collection_value = 'blah collection'
@@ -51,6 +53,7 @@ describe 'User', ->
                 param: sinon.stub()
             user_id = 10
             req.param.withArgs('id').returns(user_id)
+            req.param.withArgs('username').returns(username)
             res = 
                 json: sinon.spy()
             done()
@@ -85,8 +88,23 @@ describe 'User', ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()
 
+        describe 'get_users', ->
+            users_array = null        
+            json_data = null
+            beforeEach (done) ->
+                routes_service_mock.build.withArgs('users_collection').returns(collection_factory)
+                users_collection = 
+                    fetch_to: (callback) ->
+                        callback(collection_value)
+                collection_factory.for.withArgs(username).returns(users_collection)
+                user.methods.get_users(req,res)
+                done()
+            it 'should return the built collection for the users model', (done) ->
+                sinon.assert.calledWith(res.json, collection_value)
+                done()
 
         ###
+
         describe 'get_user_rooms', ->
 
             app = null
