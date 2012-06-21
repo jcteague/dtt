@@ -12,9 +12,16 @@ class RoomMembersCollection
                     {"name": "name", "value": user.name}
                 ]
             }
+        queries = [{
+          "href" : "users/",
+          "rel" : "search",
+          "prompt" : "Enter search string",
+          "data" :[{"name" : "name", "value" : ""}]
+        }]
         return {
             members: (get_data_for user for user in @room.users)
             links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"}]
+            queries: queries
         }
 
 module.exports = RoomMembersCollection
