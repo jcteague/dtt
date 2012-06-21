@@ -1,29 +1,19 @@
-Q = require('q')
-_ = require('underscore')
-Repository = require('../repository')
-
 class RoomCollection
 
-    constructor: (room_id) ->
-        @room_id = room_id
-        @repository = new Repository('ChatRoom')
-        _.bindAll @
-        @collection = @repository.find({id: room_id}).then(@set_collection)
+    constructor: (room) ->
+        @room = room
 
-    set_collection: (chat_rooms) ->
-        users = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in chat_rooms[0].users)
+    to_json: ->
+        users = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in @room.users)
 
         return {
             members: [
-                {"href": "/room/#{@room_id}/users", "data": users}
+                {"href": "/room/#{@room.id}/users", "data": users}
             ]
             links: [
-                {"name":"self", "rel": "Room", "href": "/room/#{@room_id}"}
-                {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{@room_id}/users"}
+                {"name":"self", "rel": "Room", "href": "/room/#{@room.id}"}
+                {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"}
             ]
         }
-
-    fetch_to: (callback) ->
-        Q.when(@collection, callback)
 
 module.exports = RoomCollection

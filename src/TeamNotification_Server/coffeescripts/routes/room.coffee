@@ -18,7 +18,9 @@ methods.post_room = (req, res, next) ->
 methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        res.json(collection)
+        console.log collection, collection.to_json()
+        #res.json(collection)
+        res.json(collection.to_json())
 
     build('room_collection').for(room_id).fetch_to callback
 
