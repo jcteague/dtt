@@ -1,9 +1,9 @@
 Q = require('q')
 Repository = require('./repository')
-CollectionFactory = require('./collection_factory')
+CollectionActionResolver = require('./collection_action_resolver')
 
 build = (collection_type) ->
-    new CollectionFactory(collection_type)
+    new CollectionActionResolver(collection_type)
 
 add_user_to_chat_room = (user_id, room_id) ->
     # TODO: How can we make this instances live outside and created within require?

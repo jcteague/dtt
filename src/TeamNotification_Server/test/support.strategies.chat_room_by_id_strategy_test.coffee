@@ -6,7 +6,7 @@ q_mock =
     when: sinon.spy()
 
 repository_class_mock = sinon.stub()
-sut = module_loader.require('../support/strategies/room_by_id_strategy', {
+sut = module_loader.require('../support/strategies/chat_room_by_id_strategy', {
     requires:
         'q': q_mock
         '../repository': repository_class_mock

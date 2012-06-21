@@ -4,11 +4,13 @@ module_loader = require('sandboxed-module')
 
 strategy_getter_class_mock = sinon.stub()
 collection_factory_class_mock = sinon.stub()
+promise_factory_class_mock = sinon.stub()
 
 CollectionActionResolver = module_loader.require('../support/collection_action_resolver', {
     requires:
         './strategy_getter': strategy_getter_class_mock
         './collection_factory': collection_factory_class_mock
+        './promise_factory': promise_factory_class_mock
 })
 
 describe 'Collection Action Resolver', ->
@@ -16,6 +18,7 @@ describe 'Collection Action Resolver', ->
     type = null
     strategy = null
     collection_class = null
+    promise_factory = null
     sut = null
 
     beforeEach (done) ->
@@ -31,6 +34,10 @@ describe 'Collection Action Resolver', ->
         collection_factory =
             get_for: sinon.stub()
         collection_factory_class_mock.returns(collection_factory)
+
+        promise_factory =
+            get_for: sinon.stub()
+        promise_factory_class_mock.returns(promise_factory)
 
         collection_class = 'blah collection class'
         collection_factory.get_for.withArgs(type).returns(collection_class)
@@ -51,32 +58,35 @@ describe 'Collection Action Resolver', ->
             expect(sut.collection_class).to.equal collection_class
             done()
 
+        it 'should instantiate a promise factory', (done) ->
+            expect(promise_factory_class_mock.calledWithNew()).to.be true
+            expect(sut.promise_factory).to.equal promise_factory
+            done()
+
     describe 'for', ->
 
-        strategy_result = null
+        strategy_promise = null
         expected_result = null
         result = null
         parameters = null
 
         beforeEach (done) ->
             parameters = 'foo bar'
-            strategy_result = 'blah strategy result'
-            collection_promise = 
-                then: (callback) ->
-                    callback(strategy_result)
+            strategy_promise = 'blah strategy result'
 
             sut.collection_class = sinon.spy()
+            strategy.withArgs(parameters).returns(strategy_promise)
 
-            strategy.withArgs(parameters).returns(collection_promise)
+            collection_promise = 
+                then: (callback) ->
+                    callback(strategy_promise)
+
+            sut.promise_factory.get_for.withArgs(sut.collection_class, strategy_promise).returns(collection_promise)
+
             expected_result = collection_promise
             result = sut.for parameters
             done()
 
         it 'should return a collection promise', (done) ->
             expect(result).to.equal expected_result
-            done()
-
-        it 'should instantiate the stored collection class with the strategy results', (done) ->
-            expect(sut.collection_class.calledWithNew()).to.be true
-            sinon.assert.calledWith(sut.collection_class, strategy_result)
             done()
