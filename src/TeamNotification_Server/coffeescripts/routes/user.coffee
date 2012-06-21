@@ -19,7 +19,7 @@ methods.get_users = (req, res)->
     username = req.param('username')  
     callback = (collection) ->
         res.json(collection)
-    uc = build('users_collection').for().fetch_to callback
+    build('users_collection').for(username).fetch_to callback
 
 module.exports =
     methods: methods
