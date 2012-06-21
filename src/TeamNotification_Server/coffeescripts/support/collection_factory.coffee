@@ -1,15 +1,12 @@
-mapping =
-    user_collection: './collections/user_collection'
-    user_rooms_collection: './collections/user_rooms_collection'
-    room_collection: './collections/room_collection'
-    room_members_collection: './collections/room_members_collection'
+path = require('path')
+collections_map = require('./collections/collections_map')
 
 class CollectionFactory
 
-    constructor: (@type) ->
+    get_for: (type) ->
+        @require_collection(collections_map[type])
 
-    for: (options) ->
-        collection = require(mapping[@type])
-        new collection(options)
+    require_collection: (collection_path) ->
+        require(path.resolve(__dirname, 'collections', collection_path))
 
 module.exports = CollectionFactory

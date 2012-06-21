@@ -2,38 +2,35 @@ expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
-collection_mock = sinon.spy()
+collections_map_mock = 
+    'blah_collection': 'blah collection class path'
+
 CollectionFactory = module_loader.require('../support/collection_factory', {
     requires:
-        './collections/user_collection': collection_mock
+        './collections/collections_map': collections_map_mock
 })
 
 describe 'Collection Factory', ->
 
-    type = null
     sut = null
 
     beforeEach (done) ->
-        type = 'user_collection'
-        sut = new CollectionFactory type
+        sut = new CollectionFactory()
         done()
 
-    describe 'constructor', ->
+    describe 'get_for', ->
 
-        it 'should contain a property for the type passed', (done) ->
-            expect(sut.type).to.equal type
-            done()
-
-    describe 'for', ->
-
+        expected_result = null
         result = null
-        options = null
 
         beforeEach (done) ->
-            result = sut.for options
+            type = 'blah_collection'
+            collection_class = 'blah collection'
+            sinon.stub(sut, 'require_collection').withArgs(collections_map_mock[type]).returns(collection_class)
+            expected_result = collection_class
+            result = sut.get_for type
             done()
 
-        it 'should return an instance of the collection type of the factory with the arguments passed', (done) ->
-            expect(collection_mock.calledWithNew()).to.be true
-            sinon.assert.calledWith(collection_mock, options)
+        it 'should return the collection for that type', (done) ->
+            expect(result).to.equal expected_result
             done()
