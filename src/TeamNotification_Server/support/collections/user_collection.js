@@ -5,27 +5,23 @@
   UserCollection = (function() {
 
     function UserCollection(user_id) {
-      this.set_collection(user_id);
+      this.user_id = user_id;
     }
 
-    UserCollection.prototype.set_collection = function(user_id) {
-      return this.collection = {
+    UserCollection.prototype.to_json = function() {
+      return {
         links: [
           {
             "rel": "self",
             "name": "self",
-            "href": "/user/" + user_id
+            "href": "/user/" + this.user_id
           }, {
             "rel": "rooms",
             "name": "rooms",
-            "href": "/user/" + user_id + "/rooms"
+            "href": "/user/" + this.user_id + "/rooms"
           }
         ]
       };
-    };
-
-    UserCollection.prototype.fetch_to = function(callback) {
-      return callback(this.collection);
     };
 
     return UserCollection;

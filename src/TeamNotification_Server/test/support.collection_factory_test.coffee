@@ -8,6 +8,7 @@ collections_map_mock =
 CollectionFactory = module_loader.require('../support/collection_factory', {
     requires:
         './collections/collections_map': collections_map_mock
+        'path': {}
 })
 
 describe 'Collection Factory', ->

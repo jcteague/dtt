@@ -32,6 +32,7 @@ describe 'User', ->
 
     describe 'methods', ->
 
+        collection = null
         collection_value = null
         collection_factory = null
         res = null
@@ -40,6 +41,10 @@ describe 'User', ->
 
         beforeEach (done) ->
             collection_value = 'blah collection'
+            collection =
+                to_json: ->
+                    collection_value
+
             collection_factory =
                 for: sinon.stub()
             req =
@@ -56,7 +61,7 @@ describe 'User', ->
                 routes_service_mock.build.withArgs('user_collection').returns(collection_factory)
                 user_collection =
                     fetch_to: (callback) ->
-                        callback(collection_value)
+                        callback(collection)
                 collection_factory.for.withArgs(user_id).returns(user_collection)
                 user.methods.get_user(req, res)
                 done()
@@ -71,7 +76,7 @@ describe 'User', ->
                 routes_service_mock.build.withArgs('user_rooms_collection').returns(collection_factory)
                 user_rooms_collection =
                     fetch_to: (callback) ->
-                        callback(collection_value)
+                        callback(collection)
                 collection_factory.for.withArgs(user_id).returns(user_rooms_collection)
                 user.methods.get_user_rooms(req, res)
                 done()

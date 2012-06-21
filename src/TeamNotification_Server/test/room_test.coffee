@@ -49,6 +49,7 @@ describe 'Room', ->
         describe 'for a room with id', ->
 
             collection_factory = null
+            collection = null
             collection_value = null
             res = null
             req = null
@@ -56,6 +57,10 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 collection_value = 'blah collection'
+                collection =
+                    to_json: ->
+                        collection_value
+
                 collection_factory =
                     for: sinon.stub()
                 req =
@@ -73,7 +78,7 @@ describe 'Room', ->
                     routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
                     room_collection =
                         fetch_to: (callback) ->
-                            callback(collection_value)
+                            callback(collection)
 
                     collection_factory.for.withArgs(room_id).returns(room_collection)
                     sut.methods.get_room_by_id(req, res)
@@ -89,7 +94,7 @@ describe 'Room', ->
                     routes_service_mock.build.withArgs('room_members_collection').returns(collection_factory)
                     room_members_collection =
                         fetch_to: (callback) ->
-                            callback(collection_value)
+                            callback(collection)
 
                     collection_factory.for.withArgs(room_id).returns(room_members_collection)
                     sut.methods.manage_room_members(req, res)
