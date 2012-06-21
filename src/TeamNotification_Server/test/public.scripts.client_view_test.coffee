@@ -1,7 +1,18 @@
-# TODO: Make it so that requirejs doesn't break test
-return
 expect = require('expect.js')
 sinon = require('sinon')
+
+requirejs = require('requirejs')
+
+requirejs.config {
+    #nodeRequire: require
+    baseUrl: __dirname
+}
+
+requirejs ['../public/scripts/client_view'], (ClientView) ->
+    console.log 'hola', ClientView
+
+return
+
 module_loader = require('sandboxed-module')
 
 DTT = {}
@@ -16,7 +27,7 @@ describe 'Client View', ->
 
     beforeEach (done) ->
         console.log DTT
-        sut = new ClientView()
+        sut = new client_view()
 
     describe 'initialize', ->
 
