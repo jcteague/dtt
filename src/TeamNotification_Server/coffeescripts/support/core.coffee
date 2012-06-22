@@ -2,7 +2,7 @@ pg = require('pg')
 orm = require('orm')
 
 _entity = {}
-db = orm.connect "postgres://postgres:1234@localhost/dtt_main", (success,db) ->
+db = orm.connect "postgres://postgres:1234@localhost/dtt_test", (success,db) ->
     _entity.ChatRoom = db.define 'chat_room',
         name : {type: 'string'}
     _entity.User = db.define 'users',
@@ -19,3 +19,4 @@ module.exports =
                 return new _entity[entity_name](params)
             get: (entity_name) ->
                 return _entity[entity_name]
+            _entity: _entity
