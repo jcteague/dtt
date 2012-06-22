@@ -4,6 +4,10 @@ build/
 log/
 tmp/
 
+src/**/routes/*.js
+src/**/support/*.js
+src/**/support/**/*.js
+
 *.suo
 *.TMP
 *.user
