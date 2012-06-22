@@ -2,34 +2,30 @@ expect = require('expect.js')
 sinon = require('sinon')
 
 requirejs = require('requirejs')
+config = require('./client.config')
 
-requirejs.config {
-    #nodeRequire: require
-    baseUrl: __dirname
-}
-
-requirejs ['../public/scripts/client_view'], (ClientView) ->
-    console.log 'hola', ClientView
-
+requirejs.config config
 return
 
-module_loader = require('sandboxed-module')
+requirejs ['client_view'], (ClientView) ->
 
-DTT = {}
-client_view = module_loader.require('../public/scripts/client_view.js', {
-    globals:
-        'DTT': DTT
-})
+    describe 'Client View', ->
 
-describe 'Client View', ->
-
-    sut = null
-
-    beforeEach (done) ->
-        console.log DTT
-        sut = new client_view()
-
-    describe 'initialize', ->
+        sut = null
 
         beforeEach (done) ->
+            sut = new ClientView()
             done()
+
+        describe 'render', ->
+
+            result = null
+
+            beforeEach (done) ->
+                sinon.stub(sut.$el, 'empty')
+                result = sut.render()
+                done()
+
+            it 'should empty the view', (done) ->
+                sinon.assert.called(sut.$el.empty)
+                done()
