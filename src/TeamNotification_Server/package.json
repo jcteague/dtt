@@ -1,5 +1,5 @@
 {
-    "name": "application-name"
+    "name": "DTT"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
@@ -8,6 +8,8 @@
     , "coffee-script": "*"
     , "q": "*"
     , "underscore": "*"
+    , "pg": "*"
+    , "sequelize": "*"
   }
   ,"devDependencies":{
     "mocha":"*"

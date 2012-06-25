@@ -1,3 +1,4 @@
+return
 expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
