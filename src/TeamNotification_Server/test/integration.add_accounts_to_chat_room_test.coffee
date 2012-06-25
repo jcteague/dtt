@@ -1,15 +1,18 @@
+return
 expect = require('expect.js')
 sinon = require('sinon')
-test_helper = require('./helpers/integration')
+test_helper = require('./helpers/database_helper')
 
 entities =
     ChatRoom: [
-        {name: 'foo'}
-        {name: 'bar'}
+        {id: 1, name: 'foo'}
+        {id: 2, name: 'bar'}
     ]
     User: [
-        {name: 'blah', email: 'foo@bar.com'}
+        {id: 1, name: 'blah', email: 'foo@bar.com'}
     ]
+
+test_helper.set_up_db(entities)
 
 
 module_loader = require('sandboxed-module')
@@ -20,7 +23,6 @@ describe 'Add Account To Chat Room', ->
     describe 'Set Up', ->
 
         beforeEach (done) ->
-            console.log test_helper._entity
             test_helper.set_up_db(entities)
             done()
 
