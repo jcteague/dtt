@@ -1,6 +1,6 @@
-define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (Backbone, ClientRouter, FormTemplateRenderer) ->
+define 'client_view', ['backbone', 'client_router', 'form_template_renderer', 'query_renderer'], (Backbone, ClientRouter, FormTemplateRenderer, QueryRenderer) ->
 
-    ClientView = class ClientView extends Backbone.View
+    class ClientView extends Backbone.View
 
         events:
             'submit': 'submit_form'
@@ -10,6 +10,7 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
             @router = new ClientRouter()
             @router.on 'render', @render_path, @
             @form_template_renderer = new FormTemplateRenderer()
+            @query_renderer = new QueryRenderer()
             Backbone.history.start()
 
         render: ->
@@ -17,6 +18,7 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
             if @data?
                 @render_links() if @data.links?
                 @render_template() if @data.template?
+                @render_queries() if @data.queries?
             @
 
         render_path: (path) ->
@@ -41,6 +43,11 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer'], (
             @$el.append('<div id="form-container"><h1>Form</h1></div>')
             console.log 'rendered template', @form_template_renderer.render(@data)
             @$el.append(@form_template_renderer.render(@data))
+
+        render_queries: ->
+            @$el.append('<div id="form-container"><h1>Queries</h1></div>')
+            console.log 'rendered queries', @query_renderer.render(@data)
+            @$el.append(@query_renderer.render(@data))
 
         submit_form: (event) ->
             event.preventDefault()
