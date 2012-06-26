@@ -25,7 +25,6 @@ methods.get_users = (req, res)->
 module.exports =
     methods: methods
     build_routes: (app) ->
-        app.get('/users', methods.get_users)
-        app.get('/users/:username?', methods.get_users)
+        app.get('/users/query', methods.get_users)
         app.get('/user/:id',methods.get_user)
         app.get('/user/:id/rooms',methods.get_user_rooms)

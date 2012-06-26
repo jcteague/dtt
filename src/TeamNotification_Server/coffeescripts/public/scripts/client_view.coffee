@@ -41,12 +41,10 @@ define 'client_view', ['backbone', 'client_router', 'form_template_renderer', 'q
 
         render_template: ->
             @$el.append('<div id="form-container"><h1>Form</h1></div>')
-            console.log 'rendered template', @form_template_renderer.render(@data)
             @$el.append(@form_template_renderer.render(@data))
 
         render_queries: ->
             @$el.append('<div id="form-container"><h1>Queries</h1></div>')
-            console.log 'rendered queries', @query_renderer.render(@data)
             @$el.append(@query_renderer.render(@data))
 
         submit_form: (event) ->

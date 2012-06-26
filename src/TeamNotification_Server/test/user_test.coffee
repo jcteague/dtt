@@ -26,6 +26,7 @@ describe 'User', ->
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
+            sinon.assert.calledWith(app.get,'/users/query',user.methods.get_users)
             sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
             sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
             done()
