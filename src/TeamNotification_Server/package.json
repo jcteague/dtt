@@ -9,7 +9,7 @@
     , "q": "*"
     , "underscore": "*"
     , "pg": "*"
-    , "sequelize": "*"
+    , "async": "*"
   }
   ,"devDependencies":{
     "mocha":"*"

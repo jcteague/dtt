@@ -1,4 +1,3 @@
-return
 expect = require('expect.js')
 sinon = require('sinon')
 test_helper = require('./helpers/database_helper')
