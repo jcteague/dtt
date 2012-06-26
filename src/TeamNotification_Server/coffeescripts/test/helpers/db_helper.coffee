@@ -12,6 +12,37 @@ open_db = () ->
 
     defer.promise
 
+structure = 
+    name: 'users'
+    columns:
+        id: 'integer'
+        name: 'varchar(100)'
+        email: 'varchar(100)'
+
+users =
+    name: 'users'
+    entities: [
+        {
+            id: 1
+            name: 'blah'
+            email: 'foo@bar.com'
+        },
+        {
+            id: 2
+            name: 'ed'
+            email: 'ed@es.com'
+        }
+    ]
+
+
+open = (steps...) ->
+    pg_gateway.open(db_config.test).then (client) ->
+        #deferred_clear('users').then(deferred_create(structure)).then(deferred_save(users))
+
+        result = Q.resolve client
+        result.then step for step in steps
+        result
+
 deferred_clear = (table) ->
     defer = Q.defer()
     return (client) ->
@@ -23,7 +54,7 @@ deferred_clear = (table) ->
             console.log 'dropped'
             defer.resolve client
 
-    defer.promise
+        defer.promise
 
 deferred_create = (table_structure) ->
     defer = Q.defer()
@@ -38,7 +69,7 @@ deferred_create = (table_structure) ->
             console.log 'created'
             defer.resolve client
 
-    defer.promise
+        defer.promise
 
 deferred_save = (table_obj) ->
     defer = Q.defer()
@@ -53,7 +84,7 @@ deferred_save = (table_obj) ->
             console.log 'saved'
             defer.resolve(client)
 
-    defer.promise
+        defer.promise
 
 make_save_query = (columns, values, client) ->
     return (callback) ->
@@ -77,6 +108,7 @@ handle = ->
 
 module.exports =
     open: open_db
+    open_all: open
     clear: deferred_clear
     create: deferred_create
     save: deferred_save
