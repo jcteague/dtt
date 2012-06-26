@@ -84,3 +84,5 @@ describe 'User', ->
             it 'should return the built collection for the user rooms model', (done) ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()
+
+
