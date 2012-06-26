@@ -13,7 +13,7 @@ class RoomMembersCollection
                 ]
             }
         queries = [{
-          "href" : "users/",
+          "href" : "/users/query",
           "rel" : "search",
           "prompt" : "Enter search string",
           "data" :[{"name" : "name", "value" : ""}]

@@ -1,11 +1,11 @@
+build = require('../support/routes_service').build
+
 methods = {}
 methods.get_root = (req, res) ->
-    r =
-        links: [
-            {"name": "self", "rel": "self", "href": "/" },
-            {"name": "user", "rel": "User", "href": "/user" }
-        ]
-    res.json(r)
+    callback = (collection) ->
+        res.json(collection.to_json())
+
+    build('root_collection').fetch_to callback
 
 module.exports =
     methods: methods,

@@ -1,7 +1,14 @@
 should = require('should')
 sinon = require('sinon')
+module_loader = require('sandboxed-module')
 
-root = require('../routes/root.js')
+routes_service_mock =
+    build: sinon.stub()
+
+sut = module_loader.require('../routes/root', {
+    requires:
+        '../support/routes_service': routes_service_mock
+})
 
 describe 'Root', ->
 
@@ -11,29 +18,36 @@ describe 'Root', ->
         beforeEach (done) ->
             app = { get:sinon.spy() } 
 
-            root.build_routes(app)
+            sut.build_routes(app)
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/',root.methods.get_root) 
+            sinon.assert.calledWith(app.get,'/', sut.methods.get_root) 
             done() 
 
     describe 'methods', ->
 
         describe 'get_root', ->
-            app = null
-            json_data = null
+
+            collection_value = null
+            res = null
 
             beforeEach (done) ->
-                res = 
-                    json: (json) -> json_data = json
-                app = get:sinon.spy()
+                collection_value = 'blah collection'
+                collection =
+                    to_json: ->
+                        collection_value
 
-                root.methods.get_root({},res)
+                collection_action =
+                    fetch_to: (callback) ->
+                        callback(collection)
+
+                routes_service_mock.build.withArgs('root_collection').returns(collection_action)
+                res = 
+                    json: sinon.spy()
+                sut.methods.get_root({}, res)
                 done()
 
-            it 'should return as a json all the links for the root path', (done) ->
-                links = json_data['links'] 
-                links[0].should.eql {"name": "self", "rel": "self", "href": "/"}
-                links[1].should.eql {"name": "user", "rel": "User", "href": "/user"}
-                done() 
+            it 'should return the built collection for the user model', (done) ->
+                sinon.assert.calledWith(res.json, collection_value)
+                done()

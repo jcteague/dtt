@@ -1,15 +1,25 @@
-Q = require('q')
-_ = require('underscore')
-
-Repository = require('../repository')
-
 class UsersCollection
-    constructor: (users) ->
-        #console.log users
-        @users = users
-        #_.bindAll @
-        #@collection = @repository.find().then(@set_collection)
-        
-    to_json: () ->
-        users = users: ({"href": "/user/#{user.id}", "data": [{"name": "name", "value": user.name }, {"name": "id", "value": user.id}]} for user in @users)
+
+    constructor: (@users) ->
+
+    to_json: ->
+        links = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in @users)
+        get_data_for = (user) ->
+            return {
+                "href": "/user/#{user.id}"
+                "data": [
+                    {"name": "id", "value": user.id}
+                    {"name": "name", "value": user.name}
+                ]
+            }
+
+        return {
+            users: (get_data_for user for user in @users)
+            links:  links
+        }
+
+    fetch_to: (callback) ->
+        Q.when(@collection, callback)
+
 module.exports = UsersCollection
+

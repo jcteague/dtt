@@ -12,4 +12,7 @@ class CollectionActionResolver
     for: (parameters) ->
         @promise_factory.get_for(@collection_class, @strategy(parameters))
 
+    fetch_to: (callback) ->
+        @promise_factory.get_for(@collection_class, @strategy()).fetch_to callback
+
 module.exports = CollectionActionResolver
