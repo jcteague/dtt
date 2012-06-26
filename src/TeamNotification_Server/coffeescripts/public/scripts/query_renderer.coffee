@@ -15,7 +15,18 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete'], ($, jquery_autocompl
 
         autocomplete: (template) ->
             input = $('<input>',{"type":"text","name":template.data.name})
-            input.autocomplete("http://localhost:3000#{template.href}", remoteDataType: true)
+
+            build_item = (item) ->
+                                
+
+            processor = (objs) ->
+                #(user.data.name for user in objs.users)
+                (link.name for link in objs.links)
+
+            on_select = () ->
+                console.log arguments
+
+            input.autocomplete("http://localhost:3000#{template.href}", {remoteDataType: 'json', processData: processor, onItemSelect: on_select})
             [$('<label>', {"for":template.data.name}).text(template.data.name), input]
 
         generator_selector: (field) =>
