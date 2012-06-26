@@ -39,6 +39,7 @@ describe 'Room', ->
         it 'should configure the routes with its corresponding callback', (done) ->
             sinon.assert.calledWith(app.get,'/room',sut.methods.get_room)
             sinon.assert.calledWith(app.get,'/room/:id',sut.methods.get_room_by_id)
+            sinon.assert.calledWith(app.get,'/room/:id/messages',sut.methods.get_room_messages)
             sinon.assert.calledWith(app.get,'/room/:id/users',sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.post,'/room/:id/users', body_parser_result, sut.methods.post_room_user)
@@ -222,3 +223,56 @@ describe 'Room', ->
                 for field in data
                     expect(field).to.have.keys(['name', 'label', 'type'])
                 done()
+           
+        describe 'get_room_messages', ->
+            collection_factory = null
+            messages = null
+            room_id = 1
+            json_data = null
+            beforeEach (done) ->
+                #routes_service_mock.build.withArgs('room_message_collection').returns(collection_factory)
+                #room_messages_collection =
+               #     fetch_to: (callback) ->
+               #         callback(collection)
+                res = 
+                    json: (json) ->
+                        json_data = json
+                
+                req =
+                    param: ()->
+                    body:
+                        room_id: room_id
+                req.param.withArgs('id').returns(room_id)
+                sut.methods.get_room_messages(req, res)
+                messages = json_data['messages']
+                done()
+            it 'should show all messages from a given room', (done) ->
+                expect(messages).to.have.length(1)
+                expect(messages['data']).to.have.length(1)
+                for messagedata in messages['data']
+                    expect(messagedata).to.keys(['name','value'])
+                done()
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
