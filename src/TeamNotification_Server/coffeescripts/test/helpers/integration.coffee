@@ -1,5 +1,6 @@
 db_config = require('../../support/globals').db
 gateway = require('../../support/orm_gateway')
+pg_gateway = require('../../support/database/pg_gateway')
 Q = require('q')
 
 # Needed because we shouldn't be clearing the db before the entities are defined
@@ -37,9 +38,20 @@ set_up_db = (entities_schema, entities) ->
     )
 
 clean_up_db = () ->
+    drop_callback = (err, result) ->
+        if err
+            console.log err
+            return
+        console.log result
+
     Q.when creation_promise, () ->
-        gateway.open(db_config.test).then (db) ->
-            _entity[entity].clear() for entity, val of _entity
+        pg_gateway.open(db_config.test).then (client) ->
+            client.query "SELECT 'drop table if exists ' || tablename || ' cascade;' as drop_statement FROM pg_tables;", (err, result) ->
+                if err
+                    console.log err
+                    return
+
+                client.query(row.drop_statement, drop_callback) for row in result.rows
 
 module.exports =
     set_up_db: set_up_db

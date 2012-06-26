@@ -18,11 +18,13 @@ schema =
 
 entities =
     ChatRoom: [
-        {id: 1, name: 'foo', owner_id: 1}
-        {id: 2, name: 'bar', owner_id: 1}
+        #{id: 1, name: 'foo', owner_id: 1}
+        #{id: 2, name: 'bar', owner_id: 1}
+        {name: 'foo', owner_id: 1}
+        {name: 'bar', owner_id: 1}
     ]
     User: [
-        {id: 1, name: 'blah', email: 'foo@bar.com'}
+        {name: 'blah', email: 'foo@bar.com'}
     ]
 
 db_helper.set_up_db(entities)
