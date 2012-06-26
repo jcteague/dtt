@@ -5,10 +5,13 @@ schema =
     ChatRoom:
         table: 'chat_room'
         columns:
+            id: {type: 'integer'}
             name: {type: 'string'}
+            owner_id: {type: 'integer'}
     User:
         table: 'users'
         columns:
+            id: {type: 'integer'}
             name: {type: 'string'}
             email: {type: 'string'}
 
