@@ -37,21 +37,15 @@ set_up_db = (entities_schema, entities) ->
             insert_entity(entity_name, values) for values in values_obj
     )
 
-clean_up_db = () ->
+clean_up_db = (tables...) ->
     drop_callback = (err, result) ->
         if err
             console.log err
             return
-        console.log result
 
     Q.when creation_promise, () ->
         pg_gateway.open(db_config.test).then (client) ->
-            client.query "SELECT 'drop table if exists ' || tablename || ' cascade;' as drop_statement FROM pg_tables;", (err, result) ->
-                if err
-                    console.log err
-                    return
-
-                client.query(row.drop_statement, drop_callback) for row in result.rows
+            client.query("drop table if exists #{table} cascade;", drop_callback) for table in tables    
 
 module.exports =
     set_up_db: set_up_db

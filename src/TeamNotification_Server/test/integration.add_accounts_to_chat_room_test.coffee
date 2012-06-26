@@ -5,15 +5,12 @@ test_helper = require('./helpers/database_helper')
 
 entities =
     ChatRoom: [
-        {id: 1, name: 'foo'}
-        {id: 2, name: 'bar'}
+        {name: 'foo', owner_id: 1}
+        {name: 'bar', owner_id: 1}
     ]
     User: [
-        {id: 1, name: 'blah', email: 'foo@bar.com'}
+        {name: 'blah', email: 'foo@bar.com'}
     ]
-
-test_helper.set_up_db(entities)
-
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
@@ -27,7 +24,7 @@ describe 'Add Account To Chat Room', ->
             done()
 
         afterEach (done) ->
-            test_helper.clean_up_db(entities)
+            test_helper.clean_up_db('chat_room', 'users', 'chat_room_users')
             done()
 
         browser = null
