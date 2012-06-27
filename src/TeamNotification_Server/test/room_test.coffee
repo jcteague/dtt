@@ -224,6 +224,7 @@ describe 'Room', ->
                     expect(field).to.have.keys(['name', 'label', 'type'])
                 done()
            
+        ###
         describe 'get_room_messages', ->
             collection_factory = null
             messages = null
@@ -253,27 +254,5 @@ describe 'Room', ->
                 for messagedata in messages['data']
                     expect(messagedata).to.keys(['name','value'])
                 done()
+        ###
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-                

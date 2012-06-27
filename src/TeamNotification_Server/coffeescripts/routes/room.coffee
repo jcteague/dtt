@@ -23,7 +23,6 @@ methods.get_room_by_id = (req, res) ->
     build('room_collection').for(room_id).fetch_to callback
 
 methods.post_room_user = (req, res, next) ->
-    console.log req.body, req.param('id')
     routes_service.add_user_to_chat_room(req.body.id, req.param('id')).then (response) ->
         res.send(response)
 
@@ -47,6 +46,8 @@ methods.get_room = (req, res) ->
             ]
     res.json(r)
 
+
+###
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     r = 
@@ -59,6 +60,7 @@ methods.get_room_messages = (req,res) ->
             { 'user':'Sasha', 'body': 'Is it me youre looking for...', 'datetime':'2012-06-23 13:31' }
         ]
     res.json(r)
+###
 
 module.exports =
     methods: methods,
