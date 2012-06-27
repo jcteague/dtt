@@ -1,4 +1,4 @@
-Repository = require '../repository'
+Repository = require('../repository')
 strategy = (username) ->
      new Repository('User').find().then (users) ->
         if typeof(username) != 'undefined'
