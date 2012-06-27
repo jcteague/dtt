@@ -41,4 +41,6 @@ blahs =
         }
     ]
 
-db.handle db.clear('users', 'blahs'), db.create(structure, blah_struct), db.save(users, blahs)
+done = ->
+    console.log 'done'
+db.handle db.clear('users', 'blahs'), db.create(structure, blah_struct), db.save(users, blahs), done
