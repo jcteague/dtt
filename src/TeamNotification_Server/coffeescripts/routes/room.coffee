@@ -23,6 +23,7 @@ methods.get_room_by_id = (req, res) ->
     build('room_collection').for(room_id).fetch_to callback
 
 methods.post_room_user = (req, res, next) ->
+    console.log req.body, req.param('id')
     routes_service.add_user_to_chat_room(req.body.id, req.param('id')).then (response) ->
         res.send(response)
 
@@ -45,6 +46,7 @@ methods.get_room = (req, res) ->
                 {'name':'owner_id', 'label':'Owner Id', 'type':'hidden'}
             ]
     res.json(r)
+
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     r = 

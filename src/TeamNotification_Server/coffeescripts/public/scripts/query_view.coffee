@@ -31,4 +31,4 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
 
-            $.post(@$('form').attr('action'), data, (res) -> console.log(res))
+            $.post(@$('form').attr('action'), data, (res) -> null)

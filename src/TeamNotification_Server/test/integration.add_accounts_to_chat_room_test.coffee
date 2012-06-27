@@ -42,14 +42,11 @@ describe 'Add Account To Chat Room', ->
 
     describe 'Set Up', ->
 
-        beforeEach (done) ->
-            db.handle db.clear('users', 'chat_room'), db.create(entities.users, entities.chat_rooms), db.save(users, chat_rooms), done
-
         browser = null
 
         beforeEach (done) ->
             browser = new Browser()
-            done()
+            db.handle db.clear('users', 'chat_room'), db.create(entities.users, entities.chat_rooms), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/users page', ->
 
@@ -64,15 +61,50 @@ describe 'Add Account To Chat Room', ->
 
         describe 'When a user visits the client#/room/:id/users page', ->
 
-            describe 'and fills in a username that exists in the system', ->
+            user_id = null
+
+            describe 'and submits in a user that exists in the system', ->
 
                 beforeEach (done) ->
+                    user_id = 2
                     browser.
                         visit('http://localhost:3000/client#/room/1/users').
-                        then(-> browser.fill('.acInput', 'bla')).
-                        then(-> browser.evaluate('console.log("blah from browser");')).
+                        then(-> 
+                            # Autocomplete is not friendly with zombie, must mock call
+                            func = """
+                                li = $('<li></li>');
+                                li.data('value', '<span class="name">blah</span><span class="hidden">#{user_id}</span>');
+                                li.data('data', {});
+                                $('.acInput').data('autocompleter').selectItem(li);
+                            """
+                            browser.evaluate(func)
+                        ).
                         then(-> browser.pressButton('input[type=submit]')).
                         then(done, done)
 
                 it 'should get a user added to user response', (done) ->
+                    expect(browser.lastResponse.body).to.equal "user #{user_id} added"
+                    done()
+
+            describe 'and submits in a user that does not exist in the system', ->
+
+                beforeEach (done) ->
+                    user_id = 10
+                    browser.
+                        visit('http://localhost:3000/client#/room/1/users').
+                        then(-> 
+                            # Autocomplete is not friendly with zombie, must mock call
+                            func = """
+                                li = $('<li></li>');
+                                li.data('value', '<span class="name">blah</span><span class="hidden">#{user_id}</span>');
+                                li.data('data', {});
+                                $('.acInput').data('autocompleter').selectItem(li);
+                            """
+                            browser.evaluate(func)
+                        ).
+                        then(-> browser.pressButton('input[type=submit]')).
+                        then(done, done)
+
+                it 'should get a user added to user response', (done) ->
+                    expect(browser.lastResponse.body).to.equal "user #{user_id} does not exist"
                     done()
