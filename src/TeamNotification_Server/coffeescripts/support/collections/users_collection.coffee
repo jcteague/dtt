@@ -15,7 +15,7 @@ class UsersCollection
 
         return {
             users: (get_data_for user for user in @users)
-            links:  links
+            links:  [{"name":"self", "rel": "Users", "href": "/users/query"}].concat(links)
         }
 
     fetch_to: (callback) ->

@@ -86,4 +86,22 @@ describe 'User', ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()
 
+        describe 'get_users', ->
+
+            username = null
+
+            beforeEach (done) ->
+                routes_service_mock.build.withArgs('users_collection').returns(collection_factory)
+                username = 'bla'
+                req.param.withArgs('q').returns(username)
+                user_rooms_collection =
+                    fetch_to: (callback) ->
+                        callback(collection)
+                collection_factory.for.withArgs(username).returns(user_rooms_collection)
+                user.methods.get_users(req, res)
+                done()
+
+            it 'should return the built collection for the user rooms model', (done) ->
+                sinon.assert.calledWith(res.json, collection_value)
+                done()
 
