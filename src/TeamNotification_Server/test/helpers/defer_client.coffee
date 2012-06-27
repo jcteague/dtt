@@ -12,13 +12,13 @@ users =
     entities: [
         {
             id: 1
-            name: 'blah'
-            email: 'foo@bar.com'
+            name: "'blah'"
+            email: "'foo@bar.com'"
         },
         {
             id: 2
-            name: 'ed'
-            email: 'ed@es.com'
+            name: "'ed2'"
+            email: "'ed@es.com'"
         }
     ]
 
@@ -37,4 +37,8 @@ console.log save
 
 save.then(() -> console.log 'done')
 ###
-db.open_all db.clear('users'), db.create(structure), db.save(users)
+
+    
+#db.open_all db.clear('users'), db.create(structure), db.save(users)
+
+db.handle db.clear('users'), db.create(structure), db.save(users)

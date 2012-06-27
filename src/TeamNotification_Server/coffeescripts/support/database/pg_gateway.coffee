@@ -6,14 +6,19 @@ connection_string = "postgres://#{db_config.user}:#{db_config.password}@#{db_con
 
 get_db_connection = (database) ->
     defer = q.defer()
+
+    defer.promise
+
+open_normal_connection = (database, callback) ->
     pg.connect "#{connection_string}/#{database}", (err, client) ->
         if err
             console.log "Could not connect to POSTGRES '#{database}' database"
             console.log err
             return
-        defer.resolve client
 
-    defer.promise
+        callback(client)
+
 
 module.exports =
     open: get_db_connection
+    open_c: open_normal_connection

@@ -43,68 +43,94 @@ open = (steps...) ->
         result.then step for step in steps
         result
 
-deferred_clear = (table) ->
-    defer = Q.defer()
-    return (client) ->
-        console.log "Dropping #{table}"
-        client.query "drop table if exists #{table} cascade;", (err, result) ->
-            if err
-                console.log err
-                return
-            console.log 'dropped'
-            defer.resolve client
+handle_actions = (steps...) ->
+    async.series steps, () ->
+        console.log 'finished'
 
-        defer.promise
+###
+deferred_clear = (table) ->
+    return (callback) ->
+        pg_gateway.open(db_config.test).then (client) ->
+            console.log "Dropping #{table}"
+            client.query "drop table if exists #{table} cascade;", (err, result) ->
+                if err
+                    console.log err
+                console.log 'dropped'
+                callback(null, null)
+###
+
+deferred_clear = (table) ->
+    return (callback) ->
+        pg_gateway.open_c db_config.test, (client) ->
+            console.log "Dropping #{table}"
+            client.query "drop table if exists #{table} cascade;", (err, result) ->
+                if err
+                    console.log err
+                console.log 'dropped'
+                callback(null, null)
+
+###
+deferred_create = (table_structure) ->
+    return (callback) ->
+        pg_gateway.open(db_config.test).then (client) ->
+            column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
+            console.log "Creating #{table}"
+            client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
+                if err
+                    console.log err
+
+                console.log 'created'
+                callback(null, null)
+###
 
 deferred_create = (table_structure) ->
-    defer = Q.defer()
-    return (client) ->
-        column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
-        console.log "Creating #{table}"
-        client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
-            if err
-                console.log err
-                return
+    return (callback) ->
+        pg_gateway.open_c db_config.test, (client) ->
+            column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
+            console.log "Creating #{table_structure.name}"
+            client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
+                if err
+                    console.log err
 
-            console.log 'created'
-            defer.resolve client
+                console.log 'created'
+                callback(null, null)
 
-        defer.promise
+###
+deferred_save = (table_obj) ->
+    return (callback) ->
+        pg_gateway.open(db_config.test).then (client) ->
+            tasks = []
+            for entity in table_obj.entities
+                columns = _.keys(entity).join(',')
+                values = _.values(entity).join(',')
+                tasks.push(make_save_query(columns, values, client))
+
+            async.series tasks, (err, results) ->
+                console.log 'saved'
+                callback(null, null)
+###
 
 deferred_save = (table_obj) ->
-    defer = Q.defer()
-    return (client) ->
-        tasks = []
-        for entity in table_obj.entities
-            columns = _.keys(entity).join(',')
-            values = _.values(entity).join(',')
-            tasks.push(make_save_query(columns, values, client))
-
-        async.series tasks, (err, results) ->
-            console.log 'saved'
-            defer.resolve(client)
-
-        defer.promise
-
-make_save_query = (columns, values, client) ->
     return (callback) ->
-        console.log "INSERT INTO #{table_obj.name}(#{columns}) VALUES(#{values})"
-        client.query "INSERT INTO #{table_obj.name}(#{columns}) VALUES(#{values})", (err, result) ->
+        pg_gateway.open_c db_config.test, (client) ->
+            tasks = []
+            for entity in table_obj.entities
+                columns = _.keys(entity).join(',')
+                values = _.values(entity).join(',')
+                tasks.push(make_save_query(table_obj.name, columns, values, client))
+
+            async.series tasks, (err, results) ->
+                console.log 'saved'
+                callback(null, null)
+
+make_save_query = (name, columns, values, client) ->
+    return (callback) ->
+        console.log "INSERT INTO #{name}(#{columns}) VALUES(#{values})"
+        client.query "INSERT INTO #{name}(#{columns}) VALUES(#{values})", (err, result) ->
             if err
                 console.log err
                 return
             callback(null, null)
-
-handle = ->
-    structure =
-        name: 'blah'
-        columns:
-            quantity: 'integer'
-
-    open_db().
-        then(deferred_clear('chat_room')).
-        then((deferred_create(structure))).
-        end()
 
 module.exports =
     open: open_db
@@ -112,3 +138,4 @@ module.exports =
     clear: deferred_clear
     create: deferred_create
     save: deferred_save
+    handle: handle_actions
