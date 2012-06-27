@@ -7,6 +7,12 @@ structure =
         name: 'varchar(100)'
         email: 'varchar(100)'
 
+blah_struct = 
+    name: 'blahs'
+    columns:
+        id: 'integer'
+        name: 'varchar(100)'
+
 users =
     name: 'users'
     entities: [
@@ -22,23 +28,17 @@ users =
         }
     ]
 
-###
-open = db.open()
-console.log open
+blahs =
+    name: 'blahs'
+    entities: [
+        {
+            id: 1
+            name: "'blah'"
+        },
+        {
+            id: 2
+            name: "'ed2'"
+        }
+    ]
 
-clear = open.then(db.clear('users'))
-console.log clear
-
-create = clear.then(db.create(structure))
-console.log create
-    
-save = create.then(db.save(users))
-console.log save
-
-save.then(() -> console.log 'done')
-###
-
-    
-#db.open_all db.clear('users'), db.create(structure), db.save(users)
-
-db.handle db.clear('users'), db.create(structure), db.save(users)
+db.handle db.clear('users', 'blahs'), db.create(structure, blah_struct), db.save(users, blahs)

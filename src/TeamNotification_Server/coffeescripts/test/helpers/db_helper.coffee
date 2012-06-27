@@ -5,59 +5,16 @@ async = require('async')
 db_config = require('../../support/globals').db
 pg_gateway = require('../../support/database/pg_gateway')
 
-open_db = () ->
-    defer = Q.defer()
-    pg_gateway.open(db_config.test).then (client) ->
-        defer.resolve client
-
-    defer.promise
-
-structure = 
-    name: 'users'
-    columns:
-        id: 'integer'
-        name: 'varchar(100)'
-        email: 'varchar(100)'
-
-users =
-    name: 'users'
-    entities: [
-        {
-            id: 1
-            name: 'blah'
-            email: 'foo@bar.com'
-        },
-        {
-            id: 2
-            name: 'ed'
-            email: 'ed@es.com'
-        }
-    ]
-
-
-open = (steps...) ->
-    pg_gateway.open(db_config.test).then (client) ->
-        #deferred_clear('users').then(deferred_create(structure)).then(deferred_save(users))
-
-        result = Q.resolve client
-        result.then step for step in steps
-        result
-
 handle_actions = (steps...) ->
     async.series steps, () ->
         console.log 'finished'
 
-###
-deferred_clear = (table) ->
+clear = (tables...) ->
     return (callback) ->
-        pg_gateway.open(db_config.test).then (client) ->
-            console.log "Dropping #{table}"
-            client.query "drop table if exists #{table} cascade;", (err, result) ->
-                if err
-                    console.log err
-                console.log 'dropped'
-                callback(null, null)
-###
+        tasks = (deferred_clear table for table in tables)
+        async.series tasks, () ->
+            console.log 'Cleared', tables
+            callback(null, null)
 
 deferred_clear = (table) ->
     return (callback) ->
@@ -69,19 +26,12 @@ deferred_clear = (table) ->
                 console.log 'dropped'
                 callback(null, null)
 
-###
-deferred_create = (table_structure) ->
+create = (table_structures...) ->
     return (callback) ->
-        pg_gateway.open(db_config.test).then (client) ->
-            column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
-            console.log "Creating #{table}"
-            client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
-                if err
-                    console.log err
-
-                console.log 'created'
-                callback(null, null)
-###
+        tasks = (deferred_create structure for structure in table_structures)
+        async.series tasks, () ->
+            console.log 'Created', table_structures
+            callback(null, null)
 
 deferred_create = (table_structure) ->
     return (callback) ->
@@ -95,20 +45,12 @@ deferred_create = (table_structure) ->
                 console.log 'created'
                 callback(null, null)
 
-###
-deferred_save = (table_obj) ->
+save = (table_objects...) ->
     return (callback) ->
-        pg_gateway.open(db_config.test).then (client) ->
-            tasks = []
-            for entity in table_obj.entities
-                columns = _.keys(entity).join(',')
-                values = _.values(entity).join(',')
-                tasks.push(make_save_query(columns, values, client))
-
-            async.series tasks, (err, results) ->
-                console.log 'saved'
-                callback(null, null)
-###
+        tasks = (deferred_save obj for obj in table_objects)
+        async.series tasks, () ->
+            console.log 'Saved', table_objects
+            callback(null, null)
 
 deferred_save = (table_obj) ->
     return (callback) ->
@@ -133,9 +75,10 @@ make_save_query = (name, columns, values, client) ->
             callback(null, null)
 
 module.exports =
-    open: open_db
-    open_all: open
-    clear: deferred_clear
-    create: deferred_create
-    save: deferred_save
+    #clear: deferred_clear
+    #create: deferred_create
+    #save: deferred_save
+    clear: clear
+    create: create
+    save: save
     handle: handle_actions
