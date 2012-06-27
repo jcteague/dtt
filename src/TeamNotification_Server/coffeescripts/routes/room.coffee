@@ -46,6 +46,12 @@ methods.get_room = (req, res) ->
     res.json(r)
 
 
+methods.get_room_messages = (req,res) ->
+    room_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection.to_json())
+
+
 module.exports =
     methods: methods,
     build_routes: (app) ->

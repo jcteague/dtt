@@ -105,6 +105,23 @@ describe 'Room', ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
 
+            describe 'get_room_messages', ->
+
+                beforeEach (done) ->
+                    routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
+                    room_messages_collection =
+                        fetch_to: (callback) ->
+                            callback(collection)
+
+                    collection_factory.for.withArgs(room_id).returns(room_messages_collection)
+                    sut.methods.get_room_messages(req, res)
+                    done()
+
+                it 'should return the built collection for the room model', (done) ->
+                    sinon.assert.calledWith(res.json, collection_value)
+                    done()
+
+
         describe 'post_room', ->
 
             req = res = owner_id = null
