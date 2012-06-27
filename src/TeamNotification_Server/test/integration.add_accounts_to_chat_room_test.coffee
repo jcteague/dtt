@@ -1,15 +1,6 @@
 expect = require('expect.js')
 sinon = require('sinon')
-test_helper = require('./helpers/database_helper')
-
-entities =
-    ChatRoom: [
-        {name: 'foo', owner_id: 1}
-        {name: 'bar', owner_id: 1}
-    ]
-    User: [
-        {name: 'blah', email: 'foo@bar.com'}
-    ]
+{db: db, entities: entities} = require('./helpers/specs_helper')
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
@@ -19,12 +10,7 @@ describe 'Add Account To Chat Room', ->
     describe 'Set Up', ->
 
         beforeEach (done) ->
-            test_helper.set_up_db(entities)
-            done()
-
-        afterEach (done) ->
-            test_helper.clean_up_db('chat_room', 'users', 'chat_room_users')
-            done()
+            db.handle db.clear('users', 'chat_room'), db.create(entities.users, entities.chat_rooms), db.save(users, chat_rooms), done
 
         browser = null
 
