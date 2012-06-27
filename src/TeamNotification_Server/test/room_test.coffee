@@ -156,7 +156,7 @@ describe 'Room', ->
                 user_id = 1
                 req =
                     body:
-                        user_id: user_id
+                        id: user_id
                     param: sinon.stub()
                 res =
                     send: sinon.spy()
@@ -246,6 +246,7 @@ describe 'Room', ->
                 sut.methods.get_room_messages(req, res)
                 messages = json_data['messages']
                 done()
+
             it 'should show all messages from a given room', (done) ->
                 expect(messages).to.have.length(1)
                 expect(messages['data']).to.have.length(1)
