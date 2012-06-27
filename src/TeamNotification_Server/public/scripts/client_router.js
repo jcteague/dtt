@@ -15,7 +15,7 @@
       }
 
       ClientRouter.prototype.routes = {
-        ':path*any': 'render_path',
+        ':p*any': 'render_path',
         '*action': 'render_root'
       };
 

@@ -32,3 +32,4 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete'], ($, jquery_autocompl
         generator_selector: (field) =>
             @autocomplete if field is 'search'
 
+

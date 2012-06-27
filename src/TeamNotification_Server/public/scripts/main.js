@@ -10,6 +10,9 @@
       'jquery.autocomplete': 'jquery.autocomplete',
       'client_view': 'client_view',
       'client_router': 'client_router',
+      'form_view': 'form_view',
+      'links_view': 'links_view',
+      'query_view': 'query_view',
       'form_template_renderer': 'form_template_renderer',
       'query_renderer': 'query_renderer'
     },

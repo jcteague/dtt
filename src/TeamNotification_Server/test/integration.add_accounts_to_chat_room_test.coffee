@@ -5,6 +5,37 @@ sinon = require('sinon')
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
 
+users =
+    name: 'users'
+    entities: [
+        {
+            id: 1
+            name: "'blah'"
+            email: "'foo@bar.com'"
+        },
+        {
+            id: 2
+            name: "'ed2'"
+            email: "'ed@es.com'"
+        }
+    ]
+
+chat_rooms =
+    name: 'chat_room'
+    entities: [
+        {
+            id: 1
+            name: "'foo'"
+            owner_id: 1
+        },
+        {
+            id: 2
+            name: "'bar'"
+            owner_id: 1
+        }
+    ]
+
+
 describe 'Add Account To Chat Room', ->
 
     describe 'Set Up', ->
