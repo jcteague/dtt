@@ -11,7 +11,7 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
             @$el.empty()
             if @model?
                 @$el.append('<h1>Queries</h1>')
-                @$el.append(@query_renderer.render(collection))
+                @$el.append(@query_renderer.render(@model))
             @
 
         update: (queries) ->

@@ -8,7 +8,6 @@ class Promise
             new class_constructor(values)
 
     fetch_to: (callback) ->
-        console.log @promised_class_instance
         @promised_class_instance.then callback
 
 module.exports = Promise

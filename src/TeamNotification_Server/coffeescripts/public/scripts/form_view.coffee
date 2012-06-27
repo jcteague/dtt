@@ -12,7 +12,7 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
 
         render: ->
             @$el.empty()
-            if @model?
+            if @model? and @model.template
                 @$el.append('<h1>Form</h1>')
                 @$el.append(@form_template_renderer.render(@model))
             @

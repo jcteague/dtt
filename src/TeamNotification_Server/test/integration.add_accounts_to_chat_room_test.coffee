@@ -1,3 +1,5 @@
+return unless process.env.NODE_ENV is 'test'
+
 expect = require('expect.js')
 sinon = require('sinon')
 {db: db, entities: entities} = require('./helpers/specs_helper')
@@ -57,7 +59,7 @@ describe 'Add Account To Chat Room', ->
                     then(done, done)
 
             it 'should contain an autocomplete input', (done) ->
-                expect(browser.html('input#username_autocomplete')).to.not.be.empty()
+                expect(browser.html('input.acInput')).to.not.be.empty()
                 done()
 
         ###

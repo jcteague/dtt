@@ -2,9 +2,8 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete'], ($, jquery_autocompl
 
     class QueryRenderer
 
-        render: (collection) ->
-            query_template = $('<div>', {action:collection.uri})
-            queries = collection.queries
+        render: (queries) ->
+            query_template = $('<div>')
             for query in queries
                 field_generator = @generator_selector(query.rel)
                 field_elements = field_generator(query)

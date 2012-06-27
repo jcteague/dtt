@@ -17,7 +17,6 @@ methods.get_user_rooms = (req, res) ->
 
 methods.get_users = (req, res)->
     username = req.param('q')  
-    console.log username
     callback = (collection) ->
         res.json(collection.to_json())
     build('users_collection').for(username).fetch_to callback

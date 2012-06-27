@@ -1,8 +1,6 @@
 Q = require('q')
 _ = require('underscore')
 async = require('async')
-
-db_config = require('../../support/globals').db
 pg_gateway = require('../../support/database/pg_gateway')
 
 handle_actions = (steps..., done) ->
@@ -17,7 +15,7 @@ clear = (tables...) ->
 
 deferred_clear = (table) ->
     return (callback) ->
-        pg_gateway.open_c db_config.test, (client) ->
+        pg_gateway.open (client) ->
             client.query "drop table if exists #{table} cascade;", (err, result) ->
                 if err
                     console.log err
@@ -31,7 +29,7 @@ create = (table_structures...) ->
 
 deferred_create = (table_structure) ->
     return (callback) ->
-        pg_gateway.open_c db_config.test, (client) ->
+        pg_gateway.open (client) ->
             column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
             client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
                 if err
@@ -47,7 +45,7 @@ save = (table_objects...) ->
 
 deferred_save = (table_obj) ->
     return (callback) ->
-        pg_gateway.open_c db_config.test, (client) ->
+        pg_gateway.open (client) ->
             tasks = []
             for entity in table_obj.entities
                 columns = _.keys(entity).join(',')
