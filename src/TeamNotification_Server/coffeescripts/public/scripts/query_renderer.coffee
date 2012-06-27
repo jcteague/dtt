@@ -1,34 +1,46 @@
-define 'query_renderer', ['jquery', 'jquery.autocomplete'], ($, jquery_autocomplete) ->
+define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jquery_autocomplete, underscore) ->
 
     class QueryRenderer
 
         render: (queries) ->
             query_template = $('<div>')
             for query in queries
-                field_generator = @generator_selector(query.rel)
+                field_generator = @generator_selector(query.type)
                 field_elements = field_generator(query)
                 query_template.append(f) for f in field_elements
 
-            query_template.append($('<input>', {"type":"submit"}))
             query_template
 
         autocomplete: (template) ->
-            input = $('<input>',{"type":"text","name":template.data.name})
+            entity = template.rel
+            input = $('<input>',{"type":"text","name":template.data[0].name})
+            hidden_input = $('<input>',{"type":"hidden","name": "id"})
+            submit = $('<input>', {"type":"submit", "class": "submit"})
+
+            label = $('<label>', {"for":template.data[0].name})
+            label.text(template.prompt)
 
             build_item = (item) ->
-                                
+                data = item.data
+                id = _.find data, (obj) ->
+                    obj.name is 'id'
+                name = _.find data, (obj) ->
+                    obj.name is 'name'
+
+                """<span class="name">#{name.value}</span><span class="hidden">#{id.value}</span>"""
 
             processor = (objs) ->
-                #(user.data.name for user in objs.users)
-                (link.name for link in objs.links)
+                (build_item item for item in objs[entity])
 
-            on_select = () ->
-                console.log arguments
+            on_select = (selected) ->
+                element = $(selected.value)
+                input.val(element.filter('.name').text())
+                hidden_input.val(element.filter('.hidden').text())
 
             input.autocomplete("http://localhost:3000#{template.href}", {remoteDataType: 'json', processData: processor, onItemSelect: on_select})
-            [$('<label>', {"for":template.data.name}).text(template.data.name), input]
+            $('<form>', {action: template.submit}).append(label, input, hidden_input, submit)
 
         generator_selector: (field) =>
-            @autocomplete if field is 'search'
+            @autocomplete if field is 'autocomplete'
 
 

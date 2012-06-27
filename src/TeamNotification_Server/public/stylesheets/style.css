@@ -12,3 +12,5 @@ a {
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+.hidden { display: none; }

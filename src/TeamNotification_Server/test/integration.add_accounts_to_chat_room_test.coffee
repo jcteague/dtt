@@ -62,7 +62,6 @@ describe 'Add Account To Chat Room', ->
                 expect(browser.html('input.acInput')).to.not.be.empty()
                 done()
 
-        ###
         describe 'When a user visits the client#/room/:id/users page', ->
 
             describe 'and fills in a username that exists in the system', ->
@@ -70,10 +69,10 @@ describe 'Add Account To Chat Room', ->
                 beforeEach (done) ->
                     browser.
                         visit('http://localhost:3000/client#/room/1/users').
-                        then(-> browser.fill('#username_autocomplete', 'blah').pressButton('#username_submit')).
+                        then(-> browser.fill('.acInput', 'bla')).
+                        then(-> browser.evaluate('console.log("blah from browser");')).
+                        then(-> browser.pressButton('input[type=submit]')).
                         then(done, done)
 
-                it 'should ', (done) ->
-                    expect().
+                it 'should get a user added to user response', (done) ->
                     done()
-        ###

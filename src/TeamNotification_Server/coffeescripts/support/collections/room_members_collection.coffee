@@ -12,13 +12,17 @@ class RoomMembersCollection
                     {"name": "name", "value": user.name}
                 ]
             }
+        self = "/room/#{@room.id}/users"
         queries = [{
-          "href" : "/users/query",
-          "rel" : "search",
-          "prompt" : "Enter search string",
+          "href" : "/users/query"
+          "rel" : "users"
+          "prompt" : "Enter search string"
+          "type" : "autocomplete"
+          "submit": self
           "data" :[{"name" : "name", "value" : ""}]
         }]
         return {
+            href: self
             members: (get_data_for user for user in @room.users)
             links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"}]
             queries: queries

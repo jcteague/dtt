@@ -15,6 +15,7 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
             if @model? and @model.template
                 @$el.append('<h1>Form</h1>')
                 @$el.append(@form_template_renderer.render(@model))
+            @delegateEvents(@events)
             @
 
         update: (template) ->
@@ -25,12 +26,9 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
 
         submit_form: (event) ->
             event.preventDefault()
-            url = _.find(@data.links, (item) ->
-                item.name is 'self'
-            )
             data = {}
             $('input').not(':submit').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
 
-            $.post(url.href, data, (res) -> console.log(res))
+            $.post(@$('form').attr('action'), data, (res) -> console.log(res))

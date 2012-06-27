@@ -14,7 +14,7 @@ define 'form_template_renderer', ['jquery'], ($) ->
                 return textFieldBuilder if fieldType is 'string'
                 return hiddenFieldBuilder if fieldType is 'hidden'
 
-            form = $('<form>', {action:collection.uri})
+            form = $('<form>', {action:collection.href})
             form_templates = collection.template.data
             form_templates.forEach (template) ->
                 fieldGenerator = generatorSelector(template.type)
