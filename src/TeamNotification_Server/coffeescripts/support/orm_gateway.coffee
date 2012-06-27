@@ -1,13 +1,13 @@
 q = require('q')
 orm = require('orm')
 
-db_config = require('./globals').db
+db_config = require('../config').db
 
-get_db_connection = (database) ->
+get_db_connection = ->
     defer = q.defer()
-    orm.connect db_config.get_connection_string_for(database), (success, db) ->
+    orm.connect db_config.connection_string, (success, db) ->
         unless success
-            console.log "Could not connect to #{database} database"
+            console.log "Could not connect to #{db_config.connection_string}"
             return
 
         defer.resolve(db)

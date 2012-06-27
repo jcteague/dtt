@@ -1,10 +1,11 @@
 pg = require('pg')
-db_config = require('./globals').db
-orm = require('./orm_gateway').open(db_config.main)
+db_config = require('../config').db
+
+orm = require('./orm_gateway').open()
 
 ###
 _entity = {}
-db = orm.connect db_config.get_connection_string_for(db_config.test), (success,db) ->
+db = orm.connect db_config.connection_string, (success,db) ->
     _entity.ChatRoom = db.define 'chat_room',
         name : {type: 'string'}
     _entity.User = db.define 'users',

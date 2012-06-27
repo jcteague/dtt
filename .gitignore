@@ -3,10 +3,12 @@ release/
 build/
 log/
 tmp/
+node_modules/
 
 src/**/routes/*.js
 src/**/support/*.js
 src/**/support/**/*.js
+src/**/test/**/*.js
 
 *.suo
 *.TMP
@@ -33,3 +35,5 @@ application.txt
 *.ncrunchproject
 *.ncrunchsolution
 *.swo
+
+config.js

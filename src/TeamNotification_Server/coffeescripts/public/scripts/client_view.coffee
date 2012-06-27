@@ -24,6 +24,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
         load_json: (data) =>
             @data = data
             @links_view.update data.links
-            @form_view.update data.template
+            @form_view.update data
             @query_view.update data.queries
             @render()
