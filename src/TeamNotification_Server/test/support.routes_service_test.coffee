@@ -100,7 +100,7 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: true, messages: ["user #{user_id} added"]})
+                    sinon.assert.calledWith(deferred.resolve, {success: true, messages: ["user added"]})
                     done()
 
             describe 'and the user is already in the room', ->
@@ -119,7 +119,7 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the not sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user #{user_id} is already in the room"]})
+                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"]})
                     done()
 
         describe 'and the user does not exist', ->
@@ -143,10 +143,5 @@ describe 'Routes Service', ->
                 done()
 
             it 'should resolve the promise with the user does not exist message', (done) ->
-                sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user #{user_id} does not exist"]})
+                sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user does not exist"]})
                 done()
-
-
-
-
-

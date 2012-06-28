@@ -46,7 +46,7 @@ describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
             browser = new Browser()
-            db.handle db.clear('users', 'chat_room'), db.create(entities.users, entities.chat_rooms), db.save(users, chat_rooms), done
+            db.handle db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/users page', ->
 
@@ -83,13 +83,13 @@ describe 'Add Account To Chat Room', ->
                         then(done, done)
 
                 it 'should display the user added message', (done) ->
-                    expect(browser.html('#messages-container p')).to.equal "<p>user #{user_id} added</p>"
+                    expect(browser.html('#messages-container p')).to.equal "<p>user added</p>"
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
 
                 beforeEach (done) ->
-                    user_id = 10
+                    user_id = 100
                     browser.
                         visit('http://localhost:3000/client#/room/1/users').
                         then(-> 
@@ -106,5 +106,5 @@ describe 'Add Account To Chat Room', ->
                         then(done, done)
 
                 it 'should display the user does not exist message', (done) ->
-                    expect(browser.html('#messages-container p')).to.equal "<p>user #{user_id} does not exist</p>"
+                    expect(browser.html('#messages-container p')).to.equal "<p>user does not exist</p>"
                     done()

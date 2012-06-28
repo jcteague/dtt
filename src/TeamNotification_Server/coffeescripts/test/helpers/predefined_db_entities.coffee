@@ -12,6 +12,13 @@ chat_rooms =
         name: 'varchar(100)'
         owner_id: 'integer'
 
+chat_room_users =
+    name: 'chat_room_users'
+    columns:
+        chat_room_id: 'integer'
+        user_id: 'integer'
+
 module.exports =
     users: users
     chat_rooms: chat_rooms
+    chat_room_users: chat_room_users
