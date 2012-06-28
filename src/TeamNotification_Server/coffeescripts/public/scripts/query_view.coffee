@@ -32,4 +32,5 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
                 data[$current.attr('name')] = $current.val()
 
             $.post @$('form').attr('action'), data, (res) => 
+                @$('input').not(':submit').val('')
                 @trigger 'messages:display', res.messages

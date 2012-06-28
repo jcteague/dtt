@@ -30,6 +30,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
                 """<span class="name">#{name.value}</span><span class="hidden">#{id.value}</span>"""
 
             processor = (objs) ->
+                return [] unless objs? and objs.length != 0
                 (build_item item for item in objs[entity])
 
             on_select = (selected) ->
@@ -37,7 +38,14 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
                 input.val(element.filter('.name').text())
                 hidden_input.val(element.filter('.hidden').text())
 
-            input.autocomplete("http://localhost:3000#{template.href}", {remoteDataType: 'json', processData: processor, onItemSelect: on_select})
+            input.autocomplete("http://localhost:3000#{template.href}", {
+                remoteDataType: 'json'
+                processData: processor
+                onItemSelect: on_select
+                mustMatch: true
+                selectFirst: true
+                autoFill: true
+            })
             $('<form>', {action: template.submit}).append(label, input, hidden_input, submit)
 
         generator_selector: (field) =>
