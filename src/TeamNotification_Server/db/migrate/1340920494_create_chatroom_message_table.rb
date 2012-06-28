@@ -5,6 +5,7 @@ class CreateChatroomMessageTable < ActiveRecord::Migration
         t.column :date,    :timestamp,  :null => false
       	t.column :room_id, :integer, :null => false
       	t.column :user_id, :integer, :null => false
+      	end
   end
 
   def self.down
