@@ -1,6 +1,6 @@
 class RoomMessagesCollection
 
-    constructor: ->
+    constructor: (@room) ->
 
 
     to_json: ->
