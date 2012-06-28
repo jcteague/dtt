@@ -16,6 +16,15 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
             input = $('<input>',{"type":"text","name":template.data[0].name})
             hidden_input = $('<input>',{"type":"hidden","name": "id"})
             submit = $('<input>', {"type":"submit", "class": "submit"})
+            submit.click (e) ->
+                if $('.acInput').val() is ''
+                    hidden_input.val ''
+                    return
+
+                selected = $('.acSelect .hidden')
+                return if (selected.length is 0)
+                value = selected.text()
+                hidden_input.val value
 
             label = $('<label>', {"for":template.data[0].name})
             label.text(template.prompt)
@@ -45,6 +54,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
                 mustMatch: true
                 selectFirst: true
                 autoFill: true
+                minChars: 1
             })
             $('<form>', {action: template.submit}).append(label, input, hidden_input, submit)
 
