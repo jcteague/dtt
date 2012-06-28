@@ -19,6 +19,9 @@ namespace :rest_service do
       sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
   end
 
+  multitask :integration_test => [:run_test_server] do
+  end
+
   task :test do
     current_dir = Dir.pwd
     Dir.chdir(RestServiceRoot)
@@ -36,6 +39,11 @@ namespace :rest_service do
   desc "Migrate the database through scripts in db/migrate"
   task :migrate do
     ActiveRecord::Migrator.migrate(RestServiceMigrations, ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+  end
+
+  desc "Start the server in test environment"
+  task :run_test_server do
+    sh "sh run_test_server.sh"
   end
 
   def db_config

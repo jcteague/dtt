@@ -31,4 +31,5 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
 
-            $.post(@$('form').attr('action'), data, (res) -> null)
+            $.post @$('form').attr('action'), data, (res) => 
+                @trigger 'messages:display', res.messages

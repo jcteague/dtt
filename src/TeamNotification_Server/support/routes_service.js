@@ -20,12 +20,37 @@
     user_repository.get_by_id(user_id).then(function(user) {
       if (user != null) {
         return chat_room_repository.get_by_id(room_id).then(function(chat_room) {
-          return chat_room.addUsers(user, function() {
-            return defer.resolve("user " + user.id + " added");
-          });
+          var member;
+          if (((function() {
+            var _i, _len, _ref, _results;
+            _ref = chat_room.users;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              member = _ref[_i];
+              if (member.id === user_id) {
+                _results.push(member);
+              }
+            }
+            return _results;
+          })()).length === 0) {
+            return chat_room.addUsers(user, function() {
+              return defer.resolve({
+                success: true,
+                messages: ["user " + user.id + " added"]
+              });
+            });
+          } else {
+            return defer.resolve({
+              success: false,
+              messages: ["user " + user_id + " is already in the room"]
+            });
+          }
         });
       } else {
-        return defer.resolve("user " + user_id + " does not exist");
+        return defer.resolve({
+          success: false,
+          messages: ["user " + user_id + " does not exist"]
+        });
       }
     });
     return defer.promise;

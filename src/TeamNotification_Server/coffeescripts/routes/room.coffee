@@ -47,21 +47,6 @@ methods.get_room = (req, res) ->
     res.json(r)
 
 
-###
-methods.get_room_messages = (req,res) ->
-    room_id = req.param('id')
-    r = 
-        'href': "/room/#{room_id}/messages"
-        'links' : [
-            {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
-        ]
-        'messages':[
-            { 'user':'etoribio', 'body': 'Hello', 'datetime':'2012-06-23 13:30' }
-            { 'user':'Sasha', 'body': 'Is it me youre looking for...', 'datetime':'2012-06-23 13:31' }
-        ]
-    res.json(r)
-###
-
 module.exports =
     methods: methods,
     build_routes: (app) ->

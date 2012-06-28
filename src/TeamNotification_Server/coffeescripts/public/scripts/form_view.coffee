@@ -31,4 +31,5 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
 
-            $.post(@$('form').attr('action'), data, (res) -> console.log(res))
+            $.post @$('form').attr('action'), data, (res) => 
+                @trigger 'messages:display', res.messages

@@ -82,21 +82,45 @@ describe 'Routes Service', ->
                     then: (callback) ->
                         callback(user)
                 users_repository.get_by_id.withArgs(user_id).returns(user_promise)
-
-                result = sut.add_user_to_chat_room(user_id, room_id)
                 done()
 
-            it 'should create the user on the database', (done) ->
-                sinon.assert.calledWith(chat_room.addUsers, user)
-                done()
+            describe 'and the user is not in the room', ->
 
-            it 'should return a promise', (done) ->
-                expect(result).to.eql expected_result
-                done()
+                beforeEach (done) ->
+                    chat_room['users'] = [{id: 100}]
+                    result = sut.add_user_to_chat_room(user_id, room_id)
+                    done()
 
-            it 'should resolve the promise with the sucessful message', (done) ->
-                sinon.assert.calledWith(deferred.resolve, "user #{user_id} added")
-                done()
+                it 'should create the user on the database', (done) ->
+                    sinon.assert.calledWith(chat_room.addUsers, user)
+                    done()
+
+                it 'should return a promise', (done) ->
+                    expect(result).to.eql expected_result
+                    done()
+
+                it 'should resolve the promise with the sucessful message', (done) ->
+                    sinon.assert.calledWith(deferred.resolve, {success: true, messages: ["user #{user_id} added"]})
+                    done()
+
+            describe 'and the user is already in the room', ->
+
+                beforeEach (done) ->
+                    chat_room['users'] = [{id: user_id}]
+                    result = sut.add_user_to_chat_room(user_id, room_id)
+                    done()
+
+                it 'should not create the user on the database', (done) ->
+                    sinon.assert.notCalled(chat_room.addUsers)
+                    done()
+
+                it 'should return a promise', (done) ->
+                    expect(result).to.eql expected_result
+                    done()
+
+                it 'should resolve the promise with the not sucessful message', (done) ->
+                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user #{user_id} is already in the room"]})
+                    done()
 
         describe 'and the user does not exist', ->
 
@@ -119,7 +143,7 @@ describe 'Routes Service', ->
                 done()
 
             it 'should resolve the promise with the user does not exist message', (done) ->
-                sinon.assert.calledWith(deferred.resolve, "user #{user_id} does not exist")
+                sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user #{user_id} does not exist"]})
                 done()
 
 

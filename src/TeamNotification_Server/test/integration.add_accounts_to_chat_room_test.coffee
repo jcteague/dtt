@@ -82,8 +82,8 @@ describe 'Add Account To Chat Room', ->
                         then(-> browser.pressButton('input[type=submit]')).
                         then(done, done)
 
-                it 'should get a user added to user response', (done) ->
-                    expect(browser.lastResponse.body).to.equal "user #{user_id} added"
+                it 'should display the user added message', (done) ->
+                    expect(browser.html('#messages-container p')).to.equal "<p>user #{user_id} added</p>"
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
@@ -105,6 +105,6 @@ describe 'Add Account To Chat Room', ->
                         then(-> browser.pressButton('input[type=submit]')).
                         then(done, done)
 
-                it 'should get a user added to user response', (done) ->
-                    expect(browser.lastResponse.body).to.equal "user #{user_id} does not exist"
+                it 'should display the user does not exist message', (done) ->
+                    expect(browser.html('#messages-container p')).to.equal "<p>user #{user_id} does not exist</p>"
                     done()

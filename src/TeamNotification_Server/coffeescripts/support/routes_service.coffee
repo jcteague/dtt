@@ -14,11 +14,15 @@ add_user_to_chat_room = (user_id, room_id) ->
     user_repository.get_by_id(user_id).then (user) ->
         if user?
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
-                chat_room.addUsers(user, () ->
-                    defer.resolve("user #{user.id} added")
-                )
+                if (member for member in chat_room.users when member.id is user_id).length is 0
+                    chat_room.addUsers(user, () ->
+                        defer.resolve({success: true, messages: ["user #{user.id} added"]})
+                    )
+                else
+                    defer.resolve({success: false, messages: ["user #{user_id} is already in the room"]})
+
         else
-            defer.resolve("user #{user_id} does not exist")
+            defer.resolve({success: false, messages: ["user #{user_id} does not exist"]})
     defer.promise
 
 module.exports =

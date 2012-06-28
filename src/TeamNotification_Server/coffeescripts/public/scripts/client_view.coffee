@@ -1,14 +1,16 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, MessagesView) ->
 
     class ClientView extends Backbone.View
 
         initialize: ->
             @setElement '#client-content'
             @router = new ClientRouter()
-            @router.on 'render', @render_path, @
             @links_view = new LinksView()
             @form_view = new FormView()
             @query_view = new QueryView()
+            @messages_view = new MessagesView()
+
+            @subscribe_to_events()
             Backbone.history.start()
 
         render: ->
@@ -17,6 +19,11 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @form_view.render().append_to @$el
             @query_view.render().append_to @$el
             @
+
+        subscribe_to_events: ->
+            @router.on 'render', @render_path, @
+            @form_view.on 'messages:display', @display_messages, @
+            @query_view.on 'messages:display', @display_messages, @
 
         render_path: (path) ->
             $.getJSON(path, @load_json)
@@ -27,3 +34,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @form_view.update data
             @query_view.update data.queries
             @render()
+
+        display_messages: (messages) ->
+            @messages_view.update(messages)
+            @messages_view.render().append_to @$el
