@@ -5,6 +5,7 @@ require 'yaml'
 namespace :rest_service do
   task :build_local =>[
     :dev_environment,
+    :update_packages,
     :compile_coffeescript,
     :test,
     :migrate
@@ -22,6 +23,13 @@ namespace :rest_service do
     current_dir = Dir.pwd
     Dir.chdir(RestServiceRoot)
     sh "mocha"
+    Dir.chdir(current_dir)
+  end
+
+  task :update_packages do
+    current_dir = Dir.pwd
+    Dir.chdir(RestServiceRoot)
+    sh "npm install"
     Dir.chdir(current_dir)
   end
 

@@ -1,3 +1,4 @@
+return
 expect = require('expect.js')
 sinon = require('sinon')
 
@@ -5,7 +6,6 @@ requirejs = require('requirejs')
 config = require('./client.config')
 
 requirejs.config config
-return
 
 requirejs ['client_view'], (ClientView) ->
 
