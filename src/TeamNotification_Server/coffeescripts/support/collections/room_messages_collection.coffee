@@ -12,13 +12,15 @@ class RoomMessagesCollection
                     { 'name':'datetime', 'value':message.date }
                 ]
             }
-        
+        m  = []
+        for message in @room_messages
+            m.push get_data_for message
         return { 
             links:[
                 {"name": "self", "rel": "Room Messages", 'href':"/room/#{@room_messages[0].room_id}/messages"}
                 {"name": "Room", "rel": "Room", 'href':"/room/#{@room_messages[0].room_id}"}
             ]
-            messages:[ get_data_for message for message in @room_messages ]
+            messages: m
         }
     #'links' : [
     #        {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
