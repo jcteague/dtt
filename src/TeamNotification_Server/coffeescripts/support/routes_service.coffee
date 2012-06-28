@@ -10,6 +10,7 @@ add_user_to_chat_room = (user_id, room_id) ->
     user_repository = new Repository('User')
     chat_room_repository = new Repository('ChatRoom')
 
+    user_id = parseInt(user_id, 10)
     defer = Q.defer()
     user_repository.get_by_id(user_id).then (user) ->
         if user?
