@@ -51,6 +51,8 @@ methods.get_room_messages = (req,res) ->
     callback = (collection) ->
         res.json(collection.to_json())
 
+    build('room_messages_collection').for(room_id).fetch_to callback
+
 
 module.exports =
     methods: methods,

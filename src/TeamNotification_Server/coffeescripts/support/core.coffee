@@ -11,9 +11,14 @@ orm.then (db) ->
         name : {type: 'string'},
         email : {type: 'string'}
         password: {type: 'string'}
+    _entity.ChatRoomMessage = db.define 'chat_room_messages'
+        body : {type: 'string'}
+        date : {type:'TIMESTAMP'}# , default:'CURRENT_TIMESTAMP()'}
 
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})
+    _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
+    _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
 
 module.exports =
     core:
