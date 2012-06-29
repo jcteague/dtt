@@ -241,5 +241,4 @@ describe 'Room', ->
             it 'should contain the fields with name, type and label properties in the template data', (done) ->
                 for field in data
                     expect(field).to.have.keys(['name', 'label', 'type'])
-                done()
-           
+                done()   

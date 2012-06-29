@@ -4,10 +4,11 @@ class RoomMessagesCollection
 
     to_json: ->
         get_data_for = (message) ->
+            console.log JSON.parse(message.body)
             return {
                 "data": [
                     { 'name':'user', 'value': message.user.name}
-                    { 'name':'body', 'value': message.body} 
+                    { 'name':'body', 'value': JSON.parse(message.body).message} 
                     { 'name':'datetime', 'value':message.date }
                 ]
             }

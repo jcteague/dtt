@@ -19,7 +19,17 @@ chat_room_users =
         chat_room_id: 'integer'
         user_id: 'integer'
 
+chat_room_messages =
+    name: 'chat_room_messages'
+    columns:
+        id: 'integer'
+        body: 'varchar(100)'
+        date: 'timestamp'
+        user_id: 'integer'
+        room_id: 'integer'
+
 module.exports =
     users: users
     chat_rooms: chat_rooms
     chat_room_users: chat_room_users
+    chat_room_messages: chat_room_messages
