@@ -1,5 +1,4 @@
-class RoomMessagesCollection
-
+class RoomMessagesCollection    
     constructor: (@room_messages) ->
         console.log @room_messages
 
