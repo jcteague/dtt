@@ -26,11 +26,15 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
 
         submit_form: (event) ->
             event.preventDefault()
-            data = {}
-            @$('input').not(':submit').each () ->
-                $current = $(this)
-                data[$current.attr('name')] = $current.val()
 
-            $.post @$('form').attr('action'), data, (res) => 
-                @$('input').not(':submit').val('')
-                @trigger 'messages:display', res.messages
+            func = =>
+                data = {}
+                @$('input').not(':submit').each () ->
+                    $current = $(this)
+                    data[$current.attr('name')] = $current.val()
+
+                $.post @$('form').attr('action'), data, (res) => 
+                    @$('input').not(':submit').val('')
+                    @trigger 'messages:display', res.messages
+
+            setTimeout func, 200
