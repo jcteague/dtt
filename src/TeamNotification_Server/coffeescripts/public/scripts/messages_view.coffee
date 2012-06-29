@@ -4,11 +4,6 @@ define 'messages_view', ['backbone'], (Backbone) ->
 
         id: 'messages-container'
 
-<<<<<<< HEAD
-        render: ->
-            @$el.empty()
-            @$el.append "<p>#{message}</p>" for message in @model
-=======
         initialize: ->
             
         render: ->
@@ -22,11 +17,7 @@ define 'messages_view', ['backbone'], (Backbone) ->
                     name = get_field 'user', message.data
                     body = get_field 'body', message.data
                     date = get_field 'datetime', message.data
-                    @$el.append("<b>#{name}(#{date}):</b>")
-                    @$el.append(body)
-                    @$el.append("<br/>")
-            console.log 'dsfgiohnsdfgin'
->>>>>>> Added the messages view
+                    @$el.append("<p><b>#{name}(#{date}):</b>#{body}</p>")
             @
 
         update: (messages) ->
@@ -34,7 +25,4 @@ define 'messages_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
-<<<<<<< HEAD
-=======
 
->>>>>>> Added the messages view
