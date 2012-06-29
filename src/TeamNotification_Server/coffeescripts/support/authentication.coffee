@@ -1,3 +1,20 @@
 passport = require 'passport'
-passportHttp = require 'passport-http'
+BasicStrategy = require('passport-http').BasicStrategy
 repository = require './repository'
+
+class Authentication
+	constructor: ->
+		passport.use(new BasicStrategy({},@findByUserName))
+
+	initializeAuth: ->
+		passport.initialize()
+	findByUserName: (username,password,done)->
+		console.log "looking form #{username}:#{password}"
+		return done(null,{username:'john'})
+
+	authenticate: (request,response) ->
+		passport.authenticate('basic',{session:false})
+
+
+
+exports = module.exports = Authentication
