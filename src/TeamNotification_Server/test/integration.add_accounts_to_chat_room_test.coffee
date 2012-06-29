@@ -2,7 +2,7 @@ return unless process.env.NODE_ENV is 'test'
 
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities} = require('./helpers/specs_helper')
+{db: db, entities: entities, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
@@ -46,7 +46,7 @@ describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
             browser = new Browser()
-            db.handle db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms), done
+            handle_in_series db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/users page', ->
 

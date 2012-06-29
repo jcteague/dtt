@@ -3,10 +3,6 @@ _ = require('underscore')
 async = require('async')
 pg_gateway = require('../../support/database/pg_gateway')
 
-handle_actions = (steps..., done) ->
-    async.series steps, () ->
-        done()
-
 clear = (tables...) ->
     return (callback) ->
         tasks = (deferred_clear table for table in tables)
@@ -67,4 +63,3 @@ module.exports =
     clear: clear
     create: create
     save: save
-    handle: handle_actions
