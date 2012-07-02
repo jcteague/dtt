@@ -2,3 +2,5 @@
 -R min
 --ui bdd
 --compilers coffee:coffee-script
+
+--globals k
