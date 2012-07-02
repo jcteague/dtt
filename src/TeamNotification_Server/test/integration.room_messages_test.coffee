@@ -24,7 +24,7 @@ chat_rooms =
             owner_id: 1
         }
     ]
-mock_message = { id: 1, body: "'"+JSON.stringify({message:"The real test"})+"'", date:"'2012-06-29 11:11'", user_id:1, room_id:1} # user: {id: 1, name: 'etoribio', email: 'etoribio@aol.com'}, room:{ id:1, name:'The real chatroom', owner_id:1 } }
+mock_message = { id: 1, body: "'"+JSON.stringify({"message":"The real test"})+"'", date:"'2012-06-29 11:11'", user_id:1, room_id:1} # user: {id: 1, name: 'etoribio', email: 'etoribio@aol.com'}, room:{ id:1, name:'The real chatroom', owner_id:1 } }
 messages =
     name: 'chat_room_messages'
     entities: []

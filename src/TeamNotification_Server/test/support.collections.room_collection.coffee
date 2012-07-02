@@ -44,6 +44,7 @@ describe 'Room Collection', ->
             links = result['links']
             expect(links[0]).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room.id}"}
             expect(links[1]).to.eql {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{room.id}/users"}
+            expect(links[2]).to.eql {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{room.id}/messages"}
             done()
 
         it 'should return all the room members in the members field', (done) ->

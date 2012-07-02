@@ -24,7 +24,7 @@ chat_room_messages =
     columns:
         id: 'integer'
         body: 'varchar(100)'
-        date: 'timestamp'
+        date: 'varchar(200)'
         user_id: 'integer'
         room_id: 'integer'
 

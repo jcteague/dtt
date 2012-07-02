@@ -13,6 +13,7 @@ class RoomCollection
             links: [
                 {"name":"self", "rel": "Room", "href": "/room/#{@room.id}"}
                 {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"}
+                {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{@room.id}/messages"}
             ]
         }
 
