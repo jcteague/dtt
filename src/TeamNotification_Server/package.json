@@ -10,6 +10,7 @@
     , "underscore": "*"
     , "pg": "*"
     , "async": "*"
+    , "passport": "*"
   }
   ,"devDependencies":{
     "mocha":"*"
