@@ -4,9 +4,29 @@ Module dependencies.
 
 express = require('express')
 
+
+passport = require('passport')
+BasicStrategy = require('passport-http').BasicStrategy
+
+passport.serializeUser (user, done) ->
+    done(null, 1)
+
+passport.deserializeUser (id, done) ->
+    done(err, {username: 'john'})
+
+passport.use(new BasicStrategy({}, (username, password, done) ->
+    done(null, {username: 'john'})
+))
+
+
+
 app = module.exports = express.createServer()
 require('./routes')(app)
 require('./helper')(app)
+
+#Authentication = require('./support/authentication')
+#auth = new Authentication()
+#
 
 
 ###
@@ -38,6 +58,11 @@ app.configure(->
         req.key = key
         next()
     )
+
+    #app.use(auth.initializeAuth())
+    app.use(passport.initialize())
+    app.use(passport.session())
+    
     app.use(app.router)
     app.use(express.static(__dirname + '/public'))
 )

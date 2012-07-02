@@ -11,6 +11,7 @@
     , "pg": "*"
     , "async": "*"
     , "passport": "*"
+    , "passport-http": "*"
   }
   ,"devDependencies":{
     "mocha":"*"
