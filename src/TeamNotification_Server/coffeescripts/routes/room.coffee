@@ -7,8 +7,7 @@ build = routes_service.build
 methods.post_room = (req, res, next) ->
     values = req.body
 
-    # TODO: Get the owner id value from the actual logged in user
-    chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: 1})
+    chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: req.user.id})
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.send('room '+ saved_chat_room.id + ' created')

@@ -45,6 +45,10 @@ describe 'Room Members Collection', ->
         it 'should return a query to search for users', (done) ->
             expect(result['queries']).to.have.length(1)
             done()
+
+        it 'should return a href property pointing to the current url', (done) ->
+            expect(result['href']).to.equal "/room/#{chat_room.id}/users"
+            done()
             
         it 'should return a query to search for users with the right format', (done) ->
             expect(result['queries'][0]).to.have.property('href', '/users/query')

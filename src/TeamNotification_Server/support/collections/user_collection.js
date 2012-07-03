@@ -9,16 +9,23 @@
     }
 
     UserCollection.prototype.to_json = function() {
+      var self;
+      self = "/user/" + this.user_id;
       return {
+        href: self,
         links: [
           {
-            "rel": "self",
+            "rel": "User",
             "name": "self",
-            "href": "/user/" + this.user_id
+            "href": self
           }, {
-            "rel": "rooms",
+            "rel": "UserRooms",
             "name": "rooms",
             "href": "/user/" + this.user_id + "/rooms"
+          }, {
+            "rel": "Room",
+            "name": "Create Room",
+            "href": "/room"
           }
         ]
       };

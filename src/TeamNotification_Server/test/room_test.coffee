@@ -107,13 +107,15 @@ describe 'Room', ->
 
         describe 'post_room', ->
 
-            res = null
-            req = null
+            req = res = owner_id = null
 
             beforeEach (done) ->
+                owner_id = 3
                 res =  send: sinon.spy()
                 req =
                     param: sinon.stub()
+                    user:
+                        id: owner_id
 
                 done()
 
@@ -129,7 +131,7 @@ describe 'Room', ->
                             callback(false, {id: chat_room_id})
 
                     req.body = {name: 'blah'}
-                    request_values = {name: req.body.name, owner_id: 1}
+                    request_values = {name: req.body.name, owner_id: owner_id}
                     sinon.spy(chat_room, 'save')
                     support_mock.core.entity_factory.create.withArgs('ChatRoom', request_values).returns(chat_room)
                     sut.methods.post_room(req,res)
@@ -224,35 +226,3 @@ describe 'Room', ->
                     expect(field).to.have.keys(['name', 'label', 'type'])
                 done()
            
-        ###
-        describe 'get_room_messages', ->
-            collection_factory = null
-            messages = null
-            room_id = 1
-            json_data = null
-            beforeEach (done) ->
-                #routes_service_mock.build.withArgs('room_message_collection').returns(collection_factory)
-                #room_messages_collection =
-               #     fetch_to: (callback) ->
-               #         callback(collection)
-                res = 
-                    json: (json) ->
-                        json_data = json
-                
-                req =
-                    param: ()->
-                    body:
-                        room_id: room_id
-                req.param.withArgs('id').returns(room_id)
-                sut.methods.get_room_messages(req, res)
-                messages = json_data['messages']
-                done()
-
-            it 'should show all messages from a given room', (done) ->
-                expect(messages).to.have.length(1)
-                expect(messages['data']).to.have.length(1)
-                for messagedata in messages['data']
-                    expect(messagedata).to.keys(['name','value'])
-                done()
-        ###
-            

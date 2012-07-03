@@ -31,6 +31,12 @@ describe 'User Collection', ->
 
         it 'should set the correct links for the user model', (done) ->
             links = result['links']
-            expect(links[0]).to.eql {"rel": "self", "name": "self", "href": "/user/#{user_id}"}
-            expect(links[1]).to.eql {"rel": "rooms", "name": "rooms", "href": "/user/#{user_id}/rooms"}
+            expect(links[0]).to.eql {"rel": "User", "name": "self", "href": "/user/#{user_id}"}
+            expect(links[1]).to.eql {"rel": "UserRooms", "name": "rooms", "href": "/user/#{user_id}/rooms"}
+            expect(links[2]).to.eql {"rel": "Room", "name": "Create Room", "href": "/room"}
             done()
+
+        it 'should return a href property pointing to the current url', (done) ->
+            expect(result['href']).to.equal "/user/#{user_id}"
+            done()
+            
