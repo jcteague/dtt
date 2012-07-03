@@ -11,9 +11,11 @@ class Authentication
 	initializeAuth: ->
 		passport.initialize()
 
-	findByUserName: (username,password,done)->
-		console.log "looking for #{username}:#{password}"
-		return done(null, {id: 1, username:'john'})
+    findByUserName: (username,password,done) ->
+        console.log "looking for #{username}:#{password}"
+        @repository.find(email: username).then (users) ->
+            #return done(null, {id: 1, username:'john'})
+            done(null, false) unless users? 
 
 	authenticate: (request,response) ->
 		passport.authenticate('basic', {session:false})

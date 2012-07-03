@@ -54,6 +54,11 @@ describe 'Authentication', ->
         describe 'and the user exists on the database', ->
 
             beforeEach (done) ->
+                user = {id: 2, username: 'blah', password: 1234}
+                promise = 
+                    then: (callback) ->
+                        callback(user)
+                sinon.stub(sut.repository, 'find').withArgs(email: username).returns(promise)
                 done()
 
             describe 'and the password matches the username', ->
@@ -75,6 +80,11 @@ describe 'Authentication', ->
         describe 'and the user does not exist in the database', ->
 
             beforeEach (done) ->
+                promise = 
+                    then: (callback) ->
+                        callback(null)
+                sinon.stub(sut.repository, 'find').withArgs(email: username).returns(promise)
+
                 sut.findByUserName(username, password, express_done)
                 done()
 
