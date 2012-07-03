@@ -2,6 +2,7 @@ build = require('../support/routes_service').build
 methods = {}
 
 methods.get_user = (req, res) ->
+    console.log req.user
     user_id = req.param('id')
     callback = (collection) ->
         res.json(collection.to_json())
@@ -9,6 +10,7 @@ methods.get_user = (req, res) ->
     build('user_collection').for(user_id).fetch_to callback
 
 methods.get_user_rooms = (req, res) ->
+    console.log req.user
     user_id = req.param('id')
     callback = (collection) ->
         res.json(collection.to_json())
@@ -25,5 +27,5 @@ module.exports =
     methods: methods
     build_routes: (app) ->
         app.get('/users/query', methods.get_users)
-        app.get('/user/:id',methods.get_user)
+        app.get('/user/:id', methods.get_user)
         app.get('/user/:id/rooms',methods.get_user_rooms)

@@ -11,4 +11,4 @@ methods.get_root = (req, res) ->
 module.exports =
     methods: methods,
     build_routes: (app) ->
-        app.get('/', passport.authenticate('basic', session: false), methods.get_root)
+        app.get('/',methods.get_root)

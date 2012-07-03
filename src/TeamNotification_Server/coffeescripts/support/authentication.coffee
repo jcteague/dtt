@@ -11,7 +11,7 @@ class Authentication
 
 	findByUserName: (username,password,done)->
 		console.log "looking for #{username}:#{password}"
-		return done(null, {username:'john'})
+		return done(null, {id: 1, username:'john'})
 
 	authenticate: (request,response) ->
 		passport.authenticate('basic', {session:false})

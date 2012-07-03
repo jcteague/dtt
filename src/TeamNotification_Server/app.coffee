@@ -47,8 +47,8 @@ app.configure(->
     app.use(app.router)
 )
 
-app.get '/auth', auth.authenticate(), (req, res) ->
-    res.send req.user
+# Apply authentication for all routes
+app.get '*', auth.authenticate()
 
 # This must live here after authentication has been initialized
 require('./routes')(app)
