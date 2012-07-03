@@ -1,10 +1,12 @@
 passport = require 'passport'
 BasicStrategy = require('passport-http').BasicStrategy
-repository = require './repository'
+Repository = require './repository'
 
 class Authentication
 	constructor: ->
-		passport.use(new BasicStrategy({},@findByUserName))
+        @repository = new Repository('User')
+        @basic_strategy = new BasicStrategy({},@findByUserName)
+        passport.use(@basic_strategy)
 
 	initializeAuth: ->
 		passport.initialize()
