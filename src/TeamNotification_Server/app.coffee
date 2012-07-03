@@ -21,7 +21,6 @@ passport.use(new BasicStrategy({}, (username, password, done) ->
 
 
 app = module.exports = express.createServer()
-require('./routes')(app)
 require('./helper')(app)
 
 #Authentication = require('./support/authentication')
@@ -59,13 +58,19 @@ app.configure(->
         next()
     )
 
+    app.use(express.static(__dirname + '/public'))
+
     #app.use(auth.initializeAuth())
     app.use(passport.initialize())
-    app.use(passport.session())
     
     app.use(app.router)
-    app.use(express.static(__dirname + '/public'))
 )
+
+app.get '/auth', passport.authenticate('basic', session: false), (req, res) ->
+    console.log req
+    res.send 'SUCCESS!!!!!!!!!!!'
+
+require('./routes')(app)
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
