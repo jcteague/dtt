@@ -4,29 +4,11 @@ Module dependencies.
 
 express = require('express')
 
-
-passport = require('passport')
-BasicStrategy = require('passport-http').BasicStrategy
-
-passport.serializeUser (user, done) ->
-    done(null, 1)
-
-passport.deserializeUser (id, done) ->
-    done(err, {username: 'john'})
-
-passport.use(new BasicStrategy({}, (username, password, done) ->
-    done(null, {username: 'john'})
-))
-
-
+Authentication = require('./support/authentication')
+auth = new Authentication()
 
 app = module.exports = express.createServer()
 require('./helper')(app)
-
-#Authentication = require('./support/authentication')
-#auth = new Authentication()
-#
-
 
 ###
   Mock Database
@@ -60,16 +42,15 @@ app.configure(->
 
     app.use(express.static(__dirname + '/public'))
 
-    #app.use(auth.initializeAuth())
-    app.use(passport.initialize())
+    app.use(auth.initializeAuth())
     
     app.use(app.router)
 )
 
-app.get '/auth', passport.authenticate('basic', session: false), (req, res) ->
-    console.log req
-    res.send 'SUCCESS!!!!!!!!!!!'
+app.get '/auth', auth.authenticate(), (req, res) ->
+    res.send req.user
 
+# This must live here after authentication has been initialized
 require('./routes')(app)
 
 app.configure('development', ->

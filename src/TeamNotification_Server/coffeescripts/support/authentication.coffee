@@ -10,7 +10,7 @@ class Authentication
 		passport.initialize()
 
 	findByUserName: (username,password,done)->
-		console.log "looking form #{username}:#{password}"
+		console.log "looking for #{username}:#{password}"
 		return done(null, {username:'john'})
 
 	authenticate: (request,response) ->
