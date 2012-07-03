@@ -43,6 +43,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/room/:id/users',sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.post,'/room/:id/users', body_parser_result, sut.methods.post_room_user)
+            sinon.assert.calledWith(app.post,'/room/:id/messages',body_parser_result, sut.methods.post_room_message)
             done()
 
     describe 'methods', ->
@@ -55,18 +56,21 @@ describe 'Room', ->
             res = null
             req = null
             room_id = null
-
+            json_data = null
             beforeEach (done) ->
-                collection_value = 'blah collection'
+                #collection_value = 'blah collection'
+                #collection =
+                #    to_json: (json)->
+                #        collection_value = json
+
                 collection =
                     to_json: ->
                         collection_value
-
                 collection_factory =
                     for: sinon.stub()
                 req =
                     param: sinon.stub()
-                room_id = 10
+                room_id = 1
                 req.param.withArgs('id').returns(room_id)
                 res = 
                     json: sinon.spy()
@@ -106,13 +110,15 @@ describe 'Room', ->
                     done()
 
             describe 'get_room_messages', ->
-
+                json_data = null
+                data = null
                 beforeEach (done) ->
                     routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
                     room_messages_collection =
                         fetch_to: (callback) ->
                             callback(collection)
-
+                    req.param.withArgs('id').returns(room_id)
+                    
                     collection_factory.for.withArgs(room_id).returns(room_messages_collection)
                     sut.methods.get_room_messages(req, res)
                     done()
@@ -120,8 +126,48 @@ describe 'Room', ->
                 it 'should return the built collection for the room model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
+        describe 'post_room_message', ->
 
+            res = null
+            req = null
+            room_id = 1
 
+            beforeEach (done) ->
+                res =  send: sinon.spy()
+                req =  param: sinon.stub()
+                req.param.withArgs('id').returns(room_id)
+                done()
+
+            describe 'when all correct parameters where sent to create the message', ->
+
+                user_id = null
+                chat_room_id = null
+                body = null
+                room_message = null
+                message_id = null
+                beforeEach (done) ->
+                    room_message = 
+                        save: (callback) ->
+                            callback(false, {id: message_id})
+                    
+                    req.body = {message: 'Dolorem Ipsum'}
+                    
+                    message = JSON.stringify(req.body)
+                    request_values = {body: message, user_id:1, room_id:room_id}
+                    sinon.spy(room_message, 'save')
+                    support_mock.core.entity_factory.create.withArgs('ChatRoomMessage', request_values).returns(room_message)
+                    sut.methods.post_room_message(req,res)
+                    done()
+
+                it 'should notify the user the room was created', (done) ->
+                    sinon.assert.calledWith(res.send,"message added to room #{room_id}")
+                    done()
+
+                it 'should create the message on the database', (done) ->
+                    sinon.assert.called(room_message.save)
+                    done()
+            
+            
         describe 'post_room', ->
 
             req = res = owner_id = null
@@ -210,7 +256,10 @@ describe 'Room', ->
                 res = 
                     json: (json) ->
                         json_data = json
-
+                req =  
+                    param: sinon.stub()
+                room_id = 1
+                req.param.withArgs('id').returns(room_id)
                 sut.methods.get_room(req, res)
                 template = json_data['template']
                 links = json_data['links']

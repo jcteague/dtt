@@ -16,10 +16,15 @@ class RoomMessagesCollection
         for message in @room_messages
             m.push get_data_for message
         return { 
+            href: "/room/#{@room_messages[0].room_id}/messages"
             links:[
                 {"name": "self", "rel": "Room Messages", 'href':"/room/#{@room_messages[0].room_id}/messages"}
                 {"name": "Room", "rel": "Room", 'href':"/room/#{@room_messages[0].room_id}"}
             ]
+            template:
+                'data':[
+                    {'name':'message', 'label':'Message', 'type':'string'}
+                ]
             messages: m
         }
     #'links' : [
