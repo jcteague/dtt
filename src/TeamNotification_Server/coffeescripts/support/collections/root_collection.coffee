@@ -1,13 +1,13 @@
 class RootCollection
 
-    constructor: ->
+    constructor: (@user_id) ->
 
 
     to_json: ->
         return {
             links: [
                 {"name": "self", "rel": "self", "href": "/" },
-                {"name": "user", "rel": "User", "href": "/user" }
+                {"name": "user", "rel": "User", "href": "/user/#{@user_id}" }
             ]
         }
 

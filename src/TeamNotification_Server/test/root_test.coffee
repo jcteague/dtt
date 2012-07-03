@@ -33,19 +33,27 @@ describe 'Root', ->
             res = null
 
             beforeEach (done) ->
+                user_id = 3
                 collection_value = 'blah collection'
                 collection =
                     to_json: ->
                         collection_value
 
+                collection_factory =
+                    for: sinon.stub()
+                routes_service_mock.build.withArgs('root_collection').returns(collection_factory)
+
                 collection_action =
                     fetch_to: (callback) ->
                         callback(collection)
+                collection_factory.for.withArgs(user_id).returns(collection_action)
 
-                routes_service_mock.build.withArgs('root_collection').returns(collection_action)
                 res = 
                     json: sinon.spy()
-                sut.methods.get_root({}, res)
+                req =
+                    user:
+                        id: user_id
+                sut.methods.get_root(req, res)
                 done()
 
             it 'should return the built collection for the user model', (done) ->
