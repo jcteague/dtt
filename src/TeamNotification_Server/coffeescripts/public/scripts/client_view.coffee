@@ -22,7 +22,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         update_messages: (unformatted_new_message) ->
             console.log @data
-            console.log @messages_view
             @messages_view.add_message @data.messages, unformatted_new_message
             @display_messages @data.messages
             

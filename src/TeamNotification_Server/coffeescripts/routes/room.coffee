@@ -49,7 +49,6 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        #console.log collection.to_json().messages
         res.json(collection.to_json())
 
     build('room_messages_collection').for(room_id).fetch_to callback
@@ -57,6 +56,9 @@ methods.get_room_messages = (req,res) ->
 methods.post_room_message = (req, res, next) ->
     values = req.body
     room_id = req.param('id')
+    #console.log req
+    console.log values
+    #console.log req.body
     message_body = JSON.stringify({message:values.message})
     newMessage = {body: message_body, room_id:room_id, user_id: 1, date:new Date()}
     # TODO: Get the user id value from the actual logged in user

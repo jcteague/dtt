@@ -1,6 +1,6 @@
 class RoomMessagesCollection    
     constructor: (@room_messages) ->
-        @room_messages.reverse()
+        @room_messages.reverse() if @room_messages.length > 0
 
     to_json: ->
         get_data_for = (message) ->
@@ -22,7 +22,7 @@ class RoomMessagesCollection
             ]
             template:
                 'data':[
-                    {'name':'message', 'label':'Message', 'type':'string'}
+                    {'name':'message', 'label':'Message', 'type':'string-big'}
                 ]
             messages: m
         }
