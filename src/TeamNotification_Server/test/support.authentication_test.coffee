@@ -17,14 +17,15 @@ describe 'Authentication', ->
     sut = basic_strategy = repository = null
 
     beforeEach (done) ->
-        sut = new Authentication
+        basic_strategy = sinon.stub()
+        sut = new Authentication(basic_strategy)
         done()
 
     it 'should tell passport to use the basic strategy', ->
         sinon.assert.calledWith(passport_mock.use, sut.basic_strategy)
 
     it 'should have instantiated the BasicStrategy', (done) ->
-        expect(sut.basic_strategy.constructor.name).to.equal 'BasicStrategy'
+        expect(sut.basic_strategy).to.equal basic_strategy
         done()
 
     it 'should have instantiated the repository', (done) ->
@@ -43,35 +44,42 @@ describe 'Authentication', ->
 
     describe 'findByUserName', ->
 
-        username = password = express_done = user = null
+        username = password = user = null
 
         beforeEach (done) ->
             username = 'blah user'
             password = 'foo password'
-            express_done = sinon.spy()
             done()
 
         describe 'and the user exists on the database', ->
 
+            express_done = null
+
             beforeEach (done) ->
-                user = {id: 2, username: 'blah', password: 1234}
+                user = {id: 2, username: 'blah', password: password}
                 promise = 
                     then: (callback) ->
-                        callback(user)
+                        callback([user])
                 sinon.stub(sut.repository, 'find').withArgs(email: username).returns(promise)
                 done()
 
             describe 'and the password matches the username', ->
 
                 beforeEach (done) ->
+                    express_done = sinon.spy()
                     sut.findByUserName(username, password, express_done)
                     done()
 
                 it 'should call the done with the user data', (done) ->
-                    sinon.assert.called(express_done, null, user)
+                    sinon.assert.calledWith(express_done, null, user)
                     done()
 
             describe 'and the password does not match the username', ->
+
+                beforeEach (done) ->
+                    express_done = sinon.spy()
+                    sut.findByUserName(username, 'foo123f', express_done)
+                    done()
 
                 it 'should call the done with false', (done) ->
                     sinon.assert.calledWith(express_done, null, false)
@@ -79,7 +87,10 @@ describe 'Authentication', ->
 
         describe 'and the user does not exist in the database', ->
 
+            express_done = null
+
             beforeEach (done) ->
+                express_done = sinon.spy()
                 promise = 
                     then: (callback) ->
                         callback(null)
@@ -91,3 +102,15 @@ describe 'Authentication', ->
             it 'should call the done with false', (done) ->
                 sinon.assert.calledWith(express_done, null, false)
                 done()
+
+    describe 'authenticate', ->
+
+        beforeEach (done) ->
+            sut.authenticate(null, null)
+            done()
+
+        it 'should authenticate with basic', (done) ->
+            sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false)
+            done()
+
+
