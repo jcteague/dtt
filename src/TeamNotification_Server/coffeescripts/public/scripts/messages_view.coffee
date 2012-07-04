@@ -25,4 +25,10 @@ define 'messages_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
-
+        
+        add_message: (messages, response) =>
+            if response.success
+                new_message = response.newMessage
+                console.log new_message
+           # @$el.append("<p><b>#{new_message.user.name}(#{new_message.date}):</b>#{body}</p>")
+                messages.push {data:[{ 'name':'user', 'value': new_message.user.name},{ 'name':'body', 'value': JSON.parse(new_message.body).message},{ 'name':'datetime', 'value':new_message.date }]}

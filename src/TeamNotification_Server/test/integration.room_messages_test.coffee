@@ -24,7 +24,7 @@ chat_rooms =
             owner_id: 1
         }
     ]
-mock_message = { id: 1, body: "'"+JSON.stringify({"message":"The real test"})+"'", date:"'2012-06-29 11:11'", user_id:1, room_id:1} # user: {id: 1, name: 'etoribio', email: 'etoribio@aol.com'}, room:{ id:1, name:'The real chatroom', owner_id:1 } }
+mock_message = { id: 1, body: "'"+JSON.stringify({"message":"The real test"})+"'", date:"'2012-06-29 11:11'", user_id:1, room_id:1}
 messages =
     name: 'chat_room_messages'
     entities: []
@@ -32,7 +32,6 @@ messages =
 for i in [1..55]
     mock_message.id = i
     messages.entities.push(mock_message)
-
 
 describe 'Room Messages', ->
 
@@ -48,9 +47,7 @@ describe 'Room Messages', ->
         describe 'When a user visits the client#/room/:id/messages page', ->
 
             beforeEach (done) ->
-                browser.
-                    visit('http://localhost:3000/client#/room/1/messages').
-                    then(done, done)
+                browser.visit('http://localhost:3000/client#/room/1/messages').then(done, done)
 
             it 'should contain an input with a "name" name', (done) ->
                 expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
@@ -67,14 +64,20 @@ describe 'Room Messages', ->
                     mock_message.id = i
                     messages.entities.push(mock_message)
                 db.handle db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
-               
+            
+            describe 'when there are less than fifty messages to show scenario', ->
+                beforeEach (done) ->
+                    browser.visit('http://localhost:3000/client#/room/1/messages').then(done, done) 
+                    
+                it 'should contain only ten messages if there are ten messages', (done) ->
+                    expect(browser.queryAll('#messages-container p').length).to.equal(10)
+                    done()
+        describe 'When a user sends a message', ->
+            message_to_post = null
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/room/1/messages').then(done, done) 
-                
-            it 'should contain only ten messages if there are ten messages', (done) ->
-                expect(browser.queryAll('#messages-container p').length).to.equal(10)
-                done()
+                message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
+                browser.visit('http://localhost:3000/client#/room/1/messages').then( ->browser.fill("message", message_to_post)).then(-> browser.pressButton('input[type=submit]')).then(done, done)
 
-          #  it 'should contain a input submit', (done) ->
-           #     expect(browser.html('input[type="submit"]')).to.not.be.empty()
-           #     done()
+            it 'should show in the message pool', (done) ->
+                expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
+                done()

@@ -1,10 +1,9 @@
 class RoomMessagesCollection    
     constructor: (@room_messages) ->
-        console.log @room_messages
+        @room_messages.reverse()
 
     to_json: ->
         get_data_for = (message) ->
-            console.log JSON.parse(message.body)
             return {
                 "data": [
                     { 'name':'user', 'value': message.user.name}

@@ -9,11 +9,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @form_view = new FormView()
             @query_view = new QueryView()
             @messages_view = new MessagesView()
-<<<<<<< HEAD
-
             @subscribe_to_events()
-=======
->>>>>>> Added the messages view
             Backbone.history.start()
 
         render: ->
@@ -24,20 +20,27 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @messages_view.render().append_to @$el
             @
 
+        update_messages: (unformatted_new_message) ->
+            console.log @data
+            console.log @messages_view
+            @messages_view.add_message @data.messages, unformatted_new_message
+            @display_messages @data.messages
+            
         subscribe_to_events: ->
             @router.on 'render', @render_path, @
             @form_view.on 'messages:display', @display_messages, @
             @query_view.on 'messages:display', @display_messages, @
+            @form_view.on 'response:received',@update_messages, @
 
         render_path: (path) ->
             $.getJSON(path, @load_json)
 
         load_json: (data) =>
             @data = data
-            @links_view.update data.links
-            @form_view.update data
-            @query_view.update data.queries
-            @messages_view.update data.messages
+            @links_view.update @data.links
+            @form_view.update @data
+            @query_view.update @data.queries
+            @messages_view.update @data.messages
             @render()
 
         display_messages: (messages) ->

@@ -49,7 +49,7 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        console.log collection.to_json().messages
+        #console.log collection.to_json().messages
         res.json(collection.to_json())
 
     build('room_messages_collection').for(room_id).fetch_to callback
@@ -58,12 +58,14 @@ methods.post_room_message = (req, res, next) ->
     values = req.body
     room_id = req.param('id')
     message_body = JSON.stringify({message:values.message})
-    newMessage = {body: message_body, room_id:room_id, user_id: 1}
+    newMessage = {body: message_body, room_id:room_id, user_id: 1, date:new Date()}
     # TODO: Get the user id value from the actual logged in user
     room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
     room_message.save (err,saved_message) ->
         if !err
-            res.send("message added to room #{room_id}")
+            #res.send("message added to room #{room_id}")
+            console.log saved_message
+            res.send({success:true, newMessage:saved_message})
         else 
             next(new Error(err.code,err.message))
     

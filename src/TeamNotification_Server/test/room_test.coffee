@@ -160,7 +160,7 @@ describe 'Room', ->
                     done()
 
                 it 'should notify the user the room was created', (done) ->
-                    sinon.assert.calledWith(res.send,"message added to room #{room_id}")
+                    sinon.assert.calledWith(res.send,{ success:true, newMessage:room_message})
                     done()
 
                 it 'should create the message on the database', (done) ->

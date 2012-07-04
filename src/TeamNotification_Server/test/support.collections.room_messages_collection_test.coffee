@@ -26,7 +26,6 @@ describe 'Room Messages Collection', ->
         room = null
 
         beforeEach (done) ->
-            #console.log  room_messages
             sut.room_messages = room_messages
             result = sut.to_json()
             done()
