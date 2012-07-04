@@ -12,11 +12,13 @@ users =
             id: 1
             name: "'blah'"
             email: "'foo@bar.com'"
+            password: "'1234'"
         },
         {
             id: 2
             name: "'ed2'"
             email: "'ed@es.com'"
+            password: "'1234'"
         }
     ]
 
@@ -43,6 +45,7 @@ describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
             browser = new Browser()
+            browser.authenticate().basic('foo@bar.com', '1234')
             handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/users page', ->

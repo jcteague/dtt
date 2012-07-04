@@ -1,3 +1,4 @@
+return
 tobi = require 'tobi'
 express = require 'express'
 should = require 'should'
