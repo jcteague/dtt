@@ -1,10 +1,12 @@
-passport = require 'passport'
+_ = require('underscore')
+passport = require('passport')
 BasicStrategy = require('passport-http').BasicStrategy
 Repository = require './repository'
 
 class Authentication
 
 	constructor: (basic_strategy = null) ->
+        _.bindAll @
         @repository = new Repository('User')
         @basic_strategy = if basic_strategy? then basic_strategy else new BasicStrategy({},@findByUserName)
         passport.use(@basic_strategy)

@@ -7,9 +7,13 @@ passport_mock =
     initialize: sinon.stub()
     authenticate: sinon.stub()
 
+underscore_mock =
+    bindAll: sinon.stub()
+
 Authentication = module_loader.require('../support/authentication', {
     requires:
         'passport': passport_mock
+        'underscore': underscore_mock
 })
 
 describe 'Authentication', ->
@@ -30,6 +34,10 @@ describe 'Authentication', ->
 
     it 'should have instantiated the repository', (done) ->
         expect(sut.repository.constructor.name).to.equal 'Repository'
+        done()
+
+    it 'should bind the findByUserName to the Authentication object', (done) ->
+        sinon.assert.calledWith(underscore_mock.bindAll, sut)
         done()
 
     describe 'initializeAuth', ->
