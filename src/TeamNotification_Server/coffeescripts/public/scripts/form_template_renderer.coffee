@@ -6,7 +6,7 @@ define 'form_template_renderer', ['jquery'], ($) ->
             textFieldBuilder = (template) ->
                 return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"text","name":template.name})]
             textAreaBuilder = (template) ->
-                return [$('<label>', {"for":template.name}).text(template.label), $('<textarea>',{"name":template.name,"rows":5,"col":34})]
+                return [$('<label>', {"for":template.name}).text(template.label), $('<textarea>',{"name":template.name,"rows":5,"col":34,maxlength:template.maxlength})]
             hiddenFieldBuilder = (template) ->
                 return [$('<input>',{"type":"hidden","name":template.name})]
             templateFieldBuilder = (template) ->

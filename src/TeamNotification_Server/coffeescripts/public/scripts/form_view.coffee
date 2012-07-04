@@ -37,4 +37,4 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
             $.post @$('form').attr('action'), data, (res) => 
                 @trigger 'messages:display', res.messages
                 @trigger 'response:received', res
-            
+            $('form').get(0).reset()

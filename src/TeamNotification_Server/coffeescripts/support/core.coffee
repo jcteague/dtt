@@ -1,5 +1,5 @@
 pg = require('pg')
-db_config = require('../config')().db
+db_config = require('../config').db
 
 orm = require('./orm_gateway').open()
 
@@ -9,10 +9,11 @@ orm.then (db) ->
         name : {type: 'string'}
     _entity.User = db.define 'users',
         name : {type: 'string'},
-        email : {type: 'string'}
+        email : {type: 'string'},
+        password : {type: 'string'}
     _entity.ChatRoomMessage = db.define 'chat_room_messages'
-        body : {type: 'string'}
-        date : {type:'TIMESTAMP'}# , default:'CURRENT_TIMESTAMP()'}
+        body : {type: 'string', lengths:250}
+        date : {type:'date', default:'now()'}
 
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})

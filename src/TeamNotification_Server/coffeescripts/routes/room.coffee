@@ -49,18 +49,26 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        res.json(collection.to_json())
+        res.json({
+            href: "/room/#{room_id}/messages"
+            links:[
+                {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
+                {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
+            ]
+            template:
+                'data':[
+                    {'name':'message', 'label':'Message', 'type':'string-big', 'maxlength':100}
+                ]
+            messages:collection.to_json()
+            })
 
     build('room_messages_collection').for(room_id).fetch_to callback
 
 methods.post_room_message = (req, res, next) ->
     values = req.body
     room_id = req.param('id')
-    #console.log req
-    console.log values
-    #console.log req.body
     message_body = JSON.stringify({message:values.message})
-    newMessage = {body: message_body, room_id:room_id, user_id: 1, date:new Date()}
+    newMessage = {body: message_body, room_id:room_id, user_id: 2, date:new Date()}
     # TODO: Get the user id value from the actual logged in user
     room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
     room_message.save (err,saved_message) ->

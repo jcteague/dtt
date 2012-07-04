@@ -1,6 +1,9 @@
 class RoomMessagesCollection    
     constructor: (@room_messages) ->
-        @room_messages.reverse() if @room_messages.length > 0
+        if @room_messages == null
+            @room_messages = []
+        else
+            @room_messages.reverse()  #&& @room_messages.lenght > 0
 
     to_json: ->
         get_data_for = (message) ->
@@ -14,18 +17,8 @@ class RoomMessagesCollection
         m  = []
         for message in @room_messages
             m.push get_data_for message
-        return { 
-            href: "/room/#{@room_messages[0].room_id}/messages"
-            links:[
-                {"name": "self", "rel": "Room Messages", 'href':"/room/#{@room_messages[0].room_id}/messages"}
-                {"name": "Room", "rel": "Room", 'href':"/room/#{@room_messages[0].room_id}"}
-            ]
-            template:
-                'data':[
-                    {'name':'message', 'label':'Message', 'type':'string-big'}
-                ]
-            messages: m
-        }
+        console.log m
+        return m
     #'links' : [
     #        {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
     #    ]
