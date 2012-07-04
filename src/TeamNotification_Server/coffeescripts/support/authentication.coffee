@@ -20,7 +20,8 @@ class Authentication
                 return done(null, false)
             if users[0].password != password
                 return done(null, false)
-            done(null, users[0])
+            user = users[0]
+            done(null, id: user.id, email: user.email)
 
 	authenticate: (request,response) ->
 		passport.authenticate('basic', {session:false})

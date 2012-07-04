@@ -64,7 +64,7 @@ describe 'Authentication', ->
             express_done = null
 
             beforeEach (done) ->
-                user = {id: 2, username: 'blah', password: password}
+                user = {id: 2, email: username, password: password}
                 promise = 
                     then: (callback) ->
                         callback([user])
@@ -79,7 +79,7 @@ describe 'Authentication', ->
                     done()
 
                 it 'should call the done with the user data', (done) ->
-                    sinon.assert.calledWith(express_done, null, user)
+                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email})
                     done()
 
             describe 'and the password does not match the username', ->
