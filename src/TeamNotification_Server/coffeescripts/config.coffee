@@ -10,5 +10,11 @@ env_db = if process.env.NODE_ENV is 'test' then db_config.db_test else db_config
 db =
     connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{env_db}"
 
+site =
+    host: 'localhost'
+    client_ID: '1234'
+    client_secret: 'secret'
+
 module.exports =
     db: db
+    site: site

@@ -12,6 +12,7 @@
     , "async": "*"
     , "passport": "*"
     , "passport-http": "*"
+    , "passport-oauth": "*"
   }
   ,"devDependencies":{
     "mocha":"*"
