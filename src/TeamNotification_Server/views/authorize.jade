@@ -1,0 +1,13 @@
+#authorize-content
+  h2 Please login
+  form(action='/oauth2/authorize')
+    input(name='client_id', type='hidden', value=model.client_id)
+    input(name='redirect_url', type='hidden', value=model.redirect_uri)
+    label(for='username') User:
+    input#username(type='text', name='username')
+    label(for='password') Password:
+    input#password(type='password', name='password')
+    input(type='submit', value='Login')
+
+script(type='text/javascript', data-main='/scripts/main.js', src='/scripts/require.js')
+

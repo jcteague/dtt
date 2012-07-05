@@ -11,11 +11,11 @@ class OAuthAuthentication
 
     get_strategy: ->
         options =
-            authorizationURL: "http://#{globals.site.host}/oauth2/authorize"
-            tokenURL: "http://#{globals.site.host}/oauth2/token"
+            authorizationURL: "http://#{globals.site.url}/oauth2/authorize"
+            tokenURL: "http://#{globals.site.url}/oauth2/token"
             clientID: globals.site.client_ID
             clientSecret: globals.site.client_secret
-            callbackURL: "http://#{globals.site.host}/auth/redirect"
+            callbackURL: "http://#{globals.site.url}/auth/redirect"
         new OAuth2Strategy(options, @verify)
 
     verify: ->

@@ -19,6 +19,7 @@ describe 'OAuth2', ->
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.post, '/oauth2/authorize', sut.methods.authorize) 
+            sinon.assert.calledWith(app.get, '/oauth2/authorize', sut.methods.authorize) 
+            sinon.assert.calledWith(app.post, '/oauth2/authorize', sut.methods.post_authorize) 
             sinon.assert.calledWith(app.get, '/oauth2/token', sut.methods.get_token) 
             done() 
