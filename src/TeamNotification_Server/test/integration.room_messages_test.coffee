@@ -1,6 +1,6 @@
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities} = require('./helpers/specs_helper')
+{db: db, entities: entities, handle_in_series: handle_in_series, server: server} = require('./helpers/specs_helper')
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
@@ -10,8 +10,9 @@ users =
     entities: [
         {
             id: 1
-            name: "'etoribio'"
-            email: "'etoribio@aol.com'"
+            name: "'foo'"
+            email: "'foo@bar.com'"
+            password: "'1234'"
         }
     ]
 
@@ -42,7 +43,11 @@ describe 'Room Messages', ->
         browser = null
         beforeEach (done) ->
             browser = new Browser()
-            db.handle db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
+            browser.authenticate().basic('foo@bar.com', '1234')
+            handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
+
+        afterEach (done) ->
+            handle_in_series server.stop(), done
         
         describe 'When a user visits the client#/room/:id/messages page', ->
 
@@ -63,7 +68,7 @@ describe 'Room Messages', ->
                 for i in [1..10]
                     mock_message.id = i
                     messages.entities.push(mock_message)
-                db.handle db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
+                handle_in_series db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
             
             describe 'when there are less than fifty messages to show scenario', ->
                 beforeEach (done) ->
@@ -72,6 +77,7 @@ describe 'Room Messages', ->
                 it 'should contain only ten messages if there are ten messages', (done) ->
                     expect(browser.queryAll('#messages-container p').length).to.equal(10)
                     done()
+
         describe 'When a user sends a message', ->
             message_to_post = null
             beforeEach (done) ->
