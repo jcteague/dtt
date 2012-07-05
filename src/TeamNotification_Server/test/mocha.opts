@@ -1,4 +1,5 @@
 --require should
+--require ./test/mocha_setup
 -R min
 --ui bdd
 --compilers coffee:coffee-script

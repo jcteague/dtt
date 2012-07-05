@@ -1,7 +1,7 @@
 q = require('q')
 orm = require('orm')
 
-db_config = require('../config').db
+db_config = require('../config')().db
 
 get_db_connection = ->
     defer = q.defer()
