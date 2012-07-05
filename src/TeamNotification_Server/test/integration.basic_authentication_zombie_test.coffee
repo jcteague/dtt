@@ -1,12 +1,10 @@
-# tobi package is broken in latest node
-return
-tobi = require('tobi')
-should = require('should')
 expect = require('expect.js')
 sinon = require('sinon')
+expect = require('expect.js')
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
 
 module_loader = require('sandboxed-module')
+Browser = require('zombie').Browser
 
 users =
     name: 'users'
@@ -14,8 +12,8 @@ users =
         {
             id: 1
             name: "'blah'"
-            email: "'foo'"
-            password: "'password'"
+            email: "'foo@bar.com'"
+            password: "'1234'"
         }
     ]
 
@@ -24,6 +22,7 @@ describe 'Basic Authentication Test', ->
     browser = null
 
     beforeEach (done) ->
+        browser = new Browser()
         handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
 
     describe 'When an unauthenticated request is received', ->
@@ -31,13 +30,12 @@ describe 'Basic Authentication Test', ->
         response = null
 
         beforeEach (done) ->
-            browser = tobi.createBrowser(3000, 'localhost')
-            browser.get '/', (res, $) ->
-                response = res
+            browser.visit 'http://localhost:3000/', (e, browser, status) ->
+                response = status
                 done()
 
         it 'should return a 401', (done) ->
-            response.should.have.status 401
+            expect(response).to.equal 401
             done()
 
     describe 'When an authenticated header is found', ->
@@ -45,12 +43,11 @@ describe 'Basic Authentication Test', ->
         response = null
 
         beforeEach (done) ->
-            browser = tobi.createBrowser(3000, 'localhost')
-            #foo:password must be sent encoded as the specification
-            browser.get '/', {headers:{"authorization": "Basic Zm9vOnBhc3N3b3Jk"}}, (res, $) ->
-                response = res
+            browser.authenticate().basic('foo@bar.com', '1234')
+            browser.visit 'http://localhost:3000/', (e, browser, status) ->
+                response = status
                 done()
 
         it 'should return a 200 status code', (done) ->
-            response.should.have.status 200
+            expect(response).to.equal 200
             done()
