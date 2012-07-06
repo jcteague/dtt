@@ -45,7 +45,7 @@ describe 'Room Messages', ->
         beforeEach (done) ->
             browser = new Browser()
             browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), done
+            handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/messages page', ->
 
@@ -54,7 +54,7 @@ describe 'Room Messages', ->
                     name: 'chat_room_messages'
                     entities: (generate_message(i) for i in [1..55])
 
-                handle_in_series db.save(users, chat_rooms, messages), done
+                handle_in_series db.save(messages), done
 
             describe 'and wants to see the messages', ->
 
@@ -68,17 +68,18 @@ describe 'Room Messages', ->
                 it 'should contain not more than fifty elements at a time', (done) ->
                     expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
                     done()
-       
-        ###
+
         describe 'When a user visits the client#/room/:id/messages page and there are less than fifty messages', ->
+
             beforeEach (done) ->
-                messages.entities = []
-                for i in [1..10]
-                    mock_message.id = i
-                    messages.entities.push(mock_message)
-                handle_in_series db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms,messages), done
-            
-            describe 'when there are less than fifty messages to show scenario', ->
+                messages =
+                    name: 'chat_room_messages'
+                    entities: (generate_message(i) for i in [1..10])
+
+                handle_in_series db.save(messages), done
+
+            describe 'and wants to see the messages', ->
+
                 beforeEach (done) ->
                     browser.visit('http://localhost:3000/client#/room/1/messages').then(done, done) 
                     
@@ -86,13 +87,27 @@ describe 'Room Messages', ->
                     expect(browser.queryAll('#messages-container p').length).to.equal(10)
                     done()
 
-        describe 'When a user sends a message', ->
-            message_to_post = null
-            beforeEach (done) ->
-                message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
-                browser.visit('http://localhost:3000/client#/room/1/messages').then( ->browser.fill("message", message_to_post)).then(-> browser.pressButton('input[type=submit]')).then(done, done)
+        describe 'When a user visits the client#/room/:id/messages page', ->
 
-            it 'should show in the message pool', (done) ->
-                expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
-                done()
-        ###
+            beforeEach (done) ->
+                messages =
+                    name: 'chat_room_messages'
+                    entities: [generate_message(1)]
+
+                handle_in_series db.save(messages), done
+
+            describe 'and wants to send a message', ->
+
+                message_to_post = null
+
+                beforeEach (done) ->
+                    message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
+                    browser.visit('http://localhost:3000/client#/room/1/messages').
+                        then( -> 
+                            browser.fill("message", message_to_post)).
+                        then(-> browser.pressButton('input[type=submit]')).
+                        then(done, done)
+
+                it 'should show in the message pool', (done) ->
+                    expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
+                    done()
