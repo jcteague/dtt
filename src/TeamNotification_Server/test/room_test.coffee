@@ -110,8 +110,9 @@ describe 'Room', ->
                     done()
 
             describe 'get_room_messages', ->
-                json_data = null
-                data = null
+
+                json_data = data = null
+
                 beforeEach (done) ->
                     routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
                     room_messages_collection =
@@ -126,6 +127,7 @@ describe 'Room', ->
                 it 'should return the built collection for the room model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
+
         describe 'post_room_message', ->
 
             res = null
@@ -134,7 +136,10 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 res =  send: sinon.spy()
-                req =  param: sinon.stub()
+                req =  
+                    param: sinon.stub()
+                    user:
+                        id: 2
                 req.param.withArgs('id').returns(room_id)
                 done()
 
@@ -144,23 +149,35 @@ describe 'Room', ->
                 chat_room_id = null
                 body = null
                 room_message = null
-                message_id = null
+                saved_message = null
+                request_values = null
+
                 beforeEach (done) ->
+                    saved_message = 'blah message'
                     room_message = 
                         save: (callback) ->
-                            callback(false, {id: message_id})
+                            callback(false, saved_message)
                     
                     req.body = {message: 'Dolorem Ipsum'}
                     
                     message = JSON.stringify(req.body)
-                    request_values = {body: message, user_id:1, room_id:room_id}
+                    request_values =
+                        body: message
+                        room_id: room_id
+                        user_id: req.user.id
+                        date: ''
+
                     sinon.spy(room_message, 'save')
-                    support_mock.core.entity_factory.create.withArgs('ChatRoomMessage', request_values).returns(room_message)
+                    support_mock.core.entity_factory.create.returns(room_message)
                     sut.methods.post_room_message(req,res)
                     done()
 
                 it 'should notify the user the room was created', (done) ->
-                    sinon.assert.calledWith(res.send,{ success:true, newMessage:room_message})
+                    sinon.assert.calledWith(res.send,{ success:true, newMessage:saved_message})
+                    done()
+
+                it 'should have asked to create the ChatRoomMessage with the correct request values', (done) ->
+                    sinon.assert.called(support_mock.core.entity_factory.create, 'ChatRoomMessage', request_values)
                     done()
 
                 it 'should create the message on the database', (done) ->

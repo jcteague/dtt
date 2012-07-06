@@ -68,13 +68,10 @@ methods.post_room_message = (req, res, next) ->
     values = req.body
     room_id = req.param('id')
     message_body = JSON.stringify({message:values.message})
-    newMessage = {body: message_body, room_id:room_id, user_id: 2, date:new Date()}
-    # TODO: Get the user id value from the actual logged in user
+    newMessage = {body: message_body, room_id:room_id, user_id: req.user.id, date:new Date()}
     room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
     room_message.save (err,saved_message) ->
         if !err
-            #res.send("message added to room #{room_id}")
-            console.log saved_message
             res.send({success:true, newMessage:saved_message})
         else 
             next(new Error(err.code,err.message))
