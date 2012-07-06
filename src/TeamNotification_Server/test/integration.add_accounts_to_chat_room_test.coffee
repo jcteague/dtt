@@ -83,7 +83,7 @@ describe 'Add Account To Chat Room', ->
                         then(done, done)
 
                 it 'should display the user added message', (done) ->
-                    expect(browser.html('#messages-container p')).to.equal "<p>user added</p>"
+                    expect(browser.html('#server-response-container p')).to.equal "<p>user added</p>"
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
@@ -106,5 +106,5 @@ describe 'Add Account To Chat Room', ->
                         then(done, done)
 
                 it 'should display the user does not exist message', (done) ->
-                    expect(browser.html('#messages-container p')).to.equal "<p>user does not exist</p>"
+                    expect(browser.html('#server-response-container p')).to.equal "<p>user does not exist</p>"
                     done()
