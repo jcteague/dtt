@@ -49,18 +49,7 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        res.json({
-            href: "/room/#{room_id}/messages"
-            links:[
-                {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
-                {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
-            ]
-            template:
-                'data':[
-                    {'name':'message', 'label':'Message', 'type':'string-big', 'maxlength':100}
-                ]
-            messages:collection.to_json()
-            })
+        res.json collection.to_json()
 
     build('room_messages_collection').for(room_id).fetch_to callback
 

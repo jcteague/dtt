@@ -3,9 +3,10 @@ class RoomMessagesCollection
         if @room_messages == null
             @room_messages = []
         else
-            @room_messages.reverse()  #&& @room_messages.lenght > 0
+            @room_messages.reverse()
 
     to_json: ->
+        room_id = @get_room_id()
         get_data_for = (message) ->
             return {
                 "data": [
@@ -14,24 +15,22 @@ class RoomMessagesCollection
                     { 'name':'datetime', 'value':message.date }
                 ]
             }
-        m  = []
-        for message in @room_messages
-            m.push get_data_for message
-        console.log m
-        return m
-    #'links' : [
-    #        {"name": "self", "rel": "Room Messages", 'href':"/room/#{room_id}/messages"}
-    #    ]
-    #    'messages':[
-    #        { href:'',
-    #          data:[ 
-    #            { name:'user' value:'etoribio'}
-    #            { name:'body': value:'Hello'} 
-    #            { name:'datetime' value:'2012-06-23 13:30' }
-    #          ]
-    #       }
-    #    ]
-    fetch_to: (callback) ->
-        Q.when(@collection, callback)
+        m = (get_data_for(message) for message in @room_messages)
+
+        return {
+            href: "/room/#{room_id}/messages"
+            links:[
+                {"name": "self", "rel": "RoomMessages", 'href':"/room/#{room_id}/messages"}
+                {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
+            ]
+            template:
+                'data':[
+                    {'name':'message', 'label':'Message', 'type':'string-big', 'maxlength':100}
+                ]
+            messages: m
+        }
+
+    get_room_id: ->
+        @room_messages[0].room_id
 
 module.exports = RoomMessagesCollection
