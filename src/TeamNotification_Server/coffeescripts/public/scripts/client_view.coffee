@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, MessagesView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, MessagesView) ->
 
     class ClientView extends Backbone.View
 
@@ -8,6 +8,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view = new LinksView()
             @form_view = new FormView()
             @query_view = new QueryView()
+            @server_response_view = new ServerResponseView()
             @messages_view = new MessagesView()
             @subscribe_to_events()
             Backbone.history.start()
@@ -21,9 +22,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @
 
         update_messages: (unformatted_new_message) ->
-            console.log @data
             @messages_view.add_message @data.messages, unformatted_new_message
-            @display_messages @data.messages
+            @messages_view.update @data.messages
+            @messages_view.render().append_to @$el
             
         subscribe_to_events: ->
             @router.on 'render', @render_path, @
@@ -43,5 +44,5 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @render()
 
         display_messages: (messages) ->
-            @messages_view.update(messages)
-            @messages_view.render().append_to @$el
+            @server_response_view.update(messages)
+            @server_response_view.render().append_to @$el

@@ -10,6 +10,7 @@ require.config
         'form_view': 'form_view'
         'links_view': 'links_view'
         'query_view': 'query_view'
+        'server_response_view': 'server_response_view'
         'messages_view': 'messages_view'
         'form_template_renderer': 'form_template_renderer'
         'query_renderer': 'query_renderer'
