@@ -1,5 +1,6 @@
 _ = require('underscore')
 passport = require('passport')
+sha256 = require('node_hash').sha256
 BasicStrategy = require('passport-http').BasicStrategy
 Repository = require './repository'
 
@@ -18,7 +19,7 @@ class Authentication
         @repository.find(email: username).then (users) ->
             if !users? or !users[0]?
                 return done(null, false)
-            if users[0].password != password
+            if users[0].password != sha256(password)
                 return done(null, false)
             user = users[0]
             done(null, id: user.id, email: user.email)

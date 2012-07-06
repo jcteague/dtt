@@ -12,13 +12,13 @@ users =
             id: 1
             name: "'blah'"
             email: "'foo@bar.com'"
-            password: "'1234'"
+            password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
         },
         {
             id: 2
             name: "'ed2'"
             email: "'ed@es.com'"
-            password: "'1234'"
+            password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
         }
     ]
 

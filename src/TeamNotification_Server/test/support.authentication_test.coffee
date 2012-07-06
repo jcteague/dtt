@@ -10,10 +10,14 @@ passport_mock =
 underscore_mock =
     bindAll: sinon.stub()
 
+hash_mock = 
+    sha256: sinon.stub()
+
 Authentication = module_loader.require('../support/authentication', {
     requires:
         'passport': passport_mock
         'underscore': underscore_mock
+        'node_hash': hash_mock
 })
 
 describe 'Authentication', ->
@@ -52,11 +56,12 @@ describe 'Authentication', ->
 
     describe 'findByUserName', ->
 
-        username = password = user = null
+        username = password = encrypted = user = null
 
         beforeEach (done) ->
             username = 'blah user'
             password = 'foo password'
+            encrypted = 'bar encrypted password'
             done()
 
         describe 'and the user exists on the database', ->
@@ -64,7 +69,8 @@ describe 'Authentication', ->
             express_done = null
 
             beforeEach (done) ->
-                user = {id: 2, email: username, password: password}
+                hash_mock.sha256.withArgs(password).returns(encrypted)
+                user = {id: 2, email: username, password: encrypted}
                 promise = 
                     then: (callback) ->
                         callback([user])
