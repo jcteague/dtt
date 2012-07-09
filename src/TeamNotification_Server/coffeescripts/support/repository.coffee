@@ -22,6 +22,8 @@ class Repository
         return (entities) ->
             if entities?
                 return deferred.resolve(entities)
-            deferred.resolve(args)
+            deferred.resolve 
+                is_empty: true
+                args: args
 
 module.exports = Repository

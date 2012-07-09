@@ -13,7 +13,9 @@ add_user_to_chat_room = (user_id, room_id) ->
     user_id = parseInt(user_id, 10)
     defer = Q.defer()
     user_repository.get_by_id(user_id).then (user) ->
-        if user?
+        if user.is_empty
+            defer.resolve({success: false, messages: ["user does not exist"]})
+        else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 if (member for member in chat_room.users when member.id is user_id).length is 0
                     chat_room.addUsers(user, () ->
@@ -22,8 +24,6 @@ add_user_to_chat_room = (user_id, room_id) ->
                 else
                     defer.resolve({success: false, messages: ["user is already in the room"]})
 
-        else
-            defer.resolve({success: false, messages: ["user does not exist"]})
     defer.promise
 
 module.exports =

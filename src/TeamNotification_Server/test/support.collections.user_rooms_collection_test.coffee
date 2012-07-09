@@ -45,7 +45,7 @@ describe 'User Rooms Collection', ->
 
             beforeEach (done) ->
                 owner_id = 2
-                sut.rooms = [[{owner_id: owner_id}]]
+                sut.rooms = is_empty: true, args: [[{owner_id: owner_id}]]
                 result = sut.to_json()
                 done()
 
