@@ -24,15 +24,33 @@ describe 'User Rooms Collection', ->
 
         result  = null
 
-        beforeEach (done) ->
-            sut.rooms = chat_rooms
-            result = sut.to_json()
-            done()
-        
-        it 'should return the user rooms collection as json', (done) ->
-            links = result['links']
-            expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{chat_rooms[0].owner_id}/rooms"}
-            expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
-            expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
+        describe 'and the user has rooms', ->
 
-            done()
+            beforeEach (done) ->
+                sut.rooms = chat_rooms
+                result = sut.to_json()
+                done()
+            
+            it 'should return the user rooms collection as json', (done) ->
+                links = result['links']
+                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{chat_rooms[0].owner_id}/rooms"}
+                expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
+                expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
+
+                done()
+
+        describe 'and the user does not have rooms', ->
+
+            owner_id = null
+
+            beforeEach (done) ->
+                owner_id = 2
+                sut.rooms = [[{owner_id: owner_id}]]
+                result = sut.to_json()
+                done()
+
+            it 'should return a link to the root path', (done) ->
+                links = result['links']
+                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{owner_id}/rooms"}
+                expect(links.length).to.equal 1
+                done()

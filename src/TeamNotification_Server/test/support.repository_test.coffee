@@ -49,8 +49,8 @@ describe 'Repository', ->
             q_mock.defer.returns deferred
 
             resolve_callback = 'blah func'
-            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred).returns(resolve_callback)
             id = 10
+            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred, id).returns(resolve_callback)
             expected_result = deferred.promise
             result = sut.get_by_id(id)
             done()
@@ -82,9 +82,8 @@ describe 'Repository', ->
             q_mock.defer.returns deferred
 
             resolve_callback = 'blah func'
-            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred).returns(resolve_callback)
-
             [arg1, arg2] = ['foo', 'bar']
+            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred, [arg1, arg2]).returns(resolve_callback)
 
             expected_result = deferred.promise
             result = sut.find arg1, arg2
