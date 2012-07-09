@@ -6,14 +6,14 @@ RoomMessagesCollection = module_loader.require('../support/collections/room_mess
 
 describe 'Room Messages Collection', ->
         
-    sut = room_id = room_messages = body = null
+    sut = room_id = room_messages = messages = body = null
 
     describe 'and there are room messages', ->
 
         beforeEach (done) ->
             room_id = 1
             body = {message: 'blah!'}
-            room_messages = [
+            messages = [
                 { 
                     id: 10
                     body: JSON.stringify(body)
@@ -45,13 +45,14 @@ describe 'Room Messages Collection', ->
                         owner_id:1
                 }
             ]
-            sut = new RoomMessagesCollection(room_messages)
+            room_messages = room_id: room_id, messages: messages
+            sut = new RoomMessagesCollection room_messages
             done()
 
         describe 'constructor', ->
 
             it 'should have the current room_messages value set inside the object', (done) ->
-                expect(sut.room_messages).to.equal(room_messages)
+                expect(sut.room_messages).to.eql room_messages
                 done()
 
         describe 'to_json', ->
@@ -75,7 +76,7 @@ describe 'Room Messages Collection', ->
 
                 it 'should return the chat room messages in the data messages field', (done) ->
                     message = result['messages'][0]
-                    expect(message['data']).to.eql [{ 'name':'user', 'value': room_messages[0].user.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':room_messages[0].date }]
+                    expect(message['data']).to.eql [{ 'name':'user', 'value': messages[0].user.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':messages[0].date }]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->
@@ -93,14 +94,14 @@ describe 'Room Messages Collection', ->
 
         beforeEach (done) ->
             room_id = 1
-            room_messages = is_empty: true, args: [[{room_id: room_id}]]
+            room_messages = room_id: room_id, messages: []
             sut = new RoomMessagesCollection(room_messages)
             done()
 
         describe 'constructor', ->
 
             it 'should have the current room_messages value set inside the object', (done) ->
-                expect(sut.room_messages).to.equal(room_messages)
+                expect(sut.room_messages).to.eql room_id: room_id, messages: []
                 done()
 
         describe 'to_json', ->
@@ -108,19 +109,18 @@ describe 'Room Messages Collection', ->
             result = room = null
 
             beforeEach (done) ->
-                room_id = 3
-                sut.room_messages = is_empty: true, args: [[{room_id: room_id}]]
+                sut.room_messages = room_messages
                 result = sut.to_json()
                 done()
 
             it 'should contain an href property pointing to the current url', (done) ->
-                expect(result['href']).to.equal "/room/#{room_id}/messages"
+                expect(result['href']).to.equal "/room/#{room_messages.room_id}/messages"
                 done()
 
             it 'should return a links array in the collection links', (done) ->
                 links = result['links']
-                expect(links[0]).to.eql {"name": "self", "rel": "RoomMessages", "href": "/room/#{room_id}/messages"}
-                expect(links[1]).to.eql {"name": "Room", "rel": "Room", "href": "/room/#{room_id}"}
+                expect(links[0]).to.eql {"name": "self", "rel": "RoomMessages", "href": "/room/#{room_messages.room_id}/messages"}
+                expect(links[1]).to.eql {"name": "Room", "rel": "Room", "href": "/room/#{room_messages.room_id}"}
                 done()
 
             it 'should contain an empty messages property', (done) ->

@@ -6,18 +6,18 @@ UserRoomsCollection = module_loader.require('../support/collections/user_rooms_c
 
 describe 'User Rooms Collection', ->
 
-    chat_rooms = null
-    sut = null
+    sut = chat_rooms = user_id = null
 
     beforeEach (done) ->
-        chat_rooms = [ { id:1, name:'happy place', owner_id:1 },{id:2, name:'somewhere', owner_id:1 }]
-        sut = new UserRoomsCollection chat_rooms
+        user_id = 1
+        chat_rooms = [ { id:1, name:'happy place', owner_id:user_id },{id:2, name:'somewhere', owner_id:user_id}]
+        sut = new UserRoomsCollection user_id: user_id, rooms: chat_rooms
         done()
 
     describe 'constructor', ->
 
         it 'should have the current rooms value set inside the object', (done) ->
-            expect(sut.rooms).to.equal(chat_rooms)
+            expect(sut.rooms).to.eql user_id: user_id, rooms: chat_rooms
             done()
 
     describe 'to_json', ->
@@ -27,13 +27,13 @@ describe 'User Rooms Collection', ->
         describe 'and the user has rooms', ->
 
             beforeEach (done) ->
-                sut.rooms = chat_rooms
+                sut.rooms = user_id: user_id, rooms: chat_rooms
                 result = sut.to_json()
                 done()
             
             it 'should return the user rooms collection as json', (done) ->
                 links = result['links']
-                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{chat_rooms[0].owner_id}/rooms"}
+                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{user_id}/rooms"}
                 expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
                 expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
 
@@ -41,16 +41,13 @@ describe 'User Rooms Collection', ->
 
         describe 'and the user does not have rooms', ->
 
-            owner_id = null
-
             beforeEach (done) ->
-                owner_id = 2
-                sut.rooms = is_empty: true, args: [[{owner_id: owner_id}]]
+                sut.rooms = user_id: user_id, rooms: []
                 result = sut.to_json()
                 done()
 
             it 'should return a link to the root path', (done) ->
                 links = result['links']
-                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{owner_id}/rooms"}
+                expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{user_id}/rooms"}
                 expect(links.length).to.equal 1
                 done()

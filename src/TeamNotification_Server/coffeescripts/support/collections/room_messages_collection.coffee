@@ -1,6 +1,6 @@
-class RoomMessagesCollection    
+class RoomMessagesCollection
     constructor: (@room_messages) ->
-        @room_messages.reverse() unless @room_messages.is_empty
+        @room_messages.messages.reverse()
 
     to_json: ->
         room_id = @get_room_id()
@@ -12,7 +12,7 @@ class RoomMessagesCollection
                     { 'name':'datetime', 'value':message.date }
                 ]
             }
-        m = (get_data_for(message) for message in @room_messages)
+        m = (get_data_for(message) for message in @room_messages.messages)
 
         return {
             href: "/room/#{room_id}/messages"
@@ -28,9 +28,6 @@ class RoomMessagesCollection
         }
 
     get_room_id: ->
-        if @room_messages.is_empty
-            @room_messages.args[0][0].room_id
-        else
-            @room_messages[0].room_id
+        @room_messages.room_id
 
 module.exports = RoomMessagesCollection

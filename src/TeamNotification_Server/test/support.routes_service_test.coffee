@@ -125,7 +125,7 @@ describe 'Routes Service', ->
         describe 'and the user does not exist', ->
 
             beforeEach (done) ->
-                user = is_empty: true, args: [user_id]
+                user = null
                 user_promise =
                     then: (callback) ->
                         callback(user)
