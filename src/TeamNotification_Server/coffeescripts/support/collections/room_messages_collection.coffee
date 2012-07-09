@@ -1,9 +1,6 @@
 class RoomMessagesCollection    
     constructor: (@room_messages) ->
-        if @room_messages == null
-            @room_messages = []
-        else
-            @room_messages.reverse()
+        @room_messages.reverse() unless @room_messages.is_empty
 
     to_json: ->
         room_id = @get_room_id()
@@ -31,6 +28,9 @@ class RoomMessagesCollection
         }
 
     get_room_id: ->
-        @room_messages[0].room_id
+        if @room_messages.is_empty
+            @room_messages.args[0][0].room_id
+        else
+            @room_messages[0].room_id
 
 module.exports = RoomMessagesCollection
