@@ -14,6 +14,7 @@ express_mock =
 routes_service_mock =
     build: sinon.stub()
     add_user_to_chat_room: sinon.stub()
+    is_user_in_room: sinon.stub()
 
 sut = module_loader.require('../routes/room.js', {
     requires:
@@ -57,12 +58,8 @@ describe 'Room', ->
             req = null
             room_id = null
             json_data = null
-            beforeEach (done) ->
-                #collection_value = 'blah collection'
-                #collection =
-                #    to_json: (json)->
-                #        collection_value = json
 
+            beforeEach (done) ->
                 collection =
                     to_json: ->
                         collection_value
@@ -74,24 +71,54 @@ describe 'Room', ->
                 req.param.withArgs('id').returns(room_id)
                 res = 
                     json: sinon.spy()
+                    redirect: sinon.spy()
 
                 done()
 
             describe 'get_room_by_id', ->
 
+                user_id = null
+
                 beforeEach (done) ->
-                    routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
-                    room_collection =
-                        fetch_to: (callback) ->
-                            callback(collection)
-
-                    collection_factory.for.withArgs(room_id).returns(room_collection)
-                    sut.methods.get_room_by_id(req, res)
+                    user_id = 10
+                    req.user =
+                        id: user_id
                     done()
 
-                it 'should return the built collection for the room model', (done) ->
-                    sinon.assert.calledWith(res.json, collection_value)
-                    done()
+                describe 'and the user is in the room', ->
+
+                    beforeEach (done) ->
+                        in_room_promise =
+                            then: (callback) ->
+                                callback(true)
+                        routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(in_room_promise)
+                        routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
+                        room_collection =
+                            fetch_to: (callback) ->
+                                callback(collection)
+
+                        collection_factory.for.withArgs(room_id).returns(room_collection)
+                        sut.methods.get_room_by_id(req, res)
+                        done()
+
+                    it 'should return the built collection for the room model', (done) ->
+                        sinon.assert.calledWith(res.json, collection_value)
+                        done()
+
+                describe 'and the user is not in the room', ->
+
+                    beforeEach (done) ->
+                        in_room_promise =
+                            then: (callback) ->
+                                callback(false)
+                        routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(in_room_promise)
+                        sut.methods.get_room_by_id(req, res)
+                        done()
+
+                    it 'should redirect the user to the root path', (done) ->
+                        sinon.assert.calledWith(res.redirect, '/')
+                        done()
+
 
             describe 'manage_room_members', ->
 

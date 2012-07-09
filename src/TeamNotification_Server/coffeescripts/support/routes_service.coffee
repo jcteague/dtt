@@ -26,6 +26,19 @@ add_user_to_chat_room = (user_id, room_id) ->
 
     defer.promise
 
+is_user_in_room = (user_id, room_id) ->
+    user_repository = new Repository('User')
+    chat_room_repository = new Repository('ChatRoom')
+
+    user_id = parseInt(user_id, 10)
+    defer = Q.defer()
+    user_repository.get_by_id(user_id).then (user) ->
+        chat_room_repository.get_by_id(room_id).then (chat_room) ->
+            defer.resolve (member for member in chat_room.users when member.id is user_id).length isnt 0
+
+    defer.promise
+
 module.exports =
     build: build
     add_user_to_chat_room: add_user_to_chat_room
+    is_user_in_room: is_user_in_room
