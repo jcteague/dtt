@@ -26,7 +26,7 @@ methods.get_room_by_id = (req, res) ->
     callback = (collection) ->
         res.json(collection.to_json())
 
-    build('room_collection').for(room_id).fetch_to callback
+    build('room_collection').for(room_id, req.user.id).fetch_to callback
 
 methods.post_room_user = (req, res, next) ->
     routes_service.add_user_to_chat_room(req.body.id, req.param('id')).then (response) ->
