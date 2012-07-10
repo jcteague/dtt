@@ -133,7 +133,7 @@ describe 'Room', ->
                         fetch_to: (callback) ->
                             callback(collection)
 
-                    collection_factory.for.withArgs(room_id, user_id).returns(room_collection)
+                    collection_factory.for.withArgs(room_id: room_id, user_id: user_id).returns(room_collection)
                     sut.methods.get_room_by_id(req, res)
                     done()
 

@@ -30,7 +30,7 @@ describe 'Chat Room By Id With User Id Strategy', ->
             expected_result =
                 user_id: user_id
                 room: room
-            result = sut(room_id, user_id)
+            result = sut(room_id: room_id, user_id: user_id)
             done()
 
         it 'should return the room repository result for the rooms that have that user as an owner or member', (done) ->

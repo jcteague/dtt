@@ -1,8 +1,6 @@
 class RoomCollection
 
-    constructor: (room) ->
-        console.log room
-        @room = room
+    constructor: (@room) ->
 
     to_json: ->
         users = ({"name": user.name, "rel": "User", "href": "/user/#{user.id}"} for user in @room.room.users)
