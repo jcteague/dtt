@@ -6,18 +6,24 @@ UserCollection = module_loader.require('../support/collections/user_collection',
 
 describe 'User Collection', ->
 
-    sut = null
-    user_id = null
+    sut = data = user_id = rooms = room = null
 
     beforeEach (done) ->
         user_id = 10
-        sut = new UserCollection(user_id)
+        room =
+            id: 1
+            name: 'blah room'
+        rooms = [room]
+        data =
+            user_id: user_id
+            rooms: rooms
+        sut = new UserCollection(data)
         done()
 
     describe 'constructor', ->
 
         it 'should set the collection with the constructor values', (done) ->
-            expect(sut.user_id).to.equal user_id
+            expect(sut.data).to.equal data
             done()
 
     describe 'to_json', ->
@@ -39,4 +45,12 @@ describe 'User Collection', ->
         it 'should return a href property pointing to the current url', (done) ->
             expect(result['href']).to.equal "/user/#{user_id}"
             done()
-            
+
+        it 'should return the rooms property as part of the collection', (done) ->
+            first_room = result['rooms'][0]
+            links = first_room['links']
+            expect(links[0]).to.eql {"rel": "Room", "name": room.name, "href": "/room/#{room.id}"}
+            data = first_room['data']
+            expect(data[0]).to.eql {"name": "id", "value": room.id}
+            expect(data[1]).to.eql {"name": "name", "value": room.name}
+            done()

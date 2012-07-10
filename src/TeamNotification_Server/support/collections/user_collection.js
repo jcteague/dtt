@@ -4,15 +4,26 @@
 
   UserCollection = (function() {
 
-    function UserCollection(user_id) {
-      this.user_id = user_id;
+    function UserCollection(data) {
+      this.data = data;
     }
 
     UserCollection.prototype.to_json = function() {
-      var self;
+      var room, rooms, self;
       self = "/user/" + this.user_id;
+      rooms = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.data.rooms;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          room = _ref[_i];
+          _results.push(this.get_room(room));
+        }
+        return _results;
+      }).call(this);
       return {
         href: self,
+        rooms: rooms,
         links: [
           {
             "rel": "User",
@@ -26,6 +37,27 @@
             "rel": "Room",
             "name": "Create Room",
             "href": "/room"
+          }
+        ]
+      };
+    };
+
+    UserCollection.prototype.get_room = function(room) {
+      return {
+        data: [
+          {
+            "name": "id",
+            "value": room.id
+          }, {
+            "name": "name",
+            "value": room.name
+          }
+        ],
+        links: [
+          {
+            "rel": "Room",
+            "name": room.name,
+            "href": "/room/" + room.id
           }
         ]
       };
