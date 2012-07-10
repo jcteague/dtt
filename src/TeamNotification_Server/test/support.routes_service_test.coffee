@@ -196,6 +196,28 @@ describe 'Routes Service', ->
                 expect(result).to.eql expected_result
                 done()
 
+        describe 'and the user is the owner of the room', ->
+
+            beforeEach (done) ->
+                room =
+                    id: room_id
+                    owner_id: user_id
+                    users: []
+                room_promise =
+                    then: (callback) ->
+                        callback(room)
+
+                chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
+                result = sut.is_user_in_room user_id, room_id
+                done()
+
+            it 'should resolve the promise with true', ->
+                sinon.assert.calledWith(deferred.resolve, true)
+
+            it 'should return a promise', (done) ->
+                expect(result).to.eql expected_result
+                done()
+
 
         describe 'and the user is not in the room', ->
 

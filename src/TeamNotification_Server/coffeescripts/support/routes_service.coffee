@@ -34,7 +34,7 @@ is_user_in_room = (user_id, room_id) ->
     defer = Q.defer()
     user_repository.get_by_id(user_id).then (user) ->
         chat_room_repository.get_by_id(room_id).then (chat_room) ->
-            defer.resolve (member for member in chat_room.users when member.id is user_id).length isnt 0
+            defer.resolve(chat_room.owner_id is user_id or (member for member in chat_room.users when member.id is user_id).length isnt 0)
 
     defer.promise
 

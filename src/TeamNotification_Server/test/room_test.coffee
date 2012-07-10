@@ -38,16 +38,61 @@ describe 'Room', ->
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/room',sut.methods.get_room)
-            sinon.assert.calledWith(app.get,'/room/:id',sut.methods.get_room_by_id)
-            sinon.assert.calledWith(app.get,'/room/:id/messages',sut.methods.get_room_messages)
-            sinon.assert.calledWith(app.get,'/room/:id/users',sut.methods.manage_room_members)
+            sinon.assert.calledWith(app.get,'/room', sut.methods.get_room)
+            sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
+            sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, sut.methods.get_room_messages)
+            sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
-            sinon.assert.calledWith(app.post,'/room/:id/users', body_parser_result, sut.methods.post_room_user)
-            sinon.assert.calledWith(app.post,'/room/:id/messages',body_parser_result, sut.methods.post_room_message)
+            sinon.assert.calledWith(app.post,'/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
+            sinon.assert.calledWith(app.post,'/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)
             done()
 
     describe 'methods', ->
+
+        describe 'user_authorized_in_room', ->
+
+            next = req = res = room_id = user_id = null
+
+            beforeEach (done) ->
+                user_id = 10
+                room_id = 1
+                req =
+                    param: sinon.stub()
+                    user:
+                        id: user_id
+                req.param.withArgs('id').returns(room_id)
+                res =
+                    redirect: sinon.spy()
+                next = sinon.spy()
+                done()
+
+            describe 'and the user is authorized', ->
+
+                beforeEach (done) ->
+                    user_in_promise =
+                        then: (callback) ->
+                            callback(true)
+                    routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(user_in_promise)
+                    sut.methods.user_authorized_in_room(req, res, next)
+                    done()
+
+                it 'should call the next function', (done) ->
+                    sinon.assert.called(next)
+                    done()
+
+            describe 'and the user is not authorized', ->
+
+                beforeEach (done) ->
+                    user_in_promise =
+                        then: (callback) ->
+                            callback(false)
+                    routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(user_in_promise)
+                    sut.methods.user_authorized_in_room(req, res, next)
+                    done()
+
+                it 'should call the next function', (done) ->
+                    sinon.assert.calledWith(res.redirect, '/')
+                    done()
 
         describe 'for a room with id', ->
 
@@ -83,41 +128,18 @@ describe 'Room', ->
                     user_id = 10
                     req.user =
                         id: user_id
+                    routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
+                    room_collection =
+                        fetch_to: (callback) ->
+                            callback(collection)
+
+                    collection_factory.for.withArgs(room_id).returns(room_collection)
+                    sut.methods.get_room_by_id(req, res)
                     done()
 
-                describe 'and the user is in the room', ->
-
-                    beforeEach (done) ->
-                        in_room_promise =
-                            then: (callback) ->
-                                callback(true)
-                        routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(in_room_promise)
-                        routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
-                        room_collection =
-                            fetch_to: (callback) ->
-                                callback(collection)
-
-                        collection_factory.for.withArgs(room_id).returns(room_collection)
-                        sut.methods.get_room_by_id(req, res)
-                        done()
-
-                    it 'should return the built collection for the room model', (done) ->
-                        sinon.assert.calledWith(res.json, collection_value)
-                        done()
-
-                describe 'and the user is not in the room', ->
-
-                    beforeEach (done) ->
-                        in_room_promise =
-                            then: (callback) ->
-                                callback(false)
-                        routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(in_room_promise)
-                        sut.methods.get_room_by_id(req, res)
-                        done()
-
-                    it 'should redirect the user to the root path', (done) ->
-                        sinon.assert.calledWith(res.redirect, '/')
-                        done()
+                it 'should return the built collection for the room model', (done) ->
+                    sinon.assert.calledWith(res.json, collection_value)
+                    done()
 
 
             describe 'manage_room_members', ->
