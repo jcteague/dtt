@@ -31,7 +31,7 @@ describe 'User Collection', ->
         result = null
 
         beforeEach (done) ->
-            sut.user_id = user_id
+            sut.data = data
             result = sut.to_json()
             done()
 
