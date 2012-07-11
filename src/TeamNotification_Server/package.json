@@ -7,6 +7,8 @@
     , "jade": ">= 0.0.1"
     , "coffee-script": "*"
     , "q": "*"
+    , "socket.io": "*"
+    , "redis": "*"
     , "underscore": "*"
     , "pg": "*"
     , "async": "*"

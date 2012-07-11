@@ -56,12 +56,13 @@ describe 'Authentication', ->
 
     describe 'findByUserName', ->
 
-        username = password = encrypted = user = null
+        username = password = encrypted = user = name = null
 
         beforeEach (done) ->
-            username = 'blah user'
-            password = 'foo password'
-            encrypted = 'bar encrypted password'
+            username = 'jhon@aol.com'
+            password = '123456789'
+            encrypted = '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225'
+            name = 'jhonny'
             done()
 
         describe 'and the user exists on the database', ->
@@ -70,7 +71,7 @@ describe 'Authentication', ->
 
             beforeEach (done) ->
                 hash_mock.sha256.withArgs(password).returns(encrypted)
-                user = {id: 2, email: username, password: encrypted}
+                user = {id: 1, email: username, password: encrypted, name:name}
                 promise = 
                     then: (callback) ->
                         callback([user])
@@ -85,7 +86,7 @@ describe 'Authentication', ->
                     done()
 
                 it 'should call the done with the user data', (done) ->
-                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email})
+                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email, name:user.name})
                     done()
 
             describe 'and the password does not match the username', ->

@@ -3,12 +3,13 @@ Module dependencies.
 ###
 
 express = require('express')
-
 Authentication = require('./support/authentication')
-auth = new Authentication()
 
+auth = new Authentication()
 app = module.exports = express.createServer()
+
 require('./helper')(app)
+io = require('socket.io').listen(app)
 
 ###
   Mock Database
@@ -49,9 +50,9 @@ app.configure(->
 
 # Apply authentication for all routes
 app.all '*', auth.authenticate()
-
 # This must live here after authentication has been initialized
-require('./routes')(app)
+require('./routes')(app, io)
+
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

@@ -21,16 +21,16 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @messages_view.render().append_to @$el
             @
 
-        update_messages: (unformatted_new_message) ->
-            @messages_view.add_message @data.messages, unformatted_new_message
-            @messages_view.update @data.messages
-            @messages_view.render().append_to @$el
+       # update_messages: (unformatted_new_message) ->
+       #     @messages_view.add_message @data.messages, unformatted_new_message
+       #     @messages_view.update @data.messages
+       #     @messages_view.render().append_to @$el
             
         subscribe_to_events: ->
             @router.on 'render', @render_path, @
-            @form_view.on 'messages:display', @display_messages, @
             @query_view.on 'messages:display', @display_messages, @
-            @form_view.on 'response:received',@update_messages, @
+            @form_view.on 'messages:display', @display_messages, @
+            #@form_view.on 'response:received',@update_messages, @
 
         render_path: (path) ->
             $.getJSON(path, @load_json)
@@ -40,7 +40,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view.update @data.links
             @form_view.update @data
             @query_view.update @data.queries
-            @messages_view.update @data.messages
+            @messages_view.update @data
             @render()
 
         display_messages: (messages) ->

@@ -10,5 +10,5 @@ methods.get_root = (req, res) ->
 
 module.exports =
     methods: methods,
-    build_routes: (app) ->
+    build_routes: (app, io) ->
         app.get('/',methods.get_root)

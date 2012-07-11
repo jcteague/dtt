@@ -22,7 +22,7 @@ class Authentication
             if users[0].password != sha256(password)
                 return done(null, false)
             user = users[0]
-            done(null, id: user.id, email: user.email)
+            done(null, id: user.id, email: user.email, name: user.name)
 
 	authenticate: (request,response) ->
 		passport.authenticate('basic', {session:false})
