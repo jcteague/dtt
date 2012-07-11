@@ -3,6 +3,7 @@ passport = require('passport')
 sha256 = require('node_hash').sha256
 BasicStrategy = require('passport-http').BasicStrategy
 Repository = require './repository'
+whitelisted_paths = require('../config')().site.whitelisted_paths
 
 class Authentication
 
@@ -24,7 +25,13 @@ class Authentication
             user = users[0]
             done(null, id: user.id, email: user.email)
 
-	authenticate: (request,response) ->
-		passport.authenticate('basic', {session:false})
+	authenticate: (request, response, next) ->
+        if @is_whitelisted(request.path)
+            next()
+        else
+            passport.authenticate('basic', {session:false})(request, response, next)
+
+    is_whitelisted: (path) ->
+        whitelisted_paths.indexOf(path) isnt -1
 
 exports = module.exports = Authentication

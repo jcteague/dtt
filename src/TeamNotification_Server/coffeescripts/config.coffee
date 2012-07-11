@@ -5,6 +5,8 @@ db_config =
     db_main: 'dtt_main'
     db_test: 'dtt_test'
 
+whitelisted_paths = ['/registration']
+
 development_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
@@ -14,6 +16,7 @@ development_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'localhost:3000'
+        whitelisted_paths: whitelisted_paths
 
 test_settings =
     db:
@@ -24,6 +27,7 @@ test_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'localhost:3000'
+        whitelisted_paths: whitelisted_paths
 
 production_settings =
     db:
@@ -34,6 +38,7 @@ production_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'localhost:3000'
+        whitelisted_paths: whitelisted_paths
 
 module.exports = ->
     switch process.env.NODE_ENV

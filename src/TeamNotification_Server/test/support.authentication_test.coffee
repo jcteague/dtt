@@ -13,11 +13,18 @@ underscore_mock =
 hash_mock = 
     sha256: sinon.stub()
 
+config_mock = ->
+    return {
+        site:
+            whitelisted_paths: ['blah path']
+    }
+
 Authentication = module_loader.require('../support/authentication', {
     requires:
         'passport': passport_mock
         'underscore': underscore_mock
         'node_hash': hash_mock
+        '../config': config_mock
 })
 
 describe 'Authentication', ->
@@ -119,12 +126,75 @@ describe 'Authentication', ->
 
     describe 'authenticate', ->
 
+        req = res = next = null
+
         beforeEach (done) ->
-            sut.authenticate(null, null)
+            req =
+                path: 'blah path'
+            next = sinon.spy()
+            res = 'blah response'
             done()
 
-        it 'should authenticate with basic', (done) ->
-            sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false)
-            done()
+        describe 'and the path is not on the whitelist', ->
 
+            authentication_func = null
 
+            beforeEach (done) ->
+                # Must reset because the mock is global
+                passport_mock.authenticate.reset()
+                sinon.stub(sut, 'is_whitelisted').withArgs(req.path).returns(false)
+                authentication_func = sinon.spy()
+                passport_mock.authenticate.withArgs('basic', session: false).returns(authentication_func)
+                sut.authenticate(req, res, next)
+                done()
+
+            it 'should authenticate with basic', (done) ->
+                sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false)
+                done()
+
+            it 'should call the authentication function with the request, response and next', (done) ->
+                sinon.assert.calledWith(authentication_func, req, res, next)
+                done()
+
+        describe 'and the path is on the whitelist', ->
+
+            beforeEach (done) ->
+                # Must reset because the mock is global
+                passport_mock.authenticate.reset()
+                sinon.stub(sut, 'is_whitelisted').withArgs(req.path).returns(true)
+                sut.authenticate(req, res, next)
+                done()
+
+            it 'should call next', (done) ->
+                sinon.assert.called(next)
+                done()
+
+            it 'should not authenticate with basic', (done) ->
+                sinon.assert.notCalled(passport_mock.authenticate)
+                done()
+
+    describe 'is_whitelisted', ->
+
+        result = path = null
+
+        describe 'and the path is on the whitelist', ->
+
+            beforeEach (done) ->
+                path = 'blah path'
+                result = sut.is_whitelisted(path)
+                done()
+
+            it 'should return true', (done) ->
+                expect(result).to.equal true
+                done()
+
+        describe 'and the path is not on the whitelist', ->
+
+            beforeEach (done) ->
+                path = 'foo path'
+                result = sut.is_whitelisted(path)
+                done()
+
+            it 'should return false', (done) ->
+                expect(result).to.equal false
+                done()
