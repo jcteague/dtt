@@ -5,7 +5,7 @@ db_config =
     db_main: 'dtt_main'
     db_test: 'dtt_test'
 
-whitelisted_paths = ['/registration']
+whitelisted_paths = ['/client', '/registration']
 
 development_settings =
     db:

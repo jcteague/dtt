@@ -9,6 +9,9 @@ define 'form_template_renderer', ['jquery'], ($) ->
                 return [$('<label>', {"for":template.name}).text(template.label), $('<textarea>',{"name":template.name,"rows":5,"col":34,maxlength:template.maxlength})]
             hiddenFieldBuilder = (template) ->
                 return [$('<input>',{"type":"hidden","name":template.name})]
+            passwordFieldBuilder = (template) ->
+                return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"password","name":template.name})]
+
             templateFieldBuilder = (template) ->
                 return
 
@@ -16,6 +19,7 @@ define 'form_template_renderer', ['jquery'], ($) ->
                 return textAreaBuilder if fieldType is 'string-big'
                 return textFieldBuilder if fieldType is 'string'
                 return hiddenFieldBuilder if fieldType is 'hidden'
+                return passwordFieldBuilder if fieldType is 'password'
 
             form = $('<form>', {action:collection.href})
             form_templates = collection.template.data
