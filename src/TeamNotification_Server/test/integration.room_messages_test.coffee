@@ -14,6 +14,12 @@ users =
             email: "'foo@bar.com'"
             password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
         }
+        {
+            id: 2
+            name: "'bar'"
+            email: "'bar@foo.com'"
+            password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
+        }
     ]
 
 chat_rooms =
@@ -38,13 +44,15 @@ generate_message = (i) ->
 describe 'Room Messages', ->
 
     browser = null
-
+    browser2 = null
     describe 'Set Up', ->
 
         browser = null
         beforeEach (done) ->
             browser = new Browser()
             browser.authenticate().basic('foo@bar.com', '1234')
+            browser2 = new Browser()
+            browser2.authenticate().basic('bar@foo.com', '1234')
             handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/messages page', ->
@@ -99,9 +107,9 @@ describe 'Room Messages', ->
             describe 'and wants to send a message', ->
 
                 message_to_post = null
-
                 beforeEach (done) ->
                     message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
+                    browser2.visit('http://localhost:3000/client#/room/1/messages')
                     browser.visit('http://localhost:3000/client#/room/1/messages').
                         then( -> 
                             browser.fill("message", message_to_post)).
@@ -111,3 +119,8 @@ describe 'Room Messages', ->
                 it 'should show in the message pool', (done) ->
                     expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
                     done()
+                    
+                it 'should appear in the others users chat pages', (done) ->
+                    expect(browser2.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
+                    done()
+                    
