@@ -14,30 +14,34 @@ methods.get_registration = (req, res) ->
 methods.post_registration = (req, res) ->
     validation_result = methods.is_valid_user(req.body)
     if validation_result.valid
-        Q.when methods.is_email_already_registered(req.body.email), (is_registered) ->
-            if is_registered
-                res.json {
-                    success: false
-                    messages: ['email is already registered']
-                }
-            else
-                user_repository = new Repository('User')
-                user_data = 
-                    first_name: req.body.first_name
-                    last_name: req.body.last_name
-                    email: req.body.email
-                    password: node_hash.sha256(req.body.password)
-
-                user_repository.save(user_data).then (user) ->
-                    res.json {
-                        success: true
-                        data: user
-                    }
+        Q.when methods.is_email_already_registered(req.body.email), methods.get_email_registered_handler(req, res)
     else
         res.json {
             success: false
             messages: validation_result.errors
         }
+
+methods.get_email_registered_handler = (req, res) ->
+    return (is_registered) ->
+        if is_registered
+            res.json {
+                success: false
+                messages: ['email is already registered']
+            }
+        else
+            user_repository = new Repository('User')
+            user_data = 
+                first_name: req.body.first_name
+                last_name: req.body.last_name
+                email: req.body.email
+                password: node_hash.sha256(req.body.password)
+
+            user_repository.save(user_data).then (user) ->
+                res.json {
+                    success: true
+                    data: user
+                }
+
 
 methods.is_valid_user = (user_data) ->
     validator = new Validator()
