@@ -23,7 +23,7 @@ describe 'Room Collection', ->
 
     describe 'to_json', ->
 
-        result = room_id = null
+        result = null
 
         describe 'and the user is the owner of the room', ->
 
@@ -46,7 +46,7 @@ describe 'Room Collection', ->
             it 'should return all the room members in the members field', (done) ->
                 members = result['members']
                 users = room.room.users
-                expect(members[0]).to.eql {"href": "/room/#{room.id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
                 done()
 
         describe 'and the user is not the owner of the room', ->
@@ -69,5 +69,5 @@ describe 'Room Collection', ->
             it 'should return all the room members in the members field', (done) ->
                 members = result['members']
                 users = room.room.users
-                expect(members[0]).to.eql {"href": "/room/#{room.id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
                 done()

@@ -13,7 +13,7 @@ class RoomCollection
         return {
             href: self
             members: [
-                {"href": "/room/#{@room.id}/users", "data": users}
+                {"href": "/room/#{@room.room.id}/users", "data": users}
             ]
             links: [self].concat(other_links)
         }
