@@ -3,9 +3,9 @@ support = require('../support/core').core
 express = require('express')
 routes_service = require('../support/routes_service')
 
-redis1 = require("redis").createClient();
-redis2 = require("redis").createClient();
-redis3 = require("redis").createClient();
+redis1 = require("redis").createClient()
+redis2 = require("redis").createClient()
+redis3 = require("redis").createClient()
 
 list_of_listeners = {}
 
@@ -68,7 +68,7 @@ methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     set_socket_events(req.socket_io, room_id)
     callback = (collection) ->
-        res.json collection.to_json()
+        res.json(collection.to_json())
 
     build('room_messages_collection').for(room_id).fetch_to callback
 
@@ -87,7 +87,7 @@ methods.post_room_message = (req, res, next) ->
                 res.send({success:true, newMessage:saved_message})
             else 
                 next(new Error(err.code,err.message))
-   
+
 socket_middleware = require('../support/middlewares').socket_io
    
     

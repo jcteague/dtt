@@ -13,38 +13,11 @@ describe 'Room Messages Collection', ->
         beforeEach (done) ->
             room_id = 1
             body = {message: 'blah!'}
-            room_messages = [
-                { 
-                    id: 10
-                    body: JSON.stringify(body)
-                    date:'2012-06-29 11:11'
-                    user_id:1
-                    user:
-                        id: 1
-                        name: 'etoribio'
-                        email: 'etoribio@aol.com'
-                    room_id: room_id
-                    room:
-                        id:1
-                        name:'The real chatroom'
-                        owner_id:1
-                },
-                { 
-                    id: 11
-                    body: JSON.stringify(body)
-                    date:'2012-06-29 11:11'
-                    user_id:1
-                    user:
-                        id: 1
-                        name: 'etoribio'
-                        email: 'etoribio@aol.com'
-                    room_id: room_id
-                    room:
-                        id:1
-                        name:'The real chatroom'
-                        owner_id:1
-                }
-            ]
+            room_messages = [ 
+                JSON.stringify({ "id":10, "body":JSON.stringify(body), "date":'2012-06-29 11:11', "user_id":1, "name":"james", "room_id":room_id })
+                JSON.stringify({ "id":11, "body":JSON.stringify(body), "date":'2012-06-29 11:12', "user_id":1, "name":"jhon", "room_id":room_id })
+                ]
+            
             sut = new RoomMessagesCollection(room_messages)
             done()
 
@@ -75,7 +48,9 @@ describe 'Room Messages Collection', ->
 
                 it 'should return the chat room messages in the data messages field', (done) ->
                     message = result['messages'][0]
-                    expect(message['data']).to.eql [{ 'name':'user', 'value': room_messages[0].user.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':room_messages[0].date }]
+                    room_message_parsed = JSON.parse(room_messages[0])
+                    
+                    expect(message['data']).to.eql [{ 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':room_message_parsed.date }]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->
@@ -93,7 +68,7 @@ describe 'Room Messages Collection', ->
 
         beforeEach (done) ->
             room_id = 1
-            room_messages = is_empty: true, args: [[{room_id: room_id}]]
+            room_messages = is_empty: true, room_id: room_id
             sut = new RoomMessagesCollection(room_messages)
             done()
 
@@ -108,8 +83,8 @@ describe 'Room Messages Collection', ->
             result = room = null
 
             beforeEach (done) ->
-                room_id = 3
-                sut.room_messages = is_empty: true, args: [[{room_id: room_id}]]
+                #room_id = 3
+                sut.room_messages = is_empty: true, room_id: room_id
                 result = sut.to_json()
                 done()
 
