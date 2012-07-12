@@ -6,6 +6,10 @@ routes_service_mock =
     build: sinon.stub()
 
 repository_class_mock = sinon.stub()
+user_repository =
+    save: sinon.stub()
+repository_class_mock.withArgs('User').returns(user_repository)
+
 node_hash_mock =
     sha256: sinon.stub()
 
@@ -63,13 +67,10 @@ describe 'Registration', ->
 
         describe 'post_registration', ->
 
-            repository = is_valid_user_stub = null
+            res = is_valid_user_stub = null
 
             beforeEach (done) ->
                 is_valid_user_stub = sinon.stub(sut.methods, 'is_valid_user')
-                repository =
-                    save: sinon.stub()
-                repository_class_mock.withArgs('User').returns(repository)
 
                 req.body = 
                     first_name: 'foo'
@@ -88,44 +89,73 @@ describe 'Registration', ->
 
             describe 'and the values sent are valid', ->
 
-                repository = user_data = save_promise = saved_user = null
+                user_data = save_promise = saved_user = is_email_already_registered_stub = null
 
                 beforeEach (done) ->
+                    user_repository.save.reset()
+                    is_email_already_registered_stub = sinon.stub(sut.methods, 'is_email_already_registered')
                     is_valid_user_stub.withArgs(req.body).returns(valid: true, errors: [])
-                    repository =
-                        save: sinon.stub()
-                    repository_class_mock.withArgs('User').returns(repository)
-
-                    hashed_password = 'abcd'
-                    node_hash_mock.sha256.withArgs(req.body.password).returns(hashed_password)
-                    user_data =
-                        first_name: req.body.first_name
-                        last_name: req.body.last_name
-                        email: req.body.email
-                        password: hashed_password
-
-                    saved_user =
-                        id: 10
-                    save_promise =
-                        then: (callback) ->
-                            callback(saved_user)
-                    repository.save.withArgs(user_data).returns(save_promise)
-                    sut.methods.post_registration(req, res)
-                    done()
-                
-                it 'should create a record for the user passed', (done) ->
-                    sinon.assert.calledWith(repository.save, user_data)
                     done()
 
-                it 'should notify the user that the user was created', (done) ->
-                    sinon.assert.calledWith(res.json, {success: true, data: saved_user})
+                afterEach (done) ->
+                    sut.methods.is_email_already_registered.restore()
                     done()
+
+                describe 'and the user is not already registered', ->
+
+                    beforeEach (done) ->
+                        is_email_already_registered_stub.withArgs(req.body.email).returns(false)
+                        hashed_password = 'abcd'
+                        node_hash_mock.sha256.withArgs(req.body.password).returns(hashed_password)
+                        user_data =
+                            first_name: req.body.first_name
+                            last_name: req.body.last_name
+                            email: req.body.email
+                            password: hashed_password
+
+                        saved_user =
+                            id: 10
+                            email: 'foo@bar.com'
+
+                        save_promise =
+                            then: (callback) ->
+                                callback(saved_user)
+
+                        user_repository.save.withArgs(user_data).returns(save_promise)
+                        sut.methods.post_registration(req, res)
+                        done()
+                    
+                    it 'should create a record for the user passed', (done) ->
+                        sinon.assert.calledWith(user_repository.save, user_data)
+                        done()
+
+                    it 'should notify the user that the user was created', (done) ->
+                        console.log 'not registered -> called?', res.json.called
+                        sinon.assert.calledWith(res.json, {success: true, data: saved_user})
+                        done()
+
+                describe 'and the user is already registered', ->
+
+                    beforeEach (done) ->
+                        is_email_already_registered_stub.withArgs(req.body.email).returns(true)
+                        sut.methods.post_registration(req, res)
+                        done()
+
+                    it 'should not create a record for the user passed', (done) ->
+                        sinon.assert.notCalled(user_repository.save)
+                        done()
+
+                    it 'should notify the user that the email was already registered', (done) ->
+                        console.log 'not registered -> called?', res.json.called
+                        sinon.assert.calledWith(res.json, {success: false, messages: ['email is already registered']})
+                        done()
 
             describe 'and the values sent are not valid', ->
 
                 user_data = save_promise = errors = null
 
                 beforeEach (done) ->
+                    user_repository.save.reset()
                     errors = ['blah error message']
                     is_valid_user_stub.withArgs(req.body).returns(valid: false, errors: errors)
                     hashed_password = 'abcd'
@@ -141,16 +171,17 @@ describe 'Registration', ->
                     save_promise =
                         then: (callback) ->
                             callback(saved_user)
-                    repository.save.withArgs(user_data).returns(save_promise)
+                    user_repository.save.withArgs(user_data).returns(save_promise)
                     sut.methods.post_registration(req, res)
                     done()
                 
                 it 'should not create a record for the user passed', (done) ->
-                    sinon.assert.notCalled(repository.save)
+                    sinon.assert.notCalled(user_repository.save)
                     done()
 
                 it 'should notify the user that the user data was invalid', (done) ->
-                    sinon.assert.calledWith(res.json, {success: false, message: errors})
+                    console.log 'called?', res.json.called
+                    sinon.assert.calledWith(res.json, {success: false, messages: errors})
                     done()
 
         describe 'is_valid_user', ->
@@ -192,3 +223,22 @@ describe 'Registration', ->
                 it 'should return true', (done) ->
                     expect(result.valid).to.equal true
                     done()
+
+        ###
+        describe 'is_email_already_registered', ->
+
+            result = email = null
+
+            beforeEach (done) ->
+                email = 'foo@bar.com'
+                done()
+
+            describe 'and the email is already registered', ->
+
+                beforeEach (done)
+                    result = sut.methods.is_email_already_registered(email)
+                    done()
+
+                it 'should return true', (done) ->
+                    done()
+        ###

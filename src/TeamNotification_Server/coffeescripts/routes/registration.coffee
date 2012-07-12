@@ -1,3 +1,4 @@
+Q = require('q')
 node_hash = require('node_hash')
 Repository = require('../support/repository')
 Validator = require('../support/validator')
@@ -11,23 +12,32 @@ methods.get_registration = (req, res) ->
     build('registration_collection').fetch_to callback
 
 methods.post_registration = (req, res) ->
-    user_repository = new Repository('User')
     validation_result = methods.is_valid_user(req.body)
     if validation_result.valid
-        user_data = 
-            first_name: req.body.first_name
-            last_name: req.body.last_name
-            email: req.body.email
-            password: node_hash.sha256(req.body.password)
+        Q.when methods.is_email_already_registered(req.body.email), (is_registered) ->
+            if is_registered
+                res.json {
+                    success: false
+                    messages: ['email is already registered']
+                }
+            else
+                user_repository = new Repository('User')
+                user_data = 
+                    first_name: req.body.first_name
+                    last_name: req.body.last_name
+                    email: req.body.email
+                    password: node_hash.sha256(req.body.password)
 
-        user_repository.save(user_data).then (user) ->
-            res.json 
-                success: true
-                data: user
+                user_repository.save(user_data).then (user) ->
+                    res.json {
+                        success: true
+                        data: user
+                    }
     else
-        res.json
+        res.json {
             success: false
-            message: validation_result.errors
+            messages: validation_result.errors
+        }
 
 methods.is_valid_user = (user_data) ->
     validator = new Validator()
@@ -42,6 +52,13 @@ methods.is_valid_user = (user_data) ->
         valid: errors.length is 0
         errors: errors
     }
+
+methods.is_email_already_registered = (email) ->
+    deferred = Q.defer()
+    new Repository('User').find(email: email).then (users) ->
+        deferred.resolve(users?)
+
+    deferred.promise
 
 module.exports =
     methods: methods
