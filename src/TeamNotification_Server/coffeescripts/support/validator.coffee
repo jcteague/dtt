@@ -1,9 +1,11 @@
+_ = require('underscore')
 Validator = require('validator').Validator
 
 Validator::error = (msg) ->
     @_errors.push msg
+    @
 
 Validator::get_errors = (msg) ->
-    @_errors
+    _.uniq @_errors
 
 module.exports = Validator

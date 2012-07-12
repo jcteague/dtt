@@ -23,3 +23,7 @@ task :create_migration, :migration_name do |t, args|
   File.open(full_file_path,'w') {|f| f.write(migration_content)}
   puts "new migration created at #{full_file_path}"
 end
+
+task :rollback_db => [
+  'rest_service:rollback_db'
+]

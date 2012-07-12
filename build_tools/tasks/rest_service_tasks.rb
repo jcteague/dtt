@@ -41,6 +41,10 @@ namespace :rest_service do
     ActiveRecord::Migrator.migrate(RestServiceMigrations, ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
   end
 
+  task :rollback_db => [:dev_environment] do
+    ActiveRecord::Migrator.rollback(RestServiceMigrations)
+  end
+
   desc "Start the server in test environment"
   task :run_test_server do
     sh "sh run_test_server.sh"

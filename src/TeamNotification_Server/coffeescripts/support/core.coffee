@@ -8,7 +8,8 @@ orm.then (db) ->
     _entity.ChatRoom = db.define 'chat_room',
         name : {type: 'string'}
     _entity.User = db.define 'users',
-        name : {type: 'string'},
+        first_name : {type: 'string'},
+        last_name : {type: 'string'},
         email : {type: 'string'},
         password : {type: 'string'}
     _entity.ChatRoomMessage = db.define 'chat_room_messages'

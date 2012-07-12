@@ -31,15 +31,11 @@ methods.post_registration = (req, res) ->
 
 methods.is_valid_user = (user_data) ->
     validator = new Validator()
-    validator.check(user_data.first_name, 'Invalid First Name').isAlphanumeric()
-    validator.check(user_data.first_name, 'Invalid First Name').notEmpty()
-    validator.check(user_data.last_name, 'Invalid Last Name').isAlphanumeric()
-    validator.check(user_data.last_name, 'Invalid Last Name').notEmpty()
-    validator.check(user_data.email, 'Invalid Email').isEmail()
-    validator.check(user_data.email, 'Invalid Email').notEmpty()
-    validator.check(user_data.password, 'Invalid Password').len(6, 48)
-    validator.check(user_data.password, 'Invalid Password').is(/^[A-Za-z0-9\!\@\#\$\%\^\&\*]+$/)
-    validator.check(user_data.password, 'Invalid Password').notEmpty()
+    validator.check(user_data.first_name, 'First name is invalid').isAlphanumeric().notEmpty()
+    validator.check(user_data.last_name, 'Last name is invalid').isAlphanumeric().notEmpty()
+    validator.check(user_data.email, 'Email is invalid').isEmail().notEmpty()
+    validator.check(user_data.password, 'Password must be contain at least 6 characters').len(6, 48).notEmpty()
+    validator.check(user_data.password, 'Password contains invalid characters').is(/^[A-Za-z0-9\!\@\#\$\%\^\&\*]+$/)
 
     errors = validator.get_errors()
     return {
