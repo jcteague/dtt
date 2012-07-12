@@ -6,6 +6,7 @@ support_mock =
     core:
         entity_factory:
             get: sinon.stub()
+            create: sinon.stub()
 
 q_mock =
     defer: sinon.stub()
@@ -18,8 +19,7 @@ Repository = module_loader.require('../support/repository', {
 
 describe 'Repository', ->
 
-    sut = null
-    entity = null
+    sut = entity = null
 
     beforeEach (done) ->
         entity = 'blah'
@@ -34,11 +34,7 @@ describe 'Repository', ->
 
     describe 'get_by_id', ->
 
-        db_entity = null
-        id = null
-        resolve_callback = null
-        result = null
-        expected_result = null
+        db_entity = id = resolve_callback = result = expected_result = null
 
         beforeEach (done) ->
             db_entity =
@@ -65,12 +61,7 @@ describe 'Repository', ->
 
     describe 'find', ->
 
-        db_entity = null
-        arg1 = null
-        arg2 = null
-        resolve_callback = null
-        expected_result = null
-        result = null
+        db_entity = arg1 = arg2 = resolve_callback = expected_result = result = null
 
         beforeEach (done) ->
             db_entity =
@@ -97,3 +88,40 @@ describe 'Repository', ->
             sinon.assert.calledWith(db_entity.find.apply, sut, [arg1, arg2, resolve_callback])
             done()
 
+    describe 'save', ->
+
+        result = expected_result = entity_data = saved_entity = deferred = null
+
+        beforeEach (done) ->
+            entity_data =
+                name: 'foo'
+                email: 'bar'
+
+            saved_entity =
+                id: 99
+                name: 'foo'
+            db_entity =
+                save: (callback) ->
+                    callback(false, saved_entity)
+            support_mock.core.entity_factory.create.withArgs(sut.entity, entity_data).returns(db_entity)
+
+            deferred =
+                promise: 'q-promise'
+                resolve: sinon.stub()
+            q_mock.defer.returns deferred
+
+            expected_result = deferred.promise
+            result = sut.save entity_data
+            done()
+
+        it 'should return a promise', (done) ->
+            expect(result).to.equal expected_result
+            done()
+
+        it 'should attemp to create the entity with the arguments', (done) ->
+            sinon.assert.calledWith(support_mock.core.entity_factory.create, sut.entity, entity_data)
+            done()
+
+        it 'should resolve the promise with the saved entity', (done) ->
+            sinon.assert.calledWith(deferred.resolve, saved_entity)
+            done()
