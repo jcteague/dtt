@@ -12,7 +12,8 @@ methods.get_registration = (req, res) ->
 
 methods.post_registration = (req, res) ->
     user_repository = new Repository('User')
-    if methods.is_valid_user(req.body)
+    validation_result = methods.is_valid_user(req.body)
+    if validation_result.valid
         user_data = 
             first_name: req.body.first_name
             last_name: req.body.last_name
@@ -26,7 +27,7 @@ methods.post_registration = (req, res) ->
     else
         res.json
             success: false
-            message: 'user data is invalid'
+            message: validation_result.errors
 
 methods.is_valid_user = (user_data) ->
     validator = new Validator()
@@ -41,7 +42,6 @@ methods.is_valid_user = (user_data) ->
     validator.check(user_data.password, 'Invalid Password').notEmpty()
 
     errors = validator.get_errors()
-    console.log errors
     return {
         valid: errors.length is 0
         errors: errors

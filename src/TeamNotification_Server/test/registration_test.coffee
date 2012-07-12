@@ -1,4 +1,4 @@
-expect = require('should')
+expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
@@ -91,7 +91,7 @@ describe 'Registration', ->
                 repository = user_data = save_promise = saved_user = null
 
                 beforeEach (done) ->
-                    is_valid_user_stub.withArgs(req.body).returns(true)
+                    is_valid_user_stub.withArgs(req.body).returns(valid: true, errors: [])
                     repository =
                         save: sinon.stub()
                     repository_class_mock.withArgs('User').returns(repository)
@@ -123,10 +123,11 @@ describe 'Registration', ->
 
             describe 'and the values sent are not valid', ->
 
-                user_data = save_promise = null
+                user_data = save_promise = errors = null
 
                 beforeEach (done) ->
-                    is_valid_user_stub.withArgs(req.body).returns(false)
+                    errors = ['blah error message']
+                    is_valid_user_stub.withArgs(req.body).returns(valid: false, errors: errors)
                     hashed_password = 'abcd'
                     node_hash_mock.sha256.withArgs(req.body).returns(hashed_password)
                     user_data =
@@ -149,7 +150,7 @@ describe 'Registration', ->
                     done()
 
                 it 'should notify the user that the user data was invalid', (done) ->
-                    sinon.assert.calledWith(res.json, {success: false, message: 'user data is invalid'})
+                    sinon.assert.calledWith(res.json, {success: false, message: errors})
                     done()
 
         describe 'is_valid_user', ->
@@ -167,10 +168,10 @@ describe 'Registration', ->
                     user_data =
                         first_name: 'foo'
                         last_name: 'bar'
-                        email: 'foo@bar.com'
-                        password: '1234'
+                        email: 'foobar.com'
+                        password: '123456'
 
-                    result = sut.methods.is_valid_user(req, user_data)
+                    result = sut.methods.is_valid_user(user_data)
                     done()
 
                 it 'should return false', (done) ->
@@ -183,9 +184,9 @@ describe 'Registration', ->
                     user_data =
                         first_name: 'foo'
                         last_name: 'bar'
-                        email: 'foocom'
-                        password: '1234'
-                    result = sut.methods.is_valid_user(req, user_data)
+                        email: 'foo@bar.com'
+                        password: '123456'
+                    result = sut.methods.is_valid_user(user_data)
                     done()
 
                 it 'should return true', (done) ->
