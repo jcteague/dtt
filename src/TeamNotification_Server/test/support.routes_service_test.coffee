@@ -125,7 +125,7 @@ describe 'Routes Service', ->
         describe 'and the user does not exist', ->
 
             beforeEach (done) ->
-                user = is_empty: true, args: [user_id]
+                user = null
                 user_promise =
                     then: (callback) ->
                         callback(user)
@@ -144,4 +144,98 @@ describe 'Routes Service', ->
 
             it 'should resolve the promise with the user does not exist message', (done) ->
                 sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user does not exist"]})
+                done()
+
+    describe 'is_user_in_room', ->
+
+        result = expected_result = deferred = chat_room_repository = users_repository = room_id = user_id = null
+
+        beforeEach (done) ->
+            deferred =
+                resolve: sinon.spy()
+                promise: 'blah promise'
+            q_mock.defer.returns(deferred)
+            expected_result = deferred.promise
+
+            user_id = 10
+            room_id = 1
+            chat_room_repository =
+                get_by_id: sinon.stub()
+            users_repository =
+                get_by_id: sinon.stub()
+
+            repository_class_mock.withArgs('ChatRoom').returns(chat_room_repository)
+            repository_class_mock.withArgs('User').returns(users_repository)
+
+            user =
+                id: user_id
+            user_promise =
+                then: (callback) ->
+                    callback(user)
+            users_repository.get_by_id.withArgs(user_id).returns(user_promise)
+            done()
+
+        describe 'and the user is in the room', ->
+
+            beforeEach (done) ->
+                room =
+                    id: room_id
+                    users: [{id: user_id}]
+                room_promise =
+                    then: (callback) ->
+                        callback(room)
+
+                chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
+                result = sut.is_user_in_room user_id, room_id
+                done()
+
+            it 'should resolve the promise with true', ->
+                sinon.assert.calledWith(deferred.resolve, true)
+
+            it 'should return a promise', (done) ->
+                expect(result).to.eql expected_result
+                done()
+
+        describe 'and the user is the owner of the room', ->
+
+            beforeEach (done) ->
+                room =
+                    id: room_id
+                    owner_id: user_id
+                    users: []
+                room_promise =
+                    then: (callback) ->
+                        callback(room)
+
+                chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
+                result = sut.is_user_in_room user_id, room_id
+                done()
+
+            it 'should resolve the promise with true', ->
+                sinon.assert.calledWith(deferred.resolve, true)
+
+            it 'should return a promise', (done) ->
+                expect(result).to.eql expected_result
+                done()
+
+
+        describe 'and the user is not in the room', ->
+
+            beforeEach (done) ->
+                room =
+                    id: room_id
+                    users: []
+                room_promise =
+                    then: (callback) ->
+                        callback(room)
+
+                chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
+                result = sut.is_user_in_room user_id, room_id
+                done()
+
+            it 'should resolve the promise with false', ->
+                sinon.assert.calledWith(deferred.resolve, false)
+
+            it 'should return a promise', (done) ->
+                expect(result).to.eql expected_result
                 done()

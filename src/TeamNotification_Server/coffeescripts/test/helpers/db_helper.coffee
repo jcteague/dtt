@@ -2,6 +2,19 @@ Q = require('q')
 _ = require('underscore')
 async = require('async')
 pg_gateway = require('../../support/database/pg_gateway')
+redis_cli = require("redis").createClient()
+
+redis ={ 
+    save: (table_object) ->
+        table_name = table_object.name
+        console.log table_name
+        for entity in table_object.entities
+            #redis3.zadd("room:#{room_id}:messages", new Date().getTime(), JSON.stringify(newMessage))
+            redis_cli.zadd(table_name,new Date().getTime(), JSON.stringify(entity))
+    clear: (tables) ->
+        for table_name in tables
+            redis_cli.del(table_name)
+    }
 
 clear = (tables...) ->
     return (callback) ->
@@ -63,3 +76,4 @@ module.exports =
     clear: clear
     create: create
     save: save
+    redis: redis

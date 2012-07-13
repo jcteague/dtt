@@ -12,8 +12,12 @@ orm.then (db) ->
         email : {type: 'string'},
         password : {type: 'string'}
     _entity.ChatRoomMessage = db.define 'chat_room_messages'
-        body : {type: 'string', lengths:250}
+        body : {type: 'string', length:250}
         date : {type:'date', default:'now()'}
+
+    _entity.ChatRoomUser = db.define 'chat_room_users'
+        chat_room_id : {type: 'int'}
+        user_id : {type:'int'}
 
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})

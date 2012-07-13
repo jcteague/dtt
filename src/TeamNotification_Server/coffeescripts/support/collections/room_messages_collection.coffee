@@ -1,11 +1,11 @@
-
 class RoomMessagesCollection    
     constructor: (@room_messages) ->
-        @room_id = @get_room_id()
-        @room_messages.sort( (a,b) ->  JSON.parse(a).date > JSON.parse(b).date) unless @room_messages.is_empty
+       # console.log @room_messages
+        @room_messages.reverse() unless @room_messages.is_empty
+        #@room_messages.sort( (a,b) ->  JSON.parse(a).date > JSON.parse(b).date) unless @room_messages.is_empty
 
     to_json: ->
-        
+        room_id = @get_room_id()
         get_data_for = (message) ->
             return {
                 "data": [
@@ -17,16 +17,17 @@ class RoomMessagesCollection
         m = ( get_data_for(JSON.parse(message)) for message in @room_messages)
 
         return{  
-                href: "/room/#{@room_id}/messages" 
+                href: "/room/#{room_id}/messages" 
                 links:[
-                    {"name": "self", "rel": "RoomMessages", 'href':"/room/#{@room_id}/messages"}
-                    {"name": "Room", "rel": "Room", 'href':"/room/#{@room_id}"}
+                    {"name": "self", "rel": "RoomMessages", 'href':"/room/#{room_id}/messages"}
+                    {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
                 ]
                 template: 'data':[
                     {'name':'message', 'label':'Message', 'type':'string-big', 'maxlength':100}
                 ]
-                messages: m
-            }
+            messages: m
+        }
+
     get_room_id: ->
         if @room_messages.is_empty
             return @room_messages.room_id

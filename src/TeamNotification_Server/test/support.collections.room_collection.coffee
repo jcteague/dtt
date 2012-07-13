@@ -2,25 +2,16 @@ expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
-q_mock =
-    when: sinon.stub()
-underscore_mock =
-    bindAll: sinon.stub()
-
-repository_class_mock = sinon.stub()
-RoomCollection = module_loader.require('../support/collections/room_collection', {
-    requires:
-        'q': q_mock
-        'underscore': underscore_mock
-        '../repository': repository_class_mock
-})
+RoomCollection = module_loader.require('../support/collections/room_collection', {})
 
 describe 'Room Collection', ->
 
-    sut = null
-    room = null
+    sut = room = room_id = user_id = null
+
     beforeEach (done) ->
-        room = { id: 10, name: 'blah room', users: [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}] }
+        user_id = 99
+        room_id = 10
+        room = user_id: user_id, room: { id: room_id, owner_id: 9, name: 'blah room', users: [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}] }
         sut = new RoomCollection(room)
         done()
 
@@ -32,23 +23,51 @@ describe 'Room Collection', ->
 
     describe 'to_json', ->
 
-        result = null
-        room_id = null
+        result = room_id = null
 
-        beforeEach (done) ->
-            sut.room = room
-            result = sut.to_json()
-            done()
-        
-        it 'should return the manage members link along with the self link', (done) ->
-            links = result['links']
-            expect(links[0]).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room.id}"}
-            expect(links[1]).to.eql {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{room.id}/users"}
-            expect(links[2]).to.eql {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{room.id}/messages"}
-            done()
+        describe 'and the user is the owner of the room', ->
 
-        it 'should return all the room members in the members field', (done) ->
-            members = result['members']
-            users = room.users
-            expect(members[0]).to.eql {"href": "/room/#{room.id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
-            done()
+            beforeEach (done) ->
+                sut.room.room.owner_id = user_id
+                result = sut.to_json()
+                done()
+            
+            it 'should return an href property pointing to the current url', (done) ->
+                expect(result['href']).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                done()
+            
+            it 'should return the manage members link along with the self link', (done) ->
+                links = result['links']
+                expect(links[0]).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                expect(links[1]).to.eql {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{room_id}/users"}
+                expect(links[2]).to.eql {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{room_id}/messages"}
+                done()
+
+            it 'should return all the room members in the members field', (done) ->
+                members = result['members']
+                users = room.room.users
+                expect(members[0]).to.eql {"href": "/room/#{room.id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                done()
+
+        describe 'and the user is not the owner of the room', ->
+
+            beforeEach (done) ->
+                sut.room.room.owner_id = 19092
+                result = sut.to_json()
+                done()
+
+            it 'should return an href property pointing to the current url', (done) ->
+                expect(result['href']).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                done()
+            
+            it 'should return the manage members link along with the self link', (done) ->
+                links = result['links']
+                expect(links[0]).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                expect(links[1]).to.eql {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{room_id}/messages"}
+                done()
+
+            it 'should return all the room members in the members field', (done) ->
+                members = result['members']
+                users = room.room.users
+                expect(members[0]).to.eql {"href": "/room/#{room.id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                done()

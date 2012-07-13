@@ -50,7 +50,7 @@ describe 'Repository', ->
 
             resolve_callback = 'blah func'
             id = 10
-            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred, id).returns(resolve_callback)
+            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred).returns(resolve_callback)
             expected_result = deferred.promise
             result = sut.get_by_id(id)
             done()
@@ -83,7 +83,7 @@ describe 'Repository', ->
 
             resolve_callback = 'blah func'
             [arg1, arg2] = ['foo', 'bar']
-            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred, [arg1, arg2]).returns(resolve_callback)
+            sinon.stub(sut, 'get_on_resolve_callback').withArgs(deferred).returns(resolve_callback)
 
             expected_result = deferred.promise
             result = sut.find arg1, arg2

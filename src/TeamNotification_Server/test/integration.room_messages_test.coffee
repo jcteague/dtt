@@ -4,7 +4,7 @@ sinon = require('sinon')
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
-
+room_id = 1
 users =
     name: 'users'
     entities: [
@@ -33,12 +33,15 @@ chat_rooms =
     ]
 
 generate_message = (i) ->
+
+    #newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date()}
     return {
-        id: i
-        body: "'"+JSON.stringify({"message":"The real test"})+"'"
-        date:"'2012-06-29 11:11'"
-        user_id: 1
-        room_id: 1
+        "id": i
+        "body": JSON.stringify({"message":"The real test"})
+        "date":"2012-06-29 11:11"
+        "user_id": 1
+        "room_id": room_id
+        "name": 'bob'
     }
 
 describe 'Room Messages', ->
@@ -53,16 +56,20 @@ describe 'Room Messages', ->
             browser.authenticate().basic('foo@bar.com', '1234')
             browser2 = new Browser()
             browser2.authenticate().basic('bar@foo.com', '1234')
+            db.redis.clear ["room:#{room_id}:messages"]
             handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/messages page', ->
 
             beforeEach (done) ->
                 messages =
-                    name: 'chat_room_messages'
+                    #name: 'chat_room_messages'
+                    name: "room:#{room_id}:messages"
                     entities: (generate_message(i) for i in [1..55])
 
-                handle_in_series db.save(messages), done
+                db.redis.save(messages)
+                done()
+                #handle_in_series db.save(messages), done
 
             describe 'and wants to see the messages', ->
 
@@ -81,10 +88,12 @@ describe 'Room Messages', ->
 
             beforeEach (done) ->
                 messages =
-                    name: 'chat_room_messages'
+                    #name: 'chat_room_messages'
+                    name: "room:#{room_id}:messages"
                     entities: (generate_message(i) for i in [1..10])
-
-                handle_in_series db.save(messages), done
+                db.redis.save(messages)
+                done()
+                #handle_in_series db.save(messages), done
 
             describe 'and wants to see the messages', ->
 
@@ -98,18 +107,17 @@ describe 'Room Messages', ->
         describe 'When a user visits the client#/room/:id/messages page', ->
 
             beforeEach (done) ->
-                messages =
-                    name: 'chat_room_messages'
-                    entities: [generate_message(1)]
-
-                handle_in_series db.save(messages), done
+                room_users = 
+                    name: "chat_room_users"
+                    entities: [ {chat_room_id:1, user_id:2}]
+                handle_in_series db.save(room_users), done
 
             describe 'and wants to send a message', ->
 
                 message_to_post = null
                 beforeEach (done) ->
                     message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
-                    browser2.visit('http://localhost:3000/client#/room/1/messages')
+                    browser2.visit('http://localhost:3000/client#/room/1/messages').then( -> )
                     browser.visit('http://localhost:3000/client#/room/1/messages').
                         then( -> 
                             browser.fill("message", message_to_post)).

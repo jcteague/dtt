@@ -8,12 +8,15 @@ support_mock =
             create: sinon.stub()
 
 repository_class_mock = sinon.stub()
+
+middleware_mock = socket_io: sinon.stub()
 express_mock =
     bodyParser: sinon.stub()
 
 routes_service_mock =
     build: sinon.stub()
     add_user_to_chat_room: sinon.stub()
+    is_user_in_room: sinon.stub()
 
 sut = module_loader.require('../routes/room.js', {
     requires:
@@ -21,33 +24,118 @@ sut = module_loader.require('../routes/room.js', {
         'express': express_mock
         '../support/routes_service': routes_service_mock
         '../support/repository': repository_class_mock
+        '../support/middlewares': middleware_mock
 })
+
 
 describe 'Room', ->
 
     describe 'build_routes', ->
         app = null
+        io = null
         body_parser_result = null
-
+        socket_middleware_result = null
         beforeEach (done) ->
             app = get:sinon.spy(), post:sinon.spy()
+            io = sinon.stub()
             body_parser_result = 'blah'
+            socket_middleware_result = 'Awesome!'
             express_mock.bodyParser.returns(body_parser_result)
-            sut.build_routes(app)
+            middleware_mock.socket_io.withArgs(io).returns(socket_middleware_result)
+            sut.build_routes(app, io)
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/room',sut.methods.get_room)
-            sinon.assert.calledWith(app.get,'/room/:id',sut.methods.get_room_by_id)
-            sinon.assert.calledWith(app.get,'/room/:id/messages',sut.methods.get_room_messages)
-            sinon.assert.calledWith(app.get,'/room/:id/users',sut.methods.manage_room_members)
+            sinon.assert.calledWith(app.get,'/room', sut.methods.get_room)
+            sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
+            #sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, sut.methods.get_room_messages)
+            sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages)
+            sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
-            sinon.assert.calledWith(app.post,'/room/:id/users', body_parser_result, sut.methods.post_room_user)
-            sinon.assert.calledWith(app.post,'/room/:id/messages',body_parser_result, sut.methods.post_room_message)
+            sinon.assert.calledWith(app.post,'/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
+            sinon.assert.calledWith(app.post,'/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)
             done()
 
     describe 'methods', ->
+           
+        describe 'user_authorized_in_room', ->
 
+            next = req = res = room_id = user_id = null
+
+            beforeEach (done) ->
+                user_id = 10
+                room_id = 1
+                req =
+                    param: sinon.stub()
+                    user:
+                        id: user_id
+                req.param.withArgs('id').returns(room_id)
+                res =
+                    redirect: sinon.spy()
+                next = sinon.spy()
+                done()
+
+            describe 'and the user is authorized', ->
+
+                beforeEach (done) ->
+                    user_in_promise =
+                        then: (callback) ->
+                            callback(true)
+                    routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(user_in_promise)
+                    sut.methods.user_authorized_in_room(req, res, next)
+                    done()
+
+                it 'should call the next function', (done) ->
+                    sinon.assert.called(next)
+                    done()
+
+            describe 'and the user is not authorized', ->
+
+                beforeEach (done) ->
+                    user_in_promise =
+                        then: (callback) ->
+                            callback(false)
+                    routes_service_mock.is_user_in_room.withArgs(user_id, room_id).returns(user_in_promise)
+                    sut.methods.user_authorized_in_room(req, res, next)
+                    done()
+
+                it 'should call the next function', (done) ->
+                    sinon.assert.calledWith(res.redirect, '/')
+                    done()
+
+        describe 'socket_callback', ->
+            redis = callback_function = room_id = room_channel = null
+            beforeEach (done) ->
+                room_id = 1
+                room_channel = "chat #{room_id}"
+                redis = { 
+                    on:sinon.spy(),
+                    subscribe:sinon.spy()
+                }
+                callback_function = sut.methods.socket_callback(redis,room_id)
+                done()
+                
+            it 'should return a function', (done) ->
+                expect(typeof callback_function).to.be("function")
+                done()
+
+                describe 'socket_callback callback function', ->
+                    client = null
+                    beforeEach (done) ->
+                        client  = 
+                            send: sinon.stub()
+                        callback_function(client)
+                        done()
+                    it 'should subscribe to the chat room on the redis server', (done) ->
+                        sinon.assert.calledWith(redis.subscribe, room_channel )
+                        done()
+                    
+                    it 'should set the on message event', (done) ->
+                        sinon.assert.called(redis.on)
+                        done()
+                    
+                
+                
         describe 'for a room with id', ->
 
             collection_factory = null
@@ -57,12 +145,8 @@ describe 'Room', ->
             req = null
             room_id = null
             json_data = null
-            beforeEach (done) ->
-                #collection_value = 'blah collection'
-                #collection =
-                #    to_json: (json)->
-                #        collection_value = json
 
+            beforeEach (done) ->
                 collection =
                     to_json: ->
                         collection_value
@@ -74,24 +158,31 @@ describe 'Room', ->
                 req.param.withArgs('id').returns(room_id)
                 res = 
                     json: sinon.spy()
+                    redirect: sinon.spy()
 
                 done()
 
             describe 'get_room_by_id', ->
 
+                user_id = null
+
                 beforeEach (done) ->
+                    user_id = 10
+                    req.user =
+                        id: user_id
                     routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
                     room_collection =
                         fetch_to: (callback) ->
                             callback(collection)
 
-                    collection_factory.for.withArgs(room_id).returns(room_collection)
+                    collection_factory.for.withArgs(room_id: room_id, user_id: user_id).returns(room_collection)
                     sut.methods.get_room_by_id(req, res)
                     done()
 
                 it 'should return the built collection for the room model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
+
 
             describe 'manage_room_members', ->
 
@@ -111,14 +202,20 @@ describe 'Room', ->
 
             describe 'get_room_messages', ->
 
-                json_data = data = null
-
+                json_data = data = listener_name = socket_mock= null
+                
                 beforeEach (done) ->
                     routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
+                    socket_mock = {on: (event, callback) -> callback() }
+                    listener_name = "/room/#{room_id}/messages"                    
                     room_messages_collection =
                         fetch_to: (callback) ->
                             callback(collection)
+                    
                     req.param.withArgs('id').returns(room_id)
+                    
+                    req.socket_io = {of: sinon.stub() } #.withArgs('id').returns(room_id)
+                    req.socket_io.of.withArgs(listener_name).returns(socket_mock)
                     
                     collection_factory.for.withArgs(room_id).returns(room_messages_collection)
                     sut.methods.get_room_messages(req, res)
@@ -159,7 +256,7 @@ describe 'Room', ->
                             callback(false, saved_message)
                     
                     req.body = {message: 'Dolorem Ipsum'}
-                    
+                    req.in_test = true
                     message = JSON.stringify(req.body)
                     request_values =
                         body: message
@@ -172,7 +269,7 @@ describe 'Room', ->
                     sut.methods.post_room_message(req,res)
                     done()
 
-                it 'should notify the user the room was created', (done) ->
+                it 'should notify the message was created', (done) ->
                     sinon.assert.calledWith(res.send,{ success:true, newMessage:saved_message})
                     done()
 

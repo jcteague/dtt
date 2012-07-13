@@ -40,7 +40,8 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view.update @data.links
             @form_view.update @data
             @query_view.update @data.queries
-            @messages_view.update @data
+            @messages_view.update @data if typeof @data.messages != 'undefined'
+            
             @render()
 
         display_messages: (messages) ->
