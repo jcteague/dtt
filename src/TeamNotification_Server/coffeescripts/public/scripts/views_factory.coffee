@@ -1,9 +1,10 @@
-define 'views_factory', ['messages_view'], (MessagesView) ->
+define 'views_factory', ['messages_view', 'rooms_view'], (MessagesView, RoomsView) ->
 
     class ViewsFactory
 
         registry:
             messages: MessagesView
+            rooms: RoomsView
 
         get_for: (collection_data) ->
             keys = _.keys(collection_data)

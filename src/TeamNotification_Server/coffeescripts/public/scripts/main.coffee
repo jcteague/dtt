@@ -13,6 +13,7 @@ require.config
         'server_response_view': 'server_response_view'
         'views_factory': 'views_factory'
         'messages_view': 'messages_view'
+        'rooms_view': 'rooms_view'
         'form_template_renderer': 'form_template_renderer'
         'query_renderer': 'query_renderer'
 
