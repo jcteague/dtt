@@ -29,10 +29,15 @@ describe 'Registration Collection', ->
             expect(links[0]).to.eql {"name": "self", "rel": "Registration", "href": "/registration"}
             done()
 
+        it 'should return a template type of registration', (done) ->
+            expect(result['template']['type']).to.equal 'registration'
+            done()
+
         it 'should return a template with the first name, last name, email, password and confirm password fields', (done) ->
             template_data = result['template']['data']
-            expect(template_data[0]).to.eql {'name': 'first_name', 'label': 'First Name', 'type': 'string'}
-            expect(template_data[1]).to.eql {'name': 'last_name', 'label': 'Last Name', 'type': 'string'}
-            expect(template_data[2]).to.eql {'name': 'email', 'label': 'Email', 'type': 'string'}
-            expect(template_data[3]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password-confirmed'}
+            expect(template_data[0]).to.eql {'name': 'first_name', 'label': 'First Name', 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[1]).to.eql {'name': 'last_name', 'label': 'Last Name', 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[2]).to.eql {'name': 'email', 'label': 'Email', 'type': 'string', 'rules': {'required': true, 'email': true}}
+            expect(template_data[3]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6}}
+            expect(template_data[4]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6, 'equalTo': 'password'}}
             done()

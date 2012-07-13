@@ -5,6 +5,7 @@ require.config
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'jquery.autocomplete': 'jquery.autocomplete'
+        'jquery.validate': 'jquery.validate.min'
         'client_view': 'client_view'
         'client_router': 'client_router'
         'form_view': 'form_view'
@@ -23,6 +24,9 @@ require.config
             exports: 'Backbone'
 
         'jquery.autocomplete':
+            deps: ['jquery']
+
+        'jquery.validate':
             deps: ['jquery']
 
 require ['jquery', 'client_view'], ($, ClientView) ->
