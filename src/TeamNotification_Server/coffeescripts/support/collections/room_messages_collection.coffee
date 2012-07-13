@@ -7,7 +7,7 @@ class RoomMessagesCollection
         get_data_for = (message) ->
             return {
                 "data": [
-                    { 'name':'user', 'value': message.user.name}
+                    { 'name':'user', 'value': message.user.first_name}
                     { 'name':'body', 'value': JSON.parse(message.body).message} 
                     { 'name':'datetime', 'value':message.date }
                 ]

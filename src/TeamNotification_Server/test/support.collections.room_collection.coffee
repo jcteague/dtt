@@ -11,7 +11,7 @@ describe 'Room Collection', ->
     beforeEach (done) ->
         user_id = 99
         room_id = 10
-        room = user_id: user_id, room: { id: room_id, owner_id: 9, name: 'blah room', users: [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}] }
+        room = user_id: user_id, room: { id: room_id, owner_id: 9, name: 'blah room', users: [{id: 1, first_name: 'foo'}, {id: 2, first_name: 'bar'}] }
         sut = new RoomCollection(room)
         done()
 
@@ -46,7 +46,7 @@ describe 'Room Collection', ->
             it 'should return all the room members in the members field', (done) ->
                 members = result['members']
                 users = room.room.users
-                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].first_name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].first_name, "rel": "User", "href": "/user/#{users[1].id}"}]}
                 done()
 
         describe 'and the user is not the owner of the room', ->
@@ -69,5 +69,5 @@ describe 'Room Collection', ->
             it 'should return all the room members in the members field', (done) ->
                 members = result['members']
                 users = room.room.users
-                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].name, "rel": "User", "href": "/user/#{users[1].id}"}]}
+                expect(members[0]).to.eql {"href": "/room/#{room_id}/users", "data": [{"name": users[0].first_name, "rel": "User", "href": "/user/#{users[0].id}"}, {"name": users[1].first_name, "rel": "User", "href": "/user/#{users[1].id}"}]}
                 done()

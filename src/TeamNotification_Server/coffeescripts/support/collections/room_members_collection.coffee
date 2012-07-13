@@ -9,7 +9,7 @@ class RoomMembersCollection
                 "href": "/user/#{user.id}"
                 "data": [
                     {"name": "id", "value": user.id}
-                    {"name": "name", "value": user.name}
+                    {"name": "name", "value": user.first_name}
                 ]
             }
         self = "/room/#{@room.id}/users"

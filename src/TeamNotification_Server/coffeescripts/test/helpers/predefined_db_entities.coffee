@@ -2,7 +2,8 @@ users =
     name: 'users'
     columns:
         id: 'integer'
-        name: 'varchar(100)'
+        first_name: 'varchar(100)'
+        last_name: 'varchar(100)'
         email: 'varchar(100)'
         password: 'varchar(100)'
 

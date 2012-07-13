@@ -190,7 +190,7 @@ describe 'Registration', ->
                     done()
 
                 it 'should notify the user that the user was created', (done) ->
-                    sinon.assert.calledWith(res.json, {success: true, data: {id: saved_user.id, email: saved_user.email}})
+                    sinon.assert.calledWith(res.json, {success: true, messages: ['User created successfully'], data: {id: saved_user.id, email: saved_user.email}})
                     done()
 
 

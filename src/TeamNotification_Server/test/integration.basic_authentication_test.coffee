@@ -13,7 +13,8 @@ users =
     entities: [
         {
             id: 1
-            name: "'blah'"
+            first_name: "'blah'"
+            last_name: "'bar'"
             email: "'foo'"
             password: "'password'"
         }

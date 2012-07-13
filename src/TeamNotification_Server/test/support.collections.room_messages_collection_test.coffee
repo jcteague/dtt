@@ -21,7 +21,7 @@ describe 'Room Messages Collection', ->
                     user_id:1
                     user:
                         id: 1
-                        name: 'etoribio'
+                        first_name: 'etoribio'
                         email: 'etoribio@aol.com'
                     room_id: room_id
                     room:
@@ -36,7 +36,7 @@ describe 'Room Messages Collection', ->
                     user_id:1
                     user:
                         id: 1
-                        name: 'etoribio'
+                        first_name: 'etoribio'
                         email: 'etoribio@aol.com'
                     room_id: room_id
                     room:
@@ -76,7 +76,7 @@ describe 'Room Messages Collection', ->
 
                 it 'should return the chat room messages in the data messages field', (done) ->
                     message = result['messages'][0]
-                    expect(message['data']).to.eql [{ 'name':'user', 'value': messages[0].user.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':messages[0].date }]
+                    expect(message['data']).to.eql [{ 'name':'user', 'value': messages[0].user.first_name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':messages[0].date }]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->

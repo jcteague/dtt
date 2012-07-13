@@ -35,4 +35,4 @@ define 'messages_view', ['backbone'], (Backbone) ->
         add_message: (messages, response) =>
             if response.success
                 new_message = response.newMessage
-                messages.push {data:[{ 'name':'user', 'value': new_message.user.name},{ 'name':'body', 'value': JSON.parse(new_message.body).message},{ 'name':'datetime', 'value':new_message.date }]}
+                messages.push {data:[{ 'name':'user', 'value': new_message.user.first_name},{ 'name':'body', 'value': JSON.parse(new_message.body).message},{ 'name':'datetime', 'value':new_message.date }]}

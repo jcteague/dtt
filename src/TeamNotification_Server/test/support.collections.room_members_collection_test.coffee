@@ -10,7 +10,7 @@ describe 'Room Members Collection', ->
     chat_room = null
 
     beforeEach (done) ->
-        chat_room = { id: 10, name: 'blah room', users: [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}] }
+        chat_room = { id: 10, name: 'blah room', users: [{id: 1, first_name: 'foo'}, {id: 2, first_name: 'bar'}] }
         sut = new RoomMembersCollection(chat_room)
         done()
 
@@ -34,8 +34,8 @@ describe 'Room Members Collection', ->
         it 'should return the chat room members in the data members field', (done) ->
             members = result['members']
             users = chat_room.users
-            expect(members[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].name}]}
-            expect(members[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].name}]}
+            expect(members[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].first_name}]}
+            expect(members[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].first_name}]}
             done()
 
         it 'should return a self link in the collection links', (done) ->

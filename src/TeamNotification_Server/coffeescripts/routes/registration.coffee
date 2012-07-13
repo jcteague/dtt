@@ -39,7 +39,10 @@ methods.get_email_registered_handler = (req, res) ->
             user_repository.save(user_data).then (user) ->
                 res.json {
                     success: true
-                    data: user
+                    messages: ['User created successfully']
+                    data: 
+                        id: user.id
+                        email: user.email
                 }
 
 

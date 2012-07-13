@@ -20,7 +20,7 @@ describe 'User By Username Strategy', ->
             repository =
                 find: sinon.stub()
             repository_class_mock.withArgs('User').returns(repository)
-            users = [{name: 'foo'}, {name: 'blah'}, {name: 'Blah'}, {name: 'bL'}, {name: 'bar'}]
+            users = [{first_name: 'foo'}, {first_name: 'blah'}, {first_name: 'Blah'}, {first_name: 'bL'}, {first_name: 'bar'}]
             promise =
                 then: (callback) ->
                     callback(users)
