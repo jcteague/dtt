@@ -26,7 +26,7 @@ describe 'User Account Registration', ->
                 expect(browser.html('input[name=last_name]')).to.not.be.empty()
                 expect(browser.html('input[name=email]')).to.not.be.empty()
                 expect(browser.html('input[name=password]')).to.not.be.empty()
-                expect(browser.html('input[name=confirm_password]')).to.not.be.empty()
+                expect(browser.html('input[name=password_confirm]')).to.not.be.empty()
                 expect(browser.html('input[type=submit]')).to.not.be.empty()
                 done()
 
@@ -40,7 +40,7 @@ describe 'User Account Registration', ->
                             fill('last_name', 'bar').
                             fill('email', 'foo@bar.com').
                             fill('password', '123456').
-                            fill('confirm_password', '123456')).
+                            fill('password_confirm', '123456')).
                     then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
 

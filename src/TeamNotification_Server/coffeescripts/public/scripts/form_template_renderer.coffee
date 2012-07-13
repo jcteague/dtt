@@ -11,6 +11,8 @@ define 'form_template_renderer', ['jquery'], ($) ->
                 return [$('<input>',{"type":"hidden","name":template.name})]
             passwordFieldBuilder = (template) ->
                 return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"password","name":template.name})]
+            passwordWithConfirmFieldBuilder = (template) ->
+                return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"password","name":template.name}), $('<label>', {"for":"#{template.name}_confirm"}).text("Confirm #{template.label}"), $('<input>',{"type":"password","name":"#{template.name}_confirm"})]
 
             templateFieldBuilder = (template) ->
                 return
@@ -20,6 +22,7 @@ define 'form_template_renderer', ['jquery'], ($) ->
                 return textFieldBuilder if fieldType is 'string'
                 return hiddenFieldBuilder if fieldType is 'hidden'
                 return passwordFieldBuilder if fieldType is 'password'
+                return passwordWithConfirmFieldBuilder if fieldType is 'password-confirmed'
 
             form = $('<form>', {action:collection.href})
             form_templates = collection.template.data

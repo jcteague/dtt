@@ -51,7 +51,7 @@ methods.is_valid_user = (user_data) ->
     validator.check(user_data.first_name, 'First name is invalid').isAlphanumeric().notEmpty()
     validator.check(user_data.last_name, 'Last name is invalid').isAlphanumeric().notEmpty()
     validator.check(user_data.email, 'Email is invalid').isEmail().notEmpty()
-    validator.check(user_data.password, 'Password must be contain at least 6 characters').len(6, 48).notEmpty()
+    validator.check(user_data.password, 'Password must contain at least 6 characters').len(6, 48).notEmpty()
     validator.check(user_data.password, 'Password contains invalid characters').is(/^[A-Za-z0-9\!\@\#\$\%\^\&\*]+$/)
 
     errors = validator.get_errors()

@@ -12,8 +12,7 @@ class RegistrationCollection
                     {name: 'first_name', label: 'First Name', type: 'string'}
                     {name: 'last_name', label: 'Last Name', type: 'string'}
                     {name: 'email', label: 'Email', type: 'string'}
-                    {name: 'password', label: 'Password', type: 'password'}
-                    {name: 'confirm_password', label: 'Confirm Password', type: 'password'}
+                    {name: 'password', label: 'Password', type: 'password-confirmed'}
                 ]
         }
 
