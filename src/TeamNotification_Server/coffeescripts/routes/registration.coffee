@@ -26,7 +26,7 @@ methods.get_email_registered_handler = (req, res) ->
         if is_registered
             res.json {
                 success: false
-                messages: ['email is already registered']
+                messages: ['Email is already registered']
             }
         else
             user_repository = new Repository('User')

@@ -156,7 +156,7 @@ describe 'Registration', ->
                     done()
 
                 it 'should notify the user that the email was already registered', (done) ->
-                    sinon.assert.calledWith(res.json, {success: false, messages: ['email is already registered']})
+                    sinon.assert.calledWith(res.json, {success: false, messages: ['Email is already registered']})
                     done()
 
             describe 'and the email is not registered', ->
