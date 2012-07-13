@@ -1,6 +1,8 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, MessagesView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'views_factory', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, ViewsFactory, MessagesView) ->
 
     class ClientView extends Backbone.View
+
+        views: []
 
         initialize: ->
             @setElement '#client-content'
@@ -9,7 +11,8 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @form_view = new FormView()
             @query_view = new QueryView()
             @server_response_view = new ServerResponseView()
-            @messages_view = new MessagesView()
+            @views_factory = new ViewsFactory()
+
             @subscribe_to_events()
             Backbone.history.start()
 
@@ -18,19 +21,18 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view.render().append_to @$el
             @form_view.render().append_to @$el
             @query_view.render().append_to @$el
-            @messages_view.render().append_to @$el
+            view.render().append_to(@$el) for view in @views
             @
 
-        update_messages: (unformatted_new_message) ->
-            @messages_view.add_message @data.messages, unformatted_new_message
-            @messages_view.update @data.messages
-            @messages_view.render().append_to @$el
-            
         subscribe_to_events: ->
             @router.on 'render', @render_path, @
             @form_view.on 'messages:display', @display_messages, @
             @query_view.on 'messages:display', @display_messages, @
-            @form_view.on 'response:received',@update_messages, @
+            @form_view.on 'all', @propagate_event, @
+
+        propagate_event: (event, values) ->
+            @trigger event, values
+            @render()
 
         render_path: (path) ->
             $.getJSON(path, @load_json)
@@ -40,7 +42,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view.update @data.links
             @form_view.update @data
             @query_view.update @data.queries
-            @messages_view.update @data.messages
+
+            @views = @views_factory.get_for @data
+            view.listen_to @ for view in @views
             @render()
 
         display_messages: (messages) ->

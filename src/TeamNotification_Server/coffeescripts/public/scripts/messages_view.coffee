@@ -13,7 +13,7 @@ define 'messages_view', ['backbone'], (Backbone) ->
                         return field.value
             @$el.empty()
             if @model?
-                for message in @model
+                for message in @model.messages
                     name = get_field 'user', message.data
                     body = get_field 'body', message.data
                     date = get_field 'datetime', message.data
@@ -25,6 +25,12 @@ define 'messages_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
+
+        listen_to: (parent_view) ->
+            parent_view.on 'response:received', @update_messages, @
+
+        update_messages: (unformatted_new_message) ->
+            @add_message @model.messages, unformatted_new_message
         
         add_message: (messages, response) =>
             if response.success
