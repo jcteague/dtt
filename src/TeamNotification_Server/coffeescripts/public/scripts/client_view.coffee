@@ -36,6 +36,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @render()
 
         render_path: (path) ->
+            @server_response_view.clear()
             $.getJSON(path, @load_json)
 
         load_json: (data) =>

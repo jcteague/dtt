@@ -15,3 +15,6 @@ define 'server_response_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
+
+        clear: ->
+            @model = null
