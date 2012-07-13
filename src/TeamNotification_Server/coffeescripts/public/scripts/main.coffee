@@ -1,6 +1,7 @@
 require.config
     baseUrl: 'scripts'
     paths:
+        'socket.io': '../socket.io/socket.io'
         'jquery': 'jquery-1.7.2.min'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'

@@ -1,8 +1,6 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'views_factory', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, ViewsFactory, MessagesView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, MessagesView) ->
 
     class ClientView extends Backbone.View
-
-        views: []
 
         initialize: ->
             @setElement '#client-content'
@@ -36,7 +34,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @render()
 
         render_path: (path) ->
-            @server_response_view.clear()
             $.getJSON(path, @load_json)
 
         load_json: (data) =>

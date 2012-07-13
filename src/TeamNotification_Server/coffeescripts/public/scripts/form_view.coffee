@@ -30,10 +30,9 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
             $('input').not(':submit').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
-            $('textarea').not(':submit').each () ->
+            $('textarea').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
-
             $.post @$('form').attr('action'), data, (res) => 
                 @trigger 'messages:display', res.messages if res.messages?
                 @trigger 'response:received', res
