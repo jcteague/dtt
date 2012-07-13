@@ -17,7 +17,6 @@ redis2 = require("redis").createClient()
 redis3 = require("redis").createClient()
 
 list_of_listeners = {}
-    
         
 methods.socket_callback = (redis1, room_id) ->
     return (client) ->
@@ -92,12 +91,8 @@ methods.post_room_message = (req, res, next) ->
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date()}
         m = JSON.stringify newMessage
         if typeof req.in_test == 'undefined'
-            console.log 'asdas'
             redis2.publish("chat #{room_id}", m)
-            console.log "room:#{room_id}:messages"
-            console.log new Date().getTime()
             redis3.zadd("room:#{room_id}:messages", new Date().getTime(), JSON.stringify(newMessage))
-            console.log 'added'
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
         room_message.save (err,saved_message) ->
             if !err

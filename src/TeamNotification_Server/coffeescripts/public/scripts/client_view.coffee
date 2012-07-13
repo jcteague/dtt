@@ -8,17 +8,18 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view = new LinksView()
             @form_view = new FormView()
             @query_view = new QueryView()
-            @server_response_view = new ServerResponseView()
             @messages_view = new MessagesView()
+            @server_response_view = new ServerResponseView()
             @subscribe_to_events()
             Backbone.history.start()
 
         render: ->
-            @$el.empty()
+            #@$el.empty()
+            @$el.contents().remove()
             @links_view.render().append_to @$el
             @form_view.render().append_to @$el
             @query_view.render().append_to @$el
-            @messages_view.render().append_to @$el
+            @messages_view.render().append_to @$el if typeof @messages_view != 'undefined'
             @
 
        # update_messages: (unformatted_new_message) ->
@@ -40,8 +41,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @links_view.update @data.links
             @form_view.update @data
             @query_view.update @data.queries
-            @messages_view.update @data if typeof @data.messages != 'undefined'
-            
+            @messages_view.update @data
             @render()
 
         display_messages: (messages) ->
