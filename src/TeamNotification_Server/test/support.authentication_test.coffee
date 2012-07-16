@@ -69,7 +69,7 @@ describe 'Authentication', ->
             username = 'jhon@aol.com'
             password = '123456789'
             encrypted = '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225'
-            name = 'jhonny'
+            first_name = 'jhonny'
             done()
 
         describe 'and the user exists on the database', ->
@@ -93,7 +93,7 @@ describe 'Authentication', ->
                     done()
 
                 it 'should call the done with the user data', (done) ->
-                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email, name:user.name})
+                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email, name:user.first_name})
                     done()
 
             describe 'and the password does not match the username', ->

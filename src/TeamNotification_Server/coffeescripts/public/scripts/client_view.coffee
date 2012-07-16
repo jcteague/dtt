@@ -1,6 +1,8 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'messages_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, MessagesView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'views_factory'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, ViewsFactory) ->
 
     class ClientView extends Backbone.View
+
+        views: []
 
         initialize: ->
             @setElement '#client-content'

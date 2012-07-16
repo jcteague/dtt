@@ -49,7 +49,7 @@ app.configure(->
 )
 
 # Apply authentication for all routes
-app.all '*', auth.authenticate()
+app.all '*', auth.authenticate
 
 # This must live here after authentication has been initialized
 require('./routes')(app, io)
