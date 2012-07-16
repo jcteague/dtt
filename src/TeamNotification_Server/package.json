@@ -16,6 +16,7 @@
     , "passport-http": "*"
     , "passport-oauth": "*"
     , "validator": "*"
+    , "jitsu": "*"
   }
   ,"devDependencies":{
     "mocha":"*"
