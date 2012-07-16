@@ -12,13 +12,11 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
             if @model.has('messages')
                 @render_message(message) for message in @model.get('messages')
                 if @socket?
-                    #@socket.removeListener 'message', message_handler
-                    @socket.removeAllListeners() # 'message', message_handler
+                    @socket.removeAllListeners()
                     @socket.$events = {}
                 
                 @socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
-                @socket.on 'message', (message) =>
-                    @add_message(message)
+                @socket.on 'message', @add_message
             @
 
         render_message: (message) ->
@@ -37,13 +35,13 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
             @$el.appendTo parent
 
         listen_to: (parent_view) ->
-            #parent_view.on 'response:received', @update_messages, @
 
-        add_message: (message) ->
+
+        add_message: (message) =>
             m = JSON.parse message
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
-            @model.set({messages: messages})
+            @model.set({messages: messages}, {silent: true})
             @append_message(m)
 
         append_message: (message) ->
