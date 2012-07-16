@@ -6,6 +6,7 @@ define 'views_factory', ['messages_view', 'rooms_view'], (MessagesView, RoomsVie
             messages: MessagesView
             rooms: RoomsView
 
-        get_for: (collection_data) ->
+        get_for: (collection_model) ->
+            collection_data = collection_model.attributes
             keys = _.keys(collection_data)
-            (new view(model: collection_data) for key, view of @registry when keys.contains(key))
+            (new view(model: collection_model) for key, view of @registry when keys.contains(key))

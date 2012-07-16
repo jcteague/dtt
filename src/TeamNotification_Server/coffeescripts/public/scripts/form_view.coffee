@@ -8,18 +8,16 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
             'submit': 'submit_form'
 
         initialize: ->
+            @model.on 'change:template', @render, @
             @form_template_renderer = new FormTemplateRenderer()
 
         render: ->
             @$el.empty()
-            if @model? and @model.template
+            if @model.has('template')
                 @$el.append('<h1>Form</h1>')
-                @$el.append(@form_template_renderer.render(@model))
+                @$el.append(@form_template_renderer.render(@model.attributes))
             @delegateEvents(@events)
             @
-
-        update: (template) ->
-            @model = template
 
         append_to: (parent) ->
             @$el.appendTo parent

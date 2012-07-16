@@ -4,11 +4,14 @@ define 'rooms_view', ['backbone'], (Backbone) ->
 
         id: 'rooms-container'
 
+        initialize: ->
+            @model.on 'change:rooms', @render, @
+
         render: ->
             @$el.empty()
-            if @model?
+            if @model.has('rooms') and @model.get('rooms').length > 0
                 @$el.append('<h1>User Rooms</h1>')
-                @render_room(room) for room in @model.rooms
+                @render_room(room) for room in @model.get('rooms')
             @
 
         render_room: (room) ->

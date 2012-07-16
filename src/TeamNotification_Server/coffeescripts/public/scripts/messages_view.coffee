@@ -5,25 +5,20 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
         id: 'messages-container'
 
         initialize: ->
+            @model.on 'change:messages', @render, @
             
         render: ->
             @$el.empty()
-            me = @$el
-            if @model? and @model.messages?
-                @render_message(message) for message in @model.messages
-                if typeof @socket != 'undefined'
+            if @model.has('messages')
+                @render_message(message) for message in @model.get('messages')
+                if @socket?
                     #@socket.removeListener 'message', message_handler
                     @socket.removeAllListeners() # 'message', message_handler
                     @socket.$events = {}
                 
-                @socket = new window.io.connect("http://localhost:3000#{@model.href}")
+                @socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
                 @socket.on 'message', (message) =>
-                    m = JSON.parse message
-                    @model.messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
-                    name = m.name
-                    date = m.date
-                    body = JSON.parse(m.body).message 
-                    me.append("<p><b>#{name}(#{date}):</b>#{body}</p>")
+                    @add_message(message)
             @
 
         render_message: (message) ->
@@ -38,24 +33,21 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
             @$el.append("<p><b>#{name}(#{date}):</b>#{body}</p>")
             @
 
-
-        ###
-        update: (messages) ->
-            @model = messages
-        ###
-
         append_to: (parent) ->
             @$el.appendTo parent
 
         listen_to: (parent_view) ->
             #parent_view.on 'response:received', @update_messages, @
 
-        ###
-        update_messages: (unformatted_new_message) ->
-            @add_message @model.messages, unformatted_new_message
-        
-        add_message: (messages, response) =>
-            if response.success
-                new_message = response.newMessage
-                messages.push {data:[{ 'name':'user', 'value': new_message.user.name},{ 'name':'body', 'value': JSON.parse(new_message.body).message},{ 'name':'datetime', 'value':new_message.date }]}
-        ###
+        add_message: (message) ->
+            m = JSON.parse message
+            messages = @model.get('messages')
+            messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
+            @model.set({messages: messages})
+            @append_message(m)
+
+        append_message: (message) ->
+            name = message.name
+            date = message.date
+            body = JSON.parse(message.body).message 
+            @$el.append("<p><b>#{name}(#{date}):</b>#{body}</p>")

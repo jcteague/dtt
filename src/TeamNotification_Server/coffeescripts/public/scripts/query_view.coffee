@@ -8,18 +8,16 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
             'submit': 'submit_form'
 
         initialize: ->
+            @model.on 'change:queries', @render, @
             @query_renderer = new QueryRenderer()
 
         render: ->
             @$el.empty()
-            if @model?
+            if @model.has('queries')
                 @$el.append('<h1>Queries</h1>')
-                @$el.append(@query_renderer.render(@model))
+                @$el.append(@query_renderer.render(@model.get('queries')))
             @delegateEvents(@events)
             @
-
-        update: (queries) ->
-            @model = queries
 
         append_to: (parent) ->
             @$el.appendTo parent

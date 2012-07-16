@@ -4,15 +4,15 @@ define 'links_view', ['backbone'], (Backbone) ->
 
         id: 'links'
 
+        initialize: ->
+            @model.on 'change:links', @render, @
+
         render: ->
             @$el.empty()
-            if @model?
+            if @model.has('links')
                 @$el.append('<h1>Links</h1>')
-                @append_link link for link in @model
+                @append_link link for link in @model.get('links')
             @
-
-        update: (links) ->
-            @model = links
 
         append_to: (parent) ->
             @$el.appendTo parent

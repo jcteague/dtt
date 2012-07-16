@@ -18,6 +18,7 @@ require.config
         'rooms_view': 'rooms_view'
         'form_template_renderer': 'form_template_renderer'
         'query_renderer': 'query_renderer'
+        'collection_model': 'collection_model'
 
     shim:
         'backbone':
