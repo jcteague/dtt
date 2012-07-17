@@ -4,12 +4,12 @@ Module dependencies.
 
 express = require('express')
 
-#Authentication = require('./support/authentication')
-#auth = new Authentication()
+Authentication = require('./support/authentication')
+auth = new Authentication()
 
 app = module.exports = express.createServer()
-#require('./helper')(app)
-#io = require('socket.io').listen(app)
+require('./helper')(app)
+io = require('socket.io').listen(app)
 
 ###
   Mock Database
@@ -43,19 +43,21 @@ app.configure(->
 
     app.use(express.static(__dirname + '/public'))
 
-    #app.use(auth.initializeAuth())
+    app.use(auth.initializeAuth())
     
     app.use(app.router)
 )
 
 # Apply authentication for all routes
-#app.all '*', auth.authenticate
+app.all '*', auth.authenticate
 
+###
 app.get '/', (req, res) ->
     res.json success: true
+###
 
 # This must live here after authentication has been initialized
-#require('./routes')(app, io)
+require('./routes')(app, io)
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

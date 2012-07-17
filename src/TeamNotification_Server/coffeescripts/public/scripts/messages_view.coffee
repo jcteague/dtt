@@ -1,10 +1,11 @@
-define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
+define 'messages_view', ['backbone', 'config'], (Backbone, config) ->
 
     class MessagesView extends Backbone.View
 
         id: 'messages-container'
 
         initialize: ->
+            console.log config
             @model.on 'change:messages', @render, @
             
         render: ->
@@ -15,7 +16,8 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
                     @socket.removeAllListeners()
                     @socket.$events = {}
                 
-                @socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
+                #@socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
+                @socket = new window.io.connect("#{config.site.url}#{@model.get('href')}")
                 @socket.on 'message', @add_message
             @
 

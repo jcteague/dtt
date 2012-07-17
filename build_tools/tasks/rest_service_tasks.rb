@@ -11,6 +11,10 @@ namespace :rest_service do
     :migrate
   ]
 
+  task :package do
+      
+  end
+
   task :dev_environment do
     ActiveRecord::Base.establish_connection(db_config["development"])
   end

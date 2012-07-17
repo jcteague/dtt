@@ -26,7 +26,7 @@
     "zombie": "1.3.x",
     "should": ">= 0",
     "expect.js": "0.1.x",
-    "requirejs": "*",
+    "requirejs": "2.0.x",
     "jquery": "1.7.x",
     "sandboxed-module": "0.1.x",
     "sinon": "1.3.x",
