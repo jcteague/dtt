@@ -11,6 +11,14 @@ namespace :rest_service do
     :migrate
   ]
 
+  task :build_production => [
+    :prod_environment,
+    :update_packages,
+    :compile_coffeescript,
+    :test,
+    :migrate
+  ]
+
   task :deploy => [
     #:compile_coffeescript,
     #:test,
@@ -29,6 +37,10 @@ namespace :rest_service do
 
   task :dev_environment do
     ActiveRecord::Base.establish_connection(db_config["development"])
+  end
+
+  task :prod_environment do
+    ActiveRecord::Base.establish_connection(db_config["production"])
   end
 
   task :compile_coffeescript do
