@@ -5,6 +5,7 @@ log/
 tmp/
 node_modules/
 redis-2.4.15/
+deploy/
 
 src/**/routes/*.js
 src/**/support/*.js

@@ -27,3 +27,7 @@ end
 task :rollback_db => [
   'rest_service:rollback_db'
 ]
+
+task :deploy => [
+  'rest_service:deploy'
+]

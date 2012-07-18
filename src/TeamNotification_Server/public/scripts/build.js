@@ -1,6 +1,6 @@
 ({
     name: 'main',
-    out: '../../../../../deploy/main.js',
+    out: '../../../../deploy/public/scripts/main.js',
     has: {
         production: true
     },
