@@ -12,9 +12,9 @@ namespace :rest_service do
   ]
 
   task :deploy => [
+    #:compile_coffeescript,
+    #:test,
     :package_and_deploy
-    #:package,
-    #:jitsu_deploy
   ]
 
   task :package_and_deploy do
@@ -25,20 +25,6 @@ namespace :rest_service do
         sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
         sh "jitsu deploy"
       end
-  end
-
-  task :package do
-    Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "node_modules", "db", "test"].include? f.split('/').last}.each do |f|
-      sh "cp -r #{f} #{RestDeployFolder}"
-    end
-      sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
-  end
-
-  task :jitsu_deploy do
-    current_dir = Dir.pwd
-    Dir.chdir(RestDeployFolder)
-    sh "jitsu deploy"
-    Dir.chdir(current_dir)
   end
 
   task :dev_environment do
