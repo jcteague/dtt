@@ -14,9 +14,10 @@ namespace :rest_service do
   task :build_production => [
     :prod_environment,
     :update_packages,
-    :compile_coffeescript,
-    :test,
-    :migrate
+    #:compile_coffeescript,
+    #:test,
+    #:migrate,
+    :package_and_deploy
   ]
 
   task :deploy => [

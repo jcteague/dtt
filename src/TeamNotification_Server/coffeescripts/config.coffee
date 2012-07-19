@@ -15,7 +15,7 @@ development_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'localhost:3000'
+        url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
 
 test_settings =
@@ -26,18 +26,18 @@ test_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'localhost:3000'
+        url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
 
 production_settings =
     db:
-        connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com/d9er2dp9rejk7k"
+        connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
     site:
-        host: 'localhost'
-        port: 3000
+        host: 'dtt.jit.su'
+        port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'localhost:3000'
+        url: 'http://dtt.jit.su'
         whitelisted_paths: whitelisted_paths
 
 module.exports = ->

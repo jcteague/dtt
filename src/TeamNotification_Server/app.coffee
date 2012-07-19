@@ -9,7 +9,8 @@ auth = new Authentication()
 
 app = module.exports = express.createServer()
 require('./helper')(app)
-io = require('socket.io').listen(app)
+#io = require('socket.io').listen(app)
+io = {}
 
 ###
   Mock Database
@@ -51,10 +52,6 @@ app.configure(->
 # Apply authentication for all routes
 app.all '*', auth.authenticate
 
-###
-app.get '/', (req, res) ->
-    res.json success: true
-###
 
 # This must live here after authentication has been initialized
 require('./routes')(app, io)
