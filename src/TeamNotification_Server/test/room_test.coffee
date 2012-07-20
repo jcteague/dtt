@@ -202,9 +202,12 @@ describe 'Room', ->
 
             describe 'get_room_messages', ->
 
-                json_data = data = listener_name = socket_mock= null
+                json_data = data = listener_name = socket_mock = null
                 
                 beforeEach (done) ->
+                    req.user =
+                        id: 9
+
                     routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
                     socket_mock = {on: (event, callback) -> callback() }
                     listener_name = "/room/#{room_id}/messages"                    
@@ -216,13 +219,23 @@ describe 'Room', ->
                     
                     req.socket_io = {of: sinon.stub() } #.withArgs('id').returns(room_id)
                     req.socket_io.of.withArgs(listener_name).returns(socket_mock)
+
+                    sinon.stub(sut.methods, 'set_socket_events')
                     
-                    collection_factory.for.withArgs(room_id).returns(room_messages_collection)
+                    collection_factory.for.withArgs(room_id: room_id, user: req.user).returns(room_messages_collection)
                     sut.methods.get_room_messages(req, res)
+                    done()
+
+                afterEach (done) ->
+                    sut.methods.set_socket_events.restore()
                     done()
 
                 it 'should return the built collection for the room model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
+                    done()
+
+                it 'should set the socket events with the room and the socket_io in the request', (done) ->
+                    sinon.assert.calledWith(sut.methods.set_socket_events, req.socket_io, room_id)
                     done()
 
         describe 'post_room_message', ->

@@ -80,7 +80,7 @@ describe 'Room Messages Collection', ->
         describe 'constructor', ->
 
             it 'should have the current room_messages value set inside the object', (done) ->
-                expect(sut.data.messages).to.equal(room_messages)
+                expect(sut.data.messages).to.eql room_messages
                 done()
 
         describe 'to_json', ->

@@ -3,6 +3,7 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
     class ChatRoomView extends GeneralView
         
         id: 'chatroom-container'
+
         initialize: ->
             @user_rooms = new UserRoomsView(model:@model)
             @form_view = new FormView(model: @model)
@@ -12,7 +13,7 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
         render: ->
             @$el.empty()
             @$el.attr('class', 'row-fluid')
-            div1 = $('<div class="row-fluid">'
+            div1 = $('<div class="row-fluid">')
             @user_rooms.render().append_to div1
             @$el.append(div1)
             div2 = $('<div id="middle-row" class="row-fluid">')
@@ -25,7 +26,7 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
             div3.find('label').attr('style','vertical-align:middle;')
             div3.find('input[type=submit]').attr('class','btn btn-primary btn-large')
             @$el.append(div3)
-            
+
             set_height = () ->
                 winHeight = $(window).height()
                 $(div1).attr('style','height:'+(winHeight/7)+'px')
@@ -36,6 +37,6 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
             set_height()
             $(window).resize set_height
             @
+
         append_to: (parent) ->
             @$el.appendTo parent
-        

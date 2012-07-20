@@ -28,7 +28,7 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
         dropDownListBuilder:(template) ->
             dropDownList = $('<select>',{"name":template.name, "class":"input-xlarge"})
             #for (props in data) 
-           #     dropDownList.append("<option value='#{props.value}'>#{props.text}</option>")
+            #    dropDownList.append("<option value='#{props.value}'>#{props.text}</option>")
             return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), dropDownList]
 
         dropDownListOptionBuilder: (props) ->
