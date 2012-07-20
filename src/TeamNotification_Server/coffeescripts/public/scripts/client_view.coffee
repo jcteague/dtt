@@ -22,12 +22,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
         subscribe_to_events: ->
             for view in @views
                 if view instanceof FormView
-                    console.log 'a FormView'
-                    console.log view
                     view.on 'messages:display', @display_messages, @
                     view.on 'all', @propagate_event, @
                 if view instanceof QueryView 
-                    console.log 'a QueryView'
                     view.on 'messages:display', @display_messages, @
 
         propagate_event: (event, values) ->
