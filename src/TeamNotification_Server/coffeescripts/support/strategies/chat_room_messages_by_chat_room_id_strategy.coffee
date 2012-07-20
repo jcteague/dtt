@@ -1,22 +1,27 @@
-#Repository = require('../repository')
+Repository = require('../repository')
 redis = require('redis').createClient()
 Q = require('q')
 
+chat_rooms = require('../strategies/chat_rooms_by_owner_id_or_member_strategy')
+chat_room_members = require('../strategies/chat_room_by_id_strategy')
+
 message = null
-callback = (deferred, room_id) ->
+callback = (deferred, room_id, user) ->
     return (err, reply) ->
         if !err
-            if reply.length > 0
-                deferred.resolve(reply)
-            else
-                deferred.resolve 
-                    is_empty: true
-                    room_id: room_id
-strategy = (room_id) ->
-    #new Repository('ChatRoomMessage').find({room_id: room_id},'date desc',50)
+            rooms = []
+            members = []
+            chat_rooms(user.id).then (user_and_rooms)->
+                for room in user_and_rooms.rooms
+                    rooms.push {room_id:room.id, name:room.name}
+                chat_room_members(room_id).then (room) ->
+                    for member in room.users
+                        members.push {user_id: member.id, name:member.first_name }
+                    members.push {user_id: room.owner.user_id, name:room.owner.first_name}
+                    deferred.resolve({room_id:room_id, messages:reply, user_id:user.id, name:user.name, chat_rooms:rooms, members:members } )
+            
+strategy =(params) ->
     deferred = Q.defer()
-    #redis.smembers "room:#{room_id}:messages", callback(deferred, room_id)
-    redis.zrevrange "room:#{room_id}:messages", 0, 49, callback(deferred, room_id)
-    #redis.quit()
+    redis.zrevrange "room:#{params.room_id}:messages", 0, 49, callback(deferred, params.room_id, params.user)
     deferred.promise
 module.exports = strategy

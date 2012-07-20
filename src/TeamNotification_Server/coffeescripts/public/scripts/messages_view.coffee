@@ -1,20 +1,21 @@
-define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
+define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scrollspy) ->
 
-    class MessagesView extends Backbone.View
+    class MessagesView extends GeneralView
 
         id: 'messages-container'
-
         initialize: ->
             @model.on 'change:messages', @render, @
             
         render: ->
             @$el.empty()
+            @$el.attr("class","well scroll-box span8")
+            #@$el.attr("style","height:500px;")
+            
             if @model.has('messages')
                 @render_message(message) for message in @model.get('messages')
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}
-                
                 @socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
                 @socket.on 'message', @add_message
             @
@@ -34,15 +35,13 @@ define 'messages_view', ['backbone','socket.io'], (Backbone,socketio) ->
         append_to: (parent) ->
             @$el.appendTo parent
 
-        listen_to: (parent_view) ->
-
-
         add_message: (message) =>
             m = JSON.parse message
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
             @append_message(m)
+            @$el.scrollTop(@$el.prop('scrollHeight'))
 
         append_message: (message) ->
             name = message.name

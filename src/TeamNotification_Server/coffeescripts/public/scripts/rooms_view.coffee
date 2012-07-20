@@ -1,6 +1,6 @@
-define 'rooms_view', ['backbone'], (Backbone) ->
+define 'rooms_view', ['general_view'], (GeneralView) ->
 
-    class RoomsView extends Backbone.View
+    class RoomsView extends GeneralView
 
         id: 'rooms-container'
 
@@ -9,8 +9,9 @@ define 'rooms_view', ['backbone'], (Backbone) ->
 
         render: ->
             @$el.empty()
+            @$el.attr('class','hero-unit')
             if @model.has('rooms') and @model.get('rooms').length > 0
-                @$el.append('<h1>User Rooms</h1>')
+                @$el.append('<h2>User Rooms</h2>')
                 @render_room(room) for room in @model.get('rooms')
             @
 
@@ -20,6 +21,3 @@ define 'rooms_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
-
-        listen_to: (parent_view) ->
-

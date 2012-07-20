@@ -13,9 +13,9 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
 
         autocomplete: (template) ->
             entity = template.rel
-            input = $('<input>',{"type":"text","name":template.data[0].name})
+            input = $('<input>',{"type":"text","name":template.data[0].name,"class":"search-query"})
             hidden_input = $('<input>',{"type":"hidden","name": "id"})
-            submit = $('<input>', {"type":"submit", "class": "submit"})
+            submit = $('<input>', {"type":"submit", "class": "btn btn-primary"})
 
             label = $('<label>', {"for":template.data[0].name})
             label.text(template.prompt)
@@ -54,7 +54,11 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
                     $('input[name=id]').val($('.acSelect .hidden').text())
 
             })
-            $('<form>', {action: template.submit}).append(label, input, hidden_input, submit)
+            query_class = "well form-horizontal"
+            if typeof template.query_class != 'undefined'
+                query_class = template.query_class
+                
+            $('<form>', {action: template.submit, "class":query_class}).append(label, input, hidden_input, submit)
 
         generator_selector: (field) =>
             @autocomplete if field is 'autocomplete'

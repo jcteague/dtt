@@ -1,31 +1,31 @@
 {
-    "name": "DTT"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.x"
-    , "jade": ">= 0.0.1"
-    , "coffee-script": "*"
-    , "q": "*"
-    , "socket.io": "*"
-    , "redis": "*"
-    , "underscore": "*"
-    , "pg": "*"
-    , "async": "*"
-    , "passport": "*"
-    , "passport-http": "*"
-    , "passport-oauth": "*"
-    , "validator": "*"
-  }
-  ,"devDependencies":{
-    "mocha":"*"
-    ,"zombie":"*"
-    ,"should": ">= 0"
-    ,"expect.js": "*"
-    ,"requirejs":"*"
-    ,"jquery":"1.7.2"
-    ,"sandboxed-module":"*"
-    ,"sinon":"*"
-	,"tobi": "*"
+  "name": "DTT",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.x",
+    "jade": ">= 0.0.1",
+    "coffee-script": "*",
+    "q": "*",
+    "socket.io": "*",
+    "redis": "*",
+    "underscore": "*",
+    "pg": "*",
+    "async": "*",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-oauth": "*",
+    "validator": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "zombie": "*",
+    "should": ">= 0",
+    "expect.js": "*",
+    "requirejs": "*",
+    "jquery": "1.7.2",
+    "sandboxed-module": "*",
+    "sinon": "*",
+    "tobi": "*"
   }
 }

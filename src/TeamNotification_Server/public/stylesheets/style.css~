@@ -9,9 +9,9 @@ a {
 
 label { vertical-align: top;}
 
-textarea { vertical-align: bottom;}
+/*textarea { vertical-align: bottom;}*/
 
-input { vertical-align: middle;}
+/*input { vertical-align: top; }*/
 
 .string-big { color: green; }
 .string { color: green; }
@@ -21,3 +21,9 @@ input { vertical-align: middle;}
 .key { color: red; }
 
 .hidden { display: none; }
+
+.scroll-box {
+    overflow-x:hidden;
+    overflow:auto;
+    
+}
