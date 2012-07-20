@@ -15,8 +15,7 @@
     "passport": "0.1.x",
     "passport-http": "0.1.x",
     "validator": "0.4.x",
-    "node_hash": "0.2.x",
-    "jquery": "1.7.x"
+    "node_hash": "0.2.x"
   },
   "devDependencies": {
     "passport-oauth": "0.1.x",
@@ -29,7 +28,8 @@
     "jquery": "1.7.x",
     "sandboxed-module": "0.1.x",
     "sinon": "1.3.x",
-    "tobi": "*"
+    "tobi": "*",
+    "jquery": "1.7.x"
   },
   "subdomain": "dtt",
   "scripts": {
