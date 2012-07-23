@@ -31,13 +31,13 @@ test_settings =
 
 production_settings =
     db:
-        connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
+        connection_string: "postgres://postgres:welc0me@localhost:5432/dtt_main"
     site:
-        host: 'dtt.jit.su'
+        host: 'localhost'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://dtt.jit.su'
+        url: 'http://localhost'
         whitelisted_paths: whitelisted_paths
 
 module.exports = ->
