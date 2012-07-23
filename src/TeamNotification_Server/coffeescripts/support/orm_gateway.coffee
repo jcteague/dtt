@@ -5,7 +5,6 @@ orm = require('orm')
 
 db_config = require('../config')().db
 
-###
 get_db_connection = ->
     defer = q.defer()
     orm.connect db_config.connection_string, (success, db) ->
@@ -16,8 +15,8 @@ get_db_connection = ->
         defer.resolve(db)
 
     defer.promise
-###
 
+###
 get_db_connection = ->
     client = new pg.Client(db_config.connection_string)
     client.connect()
@@ -30,6 +29,7 @@ get_db_connection = ->
         defer.resolve(db)
 
     defer.promise
+###
 
 module.exports =
     open: get_db_connection
