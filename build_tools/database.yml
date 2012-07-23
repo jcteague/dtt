@@ -17,5 +17,5 @@ production:
   database: dtt_main
   username: postgres
   password: welc0me
-  host: ec2-23-21-91-108.compute-1.amazonaws.com
+  host: localhost
   port: 5432
