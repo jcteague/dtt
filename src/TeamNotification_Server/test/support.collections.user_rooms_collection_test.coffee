@@ -34,8 +34,8 @@ describe 'User Rooms Collection', ->
             it 'should return the user rooms collection as json', (done) ->
                 links = result['links']
                 expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{user_id}/rooms"}
-                expect(links[1]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
-                expect(links[2]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
+                expect(links[2]).to.eql {"name":"#{chat_rooms[0].name}",  "rel": chat_rooms[0].name, "href": "/room/#{chat_rooms[0].id}"}
+                expect(links[3]).to.eql {"name":"#{chat_rooms[1].name}",  "rel": chat_rooms[1].name, "href": "/room/#{chat_rooms[1].id}"}
 
                 done()
 
@@ -49,5 +49,6 @@ describe 'User Rooms Collection', ->
             it 'should return a link to the root path', (done) ->
                 links = result['links']
                 expect(links[0]).to.eql {"name":"self", "rel": "self", "href": "/user/#{user_id}/rooms"}
-                expect(links.length).to.equal 1
+                expect(links[1]).to.eql {"name":"User", "rel": "User", "href": "/user/#{user_id}"}
+                expect(links.length).to.equal 2
                 done()

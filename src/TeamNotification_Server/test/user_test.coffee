@@ -29,6 +29,7 @@ describe 'User', ->
             sinon.assert.calledWith(app.get,'/users/query',user.methods.get_users)
             sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
             sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
+            sinon.assert.calledWith(app.get,'/users',user.methods.redir_user)
             done()
 
     describe 'methods', ->

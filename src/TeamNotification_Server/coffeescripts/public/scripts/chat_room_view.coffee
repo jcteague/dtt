@@ -25,6 +25,8 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
             div3.find('form').attr('class','well form-inline')
             div3.find('label').attr('style','vertical-align:middle;')
             div3.find('input[type=submit]').attr('class','btn btn-primary btn-large')
+            div3.find('textarea').width('80%')
+            
             @$el.append(div3)
 
             set_height = () ->

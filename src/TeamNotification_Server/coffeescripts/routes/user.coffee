@@ -20,10 +20,15 @@ methods.get_users = (req, res)->
     callback = (collection) ->
         res.json(collection.to_json())
     build('users_collection').for(username).fetch_to callback
-
-module.exports =
+    
+methods.redir_user = (req, res) ->
+    user_id = req.user.id
+    res.redirect("http://localhost:3000/user/#{user_id}")
+    
+module.exports = 
     methods: methods
     build_routes: (app) ->
         app.get('/users/query', methods.get_users)
         app.get('/user/:id', methods.get_user)
         app.get('/user/:id/rooms',methods.get_user_rooms)
+        app.get('/users', methods.redir_user)

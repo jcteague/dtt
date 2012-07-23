@@ -28,6 +28,7 @@ class RoomMessagesCollection
             links:[
                 {"name": "self", "rel": "RoomMessages", 'href':"/room/#{room_id}/messages"}
                 {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
+                {"name": "User", "rel": "User", 'href':"/user/#{@data.user_id}"}
             ]
             template:
                 'data':[

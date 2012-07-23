@@ -24,7 +24,7 @@ class RoomMembersCollection
         return {
             href: self
             members: (get_data_for user for user in @room.users)
-            links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"}]
+            links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"},{"name":"Room", "rel": "Room", "href": "/room/#{@room.id}"}]
             queries: queries
         }
 
