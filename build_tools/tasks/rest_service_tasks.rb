@@ -16,8 +16,8 @@ namespace :rest_service do
     :update_packages,
     #:compile_coffeescript,
     #:test,
-    #:migrate,
-    :package_and_deploy
+    :migrate
+    #:package_and_deploy
   ]
 
   task :deploy => [

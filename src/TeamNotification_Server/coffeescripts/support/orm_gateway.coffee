@@ -1,6 +1,6 @@
 q = require('q')
-#pg = require('pg')
-pg = require('pg').native
+pg = require('pg')
+#pg = require('pg').native
 orm = require('orm')
 
 db_config = require('../config')().db
