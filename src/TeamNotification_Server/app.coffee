@@ -3,14 +3,14 @@ Module dependencies.
 ###
 
 express = require('express')
+config = require('./config')()
 
 Authentication = require('./support/authentication')
 auth = new Authentication()
 
 app = module.exports = express.createServer()
 require('./helper')(app)
-#io = require('socket.io').listen(app)
-io = {}
+io = require('socket.io').listen(app)
 
 ###
   Mock Database
@@ -68,6 +68,6 @@ app.configure('production', ->
     app.use(express.errorHandler())
 )
 
-app.listen(3000, ->
+app.listen(config.site.port, ->
     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 )
