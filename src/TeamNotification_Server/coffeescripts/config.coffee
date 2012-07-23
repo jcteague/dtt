@@ -33,11 +33,11 @@ production_settings =
     db:
         connection_string: "postgres://postgres:welc0me@localhost:5432/dtt_main"
     site:
-        host: 'localhost'
+        host: 'ec2-107-21-171-44.compute-1.amazonaws.com'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://localhost'
+        url: 'http://ec2-107-21-171-44.compute-1.amazonaws.com'
         whitelisted_paths: whitelisted_paths
 
 module.exports = ->
