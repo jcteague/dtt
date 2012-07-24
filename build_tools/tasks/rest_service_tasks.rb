@@ -15,9 +15,10 @@ namespace :rest_service do
     :prod_environment,
     :update_packages,
     :compile_coffeescript,
-    :test,
+    #:test, # This should run on staging env
     :migrate,
-    :package
+    :package,
+    :run_production
   ]
 
   task :deploy => [
@@ -42,6 +43,12 @@ namespace :rest_service do
       sh "cp -r #{f} #{RestDeployFolder}"
     end
     sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+  end
+
+  task :run_production do
+    Dir.chdir RestDeployFolder do
+      sh "./run_production.sh"
+    end
   end
 
   task :dev_environment do
