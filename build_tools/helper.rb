@@ -28,4 +28,9 @@ class Dir
     Dir.chdir(current_dir)
     FileUtils.rm_rf path
   end
+
+  def self.recreate_dir(path)
+    FileUtils.rm_rf path
+    self.mkdir path
+  end
 end

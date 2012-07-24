@@ -14,10 +14,10 @@ namespace :rest_service do
   task :build_production => [
     :prod_environment,
     :update_packages,
-    #:compile_coffeescript,
-    #:test,
-    :migrate
-    #:package_and_deploy
+    :compile_coffeescript,
+    :test,
+    :migrate,
+    :package
   ]
 
   task :deploy => [
@@ -34,6 +34,14 @@ namespace :rest_service do
         sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
         sh "jitsu deploy"
       end
+  end
+
+  task :package do
+    Dir.recreate_dir RestDeployFolder
+    Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
+      sh "cp -r #{f} #{RestDeployFolder}"
+    end
+    sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
   end
 
   task :dev_environment do

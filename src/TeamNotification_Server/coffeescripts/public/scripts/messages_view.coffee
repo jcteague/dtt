@@ -16,7 +16,6 @@ define 'messages_view', ['backbone', 'config'], (Backbone, config) ->
                     @socket.removeAllListeners()
                     @socket.$events = {}
                 
-                #@socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
                 @socket = new window.io.connect("#{config.site.url}#{@model.get('href')}")
                 @socket.on 'message', @add_message
             @
