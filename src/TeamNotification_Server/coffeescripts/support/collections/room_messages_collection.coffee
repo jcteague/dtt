@@ -1,5 +1,6 @@
 class RoomMessagesCollection
     constructor: (@data) ->
+        console.log @data
         @room_messages = []
         @room_messages = @data.messages.reverse() unless @data.is_empty
     to_json: ->

@@ -1,5 +1,4 @@
 define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scrollspy) ->
-
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -16,7 +15,7 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}
-                @socket = new window.io.connect("http://localhost:3000#{@model.get('href')}")
+                @socket = new window.io.connect("#{@model.get('href')}")
                 @socket.on 'message', @add_message
             @
 

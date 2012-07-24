@@ -4,21 +4,36 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
         
         id: 'user-rooms-container'
         initialize: ->
+            console.log 'asd'
             @formTemplateRenderer = new FormTemplateRenderer()
             @data = @model.attributes
         render: ->
             @$el.empty()
-            @$el.attr( 'class', 'well inline')
-            @$el.append "<a href='/client#/user/#{@data.user.user_id}/' class='span4'>#{@data.user.name}</a>"
-            userRooms = @formTemplateRenderer.dropDownListBuilder({name:'room', label:'Rooms'})
-            $(userRooms[1]).bind "change", ()->
-                window.location.assign($(userRooms[1]).val())
+            navInner = $("<div>",{"class":"navbar-inner"})
+            navContent = $("<div>",{"class":"container-fluid"})
+            #navContent.append "<a class=​'btn btn-navbar' data-toggle=​'collapse' data-target=​'.nav-collapse'>​​<span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span></a>​"
+            userName = $("<a>", { "class":"brand", "href":"/client#/user/#{@data.user.user_id}/"})
+            userName.append @data.user.name
+            #divCollapse = $("<div>",{"class":"nav-collapse"})
+            @$el.attr('class', 'navbar navbar-fixed-top')
+            ul = $("<ul>",{"class":"nav pull-right"})
+            ul.append "<li class='divider-vertical'></li>"
+            userRooms = $("<li>",{'class':'dropdown'})
+            userRooms.append "<a href='#' id='DropDownInfuncional' class='dropdown-toggle' data-toggle='dropdown'>Rooms <b class='caret'></b></a>"
+            
+            userRoomsList = $("<ul>",{"class":"dropdown-menu"})
+            
             for room in @data.user_rooms
-                roomOption = @formTemplateRenderer.dropDownListOptionBuilder({value:"client#/room/#{room.room_id}/messages",text:room.name})
-                if ("/room/#{room.room_id}/messages" == @data.href)
-                    roomOption.attr('selected', 'selected')
-                userRooms[1].append roomOption
-            @$el.append userRooms[1]
+                userRoomsList.append "<li><a href='client#/room/#{room.room_id}/messages'>#{room.name}</a></li>"
+            
+            userRooms.append userRoomsList
+            ul.append userRooms
+            navContent.append userName
+            navContent.append ul
+            navInner.append navContent
+            $(userRooms).bind 'click', () ->
+               $(userRoomsList).toggle() 
+            @$el.append navInner
             @
         append_to: (parent) ->
             @$el.appendTo parent

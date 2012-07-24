@@ -15,8 +15,8 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         render: ->
             @$el.empty()
-            @server_response_view.render().append_to @$el
             view.render().append_to(@$el) for view in @views
+            @server_response_view.render().append_to @$el
             @
 
         subscribe_to_events: ->

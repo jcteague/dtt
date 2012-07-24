@@ -40,7 +40,7 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), $('<input>',{"type":"text","name":template.name, "class":"input-xlarge"})]
 
         textAreaBuilder: (template) ->
-            return [$('<label>', {"for":template.name, "class":"control-label"}).text(template.label), $('<textarea>',{"name":template.name,"rows":2,maxlength:template.maxlength,"class":"input-xlarge"})]
+            return [$('<textarea>',{"name":template.name,"rows":2,maxlength:template.maxlength,"class":"input-xlarge", placeholder:template.label})]
 
         hiddenFieldBuilder: (template) ->
             return [$('<input>',{"type":"hidden","name":template.name})]
