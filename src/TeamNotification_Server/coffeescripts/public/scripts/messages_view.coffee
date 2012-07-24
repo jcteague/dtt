@@ -5,11 +5,11 @@ define 'messages_view', ['backbone', 'config'], (Backbone, config) ->
         id: 'messages-container'
 
         initialize: ->
-            console.log config
             @model.on 'change:messages', @render, @
             
         render: ->
             @$el.empty()
+            console.log config.site, config.site.url
             if @model.has('messages')
                 @render_message(message) for message in @model.get('messages')
                 if @socket?
