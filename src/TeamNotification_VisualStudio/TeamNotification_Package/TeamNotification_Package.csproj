@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="DynamicControlBuilder.cs" />
+    <Compile Include="IApiService.cs" />
+    <Compile Include="IDynamicControlBuilder.cs" />
     <Compile Include="MyControl.xaml.cs">
       <DependentUpon>MyControl.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,7 @@
     <Compile Include="TeamNotificationPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="LoginWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -196,6 +200,9 @@
       <Project>{DDCC2E40-EFCB-43DD-97F4-8DE50AF26173}</Project>
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Windows\" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

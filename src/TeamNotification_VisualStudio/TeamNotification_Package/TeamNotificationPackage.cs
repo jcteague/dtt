@@ -31,6 +31,7 @@ namespace AvenidaSoftware.TeamNotification_Package
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof(MyToolWindow))]
+    [ProvideToolWindow(typeof(LoginWindow))]
     [Guid(GuidList.guidTeamNotificationPkgString)]
     public sealed class TeamNotificationPackage : Package
     {
@@ -65,6 +66,25 @@ namespace AvenidaSoftware.TeamNotification_Package
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
+        /// <summary>
+        /// This function is called when the user clicks the menu item that shows the 
+        /// tool window. See the Initialize method to see how the menu item is associated to 
+        /// this function using the OleMenuCommandService service and the MenuCommand class.
+        /// </summary>
+        private void ShowLoginWindow(object sender, EventArgs e)
+        {
+            // Get the instance number 0 of this tool window. This window is single instance so this instance
+            // is actually the only one.
+            // The last flag is set to true so that if the tool window does not exists it will be created.
+            ToolWindowPane window = this.FindToolWindow(typeof(LoginWindow), 0, true);
+            if ((null == window) || (null == window.Frame))
+            {
+                throw new NotSupportedException(Resources.CanNotCreateWindow);
+            }
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////
         // Overriden Package Implementation
@@ -85,7 +105,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidTeamNotificationCmdSet, (int)PkgCmdIDList.teamNotificationToolCommand);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
+                //MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
+                MenuCommand menuItem = new MenuCommand(ShowLoginWindow, menuCommandID);
+
                 mcs.AddCommand( menuItem );
                 // Create the command for the tool window
                 CommandID toolwndCommandID = new CommandID(GuidList.guidTeamNotificationCmdSet, (int)PkgCmdIDList.openTeamNotificationWindow);
@@ -109,6 +131,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
             Guid clsid = Guid.Empty;
             int result;
+            
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
                        0,
                        ref clsid,
