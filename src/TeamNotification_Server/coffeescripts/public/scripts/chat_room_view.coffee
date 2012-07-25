@@ -26,12 +26,10 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
             div3.find('label').attr('style','vertical-align:middle;')
             div3.find('input[type=submit]').attr('class','btn btn-primary btn-large')
             div3.find('textarea').width('80%')
-            
             @$el.append(div3)
-
+                    
             set_height = () ->
                 winHeight = $(window).height()
-            #    $(div1).attr('style','height:'+(winHeight/7)+'px')
                 $(div3).attr('style','height:'+(winHeight/7)+'px')
                 div2.find('div').each (key, value) ->
                     newHeight = ( (winHeight*5)/7)+'px'
