@@ -3,7 +3,7 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
 
         id: 'messages-container'
         initialize: ->
-            @model.on 'change:messages', @render, @
+            #@model.on 'change:messages', @render, @
             
         render: ->
             me = @
@@ -18,21 +18,23 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
                 
             if @model.has('messages')
-                setInterval((() -> render_model() ), 1000)
+                setInterval((() -> render_model() ), 10000)
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}
                 @socket = new window.io.connect("#{@model.get('href')}")
                 @socket.on 'message', @add_message
+                render_model()
             @
-        
-        
+
         parse_date = (message_date, curr_date) ->
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
             if delta_time < 60
                 return "just now"
+            if delta_time < 120
+                return "a minute ago"
             if delta_time < 3600
                 return "#{Math.floor(delta_time/60)} minutes ago"
             if delta_time < 86400
@@ -59,8 +61,8 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
-            @render_model()
-            #@append_message(m)
+            #@render_model()
+            @append_message(m)
 
         append_message: (message) ->
             name = message.name
