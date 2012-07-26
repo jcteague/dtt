@@ -8,6 +8,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using StructureMap;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -77,6 +78,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
             ToolWindowPane window = this.FindToolWindow(typeof(LoginWindow), 0, true);
+            //ToolWindowPane window = ObjectFactory.GetInstance<LoginWindow>(); 
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
