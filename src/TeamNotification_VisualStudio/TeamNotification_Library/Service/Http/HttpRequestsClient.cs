@@ -27,8 +27,7 @@ namespace TeamNotification_Library.Service.Http
                 .ContinueWith(x => action(x.Result));
         }
 
-//        public void Get(string uri, Action<Task<string>> action)
-        public T Get<T>(string uri, Func<Task<string>, T> action)
+        public void Get(string uri, Action<Task<string>> action)
         {
             httpClient.GetStringAsync(uri).ContinueWith(action);
         }
