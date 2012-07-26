@@ -11,13 +11,14 @@ namespace AvenidaSoftware.TeamNotification_Package
     [Guid(GuidList.guidLoginWindowPersistanceString)]
     public class LoginWindow : ToolWindowPane
     {
+        private string href = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=hellothere";
+
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
         public LoginWindow() :
             base(null)
-        {
-            var apiService = Container.GetInstance<IApiService>();
+        {           
             // Set the window title reading it from the resources.
             this.Caption = Resources.ToolWindowTitle;
             // Set the image that will appear on the tab of the window frame
@@ -30,11 +31,8 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
-            // the object returned by the Content property.          
-            base.Content = Container.GetInstance<IDynamicControlBuilder>().GetContentFrom();
-            var value = apiService.GetString();
-
-            return;
+            // the object returned by the Content property.
+            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
         }       
     }
 }

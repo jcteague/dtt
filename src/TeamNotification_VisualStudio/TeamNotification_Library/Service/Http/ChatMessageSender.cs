@@ -1,3 +1,5 @@
+using System;
+
 namespace TeamNotification_Library.Service.Http
 {
     public class ChatMessageSender : ISendChatMessages
@@ -10,9 +12,7 @@ namespace TeamNotification_Library.Service.Http
         }
 
         public void SendMessage(string message)
-        {
-//            var uri = string.Format("http://10.0.0.37:3000/?&userName={0}&userMessage={1}", "Raymi", message);
-            
+        {           
             //Using this open URL so that the request doesnt make the package crash
             var uri = string.Format("http://dtt.local:3000/registration?&userName={0}&userMessage={1}", "Raymi", message);
             client.Get(uri);
