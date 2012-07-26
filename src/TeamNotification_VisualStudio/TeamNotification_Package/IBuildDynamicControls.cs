@@ -2,8 +2,8 @@ using System.Windows.Controls;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
-    public interface IDynamicControlBuilder
+    public interface IBuildDynamicControls
     {
-        Panel GetContentFrom();
+        Panel GetContentFrom(string href);
     }
 }

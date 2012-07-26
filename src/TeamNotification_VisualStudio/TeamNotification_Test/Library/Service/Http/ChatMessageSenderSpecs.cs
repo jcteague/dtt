@@ -7,21 +7,21 @@ using developwithpassion.specifications.extensions;
 namespace TeamNotification_Test.Library.Service.Http
 {
     [Subject(typeof(ChatMessageSender))]
-    public class chant_message_sender_specs 
+    public class ChatMessageSenderSpecs 
     {
-        public class concern : Observes<ISendChatMessages,ChatMessageSender>
+        public class Concern : Observes<ISendChatMessages,ChatMessageSender>
         {
             
         }
         
-        public class when_sending_a_message : concern
+        public class when_sending_a_message : Concern
         {
             Establish context = () =>
-                                    {
-                                        httpRequestsClient = depends.on<ISendHttpRequests>();
-                                        message = "blah";
-                                        url = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=blah";
-                                    };
+            {
+                httpRequestsClient = depends.on<ISendHttpRequests>();
+                message = "blah";
+                url = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=blah";
+            };
 
             Because b = () => sut.SendMessage(message);
 

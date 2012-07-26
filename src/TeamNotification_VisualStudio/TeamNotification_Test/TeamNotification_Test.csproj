@@ -56,20 +56,26 @@
     <Reference Include="Machine.Specifications.Clr4, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Machine.Specifications.0.5.7\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
     <Compile Include="Library\Service\Http\ChatMessageSenderSpecs.cs" />
+    <Compile Include="Library\Service\Http\HttpRequestClientSpecs.cs" />
+    <Compile Include="Package\DynamicControlBuilderSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,10 +86,12 @@
       <Project>{DDCC2E40-EFCB-43DD-97F4-8DE50AF26173}</Project>
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TeamNotification_Package\TeamNotification_Package.csproj">
+      <Project>{C824899B-65C3-4A2B-85BB-E49B12BC54B6}</Project>
+      <Name>TeamNotification_Package</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Package\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

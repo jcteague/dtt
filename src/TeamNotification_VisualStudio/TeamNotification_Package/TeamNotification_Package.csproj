@@ -140,7 +140,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="DynamicControlBuilder.cs" />
     <Compile Include="IApiService.cs" />
-    <Compile Include="IDynamicControlBuilder.cs" />
+    <Compile Include="IBuildDynamicControls.cs" />
     <Compile Include="MyControl.xaml.cs">
       <DependentUpon>MyControl.xaml</DependentUpon>
     </Compile>

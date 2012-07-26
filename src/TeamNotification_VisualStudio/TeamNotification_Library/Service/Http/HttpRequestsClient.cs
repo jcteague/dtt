@@ -1,19 +1,36 @@
+using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
+        readonly ISerializeJSON serializer;
         readonly HttpClient httpClient;
 
-        public HttpRequestsClient()
+        public HttpRequestsClient(ISerializeJSON serializer)
         {
+            this.serializer = serializer;
             httpClient = new HttpClient();
         }
 
         public void Get(string uri)
         {
             httpClient.GetAsync(uri);
+        }
+        
+        public Task<R> Get<T, R>(string uri, Func<T, R> action) where T : class
+        {
+            return httpClient.GetStringAsync(uri)
+                .ContinueWith(response => serializer.Deserialize<T>(response.Result))
+                .ContinueWith(x => action(x.Result));
+        }
+
+//        public void Get(string uri, Action<Task<string>> action)
+        public T Get<T>(string uri, Func<Task<string>, T> action)
+        {
+            httpClient.GetStringAsync(uri).ContinueWith(action);
         }
     }
 }
