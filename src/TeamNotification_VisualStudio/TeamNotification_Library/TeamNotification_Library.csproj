@@ -87,6 +87,10 @@
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Factories\CallbackFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
+    <Compile Include="Service\Factories\ICreateInstances.cs" />
+    <Compile Include="Service\Factories\PanelFactory.cs" />
+    <Compile Include="Service\Factories\UI\ICreateTextBox.cs" />
+    <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
     <Compile Include="Service\Http\IListenToMessages.cs" />
     <Compile Include="Service\Http\IConnectToRedis.cs" />
@@ -100,6 +104,9 @@
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />
+    <Compile Include="Service\Renderer\ContentRenderer.cs" />
+    <Compile Include="Service\Renderer\IRenderCollectionTemplate.cs" />
     <Compile Include="Service\Renderer\IRenderContent.cs" />
   </ItemGroup>
   <ItemGroup>

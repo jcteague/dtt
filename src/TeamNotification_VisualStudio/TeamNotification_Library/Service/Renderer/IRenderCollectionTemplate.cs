@@ -3,8 +3,8 @@ using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Service.Renderer
 {
-    public interface IRenderContent
+    public interface IRenderCollectionTemplate
     {
-        StackPanel Render(Collection collection);
+        StackPanel RenderFor(Collection collection);
     }
 }

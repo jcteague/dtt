@@ -19,12 +19,11 @@ namespace TeamNotification_Library.Service.Http
         {
             httpClient.GetAsync(uri);
         }
-        
-        public Task<R> Get<T, R>(string uri, Func<T, R> action) where T : class
+
+        public Task<T> Get<T>(string uri) where T : class
         {
             return httpClient.GetStringAsync(uri)
-                .ContinueWith(response => serializer.Deserialize<T>(response.Result))
-                .ContinueWith(x => action(x.Result));
+                .ContinueWith(response => serializer.Deserialize<T>(response.Result));
         }
 
         public void Get(string uri, Action<Task<string>> action)
