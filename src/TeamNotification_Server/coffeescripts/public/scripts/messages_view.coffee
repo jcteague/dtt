@@ -42,7 +42,7 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
             day = message_date.getDate()
             month = message_date.getMonth() + 1
             year = message_date.getFullYear()
-            return "#{day}/#{month}/#{year}"
+            return "#{month}/#{day}/#{year}"
 
         render_message: (message,curr_date) ->
             get_field = (field_name, data) ->
