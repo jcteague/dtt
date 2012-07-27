@@ -47,7 +47,7 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         res.send({success: true, user:collection})
     
-    build('user_login_collection').for({email:email, password:pass}).fetch_to callback
+    build('user_login_collection').for(email:email, password:pass).fetch_to callback
         #res.send({success:true, user:{email:email}})
     
     
