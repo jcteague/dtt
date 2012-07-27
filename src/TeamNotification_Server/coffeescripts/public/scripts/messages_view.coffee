@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scrollspy) ->
+define 'messages_view', ['general_view'], (GeneralView) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -9,7 +9,6 @@ define 'messages_view', ['general_view','socket.io'], (GeneralView,socketio,scro
             me = @
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
-            #@$el.attr("style","height:500px;")
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()
