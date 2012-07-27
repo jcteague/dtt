@@ -8,29 +8,24 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @model = new CollectionModel
             @setElement '#client-content'
             @router = new ClientRouter()
-            @links_view = new LinksView(model: @model)
-            @form_view = new FormView(model: @model)
-            @query_view = new QueryView(model: @model)
             @server_response_view = new ServerResponseView(model: @model)
+            @router.on 'render', @render_path, @
             @views_factory = new ViewsFactory()
-
-            @subscribe_to_events()
             Backbone.history.start()
 
         render: ->
             @$el.empty()
-            @links_view.render().append_to @$el
-            @form_view.render().append_to @$el
-            @query_view.render().append_to @$el
-            @server_response_view.render().append_to @$el
             view.render().append_to(@$el) for view in @views
+            @server_response_view.render().append_to @$el
             @
 
         subscribe_to_events: ->
-            @router.on 'render', @render_path, @
-            @form_view.on 'messages:display', @display_messages, @
-            @query_view.on 'messages:display', @display_messages, @
-            @form_view.on 'all', @propagate_event, @
+            for view in @views
+                if view instanceof FormView
+                    view.on 'messages:display', @display_messages, @
+                    view.on 'all', @propagate_event, @
+                if view instanceof QueryView 
+                    view.on 'messages:display', @display_messages, @
 
         propagate_event: (event, values) ->
             @trigger event, values
@@ -43,6 +38,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @model.clear()
             @model.set data
             @views = @views_factory.get_for @model
+            @subscribe_to_events()
             view.listen_to @ for view in @views
             @render()
 

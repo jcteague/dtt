@@ -60,13 +60,13 @@ describe 'User Room', ->
                     then(done, done)
 
             it 'should contain an anchor for the user rooms and the create room', (done) ->
-                expect(browser.html('#links h1')).to.equal('<h1>Links</h1>')
+                expect(browser.html('#links h2')).to.equal('<h2>Links</h2>')
                 expect(browser.html('#links a[href="#/user/1/rooms"]')).to.not.be.empty()
                 expect(browser.html('#links a[href="#/room"]')).to.not.be.empty()
                 done()
 
             it 'should contain an anchor for each room the user is in', (done) ->
-                expect(browser.html('#rooms-container h1')).to.equal('<h1>User Rooms</h1>')
+                expect(browser.html('#rooms-container h2')).to.equal('<h2>User Rooms</h2>')
                 expect(browser.html('a[href="#/room/1"]')).to.not.be.empty()
                 expect(browser.html('a[href="#/room/2"]')).to.not.be.empty()
                 done()

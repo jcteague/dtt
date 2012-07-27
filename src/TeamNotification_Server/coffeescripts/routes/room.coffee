@@ -2,7 +2,7 @@ methods = {}
 support = require('../support/core').core
 express = require('express')
 routes_service = require('../support/routes_service')
-
+#cookies = require('cookies')
 build = routes_service.build
 
 methods.user_authorized_in_room = (req, res, next) ->
@@ -77,11 +77,15 @@ methods.get_room = (req, res) ->
 
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
+    user_id = req.user.id
+    
+    #res.cookie('user_token', JSON.stringify(req.user), { maxAge: 3600000, path: '/' })
     methods.set_socket_events(req.socket_io, room_id)
     callback = (collection) ->
         res.json collection.to_json()
 
-    build('room_messages_collection').for(room_id).fetch_to callback
+    console.log 'ROOM MESSAGES COLLECTION'
+    build('room_messages_collection').for({room_id:room_id, user:req.user}).fetch_to callback
 
 methods.post_room_message = (req, res, next) ->
     values = req.body

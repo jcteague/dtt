@@ -19,6 +19,9 @@ require.config
         'form_template_renderer': 'form_template_renderer'
         'query_renderer': 'query_renderer'
         'collection_model': 'collection_model'
+        'bootstrap': 'bootstrap.min'
+        'bootstrap-dropdown': 'bootstrap-dropdown'
+        'bootstrap-collapse': 'bootstrap-collapse'
 
     shim:
         'backbone':

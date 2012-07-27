@@ -3,15 +3,19 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
     class FormTemplateRenderer
 
         render: (collection) ->
+            form_class = 'well'
+            if typeof collection.form_class != 'undefined'
+                form_class = collection.form_class
             form = $('<form>', {action:collection.href})
             form_templates = collection.template.data
             form_templates.forEach (template) =>
                 fieldGenerator = @get_builder_for(template.type)
                 fieldElements = fieldGenerator(template)
-                fieldElements.forEach((f) -> form.append($('<p/>').append(f)))
+                fieldElements.forEach((f) -> form.append(f))#$('<p/>').append(f)))
 
             @set_up_validation(form, collection.template)
-            form.append($('<p/>').append($('<input>', {"type":"submit"})))
+            form.attr('class', form_class)
+            form.append($('<input>', {"type":"submit","class":"btn btn-primary"}))#$('<p/>').append($('<input>', {"type":"submit","class":"btn btn-primary"})))
             form
 
         get_builder_for: (field_type) ->
@@ -20,21 +24,32 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             return @hiddenFieldBuilder if field_type is 'hidden'
             return @passwordFieldBuilder if field_type is 'password'
             return @passwordWithConfirmFieldBuilder if field_type is 'password-confirmed'
+        
+        dropDownListBuilder:(template) ->
+            dropDownList = $('<select>',{"name":template.name, "class":"input-xlarge"})
+            #for (props in data) 
+            #    dropDownList.append("<option value='#{props.value}'>#{props.text}</option>")
+            return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), dropDownList]
 
+        dropDownListOptionBuilder: (props) ->
+            opt = $("<option>",{value:props.value})
+            opt.append(props.text)
+            return opt 
+            
         textFieldBuilder: (template) ->
-            return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"text","name":template.name})]
+            return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), $('<input>',{"type":"text","name":template.name, "class":"input-xlarge"})]
 
         textAreaBuilder: (template) ->
-            return [$('<label>', {"for":template.name}).text(template.label), $('<textarea>',{"name":template.name,"rows":5,"col":34,maxlength:template.maxlength})]
+            return [$('<textarea>',{"name":template.name,"rows":2,maxlength:template.maxlength,"class":"input-xlarge", placeholder:template.label})]
 
         hiddenFieldBuilder: (template) ->
             return [$('<input>',{"type":"hidden","name":template.name})]
 
         passwordFieldBuilder: (template) ->
-            return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"id": template.name, "type":"password","name":template.name})]
+            return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"id": template.name, "type":"password","name":template.name, "class":"input-xlarge"})]
 
         passwordWithConfirmFieldBuilder: (template) ->
-            return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"password","name":template.name}), $('<label>', {"for":"#{template.name}_confirm"}).text("Confirm #{template.label}"), $('<input>',{"type":"password","name":"#{template.name}_confirm"})]
+            return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"type":"password","name":template.name,"class":"input-xlarge"}), $('<label>', {"for":"#{template.name}_confirm"}).text("Confirm #{template.label}"), $('<input>',{"type":"password","name":"#{template.name}_confirm","class":"input-xlarge"})]
 
         set_up_validation: (form, template) ->
             return unless _.find(template.data, (element) ->

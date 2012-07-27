@@ -1,6 +1,6 @@
-define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTemplateRenderer) ->
+define 'form_view', ['general_view', 'form_template_renderer'], (GeneralView, FormTemplateRenderer) ->
 
-    class FormView extends Backbone.View
+    class FormView extends GeneralView
 
         id: 'form-container'
 
@@ -14,7 +14,7 @@ define 'form_view', ['backbone', 'form_template_renderer'], (Backbone, FormTempl
         render: ->
             @$el.empty()
             if @model.has('template')
-                @$el.append('<h1>Form</h1>')
+                #@$el.append('<h2>Form</h2>')
                 @$el.append(@form_template_renderer.render(@model.attributes))
             @delegateEvents(@events)
             @
