@@ -41,12 +41,15 @@ methods.login = (req, res) ->
     res.json(r)
 
 methods.authenticate = (req, res, next) ->
-    email = req.body.username
-    pass = sha256(req.body.password)
+    values = req.body
+    email = values.username
+    pass = sha256(values.password)
     
     callback = (collection) ->
-        if req.body.username == 'foo@bar.com'
-            res.send({success: true, user:{email:email}})
+        console.log collection
+        user_data = collection.to_json()
+        if JSON.stringify( user_data ) != '{}'
+            res.send({success: true, user:{email:user_data.email}})
         else
             res.send({})
           

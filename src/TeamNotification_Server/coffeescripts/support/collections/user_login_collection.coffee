@@ -5,5 +5,4 @@ class UserLoginCollection
     to_json: ->
         return @data
 
-
 module.exports = UserLoginCollection
