@@ -46,9 +46,8 @@ namespace :rest_service do
   end
 
   task :run_production do
-    Dir.chdir RestDeployFolder do
-      sh "./run_production.sh"
-    end
+    sh "sudo stop dtt"
+    sh "sudo start dtt"
   end
 
   task :dev_environment do
