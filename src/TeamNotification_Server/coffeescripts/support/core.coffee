@@ -1,4 +1,3 @@
-pg = require('pg')
 db_config = require('../config').db
 
 orm = require('./orm_gateway').open()

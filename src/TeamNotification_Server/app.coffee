@@ -3,6 +3,7 @@ Module dependencies.
 ###
 
 express = require('express')
+config = require('./config')()
 
 Authentication = require('./support/authentication')
 auth = new Authentication()
@@ -51,6 +52,7 @@ app.configure(->
 # Apply authentication for all routes
 app.all '*', auth.authenticate
 
+
 # This must live here after authentication has been initialized
 require('./routes')(app, io)
 
@@ -66,6 +68,6 @@ app.configure('production', ->
     app.use(express.errorHandler())
 )
 
-app.listen(3000, ->
+app.listen(config.site.port, ->
     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 )

@@ -15,7 +15,7 @@ test:
 production:
   adapter: postgresql
   database: dtt_main
-  username: intellisys
+  username: postgres
   password: welc0me
-  host: production_ip
-
+  host: localhost
+  port: 5432

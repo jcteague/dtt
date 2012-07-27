@@ -1,12 +1,12 @@
 require.config
     baseUrl: 'scripts'
     paths:
-        'socket.io': '../socket.io/socket.io'
         'jquery': 'jquery-1.7.2.min'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'jquery.autocomplete': 'jquery.autocomplete'
         'jquery.validate': 'jquery.validate.min'
+        'config': 'config'
         'client_view': 'client_view'
         'client_router': 'client_router'
         'form_view': 'form_view'

@@ -11,15 +11,56 @@ namespace :rest_service do
     :migrate
   ]
 
+  task :build_production => [
+    :prod_environment,
+    :update_packages,
+    :compile_coffeescript,
+    #:test, # This should run on staging env
+    :migrate,
+    :package,
+    :run_production
+  ]
+
+  task :deploy => [
+    #:compile_coffeescript,
+    #:test,
+    :package_and_deploy
+  ]
+
+  task :package_and_deploy do
+      Dir.make_temp_dir(RestDeployFolder) do |deploy|
+        Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "node_modules", "db", "test"].include? f.split('/').last}.each do |f|
+          sh "cp -r #{f} #{deploy}"
+        end
+        sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+        sh "jitsu deploy"
+      end
+  end
+
+  task :package do
+    Dir.recreate_dir RestDeployFolder
+    Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
+      sh "cp -r #{f} #{RestDeployFolder}"
+    end
+    sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+  end
+
+  task :run_production do
+    Dir.chdir RestDeployFolder do
+      sh "./run_production.sh"
+    end
+  end
+
   task :dev_environment do
     ActiveRecord::Base.establish_connection(db_config["development"])
   end
 
-  task :compile_coffeescript do
-      sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
+  task :prod_environment do
+    ActiveRecord::Base.establish_connection(db_config["production"])
   end
 
-  multitask :integration_test => [:run_test_server] do
+  task :compile_coffeescript do
+      sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
   end
 
   task :test do
