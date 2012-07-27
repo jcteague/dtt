@@ -138,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\IBuildControls.cs" />
+    <Compile Include="Controls\LoginControlRenderer.cs" />
     <Compile Include="DynamicControlBuilder.cs" />
     <Compile Include="IApiService.cs" />
     <Compile Include="IBuildDynamicControls.cs" />
@@ -201,9 +203,7 @@
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Windows\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
