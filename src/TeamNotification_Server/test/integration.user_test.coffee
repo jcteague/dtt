@@ -41,16 +41,43 @@ chat_room_users =
         }
     ]
 
-describe 'User Room', ->
+describe 'User ', ->
 
+    browser = null
+    beforeEach (done) ->
+        browser = new Browser()
+        handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
+
+    describe 'When a user logins', ->
+        describe 'if the user is invalid',  ->
+            beforeEach (done) ->
+                browser.visit('http://localhost:3000/client#/user/login').then( -> 
+                        browser.fill("username", "foo@bar.com")
+                        browser.fill("password", "something wrong")
+                    ).then(-> browser.pressButton('input[type=submit]')).
+                    then(done, done)
+              
+            it 'should give the right response', (done) ->
+                expect(browser.lastResponse.body).to.equal {}
+                done()
+    
+        describe 'if the user is valid', ->
+            beforeEach (done) ->
+                browser.visit('http://localhost:3000/client#/user/login').then( ->  
+                        browser.fill("username", "foo@bar.com")
+                        browser.fill("password", '1234')).
+                    then(-> browser.pressButton('input[type=submit]')).
+                    then(done, done)
+                    
+            it 'should give the right response', (done)->
+                expect(browser.lastResponse.body).to.equal '{"success":true,"user":{"email":"foo@bar.com"}}'
+                done()
+                    
     describe 'Set Up', ->
-
-        browser = null
-
         beforeEach (done) ->
-            browser = new Browser()
             browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
+            done()
+            #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the client#/user/1 page', ->
 

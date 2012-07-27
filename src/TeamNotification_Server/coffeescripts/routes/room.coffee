@@ -84,7 +84,6 @@ methods.get_room_messages = (req,res) ->
     callback = (collection) ->
         res.json collection.to_json()
 
-    console.log 'ROOM MESSAGES COLLECTION'
     build('room_messages_collection').for({room_id:room_id, user:req.user}).fetch_to callback
 
 methods.post_room_message = (req, res, next) ->
