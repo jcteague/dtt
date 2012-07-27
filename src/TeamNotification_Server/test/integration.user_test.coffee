@@ -52,13 +52,13 @@ describe 'User ', ->
         describe 'if the user is invalid',  ->
             beforeEach (done) ->
                 browser.visit('http://localhost:3000/client#/user/login').then( -> 
-                        browser.fill("username", "foo@bar.com")
+                        browser.fill("username", "foo@bars.com")
                         browser.fill("password", "something wrong")
                     ).then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
               
             it 'should give the right response', (done) ->
-                expect(browser.lastResponse.body).to.equal {}
+                expect(browser.lastResponse.body).to.equal '{}'
                 done()
     
         describe 'if the user is valid', ->

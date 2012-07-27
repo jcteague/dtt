@@ -1,6 +1,6 @@
 Repository = require('../repository')
-strategy = (q) ->
-     new Repository('User').find({email:q.email, password:q.pass}).then (user) ->
+strategy = (email, password) ->
+     new Repository('User').find({email:email, password:password}).then (user) ->
         return user
         #if typeof(username) != 'undefined'
         #   return (user for user in users when user.first_name.toLowerCase().indexOf(username.toLowerCase())==0)

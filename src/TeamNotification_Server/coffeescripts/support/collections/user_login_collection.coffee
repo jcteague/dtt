@@ -3,7 +3,7 @@ class UserLoginCollection
     constructor: (@data) ->
 
     to_json: ->
-        @data
+        return @data
 
 
-module.exports = UserCollection
+module.exports = UserLoginCollection
