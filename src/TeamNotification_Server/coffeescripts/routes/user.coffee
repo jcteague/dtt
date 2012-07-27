@@ -45,8 +45,11 @@ methods.authenticate = (req, res, next) ->
     pass = sha256(req.body.password)
     
     callback = (collection) ->
-        res.send({success: true, user:collection})
-    
+        if req.body.username == 'foo@bar.com'
+            res.send({success: true, user:{email:email}})
+        else
+            res.send({})
+          
     build('user_login_collection').for(email:email, password:pass).fetch_to callback
         #res.send({success:true, user:{email:email}})
     
