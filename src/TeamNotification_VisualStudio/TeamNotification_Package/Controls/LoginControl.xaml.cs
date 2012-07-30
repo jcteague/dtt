@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Http;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -20,15 +21,19 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class LoginControl : UserControl
     {
-        public LoginControl()
+        private string href = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=hellothere";
+
+        public LoginControl(ISendHttpRequests httpClient)
         {
             InitializeComponent();
-            var list = new List<CollectionData>
-                           {
-                               new CollectionData {label = "First Element"},
-                               new CollectionData {label = "Second Element"}
-                           };
-            this.Resources.Add("collection", list);
+//            var collection = new List<CollectionData>
+//                           {
+//                               new CollectionData {label = "First Element"},
+//                               new CollectionData {label = "Second Element"}
+//                           };
+            var collection = httpClient.Get<Collection>(href).Result;
+//            this.Resources.Add("collection", collection);
+            this.Resources.Add("templateData", collection.template.data);
         }
     }
 

@@ -12,8 +12,6 @@ namespace AvenidaSoftware.TeamNotification_Package
     [Guid(GuidList.guidLoginWindowPersistanceString)]
     public class LoginWindow : ToolWindowPane
     {
-        private string href = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=hellothere";
-
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
@@ -35,7 +33,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             // the object returned by the Content property.
 //            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
 //            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
-            base.Content = Container.GetInstance<IBuildControls<LoginControl>>().GetContentFrom(href);
+            base.Content = Container.GetInstance<LoginControl>();
         }       
     }
 }

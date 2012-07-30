@@ -16,8 +16,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         public LoginControl GetContentFrom(string uri)
         {
             return Container.GetInstance<LoginControl>();
-//            var loginControl = Container.GetInstance<LoginControl>();
-//            return loginControl.Render(httpClient.Get<Collection>(uri).Result);
         }
     }
 }

@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Models="clr-namespace:TeamNotification_Library.Models;assembly=TeamNotification_Library"
-             xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls" mc:Ignorable="d" 
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 <!--    <UserControl.Resources>-->
 <!--        <Controls:CollectionData x:Key="collection"></Controls:CollectionData>-->
@@ -13,18 +12,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="44*" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Please Login" Height="45" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" Width="267" FontSize="24" />
-<!--        <StackPanel Grid.Row="1" DataContext="{DynamicResource collection}" >-->
-<!--            <TextBox Text="{Binding label}" />-->
-<!--            <Label Content="{Binding label}" />-->
-<!--        </StackPanel>-->
-        <ListBox Grid.Row="1" Height="100" HorizontalAlignment="Left" Margin="20,68,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{DynamicResource collection}">
+        <ListBox Grid.Row="1" Height="100" HorizontalAlignment="Left" Margin="20,12,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{DynamicResource templateData}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding Path=label}" />
-                        <TextBlock Text="" />
+                        <Label Content="{Binding Path=label}" />
+                        <TextBox Text="{Binding Path=name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
