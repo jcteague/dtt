@@ -2,7 +2,7 @@
 
 namespace TeamNotification_Library.Service.Factories.UI
 {
-    public class TextBoxFactory
+    public class TextBoxFactory : ICreateTextBox
     {
          public TextBox Get(string text)
          {

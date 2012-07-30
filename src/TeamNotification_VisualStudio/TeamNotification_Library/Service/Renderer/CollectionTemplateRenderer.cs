@@ -22,6 +22,8 @@ namespace TeamNotification_Library.Service.Renderer
         public StackPanel RenderFor(Collection collection)
         {
             var panel = panelFactory.GetInstance();
+            panel.Width = 700;
+            panel.Height = 500;
             foreach(var data in collection.template.data)
             {
                 var textBox = textBoxFactory.Get(data.name);
