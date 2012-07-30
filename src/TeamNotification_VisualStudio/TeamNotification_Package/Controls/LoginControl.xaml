@@ -2,10 +2,32 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Models="clr-namespace:TeamNotification_Library.Models;assembly=TeamNotification_Library"
+             xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+<!--    <UserControl.Resources>-->
+<!--        <Controls:CollectionData x:Key="collection"></Controls:CollectionData>-->
+<!--    </UserControl.Resources>-->
+    <Grid Height="213" Width="295">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="Please Login" Height="45" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" Width="267" FontSize="24" />
+        <StackPanel Grid.Row="1" DataContext="{DynamicResource collection}" >
+            <TextBox Text="{Binding label}" />
+            <Label Content="{Binding label}" />
+        </StackPanel>
+        <!--        <ListBox Height="100" HorizontalAlignment="Left" Margin="20,68,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{Binding Source={DynamicResource Collection}}">-->
+<!--            <ListBox.ItemTemplate>-->
+<!--                <DataTemplate>-->
+<!--                    <StackPanel>-->
+<!--                        <TextBlock Text="{Binding Path=label}" />-->
+<!--                        <TextBlock Text="" />-->
+<!--                    </StackPanel>-->
+<!--                </DataTemplate>-->
+<!--            </ListBox.ItemTemplate>-->
+<!--        </ListBox>-->
     </Grid>
 </UserControl>

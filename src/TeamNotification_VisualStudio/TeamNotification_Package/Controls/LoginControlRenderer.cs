@@ -4,7 +4,7 @@ using TeamNotification_Library.Service.Http;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
-    public class LoginControlRenderer : IBuildControls<MyControl>
+    public class LoginControlRenderer : IBuildControls<LoginControl>
     {
         private readonly ISendHttpRequests httpClient;
 
@@ -13,9 +13,9 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             this.httpClient = httpClient;
         }
 
-        public MyControl GetContentFrom(string uri)
+        public LoginControl GetContentFrom(string uri)
         {
-            return Container.GetInstance<MyControl>();
+            return Container.GetInstance<LoginControl>();
 //            var loginControl = Container.GetInstance<LoginControl>();
 //            return loginControl.Render(httpClient.Get<Collection>(uri).Result);
         }

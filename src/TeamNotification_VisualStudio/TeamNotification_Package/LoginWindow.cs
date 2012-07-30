@@ -34,8 +34,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
             // the object returned by the Content property.
 //            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
-            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
-//            base.Content = Container.GetInstance<IBuildControls<MyControl>>().GetContentFrom(href);
+//            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
+            base.Content = Container.GetInstance<IBuildControls<LoginControl>>().GetContentFrom(href);
         }       
     }
 }

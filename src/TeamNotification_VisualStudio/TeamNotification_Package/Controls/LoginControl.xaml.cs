@@ -20,18 +20,15 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class LoginControl : UserControl
     {
-        private Collection collection { get; set; }
-
         public LoginControl()
         {
             InitializeComponent();
+            this.Resources.Add("collection", new CollectionData {label="Hello from collection data"});
         }
+    }
 
-        public LoginControl Render(Collection collection)
-        {
-            this.collection = collection;
-            return null;
-        }
-
+    public class CollectionData
+    {
+        public string label { get; set; }
     }
 }
