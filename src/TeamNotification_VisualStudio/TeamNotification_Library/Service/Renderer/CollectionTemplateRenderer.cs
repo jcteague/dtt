@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Factories.UI;
@@ -8,12 +9,14 @@ namespace TeamNotification_Library.Service.Renderer
     public class CollectionTemplateRenderer : IRenderCollectionTemplate
     {
         private ICreateInstances<StackPanel> panelFactory;
-        private TextBoxFactory textBoxFactory;
+        private ICreateTextBox textBoxFactory;
+        private ICreateButtons buttonFactory;
 
-        public CollectionTemplateRenderer(ICreateInstances<StackPanel> panelFactory, TextBoxFactory textBoxFactory)
+        public CollectionTemplateRenderer(ICreateInstances<StackPanel> panelFactory, ICreateTextBox textBoxFactory, ICreateButtons buttonFactory)
         {
             this.panelFactory = panelFactory;
             this.textBoxFactory = textBoxFactory;
+            this.buttonFactory = buttonFactory;
         }
 
         public StackPanel RenderFor(Collection collection)
@@ -26,8 +29,10 @@ namespace TeamNotification_Library.Service.Renderer
                                 {
                                     Text = data.label
                                 };
-                panel.Children.Add(label);
+//                panel.Children.Add(label);
                 panel.Children.Add(textBox);
+//                var button = buttonFactory.Get();
+//                panel.Children.Add(button);
             }
             return panel;
         }

@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TeamNotification_Library.Models;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -19,9 +20,18 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class LoginControl : UserControl
     {
+        private Collection collection { get; set; }
+
         public LoginControl()
         {
             InitializeComponent();
         }
+
+        public LoginControl Render(Collection collection)
+        {
+            this.collection = collection;
+            return null;
+        }
+
     }
 }

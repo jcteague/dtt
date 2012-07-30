@@ -89,6 +89,8 @@
     <Compile Include="Service\Factories\ICreateCallback.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
+    <Compile Include="Service\Factories\UI\ButtonFactory.cs" />
+    <Compile Include="Service\Factories\UI\ICreateButtons.cs" />
     <Compile Include="Service\Factories\UI\ICreateTextBox.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />

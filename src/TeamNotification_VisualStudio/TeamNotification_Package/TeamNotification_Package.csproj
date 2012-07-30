@@ -139,6 +139,9 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controls\IBuildControls.cs" />
+    <Compile Include="Controls\LoginControl.xaml.cs">
+      <DependentUpon>LoginControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LoginControlRenderer.cs" />
     <Compile Include="DynamicControlBuilder.cs" />
     <Compile Include="IApiService.cs" />
@@ -192,6 +195,10 @@
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\LoginControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -203,7 +210,9 @@
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\Factories\" />
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
