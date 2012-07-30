@@ -23,7 +23,12 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         public LoginControl()
         {
             InitializeComponent();
-            this.Resources.Add("collection", new CollectionData {label="Hello from collection data"});
+            var list = new List<CollectionData>
+                           {
+                               new CollectionData {label = "First Element"},
+                               new CollectionData {label = "Second Element"}
+                           };
+            this.Resources.Add("collection", list);
         }
     }
 

@@ -15,19 +15,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Please Login" Height="45" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" Width="267" FontSize="24" />
-        <StackPanel Grid.Row="1" DataContext="{DynamicResource collection}" >
-            <TextBox Text="{Binding label}" />
-            <Label Content="{Binding label}" />
-        </StackPanel>
-        <!--        <ListBox Height="100" HorizontalAlignment="Left" Margin="20,68,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{Binding Source={DynamicResource Collection}}">-->
-<!--            <ListBox.ItemTemplate>-->
-<!--                <DataTemplate>-->
-<!--                    <StackPanel>-->
-<!--                        <TextBlock Text="{Binding Path=label}" />-->
-<!--                        <TextBlock Text="" />-->
-<!--                    </StackPanel>-->
-<!--                </DataTemplate>-->
-<!--            </ListBox.ItemTemplate>-->
-<!--        </ListBox>-->
+<!--        <StackPanel Grid.Row="1" DataContext="{DynamicResource collection}" >-->
+<!--            <TextBox Text="{Binding label}" />-->
+<!--            <Label Content="{Binding label}" />-->
+<!--        </StackPanel>-->
+        <ListBox Grid.Row="1" Height="100" HorizontalAlignment="Left" Margin="20,68,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{DynamicResource collection}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=label}" />
+                        <TextBlock Text="" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>
