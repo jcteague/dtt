@@ -25,10 +25,21 @@ namespace TeamNotification_Library.Service.Http
             return httpClient.GetStringAsync(uri)
                 .ContinueWith(response => serializer.Deserialize<T>(response.Result));
         }
-
+        
         public void Get(string uri, Action<Task<string>> action)
         {
             httpClient.GetStringAsync(uri).ContinueWith(action);
+        }
+
+//        public Task<HttpResponseMessage> Post<T>(string uri, HttpContent content) where T : class
+//        {
+//            return httpClient.PostAsync(uri, content);
+//        }
+
+        public Task<T> Post<T>(string uri, HttpContent content) where T : class
+        {
+            return httpClient.PostAsync(uri, content)
+                    .ContinueWith(response => serializer.Deserialize<T>(response.Result.Content.ReadAsStringAsync().Result));
         }
     }
 }

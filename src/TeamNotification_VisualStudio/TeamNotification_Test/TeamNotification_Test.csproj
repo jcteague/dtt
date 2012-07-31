@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
+    <Compile Include="Library\Service\Controls\LoginControlServiceSpecs.cs" />
     <Compile Include="Library\Service\Http\ChatMessageSenderSpecs.cs" />
     <Compile Include="Library\Service\Http\HttpRequestClientSpecs.cs" />
     <Compile Include="Library\Service\Renderer\CollectionTemplateRendererSpecs.cs" />

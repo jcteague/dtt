@@ -23,12 +23,12 @@ namespace TeamNotification_Test.Library.Service.Renderer
         {
             Establish context = () =>
             {
-                var data1 = new Collection.CollectionData
+                var data1 = new CollectionData
                             {
                                 name = "foo name",
                                 value = "foo value"
                             };
-                var data2 = new Collection.CollectionData
+                var data2 = new CollectionData
                             {
                                 name = "bar name",
                                 value = "bar value"
@@ -39,7 +39,7 @@ namespace TeamNotification_Test.Library.Service.Renderer
                     href = "/blah",
                     template = new Collection.Template
                     {
-                        data = new List<Collection.CollectionData>{data1, data2}
+                        data = new List<CollectionData>{data1, data2}
                     }
                 };
                 panelFactory = depends.on<ICreateInstances<StackPanel>>();
