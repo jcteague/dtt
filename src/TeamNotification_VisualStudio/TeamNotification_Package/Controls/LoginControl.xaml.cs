@@ -23,8 +23,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class LoginControl : UserControl
     {
-        // TODO: This href should not be hardcoded here. How should it be passed it to the control?
-        private string href = "http://dtt.local:3000/user/login";
         private IServiceLoginControl loginControlService;
 
         public LoginControl(IServiceLoginControl loginControlService)
@@ -38,7 +36,12 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            loginControlService.HandleClick();
+            var collection = new List<CollectionData>();
+            foreach (CollectionData item in listBox1.Items)
+            {
+                collection.Add(item);
+            }
+            loginControlService.HandleClick(collection);
             
 //            var data = new List<KeyValuePair<string, string>>();
 //            foreach (CollectionData item in listBox1.Items)

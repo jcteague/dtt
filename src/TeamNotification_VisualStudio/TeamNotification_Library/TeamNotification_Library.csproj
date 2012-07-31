@@ -117,6 +117,8 @@
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\IStoreDataLocally.cs" />
+    <Compile Include="Service\Mappers\IMapEntities.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />
     <Compile Include="Service\Renderer\ContentRenderer.cs" />
