@@ -18,12 +18,13 @@
         <ListBox Grid.Row="1" Height="100" HorizontalAlignment="Left" Margin="20,12,0,0" Name="listBox1" VerticalAlignment="Top" Width="259" ItemsSource="{DynamicResource templateData}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <Label Content="{Binding Path=label}" />
-                        <TextBox Text="{Binding Path=name}"/>
+                    <StackPanel Name="stack1">
+                        <Label Content="{Binding Path=label}"  />
+                        <TextBox Text="{Binding Path=value}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Button Grid.Row="2" Content="Submit" Click="Button_Click" />
     </Grid>
 </UserControl>

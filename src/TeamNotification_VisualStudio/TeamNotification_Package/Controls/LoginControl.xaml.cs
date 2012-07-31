@@ -23,22 +23,23 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     {
         private string href = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=hellothere";
 
+        private ISendHttpRequests httpClient;
+
         public LoginControl(ISendHttpRequests httpClient)
         {
+            this.httpClient = httpClient;
             InitializeComponent();
-//            var collection = new List<CollectionData>
-//                           {
-//                               new CollectionData {label = "First Element"},
-//                               new CollectionData {label = "Second Element"}
-//                           };
-            var collection = httpClient.Get<Collection>(href).Result;
-//            this.Resources.Add("collection", collection);
-            this.Resources.Add("templateData", collection.template.data);
-        }
-    }
 
-    public class CollectionData
-    {
-        public string label { get; set; }
+            var collection = httpClient.Get<Collection>(href).Result;
+            Resources.Add("templateData", collection.template.data);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (CollectionData item in listBox1.Items)
+            {
+                System.Diagnostics.Debug.WriteLine(item);
+            }
+        }
     }
 }
