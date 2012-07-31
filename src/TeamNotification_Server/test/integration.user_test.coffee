@@ -65,11 +65,11 @@ describe 'User ', ->
             beforeEach (done) ->
                 browser.visit('http://localhost:3000/client#/user/login').then( ->  
                         browser.fill("username", "foo@bar.com")
-                        browser.fill("password", '1234')).
+                        browser.fill("password", "1234")).
                     then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
-                    
             it 'should give the right response', (done)->
+                console.log browser
                 expect(browser.lastResponse.body).to.equal '{"success":true,"user":{"email":"foo@bar.com"}}'
                 done()
                     
