@@ -63,7 +63,6 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-
                 var collectionData1 = new CollectionData { label = "foo", value = "foo value" };
                 var collectionData2 = new CollectionData { label = "bar", value = "bar value" };
                 collectionDataList = new List<CollectionData> { collectionData1, collectionData2 };
@@ -97,9 +96,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             It should_store_the_response_user_data_locally = () =>
                 localStorageService.AssertWasCalled(x => x.Store(user));
 
-//            It should_post_the_input_values_to_the_service_href = () =>
-//                httpClient.AssertWasCalled(x => x.Post<LoginResponse>(configuration.HREF, postData));
-
             private static User user;
         }
 
@@ -122,9 +118,6 @@ namespace TeamNotification_Test.Library.Service.Controls
 
             It should_not_store_the_response_user_data_locally = () =>
                 localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything));
-
-//            It should_post_the_input_values_to_the_service_href = () =>
-//                httpClient.AssertWasCalled(x => x.Post<LoginResponse>(configuration.HREF, postData));
 
             private static User user;
         }
