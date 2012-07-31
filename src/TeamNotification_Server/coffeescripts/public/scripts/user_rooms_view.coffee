@@ -4,17 +4,14 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
         
         id: 'user-rooms-container'
         initialize: ->
-            console.log 'asd'
             @formTemplateRenderer = new FormTemplateRenderer()
             @data = @model.attributes
         render: ->
             @$el.empty()
             navInner = $("<div>",{"class":"navbar-inner"})
             navContent = $("<div>",{"class":"container-fluid"})
-            #navContent.append "<a class=​'btn btn-navbar' data-toggle=​'collapse' data-target=​'.nav-collapse'>​​<span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span></a>​"
             userName = $("<a>", { "class":"brand", "href":"/client#/user/#{@data.user.user_id}/"})
             userName.append @data.user.name
-            #divCollapse = $("<div>",{"class":"nav-collapse"})
             @$el.attr('class', 'navbar navbar-fixed-top')
             ul = $("<ul>",{"class":"nav pull-right"})
             ul.append "<li class='divider-vertical'></li>"
