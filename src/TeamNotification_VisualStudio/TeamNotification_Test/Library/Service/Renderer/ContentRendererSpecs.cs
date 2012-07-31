@@ -28,7 +28,7 @@ namespace TeamNotification_Test.Library.Service.Renderer
                     href = "/blah",
                     template = new Collection.Template
                     {
-                        data = new List<Collection.CollectionData>{new Collection.CollectionData
+                        data = new List<CollectionData>{new CollectionData
                                                                                                        {
                                                                                                            name = "foo",
                                                                                                            value = "bar"

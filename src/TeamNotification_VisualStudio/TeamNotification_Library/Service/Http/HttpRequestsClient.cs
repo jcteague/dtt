@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,6 +19,11 @@ namespace TeamNotification_Library.Service.Http
         public void Get(string uri)
         {
             httpClient.GetAsync(uri);
+        }
+
+        public void Post(string uri, params KeyValuePair<string, string>[] values)
+        {
+            httpClient.PostAsync(uri, new FormUrlEncodedContent(values));
         }
 
         public Task<T> Get<T>(string uri) where T : class
