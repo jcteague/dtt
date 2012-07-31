@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 
@@ -42,16 +43,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 collection.Add(item);
             }
             loginControlService.HandleClick(collection);
-            
-//            var data = new List<KeyValuePair<string, string>>();
-//            foreach (CollectionData item in listBox1.Items)
-//            {
-//                data.Add(new KeyValuePair<string, string>(item.name, item.value));
-//            }
-//
-//            var content = new FormUrlEncodedContent(data);
-//            var result = httpClient.Post<LoginResponse>(href, content).Result;
-//            System.Diagnostics.Debug.WriteLine(result);
         }
     }
 }

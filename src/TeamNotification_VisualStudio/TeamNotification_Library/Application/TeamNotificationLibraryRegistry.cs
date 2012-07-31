@@ -1,4 +1,5 @@
 ﻿using StructureMap.Configuration.DSL;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Http;
 using RedisConnection = BookSleeve.RedisConnection;
 
@@ -15,6 +16,7 @@ namespace TeamNotification_Library.Application
             });
 
             For<IRedisConnection>().Use(new Service.Http.RedisConnection(new RedisConnection("10.0.0.37")));
+            For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
         }
     }
 }
