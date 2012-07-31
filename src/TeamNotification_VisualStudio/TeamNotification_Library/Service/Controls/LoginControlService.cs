@@ -37,5 +37,10 @@ namespace TeamNotification_Library.Service.Controls
                                       if (x.Result.success) localStorageService.Store(x.Result.user);
                                   });
         }
+
+        public bool IsUserLogged()
+        {
+            return localStorageService.User != null;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -16,6 +17,7 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -29,6 +31,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         public LoginControl(IServiceLoginControl loginControlService)
         {
             this.loginControlService = loginControlService;
+
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
@@ -37,6 +40,11 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if(loginControlService.IsUserLogged())
+            {
+                Debug.WriteLine("User is logged in");
+            }
+
             var collection = new List<CollectionData>();
             foreach (CollectionData item in listBox1.Items)
             {
