@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Providers;
@@ -27,24 +28,24 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     public partial class LoginControl : UserControl
     {
         private IServiceLoginControl loginControlService;
+        private IProvideUser userProvider;
 
-        public LoginControl(IServiceLoginControl loginControlService)
+        public LoginControl(IServiceLoginControl loginControlService, IProvideUser userProvider)
         {
             this.loginControlService = loginControlService;
+            this.userProvider = userProvider;
 
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
             Resources.Add("templateData", collection.template.data);
+
+            loginControlService.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<MyControl>();
+            loginControlService.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(loginControlService.IsUserLogged())
-            {
-                Debug.WriteLine("User is logged in");
-            }
-
             var collection = new List<CollectionData>();
             foreach (CollectionData item in listBox1.Items)
             {

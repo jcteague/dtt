@@ -5,9 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-<!--    <UserControl.Resources>-->
-<!--        <Controls:CollectionData x:Key="collection"></Controls:CollectionData>-->
-<!--    </UserControl.Resources>-->
     <Grid Height="213" Width="295">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

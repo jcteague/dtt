@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Windows.Controls;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 
@@ -14,6 +15,9 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IProvideConfiguration<LoginConfiguration> configuration;
         private readonly IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper;
         private readonly IStoreDataLocally localStorageService;
+
+        public event CustomEventHandler UserHasLogged;
+        public event CustomEventHandler UserCouldNotLogIn;
 
         public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService)
         {
@@ -31,11 +35,34 @@ namespace TeamNotification_Library.Service.Controls
         public void HandleClick(IEnumerable<CollectionData> items)
         {
             var content = mapper.MapFrom(items);
-            httpClient.Post<LoginResponse>(configuration.Get().HREF, content)
-                .ContinueWith(x =>
-                                  {
-                                      if (x.Result.success) localStorageService.Store(x.Result.user);
-                                  });
+            var task = httpClient.Post<LoginResponse>(configuration.Get().HREF, content);
+            
+            var loginResponse = task.Result;
+            if (loginResponse.success)
+            {
+                localStorageService.Store(loginResponse.user);
+                OnLoginSuccess();
+            }
+            else
+            {
+                OnLoginFail();
+            }
+        }
+
+        private void OnLoginSuccess()
+        {
+            HandleEvent(UserHasLogged);
+        }
+
+        private void OnLoginFail()
+        {
+            HandleEvent(UserCouldNotLogIn);
+        }
+
+        private void HandleEvent(CustomEventHandler handler)
+        {
+            if(handler != null)
+                handler(this, new CustomEventArgs());
         }
 
         public bool IsUserLogged()

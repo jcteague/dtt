@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using Microsoft.VisualStudio.Shell;
+using TeamNotification_Library.Service.Controls;
 using Container = TeamNotification_Library.Service.Container;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -31,9 +32,14 @@ namespace AvenidaSoftware.TeamNotification_Package
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
             // the object returned by the Content property.
-//            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
-//            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
-            base.Content = Container.GetInstance<LoginControl>();
+            if(Container.GetInstance<IServiceLoginControl>().IsUserLogged())
+            {
+                base.Content = Container.GetInstance<MyControl>();
+            }
+            else
+            {
+                base.Content = Container.GetInstance<LoginControl>();
+            }
         }       
     }
 }
