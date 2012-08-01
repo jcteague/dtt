@@ -47,11 +47,36 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var collection = new List<CollectionData>();
-            foreach (CollectionData item in listBox1.Items)
+            foreach (CollectionData item in templateContainer.Items)
             {
                 collection.Add(item);
             }
             loginControlService.HandleClick(collection);
+        }
+
+        private IEnumerable<StackPanel> GetTemplateFrom(Collection collection)
+        {
+            var panels = new List<StackPanel>();
+            foreach (var field in collection.template.data)
+            {
+                var stackPanel = new StackPanel();
+                var label = new Label {Content = field.label};
+                stackPanel.Children.Add(label);
+
+                if(field.type == "password")
+                {
+                    var passwordBox = new PasswordBox();
+//                    passwordBox.SetBinding(PasswordBox.)
+                    stackPanel.Children.Add(passwordBox);
+                }
+                else
+                {
+                    var textbox = new TextBox();
+                    textbox.SetBinding(TextBox.TextProperty, field.value);
+                    stackPanel.Children.Add(textbox);
+                }
+            }
+            return panels;
         }
     }
 }
