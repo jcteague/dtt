@@ -37,11 +37,6 @@ namespace TeamNotification_Library.Service.Http
             httpClient.GetStringAsync(uri).ContinueWith(action);
         }
 
-//        public Task<HttpResponseMessage> Post<T>(string uri, HttpContent content) where T : class
-//        {
-//            return httpClient.PostAsync(uri, content);
-//        }
-
         public Task<T> Post<T>(string uri, HttpContent content) where T : class
         {
             return httpClient.PostAsync(uri, content)

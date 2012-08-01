@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -13,8 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -23,13 +26,12 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class LoginControl : UserControl
     {
-        // TODO: This href should not be hardcoded here. How should it be passed it to the control?
-        private string href = "http://dtt.local:3000/user/login";
         private IServiceLoginControl loginControlService;
 
         public LoginControl(IServiceLoginControl loginControlService)
         {
             this.loginControlService = loginControlService;
+
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
@@ -38,17 +40,17 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            loginControlService.HandleClick();
-            
-//            var data = new List<KeyValuePair<string, string>>();
-//            foreach (CollectionData item in listBox1.Items)
-//            {
-//                data.Add(new KeyValuePair<string, string>(item.name, item.value));
-//            }
-//
-//            var content = new FormUrlEncodedContent(data);
-//            var result = httpClient.Post<LoginResponse>(href, content).Result;
-//            System.Diagnostics.Debug.WriteLine(result);
+            if(loginControlService.IsUserLogged())
+            {
+                Debug.WriteLine("User is logged in");
+            }
+
+            var collection = new List<CollectionData>();
+            foreach (CollectionData item in listBox1.Items)
+            {
+                collection.Add(item);
+            }
+            loginControlService.HandleClick(collection);
         }
     }
 }

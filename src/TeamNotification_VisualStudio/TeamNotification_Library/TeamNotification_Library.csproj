@@ -97,7 +97,9 @@
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
     <Compile Include="Service\Factories\CallbackFactory.cs" />
+    <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
+    <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
     <Compile Include="Service\Factories\UI\ButtonFactory.cs" />
@@ -117,7 +119,12 @@
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\IStoreDataLocally.cs" />
+    <Compile Include="Service\LocalDataStorageService.cs" />
+    <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
+    <Compile Include="Service\Mappers\IMapEntities.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
+    <Compile Include="Service\Providers\UserProvider.cs" />
     <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />
     <Compile Include="Service\Renderer\ContentRenderer.cs" />
     <Compile Include="Service\Renderer\IRenderCollectionTemplate.cs" />

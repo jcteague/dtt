@@ -41,18 +41,18 @@ methods.login = (req, res) ->
     res.json(r)
 
 methods.authenticate = (req, res, next) ->
-    email = req.body.username
-    pass = sha256(req.body.password)
+    values = req.body
+    email = values.username
+    pass = sha256(values.password)
     
     callback = (collection) ->
-        if req.body.username == 'foo@bar.com'
-            res.send({success: true, user:{email:email}})
+        user_data = collection.to_json()
+        if JSON.stringify( user_data ) != '{}'
+            res.send({success: true, user:{id: user_data.id, email:user_data.email}})
         else
             res.send({})
           
     build('user_login_collection').for(email:email, password:pass).fetch_to callback
-        #res.send({success:true, user:{email:email}})
-    
     
 module.exports = 
     methods: methods

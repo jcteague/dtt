@@ -10,9 +10,9 @@
             Email = "foo@bar.com";
         }
 
-        public int Id { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Email { get; private set; }
+        public int id { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string email { get; set; }
     }
 }

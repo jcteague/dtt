@@ -1,10 +1,8 @@
 Repository = require('../repository')
-strategy = (email, password) ->
-     new Repository('User').find({email:email, password:password}).then (user) ->
-        return user
-        #if typeof(username) != 'undefined'
-        #   return (user for user in users when user.first_name.toLowerCase().indexOf(username.toLowerCase())==0)
-        #else
-        #    return users
-        
+strategy = (q) ->
+     new Repository('User').find({email:q.email, password:q.password}).then (user) ->
+        if user == null || typeof user == 'undefined'
+            return {}
+        else
+            return user[0]
 module.exports = strategy
