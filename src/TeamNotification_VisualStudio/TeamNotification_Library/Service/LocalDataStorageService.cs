@@ -6,6 +6,10 @@ namespace TeamNotification_Library.Service
     {
         public User User { get; set; }
 
+        public LocalDataStorageService()
+        {
+            User = new User();
+        }
         public void Store(User userToStore)
         {
             User = userToStore;

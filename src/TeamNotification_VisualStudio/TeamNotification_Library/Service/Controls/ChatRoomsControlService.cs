@@ -22,7 +22,7 @@ namespace TeamNotification_Library.Service.Controls
         public Collection GetCollection()
         {
             var user = userProvider.GetUser();
-            var uri = "http://dtt.local/room/" + user.Id + "/rooms";
+            var uri = "http://dtt.local:3000/user/" + user.id + "/rooms";
             var c = httpClient.Get<Collection>(uri).Result;
 
             return c;
