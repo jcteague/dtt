@@ -12,16 +12,19 @@
             <RowDefinition Height="44*" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Please Login" HorizontalAlignment="Center" Margin="0,12,0,0" Name="label1" VerticalAlignment="Top" FontSize="24" />
-        <ListBox Grid.Row="1" Padding="10,0,10,0" HorizontalAlignment="Stretch" Name="templateContainer" VerticalAlignment="Stretch" ItemsSource="{DynamicResource templateData}">          
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Label Content="{Binding Path=label}" Width="75" />
-                        <TextBox Text="{Binding Path=value}" HorizontalAlignment="Stretch" Width="100" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+<!--        <ListBox Grid.Row="1" Padding="10,0,10,0" HorizontalAlignment="Stretch" Name="templateContainer" VerticalAlignment="Stretch" ItemsSource="{DynamicResource templateData}">          -->
+<!--            <ListBox.ItemTemplate>-->
+<!--                <DataTemplate>-->
+<!--                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">-->
+<!--                        <Label Content="{Binding Path=label}" Width="75" />-->
+<!--                        <TextBox Text="{Binding Path=value}" HorizontalAlignment="Stretch" Width="100" />-->
+<!--                    </StackPanel>-->
+<!--                </DataTemplate>-->
+<!--            </ListBox.ItemTemplate>-->
+<!--        </ListBox>-->
+        <StackPanel Grid.Row="1" HorizontalAlignment="center" Name="templateContainer" DataContext="{DynamicResource templateData}">
+            
+        </StackPanel>
         <Button Grid.Row="2" HorizontalAlignment="Center" Height="25" Content="Submit" Click="Button_Click" />
     </Grid>
 </UserControl>

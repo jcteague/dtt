@@ -16,8 +16,10 @@ using System.Windows.Shapes;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
@@ -28,17 +30,24 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     public partial class LoginControl : UserControl
     {
         private IServiceLoginControl loginControlService;
-        private IProvideUser userProvider;
+        private IBuildContent contentBuilder;
+        private IGetFieldValue fieldValueGetter;
 
-        public LoginControl(IServiceLoginControl loginControlService, IProvideUser userProvider)
+        public LoginControl(IServiceLoginControl loginControlService, IHelpControls formHelper, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter)
         {
             this.loginControlService = loginControlService;
-            this.userProvider = userProvider;
+            this.contentBuilder = contentBuilder;
+            this.fieldValueGetter = fieldValueGetter;
 
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
             Resources.Add("templateData", collection.template.data);
+
+            foreach (var panel in contentBuilder.GetContentFor(collection))
+            {
+                templateContainer.Children.Add(panel);
+            }
 
             loginControlService.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<MyControl>();
             loginControlService.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
@@ -46,37 +55,14 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+//            var collection = templateDataToCollectionDataListMapper.MapFrom(Resources["templateData"]);
+            
             var collection = new List<CollectionData>();
-            foreach (CollectionData item in templateContainer.Items)
+            foreach (CollectionData item in (IEnumerable<CollectionData>)Resources["templateData"])
             {
-                collection.Add(item);
+                collection.Add(fieldValueGetter.GetValue(item, templateContainer));
             }
             loginControlService.HandleClick(collection);
-        }
-
-        private IEnumerable<StackPanel> GetTemplateFrom(Collection collection)
-        {
-            var panels = new List<StackPanel>();
-            foreach (var field in collection.template.data)
-            {
-                var stackPanel = new StackPanel();
-                var label = new Label {Content = field.label};
-                stackPanel.Children.Add(label);
-
-                if(field.type == "password")
-                {
-                    var passwordBox = new PasswordBox();
-//                    passwordBox.SetBinding(PasswordBox.)
-                    stackPanel.Children.Add(passwordBox);
-                }
-                else
-                {
-                    var textbox = new TextBox();
-                    textbox.SetBinding(TextBox.TextProperty, field.value);
-                    stackPanel.Children.Add(textbox);
-                }
-            }
-            return panels;
         }
     }
 }

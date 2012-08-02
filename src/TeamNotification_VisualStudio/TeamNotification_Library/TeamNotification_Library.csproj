@@ -95,7 +95,13 @@
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandlePubSub.cs" />
     <Compile Include="Service\Container.cs" />
+    <Compile Include="Service\Content\ContentBuilder.cs" />
+    <Compile Include="Service\Content\FieldValueGetter.cs" />
+    <Compile Include="Service\Content\IBuildContent.cs" />
+    <Compile Include="Service\Content\IGetFieldValue.cs" />
     <Compile Include="Service\Controls\ChatRoomsControlService.cs" />
+    <Compile Include="Service\Controls\FormControlHelpers.cs" />
+    <Compile Include="Service\Controls\IHelpControls.cs" />
     <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
@@ -106,6 +112,9 @@
     <Compile Include="Service\Factories\ICreateInstances.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
     <Compile Include="Service\Factories\UI\ButtonFactory.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
     <Compile Include="Service\Factories\UI\ICreateButtons.cs" />
     <Compile Include="Service\Factories\UI\ICreateTextBox.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
@@ -126,6 +135,7 @@
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
+    <Compile Include="Service\Mappers\TemplateDataToCollectionDataListMapper.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
     <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />
