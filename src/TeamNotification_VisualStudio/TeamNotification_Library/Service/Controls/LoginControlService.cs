@@ -18,18 +18,16 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IProvideConfiguration<LoginConfiguration> configuration;
         private readonly IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper;
         private readonly IStoreDataLocally localStorageService;
-        private IBuildContent contentBuilder;
 
         public event CustomEventHandler UserHasLogged;
         public event CustomEventHandler UserCouldNotLogIn;
 
-        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IBuildContent contentBuilder)
+        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService)
         {
             this.httpClient = httpClient;
             this.configuration = configuration;
             this.mapper = mapper;
             this.localStorageService = localStorageService;
-            this.contentBuilder = contentBuilder;
         }
 
         public Collection GetCollection()
