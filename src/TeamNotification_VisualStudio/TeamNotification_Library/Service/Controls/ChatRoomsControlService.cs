@@ -35,6 +35,5 @@ namespace TeamNotification_Library.Service.Controls
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
         }
-
     }
 }
