@@ -28,6 +28,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
         private string roomId { get; set; }
+        private string currentChannel { get; set; }
+        private List<string> subscribedChannels; 
 
         public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
         {
@@ -35,6 +37,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.messageSender = messageSender;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
+            this.subscribedChannels = new List<string>();
 
             InitializeComponent();
             connection.Open();
@@ -49,9 +52,12 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
-            var m = serializeJson.Deserialize<MessageData>(payload);
-            var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
-            AppendMessage(m.name, messageBody.message);
+            if (channel == currentChannel)
+            {
+                var m = serializeJson.Deserialize<MessageData>(payload);
+                var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
+                AppendMessage(m.name, messageBody.message);
+            }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
         {
@@ -79,7 +85,13 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
-            messageListener.ListenOnChannel("chat " + newRoomId, ChatMessageArrived);
+            currentChannel = "chat " + newRoomId;
+            
+            if (!subscribedChannels.Contains(currentChannel))
+            {
+                messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
+                subscribedChannels.Add(currentChannel);
+            }
             messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Children.Clear()));
             AddMessages(newRoomId);
         }
