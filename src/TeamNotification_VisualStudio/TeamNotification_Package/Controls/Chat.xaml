@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="AvenidaSoftware.TeamNotification_Package.Chat"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
+             xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package" mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="424"
+             Name="MyToolWindow">
+            <UserControl.Resources>
+                <ResourceDictionary Source="Themes/BureauBlue.xaml"/>
+            </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Name="grid1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,45" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
+                    <StackPanel Height="auto" Name="messageList" Width="auto" Orientation="Vertical" Background="White" Margin="2,2,2,2"></StackPanel>
+                </Border>
+            </ScrollViewer>
+        </Grid>
+        <Grid Name="roomsGrid" Width="auto" Grid.Row="0" Grid.Column="2" Margin="10,15,15,45" Grid.RowSpan="2">
+            <ListBox Name="lstRooms" Width="Auto" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="Single" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="ListItem">
+                        <StackPanel Name="stack1">
+                            <Label Content="{Binding Path=name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            <TextBox Width="309" HorizontalAlignment="Left" Height="24" Name="messageTextBox" Text="" VerticalAlignment="Bottom" Margin="15,0,0,15" KeyDown="CheckKeyboard" />
+            <Button Content="Send" Height="23" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" />
+        </Grid>
+    </Grid>
+</UserControl>

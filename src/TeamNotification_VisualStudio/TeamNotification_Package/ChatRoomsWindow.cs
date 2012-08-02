@@ -5,18 +5,19 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using Microsoft.VisualStudio.Shell;
-using TeamNotification_Library.Service.Controls;
 using Container = TeamNotification_Library.Service.Container;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
     [Guid(GuidList.guidLoginWindowPersistanceString)]
-    public class LoginWindow : ToolWindowPane
+    public class ChatRoomsWindow : ToolWindowPane
     {
+        private string href = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=hellothere";
+
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
-        public LoginWindow() :
+        public ChatRoomsWindow() :
             base(null)
         {           
             // Set the window title reading it from the resources.
@@ -32,14 +33,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
             // the object returned by the Content property.
-            if(Container.GetInstance<IServiceLoginControl>().IsUserLogged())
-            {
-                base.Content = Container.GetInstance<Chat>();
-            }
-            else
-            {
-                base.Content = Container.GetInstance<LoginControl>();
-            }
+//            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
+            base.Content = Container.GetInstance<IBuildDynamicControls>().GetContentFrom(href);
         }       
     }
 }

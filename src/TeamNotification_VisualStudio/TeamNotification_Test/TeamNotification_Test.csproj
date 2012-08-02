@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
+    <Compile Include="Library\Service\Controls\ChatRoomsControlServiceSpecs.cs" />
     <Compile Include="Library\Service\Content\ContentBuilderSpecs.cs" />
     <Compile Include="Library\Service\Content\StackPanelBuilderSpecs.cs" />
     <Compile Include="Library\Service\Controls\LoginControlServiceSpecs.cs" />

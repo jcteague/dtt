@@ -9,7 +9,21 @@ namespace TeamNotification_Library.Models
         public Template template { get; set; }
         public IEnumerable<Query> queries { get; set; }
         public IEnumerable<Room> rooms { get; set; }
-        public IEnumerable<Members> members {get; set;}
+        public IEnumerable<Members> members { get; set; }
+        public IEnumerable<Messages> messages { get; set; }
+
+        public static string getField(IEnumerable<CollectionData> data, string fieldName)
+        {
+            foreach (var d in data)
+                if (d.name == fieldName)
+                    return d.value;
+            return "";
+        }
+
+        public class Messages
+        {
+            public IEnumerable<CollectionData> data;
+        }
 
         public class Link
         {

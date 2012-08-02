@@ -20,10 +20,10 @@ namespace TeamNotification_Test.Library.Service.Http
             {
                 httpRequestsClient = depends.on<ISendHttpRequests>();
                 message = "blah";
-                url = "http://dtt.local:3000/registration?&userName=Raymi&userMessage=blah";
+                url = "http://dtt.local:3000/room/1/messages";
             };
 
-            Because b = () => sut.SendMessage(message);
+            Because b = () => sut.SendMessage(message, "1");
 
             It should_send_the_message_in_the_url_using_the_client = () =>
                 httpRequestsClient.WasToldTo(x => x.Get(url));

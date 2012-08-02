@@ -49,7 +49,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            loginControlService.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<MyControl>();
+            loginControlService.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<Chat>();
             loginControlService.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 
