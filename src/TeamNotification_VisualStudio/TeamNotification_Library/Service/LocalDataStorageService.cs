@@ -10,6 +10,7 @@ namespace TeamNotification_Library.Service
         {
             User = new User();
         }
+
         public void Store(User userToStore)
         {
             User = userToStore;
