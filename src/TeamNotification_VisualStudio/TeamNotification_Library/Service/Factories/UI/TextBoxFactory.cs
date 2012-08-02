@@ -1,15 +1,12 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
 namespace TeamNotification_Library.Service.Factories.UI
 {
-    public class TextBoxFactory : ICreateTextBox
+    public class TextBoxFactory : ICreateUIElements<TextBox>
     {
-         public TextBox Get(string text)
-         {
-             return new TextBox
-                        {
-                            Text = text
-                        };
-         }
+        public TextBox Get(string name)
+        {
+            return new TextBox { Name = name, Width = 100 };
+        }
     }
 }

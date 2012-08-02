@@ -2,7 +2,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using TeamNotification_Library.Models;
-using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories.UI;
 
 namespace TeamNotification_Library.Service.Content

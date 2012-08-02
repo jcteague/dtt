@@ -9,24 +9,18 @@ namespace TeamNotification_Library.Service.Renderer
     public class ContentRenderer : IRenderContent
     {
         private readonly ICreateInstances<StackPanel> panelFactory;
-        private readonly IRenderCollectionTemplate templateRenderer;
 
-        public ContentRenderer(ICreateInstances<StackPanel> panelFactory, IRenderCollectionTemplate templateRenderer)
+        public ContentRenderer(ICreateInstances<StackPanel> panelFactory)
         {
             this.panelFactory = panelFactory;
-            this.templateRenderer = templateRenderer;
         }
 
         public StackPanel Render(Collection collection)
         {
             var panel = panelFactory.GetInstance();
-            panel.Children.Add(templateRenderer.RenderFor(collection));
+//            panel.Children.Add(templateRenderer.RenderFor(collection));
 
-//            var redCircle = new Ellipse();
-//            redCircle.Width = 100;
-//            redCircle.Height = 100;
-//            redCircle.Fill = new SolidColorBrush(Colors.Red);
-//            panel.Children.Add(redCircle);
+
 
             return panel;
         }

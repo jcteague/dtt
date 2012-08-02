@@ -55,8 +55,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-//            var collection = templateDataToCollectionDataListMapper.MapFrom(Resources["templateData"]);
-            
             var collection = new List<CollectionData>();
             foreach (CollectionData item in (IEnumerable<CollectionData>)Resources["templateData"])
             {
