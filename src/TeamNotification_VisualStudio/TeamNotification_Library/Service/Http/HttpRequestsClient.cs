@@ -9,15 +9,17 @@ namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
-        readonly ISerializeJSON serializer;
+        private HttpClientHandler _handler;
         private HttpClient httpClient;
-        readonly IProvideUser userProvider;
+        readonly ISerializeJSON serializer;
 
         public HttpRequestsClient(ISerializeJSON serializer, IProvideUser userProvider)
         {
             this.serializer = serializer;
-            //httpClient = new HttpClient();
-            this.userProvider = userProvider;
+            var user = userProvider.GetUser();
+            _handler = new HttpClientHandler();
+            _handler.Credentials = new NetworkCredential(user.email, user.password);
+            this.httpClient = new HttpClient(_handler);
         }
 
         public void Get(string uri)
@@ -32,14 +34,8 @@ namespace TeamNotification_Library.Service.Http
 
         public Task<T> Get<T>(string uri) where T : class
         {
-            var user = userProvider.GetUser();
-            using (var handler = new HttpClientHandler())
-            {
-                handler.Credentials = new NetworkCredential(user.email,user.password);
-                this.httpClient = new HttpClient(handler);
-                return httpClient.GetStringAsync(uri)
-                    .ContinueWith(response => serializer.Deserialize<T>(response.Result));
-            }
+            return httpClient.GetStringAsync(uri)
+                .ContinueWith(response => serializer.Deserialize<T>(response.Result));
         }
         
         public void Get(string uri, Action<Task<string>> action)
