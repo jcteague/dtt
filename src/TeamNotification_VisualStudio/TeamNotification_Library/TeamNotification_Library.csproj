@@ -111,7 +111,6 @@
     <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
-    <Compile Include="Service\Factories\CallbackFactory.cs" />
     <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
     <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
