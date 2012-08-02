@@ -17,7 +17,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 cfg.AddRegistry<TeamNotificationLibraryRegistry>();
                 cfg.Scan(scanner=>
                 {
-                    scanner.AssemblyContainingType<MyControl>();
+                    scanner.AssemblyContainingType<Chat>();
                     scanner.RegisterConcreteTypesAgainstTheFirstInterface().OnAddedPluginTypes(x=>x.Singleton());
                 });
             });

@@ -55,7 +55,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
+            // Get the instance number 0 of this tool window. This window is single instance so this instance6
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
             ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
