@@ -80,7 +80,8 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void AppendMessage(string username, string message)
         {
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + " : " + message })));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0,0.0,0.0,5.0)})));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom() ));
         }
 
         private void ChangeRoom(string newRoomId)

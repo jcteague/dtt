@@ -39,8 +39,12 @@
             </ListBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-            <TextBox Width="309" HorizontalAlignment="Left" Height="24" Name="messageTextBox" Text="" VerticalAlignment="Bottom" Margin="15,0,0,15" KeyDown="CheckKeyboard" />
-            <Button Content="Send" Height="23" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <TextBox Width="auto" HorizontalAlignment="Stretch" Height="24" Name="messageTextBox" Text="" VerticalAlignment="Bottom" Margin="15,0,0,15" KeyDown="CheckKeyboard" />
+            <Button Content="Send" Height="23" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Grid.Column="1" />
         </Grid>
     </Grid>
 </UserControl>

@@ -9,7 +9,7 @@ namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
-        private HttpClientHandler _handler;
+        private HttpClientHandler handler;
         private HttpClient httpClient;
         readonly ISerializeJSON serializer;
 
@@ -17,9 +17,9 @@ namespace TeamNotification_Library.Service.Http
         {
             this.serializer = serializer;
             var user = userProvider.GetUser();
-            _handler = new HttpClientHandler();
-            _handler.Credentials = new NetworkCredential(user.email, user.password);
-            this.httpClient = new HttpClient(_handler);
+            handler = new HttpClientHandler();
+            handler.Credentials = new NetworkCredential(user.email, user.password);
+            this.httpClient = new HttpClient(handler);
         }
 
         public void Get(string uri)
