@@ -11,6 +11,7 @@ namespace TeamNotification_Library.Service.Controls
         Collection GetCollection();
         void HandleClick(IEnumerable<CollectionData> items);
         bool IsUserLogged();
+
         event CustomEventHandler UserHasLogged;
         event CustomEventHandler UserCouldNotLogIn;
     }
