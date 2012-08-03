@@ -19,16 +19,15 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IProvideConfiguration<LoginConfiguration> configuration;
         private readonly IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper;
         private readonly IStoreDataLocally localStorageService;
+        private readonly IHandleLoginEvents loginEvents;
 
-        public event CustomEventHandler UserHasLogged;
-        public event CustomEventHandler UserCouldNotLogIn;
-
-        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService)
+        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IHandleLoginEvents loginEvents)
         {
             this.httpClient = httpClient;
             this.configuration = configuration;
             this.mapper = mapper;
             this.localStorageService = localStorageService;
+            this.loginEvents = loginEvents;
         }
 
         public Collection GetCollection()
@@ -46,28 +45,12 @@ namespace TeamNotification_Library.Service.Controls
             if (loginResponse.success)
             {
                 localStorageService.Store(loginResponse.user, itemsList);
-                OnLoginSuccess();
+                loginEvents.OnLoginSuccess(this);
             }
             else
             {
-                OnLoginFail();
+                loginEvents.OnLoginFail(this);
             }
-        }
-
-        private void OnLoginSuccess()
-        {
-            HandleEvent(UserHasLogged);
-        }
-
-        private void OnLoginFail()
-        {
-            HandleEvent(UserCouldNotLogIn);
-        }
-
-        private void HandleEvent(CustomEventHandler handler)
-        {
-            if(handler != null)
-                handler(this, new CustomEventArgs());
         }
 
         public bool IsUserLogged()
