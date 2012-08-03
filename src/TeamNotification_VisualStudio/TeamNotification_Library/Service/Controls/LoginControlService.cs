@@ -9,6 +9,7 @@ using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
+using System.Linq;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -37,13 +38,14 @@ namespace TeamNotification_Library.Service.Controls
 
         public void HandleClick(IEnumerable<CollectionData> items)
         {
-            var content = mapper.MapFrom(items);
+            var itemsList = items.ToList();
+            var content = mapper.MapFrom(itemsList);
             var task = httpClient.Post<LoginResponse>(configuration.Get().HREF, content);
             
             var loginResponse = task.Result;
             if (loginResponse.success)
             {
-                localStorageService.Store(loginResponse.user);
+                localStorageService.Store(loginResponse.user, itemsList);
                 OnLoginSuccess();
             }
             else
@@ -70,7 +72,7 @@ namespace TeamNotification_Library.Service.Controls
 
         public bool IsUserLogged()
         {
-            return localStorageService.User != null;
+            return localStorageService.GetUser() != null;
         }
     }
 }

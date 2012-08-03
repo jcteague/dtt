@@ -94,7 +94,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasCalled(x => x.Store(user));
+                localStorageService.AssertWasCalled(x => x.Store(user, Arg<IEnumerable<CollectionData>>.Is.Anything));
 
             private static User user;
         }
@@ -117,7 +117,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_not_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything));
+                localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
 
             private static User user;
         }
