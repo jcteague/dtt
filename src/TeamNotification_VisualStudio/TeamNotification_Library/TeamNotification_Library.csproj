@@ -126,6 +126,7 @@
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
+    <Compile Include="Service\Http\IGetHttpClientHandler.cs" />
     <Compile Include="Service\Http\IListenToMessages.cs" />
     <Compile Include="Service\Http\IConnectToRedis.cs" />
     <Compile Include="Service\Http\IRedisConnection.cs" />

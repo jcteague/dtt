@@ -34,7 +34,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             // the object returned by the Content property.
             if(Container.GetInstance<IServiceLoginControl>().IsUserLogged())
             {
-                base.Content = Container.GetInstance<MyControl>();
+                base.Content = Container.GetInstance<Chat>();
             }
             else
             {

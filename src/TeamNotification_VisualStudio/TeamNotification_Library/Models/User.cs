@@ -5,10 +5,10 @@
         public User()
         {
             id = 1;
-            first_name = "Jhon";
-            last_name = "Doe";
-            email = "jhon@aol.com";
-            password = "123456789";
+            first_name = "eddy";
+            last_name = "espinal";
+            email = "eespinal@intellisys.com.do";
+            password = "123456";
         }
 
         public int id { get; set; }
