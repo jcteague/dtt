@@ -22,7 +22,6 @@ namespace TeamNotification_Library.Service.Controls
 
         public Collection GetMessagesCollection(string roomId)
         {
-            var user = userProvider.GetUser();
             var uri = configuration.Get().HREF + "room/" + roomId + "/messages";
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
