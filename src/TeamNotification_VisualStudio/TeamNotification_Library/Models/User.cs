@@ -2,14 +2,14 @@
 {
     public class User
     {
-        public User()
-        {
-            id = 1;
-            first_name = "eddy";
-            last_name = "espinal";
-            email = "eespinal@intellisys.com.do";
-            password = "123456";
-        }
+//        public User()
+//        {
+//            id = 1;
+//            first_name = "eddy";
+//            last_name = "espinal";
+//            email = "eespinal@intellisys.com.do";
+//            password = "123456";
+//        }
 
         public int id { get; set; }
         public string first_name { get; set; }
