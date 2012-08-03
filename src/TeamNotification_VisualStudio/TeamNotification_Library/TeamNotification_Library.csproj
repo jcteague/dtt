@@ -125,6 +125,9 @@
     <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
+    <Compile Include="Service\FileSystem\FileHandler.cs" />
+    <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
     <Compile Include="Service\Http\IGetHttpClientHandler.cs" />
     <Compile Include="Service\Http\IListenToMessages.cs" />
