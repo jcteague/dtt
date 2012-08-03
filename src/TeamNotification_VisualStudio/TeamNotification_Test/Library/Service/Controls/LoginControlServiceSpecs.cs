@@ -6,6 +6,7 @@ using Rhino.Mocks;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
@@ -24,6 +25,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 configurationProvider = depends.on<IProvideConfiguration<LoginConfiguration>>();                        
                 collectionToUrlEncodedFormMapper = depends.on<IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent>>();
                 localStorageService = depends.on<IStoreDataLocally>();
+                loginEvents = depends.on<IHandleLoginEvents>();
 
                 configuration = fake.an<IStoreConfiguration>();
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
@@ -37,6 +39,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IStoreConfiguration configuration;
             protected static IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> collectionToUrlEncodedFormMapper;
             protected static IStoreDataLocally localStorageService;
+            protected static IHandleLoginEvents loginEvents;
         }
 
         public class when_getting_the_collection : Concern
@@ -94,12 +97,15 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasCalled(x => x.Store(user, Arg<IEnumerable<CollectionData>>.Is.Anything));
+                localStorageService.AssertWasCalled(x => x.Store(user, collectionDataList));
+
+            It should_call_the_on_login_success_event = () =>
+                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut));
 
             private static User user;
         }
 
-        public class when_the_submit_button_is_clicked_and_the_user_and_password_is_not_correct : when_the_submit_button_is_clicked
+        public class when_the_submit_button_is_clicked_and_the_user_and_password_are_not_correct : when_the_submit_button_is_clicked
         {
             Establish context = () =>
             {
@@ -118,6 +124,9 @@ namespace TeamNotification_Test.Library.Service.Controls
 
             It should_not_store_the_response_user_data_locally = () =>
                 localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
+
+            It should_call_the_on_login_fail_event = () =>
+                loginEvents.AssertWasCalled(x => x.OnLoginFail(sut));
 
             private static User user;
         }

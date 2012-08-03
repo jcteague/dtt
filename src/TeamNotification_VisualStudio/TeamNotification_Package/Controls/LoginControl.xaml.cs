@@ -32,12 +32,14 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IServiceLoginControl loginControlService;
         private IBuildContent contentBuilder;
         private IGetFieldValue fieldValueGetter;
+        private readonly IHandleLoginEvents loginEvents;
 
-        public LoginControl(IServiceLoginControl loginControlService, IHelpControls formHelper, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter)
+        public LoginControl(IServiceLoginControl loginControlService, IHelpControls formHelper, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
         {
             this.loginControlService = loginControlService;
             this.contentBuilder = contentBuilder;
             this.fieldValueGetter = fieldValueGetter;
+            this.loginEvents = loginEvents;
 
             InitializeComponent();
             
@@ -49,8 +51,8 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            loginControlService.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<MyControl>();
-            loginControlService.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
+            loginEvents.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<Chat>();
+            loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -6,15 +6,15 @@ using developwithpassion.specifications.extensions;
 
 namespace TeamNotification_Test.Library.Service.Http
 {
+    // TODO: Update when correct implementation of messages is used
     [Subject(typeof(ChatMessageSender))]
     public class ChatMessageSenderSpecs 
     {
-        public class Concern : Observes<ISendChatMessages,ChatMessageSender>
-        {
-            
-        }
-        
-        // TODO: This implementation may change
+//        public class Concern : Observes<ISendChatMessages,ChatMessageSender>
+//        {
+//            
+//        }
+//        
 //        public class when_sending_a_message : Concern
 //        {
 //            Establish context = () =>
