@@ -10,7 +10,7 @@
 
         public static class Paths
         {
-            public static string UserResource = @"user.txt";
+            public static string UserResource = @"user";
         }
     }
 }
