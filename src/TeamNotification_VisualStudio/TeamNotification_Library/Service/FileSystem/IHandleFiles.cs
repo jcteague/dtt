@@ -5,7 +5,7 @@ namespace TeamNotification_Library.Service.FileSystem
 {
     public interface IHandleFiles
     {
-        void Write(IEnumerable<CollectionData> items);
+        void Write(User user);
         
         User Read();
     }

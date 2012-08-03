@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TeamNotification_Library.Configuration;
@@ -10,11 +8,16 @@ namespace TeamNotification_Library.Service.FileSystem
 {
     public class FileHandler : IHandleFiles
     {
-        public void Write(IEnumerable<CollectionData> items)
+        private readonly IHandleEncoding base64Encoder;
+
+        public FileHandler(IHandleEncoding base64Encoder)
         {
-            var lines = items.Select(x => x.name + "=" + x.value).ToArray();
-            Debug.WriteLine(Directory.GetCurrentDirectory());
-            File.WriteAllLines(Globals.Paths.UserResource, lines);
+            this.base64Encoder = base64Encoder;
+        }
+
+        public void Write(User user)
+        {
+            File.WriteAllLines(Globals.Paths.UserResource, user.SerializeForFile().Select(x => base64Encoder.Encode(x)));
         }
 
         public User Read()
@@ -22,18 +25,13 @@ namespace TeamNotification_Library.Service.FileSystem
             if (!File.Exists(Globals.Paths.UserResource))
                 return null;
 
-            var lines = File.ReadAllLines(Globals.Paths.UserResource);
+            var lines = File.ReadAllLines(Globals.Paths.UserResource).Select(x => base64Encoder.Decode(x)).ToArray();
             return new User
                        {
-                           id = Convert.ToInt32(GetValue(lines, 0)),
-                           email = GetValue(lines, 1),
-                           password = GetValue(lines, 2)
+                           id = Convert.ToInt32(lines[0]),
+                           email = lines[1],
+                           password = lines[2]
                        };
-        }
-
-        private string GetValue(string[] lines, int index)
-        {
-            return lines[index].Split('=')[1];
         }
     }
 }

@@ -18,7 +18,7 @@ namespace TeamNotification_Library.Service.Async
         private void Handle(object source, CustomEventHandler handler)
         {
             if (handler != null)
-                handler(this, new CustomEventArgs());
+                handler(source, new CustomEventArgs());
         }
     }
 }

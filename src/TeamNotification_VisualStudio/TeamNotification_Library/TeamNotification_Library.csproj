@@ -114,9 +114,11 @@
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
     <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
+    <Compile Include="Service\Factories\HttpClientHandlerFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
     <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
+    <Compile Include="Service\Factories\ICreateUserFromResponse.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
@@ -127,7 +129,10 @@
     <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
+    <Compile Include="Service\Factories\UserFromResponseGetter.cs" />
+    <Compile Include="Service\FileSystem\Base64Encoder.cs" />
     <Compile Include="Service\FileSystem\FileHandler.cs" />
+    <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
