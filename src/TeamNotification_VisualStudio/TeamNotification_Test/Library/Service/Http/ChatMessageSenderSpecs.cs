@@ -30,7 +30,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 configuration.Stub(x => x.Get()).Return(serverConfiguration);
 
                 message = "blah";
-                url = siteUrl+"room/1/messages";//"http://dtt.local:3000/room/1/messages";
+                url = siteUrl+"room/1/messages";
                 values = new KeyValuePair<string, string>("message", message);
             };
 
