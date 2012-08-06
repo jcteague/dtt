@@ -138,13 +138,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundService\BackgroundService.cs" />
-    <Compile Include="BackgroundService\IServiceInBackground.cs" />
+    <Compile Include="BackgroundService\DTTClipboardService.cs" />
+    <Compile Include="BackgroundService\IRunInBackground.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controls\IBuildControls.cs" />
     <Compile Include="Controls\LoginControl.xaml.cs">
       <DependentUpon>LoginControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LoginControlRenderer.cs" />
     <Compile Include="Controls\ChatControlRenderer.cs" />
     <Compile Include="Controls\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
