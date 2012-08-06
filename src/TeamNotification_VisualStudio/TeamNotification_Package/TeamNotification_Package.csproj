@@ -137,6 +137,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundService\BackgroundService.cs" />
+    <Compile Include="BackgroundService\IServiceInBackground.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controls\IBuildControls.cs" />
     <Compile Include="Controls\LoginControl.xaml.cs">
@@ -144,9 +146,6 @@
     </Compile>
     <Compile Include="Controls\LoginControlRenderer.cs" />
     <Compile Include="Controls\ChatControlRenderer.cs" />
-    <Compile Include="DynamicControlBuilder.cs" />
-    <Compile Include="IApiService.cs" />
-    <Compile Include="IBuildDynamicControls.cs" />
     <Compile Include="Controls\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>

@@ -83,7 +83,6 @@
     <Compile Include="Library\Service\Http\HttpRequestClientSpecs.cs" />
     <Compile Include="Library\Service\LocalDataStorageServiceSpecs.cs" />
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
-    <Compile Include="Package\DynamicControlBuilderSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

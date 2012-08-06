@@ -155,14 +155,14 @@
     <Compile Include="Service\Mappers\IMapEntities.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
-    <Compile Include="Service\Renderer\ContentRenderer.cs" />
-    <Compile Include="Service\Renderer\IRenderContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Service\Renderer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
