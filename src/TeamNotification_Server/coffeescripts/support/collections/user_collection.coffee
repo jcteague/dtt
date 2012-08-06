@@ -1,3 +1,5 @@
+config = require('../../config')()
+
 class UserCollection
 
     constructor: (@data) ->
@@ -7,6 +9,7 @@ class UserCollection
         rooms = (@get_room(room) for room in @data.rooms)
         return {
             href: self
+            redis: config.redis
             rooms: rooms
             links: [
                 {"rel":"User", "name": "self", "href": self}

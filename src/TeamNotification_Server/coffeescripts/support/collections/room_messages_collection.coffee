@@ -1,3 +1,6 @@
+
+config = require('../../config')()
+
 class RoomMessagesCollection
     constructor: (@data) ->
         @room_messages = []
@@ -25,6 +28,7 @@ class RoomMessagesCollection
         r.push(room) for room in @data.chat_rooms
         return {
             href: "/room/#{room_id}/messages"
+            redis: config.redis
             links:[
                 {"name": "self", "rel": "RoomMessages", 'href':"/room/#{room_id}/messages"}
                 {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}

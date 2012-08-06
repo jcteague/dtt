@@ -17,6 +17,9 @@ development_settings =
         client_secret: 'secret'
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
+    redis:
+        host:'localhost'
+        port: 6379
 
 test_settings =
     db:
@@ -28,6 +31,9 @@ test_settings =
         client_secret: 'secret'
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
+    redis:
+        host:'localhost'
+        port: 6379
 
 production_settings =
     db:
@@ -39,6 +45,9 @@ production_settings =
         client_secret: 'secret'
         url: 'http://ec2-107-21-171-44.compute-1.amazonaws.com'
         whitelisted_paths: whitelisted_paths
+    redis:
+        host:'localhost'
+        port: 6379
 
 module.exports = ->
     switch process.env.NODE_ENV
