@@ -34,7 +34,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IGetFieldValue fieldValueGetter;
         private readonly IHandleLoginEvents loginEvents;
 
-        public LoginControl(IServiceLoginControl loginControlService, IHelpControls formHelper, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
+        public LoginControl(IServiceLoginControl loginControlService, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
         {
             this.loginControlService = loginControlService;
             this.contentBuilder = contentBuilder;
