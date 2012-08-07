@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
+using Clipboard = System.Windows.Clipboard;
+using DataFormats = System.Windows.DataFormats;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
@@ -48,6 +53,122 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
         }
+
+        #region Win32_Clipboard
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
+            if (hwndSource != null)
+            {
+                installedHandle = ((HwndSource) hwndSource).Handle;
+                viewerHandle = SetClipboardViewer(installedHandle);
+                ((HwndSource) hwndSource).AddHook(new HwndSourceHook(this.hwndSourceHook));
+            }
+
+        }
+
+        // TODO: Must do this for deregistration? Where?
+//        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+//        {
+//            ChangeClipboardChain(this.installedHandle, this.viewerHandle);
+//            int error = System.Runtime.InteropServices.Marshal.GetLastWin32Error();
+//            e.Cancel = error != 0;
+//
+//            base.OnClosing(e);
+//        }
+//
+//        protected override void OnClosed(EventArgs e)
+//        {
+//            this.viewerHandle = IntPtr.Zero;
+//            this.installedHandle = IntPtr.Zero;
+//            base.OnClosed(e);
+//        }
+
+        IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case WM_CHANGECBCHAIN:
+                    this.viewerHandle = lParam;
+                    if (this.viewerHandle != IntPtr.Zero)
+                    {
+                        SendMessage(this.viewerHandle, msg, wParam, lParam);
+                    }
+
+                    break;
+
+                case WM_DRAWCLIPBOARD:
+                    EventArgs clipChange = new EventArgs();
+                    OnClipboardChanged(clipChange);
+
+                    if (this.viewerHandle != IntPtr.Zero)
+                    {
+                        SendMessage(this.viewerHandle, msg, wParam, lParam);
+                    }
+
+                    break;
+
+            }
+            return IntPtr.Zero;
+        }
+
+        private void OnClipboardChanged(EventArgs clipChange)
+        {
+            try
+            {
+                if (Clipboard.ContainsData(DataFormats.Text))
+                {
+//                    ImageSource = (System.Windows.Interop.InteropBitmap)Clipboard.GetData(DataFormats.Bitmap);
+                    Debug.WriteLine("Clipboard has changed and event has been raised");
+                    
+                }
+            }
+            catch
+            {
+                // Details: http://blogs.microsoft.co.il/blogs/tamir/archive/2007/10/24/clipboard-setdata-getdata-troubles-with-vpc-and-ts.aspx 
+            }
+        }
+
+//        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+//        {
+//            Microsoft.Win32.SaveFileDialog f = new Microsoft.Win32.SaveFileDialog();
+//            f.DefaultExt = ".jpg";
+//            f.Filter = "Jpeg images (.jpg)|*.jpg";
+//            if (f.ShowDialog() == true)
+//            {
+//                using (FileStream fs = new FileStream(f.FileName, FileMode.Create, FileAccess.Write))
+//                {
+//                    JpegBitmapEncoder enc = new JpegBitmapEncoder();
+//                    enc.Frames.Add(BitmapFrame.Create(ImageSource));
+//                    enc.Save(fs);
+//                    fs.Close();
+//                    fs.Dispose();
+//                }
+//            }
+//
+//        }
+//
+//        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+//        {
+//            e.CanExecute = ImageSource != default(BitmapSource);
+//        }
+
+        IntPtr viewerHandle = IntPtr.Zero;
+        IntPtr installedHandle = IntPtr.Zero;
+
+        const int WM_DRAWCLIPBOARD = 0x308;
+        const int WM_CHANGECBCHAIN = 0x30D;
+        [DllImport("user32.dll")]
+        private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+        #endregion
+
 
         #region Events
         public void ChatMessageArrived(string channel, string payload)

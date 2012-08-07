@@ -137,10 +137,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundService\BackgroundService.cs" />
-    <Compile Include="BackgroundService\ClipboardEvents.cs" />
-    <Compile Include="BackgroundService\DTTClipboardService.cs" />
-    <Compile Include="BackgroundService\IRunInBackground.cs" />
+    <Compile Include="BackgroundService\ClipboardViewer.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controls\LoginControl.xaml.cs">
       <DependentUpon>LoginControl.xaml</DependentUpon>
