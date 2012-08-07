@@ -13,7 +13,7 @@ namespace TeamNotification_Library.Service.Providers
 
         public User GetUser()
         {
-            return localStorageService.User;
+            return localStorageService.GetUser();
         }
 
         public bool IsLogged()

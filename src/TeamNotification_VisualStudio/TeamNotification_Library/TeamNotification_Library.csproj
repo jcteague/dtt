@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\TeamNotificationLibraryRegistry.cs" />
+    <Compile Include="Configuration\Globals.cs" />
     <Compile Include="Configuration\IStoreConfiguration.cs" />
     <Compile Include="Configuration\LoginConfiguration.cs" />
     <Compile Include="Configuration\IProvideConfiguration.cs" />
@@ -96,22 +97,48 @@
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Async\CustomEventHandler.cs" />
+    <Compile Include="Service\Async\CustomEventArgs.cs" />
+    <Compile Include="Service\Async\IHandleLoginEvents.cs" />
+    <Compile Include="Service\Async\LoginEvents.cs" />
     <Compile Include="Service\Container.cs" />
+    <Compile Include="Service\Content\ContentBuilder.cs" />
+    <Compile Include="Service\Content\FieldValueGetter.cs" />
+    <Compile Include="Service\Content\IBuildContent.cs" />
+    <Compile Include="Service\Content\ICreateElementsFromFields.cs" />
+    <Compile Include="Service\Content\IBuildStackPanels.cs" />
+    <Compile Include="Service\Content\IGetFieldValue.cs" />
+    <Compile Include="Service\Content\StackPanelBuilder.cs" />
     <Compile Include="Service\Controls\ChatRoomsControlService.cs" />
+    <Compile Include="Service\Controls\FormControlHelpers.cs" />
+    <Compile Include="Service\Controls\IHelpControls.cs" />
     <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
-    <Compile Include="Service\Factories\CallbackFactory.cs" />
     <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
+    <Compile Include="Service\Factories\HttpClientHandlerFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
     <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
+    <Compile Include="Service\Factories\ICreateUserFromResponse.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
-    <Compile Include="Service\Factories\UI\ButtonFactory.cs" />
-    <Compile Include="Service\Factories\UI\ICreateButtons.cs" />
-    <Compile Include="Service\Factories\UI\ICreateTextBox.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
+    <Compile Include="Service\Factories\UI\ICreateLabels.cs" />
+    <Compile Include="Service\Factories\UI\ICreateUIElements.cs" />
+    <Compile Include="Service\Factories\UI\LabelFactory.cs" />
+    <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
+    <Compile Include="Service\Factories\UserFromResponseGetter.cs" />
+    <Compile Include="Service\FileSystem\Base64Encoder.cs" />
+    <Compile Include="Service\FileSystem\FileHandler.cs" />
+    <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
+    <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
+    <Compile Include="Service\Http\IGetHttpClientHandler.cs" />
     <Compile Include="Service\Http\IListenToMessages.cs" />
     <Compile Include="Service\Http\IConnectToRedis.cs" />
     <Compile Include="Service\Http\IRedisConnection.cs" />
@@ -131,15 +158,14 @@
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
-    <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />
     <Compile Include="Service\Renderer\ContentRenderer.cs" />
-    <Compile Include="Service\Renderer\IRenderCollectionTemplate.cs" />
     <Compile Include="Service\Renderer\IRenderContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

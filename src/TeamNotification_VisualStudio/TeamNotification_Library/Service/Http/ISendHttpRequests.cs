@@ -16,7 +16,5 @@ namespace TeamNotification_Library.Service.Http
         Task<T> Get<T>(string uri) where T : class;
 
         Task<T> Post<T>(string uri, HttpContent content) where T : class;
-//        Task<HttpResponseMessage> Post<T>(string uri, HttpContent content) where T : class;
-
     }
 }

@@ -15,8 +15,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
+using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
@@ -27,28 +30,37 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     public partial class LoginControl : UserControl
     {
         private IServiceLoginControl loginControlService;
+        private IBuildContent contentBuilder;
+        private IGetFieldValue fieldValueGetter;
+        private readonly IHandleLoginEvents loginEvents;
 
-        public LoginControl(IServiceLoginControl loginControlService)
+        public LoginControl(IServiceLoginControl loginControlService, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
         {
             this.loginControlService = loginControlService;
+            this.contentBuilder = contentBuilder;
+            this.fieldValueGetter = fieldValueGetter;
+            this.loginEvents = loginEvents;
 
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
             Resources.Add("templateData", collection.template.data);
+
+            foreach (var panel in contentBuilder.GetContentFor(collection))
+            {
+                templateContainer.Children.Add(panel);
+            }
+
+            loginEvents.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<Chat>();
+            loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(loginControlService.IsUserLogged())
-            {
-                Debug.WriteLine("User is logged in");
-            }
-
             var collection = new List<CollectionData>();
-            foreach (CollectionData item in listBox1.Items)
+            foreach (CollectionData item in (IEnumerable<CollectionData>)Resources["templateData"])
             {
-                collection.Add(item);
+                collection.Add(fieldValueGetter.GetValue(item, templateContainer));
             }
             loginControlService.HandleClick(collection);
         }
