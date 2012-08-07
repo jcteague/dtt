@@ -1,7 +1,7 @@
 expect = require('expect.js')
 sinon = require('sinon')
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
+config = require('../config')()
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
 
@@ -69,7 +69,7 @@ describe 'User ', ->
                     then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
             it 'should give the right response', (done)->
-                expect(browser.lastResponse.body).to.equal '{"success":true,"user":{"id":1,"email":"foo@bar.com"}}'
+                expect(browser.lastResponse.body).to.equal JSON.stringify({"success":true,redis:config.redis, "user":{"id":1,"email":"foo@bar.com"}})
                 done()
                     
     describe 'Set Up', ->
