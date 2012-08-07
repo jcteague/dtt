@@ -10,6 +10,7 @@ namespace TeamNotification_Library.Configuration
         public string Uri
         {
             get { return "http://dtt.local:3000/"; }
+            set { Uri = value; }
         }
     }
 }

@@ -4,10 +4,11 @@ namespace TeamNotification_Library.Service.Async
     {
         public event CustomEventHandler UserHasLogged;
         public event CustomEventHandler UserCouldNotLogIn;
-        
-        public void OnLoginSuccess(object source)
+
+        public void OnLoginSuccess(object source, UserLoginEventArgs eventArgs)
         {
-            Handle(source, UserHasLogged);
+            UserHasLogged(source, eventArgs);
+            //Handle(source, UserHasLogged);
         }
 
         public void OnLoginFail(object source)

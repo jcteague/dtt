@@ -5,7 +5,7 @@
         event CustomEventHandler UserHasLogged;
         event CustomEventHandler UserCouldNotLogIn;
 
-        void OnLoginSuccess(object source);
+        void OnLoginSuccess(object source, UserLoginEventArgs eventArgs );
         void OnLoginFail(object source);
     }
 }

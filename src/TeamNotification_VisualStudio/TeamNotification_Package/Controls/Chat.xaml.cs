@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -77,6 +78,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             var message = messageTextBox.Text;
             messageTextBox.Text = "";
+            if(message == "user --logout")
+            {
+                File.Delete(@"C:\git\dtt\src\TeamNotification_VisualStudio\TeamNotification_Package\bin\Debug\user");
+                return;
+            }
             messageSender.SendMessage(message, this.roomId);
         }
 

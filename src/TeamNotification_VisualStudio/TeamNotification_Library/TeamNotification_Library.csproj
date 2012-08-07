@@ -101,6 +101,7 @@
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandleLoginEvents.cs" />
     <Compile Include="Service\Async\LoginEvents.cs" />
+    <Compile Include="Service\Async\UserLoginEventArgs.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />

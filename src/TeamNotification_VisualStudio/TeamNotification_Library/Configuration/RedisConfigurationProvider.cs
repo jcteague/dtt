@@ -7,9 +7,12 @@ namespace TeamNotification_Library.Configuration
 {
     public class RedisConfigurationProvider : IProvideConfiguration<RedisConfiguration>
     {
+        private static RedisConfiguration redisConfiguration;
         public IStoreConfiguration Get()
         {
-            return new RedisConfiguration();
+            if (redisConfiguration == null)
+                redisConfiguration = new RedisConfiguration();
+            return redisConfiguration;
         }
     }
 }

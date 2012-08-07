@@ -45,7 +45,7 @@ namespace TeamNotification_Library.Service.Controls
             if (loginResponse.success)
             {
                 localStorageService.Store(loginResponse.user, itemsList);
-                loginEvents.OnLoginSuccess(this);
+                loginEvents.OnLoginSuccess(this, new UserLoginEventArgs(loginResponse.user, loginResponse.redis));
             }
             else
             {
