@@ -2,8 +2,8 @@
 
 namespace TeamNotification_Library.Service.Factories.UI
 {
-    public interface ICreateTextBox
+    public interface ICreateLabels
     {
-        TextBox Get(string text);
+        Label Get(string label);
     }
 }

@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
-        private HttpClientHandler _handler;
-        private HttpClient httpClient;
+        private HttpClient httpClient
+        {
+            get
+            {
+                return new HttpClient(httpClientHandlerGetter.GetHandler());
+            }
+        }
+
+        private IGetHttpClientHandler httpClientHandlerGetter;
         readonly ISerializeJSON serializer;
 
-        public HttpRequestsClient(ISerializeJSON serializer, IProvideUser userProvider)
+        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter)
         {
             this.serializer = serializer;
-            var user = userProvider.GetUser();
-            _handler = new HttpClientHandler();
-            _handler.Credentials = new NetworkCredential(user.email, user.password);
-            this.httpClient = new HttpClient(_handler);
+            this.httpClientHandlerGetter = httpClientHandlerGetter;
         }
 
         public void Get(string uri)
