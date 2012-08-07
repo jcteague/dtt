@@ -1,6 +1,6 @@
 namespace TeamNotification_Library.Service.Async
 {
-    public class LoginEvents : IHandleLoginEvents
+    public class LoginEvents : AbstractEventHandler, IHandleLoginEvents
     {
         public event CustomEventHandler UserHasLogged;
         public event CustomEventHandler UserCouldNotLogIn;
@@ -13,12 +13,6 @@ namespace TeamNotification_Library.Service.Async
         public void OnLoginFail(object source)
         {
             Handle(source, UserCouldNotLogIn);
-        }
-        
-        private void Handle(object source, CustomEventHandler handler)
-        {
-            if (handler != null)
-                handler(source, new CustomEventArgs());
         }
     }
 }

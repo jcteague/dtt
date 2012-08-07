@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -32,16 +33,20 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
+
+        readonly IHandleClipboardEvents clipboardEvents;
+
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels; 
 
-        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
+        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IHandleClipboardEvents clipboardEvents)
         {
             this.chatRoomControlService = chatRoomControlService;
             this.messageSender = messageSender;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
+            this.clipboardEvents = clipboardEvents;
             this.subscribedChannels = new List<string>();
 
             InitializeComponent();
@@ -62,9 +67,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             if (hwndSource != null)
             {
-                installedHandle = ((HwndSource) hwndSource).Handle;
+                installedHandle = hwndSource.Handle;
                 viewerHandle = SetClipboardViewer(installedHandle);
-                ((HwndSource) hwndSource).AddHook(new HwndSourceHook(this.hwndSourceHook));
+                hwndSource.AddHook(new HwndSourceHook(this.hwndSourceHook));
             }
 
         }
@@ -100,8 +105,10 @@ namespace AvenidaSoftware.TeamNotification_Package
                     break;
 
                 case WM_DRAWCLIPBOARD:
-                    EventArgs clipChange = new EventArgs();
-                    OnClipboardChanged(clipChange);
+//                    EventArgs clipChange = new EventArgs();
+//                    OnClipboardChanged(clipChange);
+
+                    clipboardEvents.OnClipboardChanged(this, new CustomEventArgs());
 
                     if (this.viewerHandle != IntPtr.Zero)
                     {

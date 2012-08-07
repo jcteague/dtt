@@ -1,4 +1,4 @@
 namespace TeamNotification_Library.Service.Async
 {
-    public delegate void CustomEventHandler(object sender, CustomEventArgs e);
+    public delegate void CustomEventHandler<T>(object sender, CustomEventArgs e);
 }
