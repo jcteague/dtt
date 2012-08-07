@@ -1,4 +1,6 @@
+using TeamNotification_Library.Service.Async.Models;
+
 namespace TeamNotification_Library.Service.Async
 {
-    public delegate void CustomEventHandler(object sender, CustomEventArgs e);
+    public delegate void CustomEventHandler<T>(object sender, T e) where T : IHaveEventArguments;
 }
