@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundService\BackgroundService.cs" />
+    <Compile Include="BackgroundService\ClipboardEvents.cs" />
     <Compile Include="BackgroundService\DTTClipboardService.cs" />
     <Compile Include="BackgroundService\IRunInBackground.cs" />
     <Compile Include="Bootstrapper.cs" />

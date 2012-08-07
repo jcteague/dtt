@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using AvenidaSoftware.TeamNotification_Package.BackgroundService;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -47,20 +46,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         public TeamNotificationPackage()
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-
-            var serviceContainer = this as IServiceContainer;
-            var callback = new ServiceCreatorCallback(CreateService);
-            serviceContainer.AddService(typeof(SVsUIHierWinClipboardHelper), callback);
         }
-
-        private object CreateService(IServiceContainer container, Type servicetype)
-        {
-            if (typeof(SVsUIHierWinClipboardHelper) == servicetype)
-                return new DTTClipboardService(this);
-
-            return null;
-        }
-
 
         /// <summary>
         /// This function is called when the user clicks the menu item that shows the 
@@ -93,10 +79,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             // The last flag is set to true so that if the tool window does not exists it will be created.
             ToolWindowPane window = this.FindToolWindow(typeof(LoginWindow), 0, true);
 
-            IVsUIHierWinClipboardHelper clipboardHelper =
-                GetService(typeof(SVsUIHierWinClipboardHelper)) as IVsUIHierWinClipboardHelper;
-
-            clipboardHelper.Cut(null);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
