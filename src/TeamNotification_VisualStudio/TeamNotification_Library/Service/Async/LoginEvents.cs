@@ -2,33 +2,19 @@ using TeamNotification_Library.Service.Async.Models;
 
 namespace TeamNotification_Library.Service.Async
 {
-    public class LoginEvents : IHandleLoginEvents
+    public class LoginEvents : AbstractEventHandler, IHandleLoginEvents
     {
-        public event CustomEventHandler<UserAttemptedLogin> UserHasLogged;
-        public event CustomEventHandler<UserAttemptedLogin> UserCouldNotLogIn;
+        public event CustomEventHandler<UserHasLogged> UserHasLogged;
+        public event CustomEventHandler<UserCouldNotLogIn> UserCouldNotLogIn;
 		
-		/*
-        public void OnLoginSuccess(object source, UserLoginEventArgs eventArgs)
+        public void OnLoginSuccess(object source, UserHasLogged eventArgs)
         {
-            UserHasLogged(source, eventArgs);
-            //Handle(source, UserHasLogged);
-        }
-		*/
-        
-        public void OnLoginSuccess(object source)
-        {
-            Handle(source, UserHasLogged);
+            Handle(source, UserHasLogged, eventArgs);
         }
 
         public void OnLoginFail(object source)
         {
             Handle(source, UserCouldNotLogIn);
-        }
-        
-        private void Handle(object source, CustomEventHandler<UserAttemptedLogin> handler)
-        {
-            if (handler != null)
-                handler(source, new UserAttemptedLogin());
         }
     }
 }

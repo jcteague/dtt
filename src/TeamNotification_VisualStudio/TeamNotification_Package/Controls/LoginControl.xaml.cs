@@ -53,9 +53,8 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             }
 
             loginEvents.UserHasLogged += (sender, e) => { this.Content = Container.GetInstance<Chat>();
-                                                            UserLoginEventArgs ulea = (UserLoginEventArgs) e;
                                                             redisConfigurationProvider.Get().Uri =
-                                                                ulea.RedisConfig.host + ":" + ulea.RedisConfig.port;
+                                                                e.RedisConfig.host + ":" + e.RedisConfig.port;
             };
             loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }

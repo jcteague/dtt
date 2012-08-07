@@ -97,13 +97,14 @@
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Async\AbstractEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandleLoginEvents.cs" />
     <Compile Include="Service\Async\LoginEvents.cs" />
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
-    <Compile Include="Service\Async\Models\UserAttemptedLogin.cs" />
-    <Compile Include="Service\Async\UserLoginEventArgs.cs" />
+    <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
+    <Compile Include="Service\Async\Models\UserHasLogged.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />

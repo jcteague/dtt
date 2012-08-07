@@ -7,6 +7,7 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
@@ -105,7 +106,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 localStorageService.AssertWasCalled(x => x.Store(user, collectionDataList));
 
             It should_call_the_on_login_success_event = () =>
-                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut,new UserLoginEventArgs(user,redisConfig)));
+                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut,new UserHasLogged(user,redisConfig)));
 
             private static User user;
             private static Collection.RedisConfig redisConfig;
