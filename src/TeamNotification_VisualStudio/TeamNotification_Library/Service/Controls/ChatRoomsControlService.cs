@@ -23,7 +23,7 @@ namespace TeamNotification_Library.Service.Controls
         public Collection GetMessagesCollection(string roomId)
         {
             var user = userProvider.GetUser();
-            var uri = configuration.Get().HREF + "room/" + roomId + "/messages";
+            var uri = configuration.Get().Uri + "room/" + roomId + "/messages";
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
         }
@@ -31,7 +31,7 @@ namespace TeamNotification_Library.Service.Controls
         public Collection GetCollection()
         {
             var user = userProvider.GetUser();
-            var uri = configuration.Get().HREF +"user/"+ user.id;
+            var uri = configuration.Get().Uri +"user/"+ user.id;
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
         }

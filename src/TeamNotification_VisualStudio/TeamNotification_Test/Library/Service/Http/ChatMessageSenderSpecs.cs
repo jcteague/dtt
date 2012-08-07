@@ -26,7 +26,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 IStoreConfiguration serverConfiguration = fake.an<IStoreConfiguration>();
                 httpRequestsClient = depends.on<ISendHttpRequests>();
 
-                serverConfiguration.Stub(x => x.HREF).Return(siteUrl);
+                serverConfiguration.Stub(x => x.Uri).Return(siteUrl);
                 configuration.Stub(x => x.Get()).Return(serverConfiguration);
 
                 message = "blah";

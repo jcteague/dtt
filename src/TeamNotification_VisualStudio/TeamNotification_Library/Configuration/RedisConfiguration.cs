@@ -5,11 +5,13 @@ using System.Text;
 
 namespace TeamNotification_Library.Configuration
 {
-    public class ServerConfiguration : IStoreConfiguration
+    public class RedisConfiguration : IStoreConfiguration
     {
+        private string _href = "dtt.local:6379";
         public string Uri
         {
-            get { return "http://dtt.local:3000/"; }
+            get { return _href; }
+            set { _href = value; }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -6,9 +7,9 @@ namespace TeamNotification_Library.Service.Http
     {
         readonly IRedisConnection conn;
 
-        public RedisClient(IRedisConnection conn)
+        public RedisClient(IProvideDbConnection<IRedisConnection> connectionProvider )// IRedisConnection conn)
         {
-            this.conn = conn;
+            this.conn = connectionProvider.Get();
         }
 
         public void Subscribe(string channel,Action<string,byte[]> callback)

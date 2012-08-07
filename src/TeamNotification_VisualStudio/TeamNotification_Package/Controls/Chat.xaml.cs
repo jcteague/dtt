@@ -11,6 +11,7 @@ using System.Windows.Input;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Providers;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
@@ -27,22 +28,23 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
+        private readonly RedisClient redisClient;
         private string roomId { get; set; }
         private string currentChannel { get; set; }
-        private List<string> subscribedChannels; 
+        private List<string> subscribedChannels;
 
-        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
+        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
         {
             this.chatRoomControlService = chatRoomControlService;
             this.messageSender = messageSender;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
             this.subscribedChannels = new List<string>();
-
             InitializeComponent();
-            connection.Open();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = this.formatRooms(collection.rooms);
+
+          //  var conn = connectionProvider.Get();
 
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)

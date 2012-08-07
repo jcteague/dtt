@@ -20,7 +20,7 @@ namespace TeamNotification_Library.Service.Http
         {           
             //Using this open URL so that the request doesnt make the package crash
             //var uri = string.Format("http://dtt.local:3000/registration?&userName={0}&userMessage={1}", "Raymi", message);
-            var sb = new StringBuilder(serverConfiguration.Get().HREF);
+            var sb = new StringBuilder(serverConfiguration.Get().Uri);
             var postValues = new List<KeyValuePair<string, string>>();
 
             sb.AppendFormat("room/{0}/messages", roomId);

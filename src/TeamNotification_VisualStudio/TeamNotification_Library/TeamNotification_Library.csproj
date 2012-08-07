@@ -85,6 +85,8 @@
     <Compile Include="Configuration\LoginConfiguration.cs" />
     <Compile Include="Configuration\IProvideConfiguration.cs" />
     <Compile Include="Configuration\LoginConfigurationProvider.cs" />
+    <Compile Include="Configuration\RedisConfiguration.cs" />
+    <Compile Include="Configuration\RedisConfigurationProvider.cs" />
     <Compile Include="Configuration\ServerConfiguration.cs" />
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
+    <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
     <Compile Include="Service\Renderer\CollectionTemplateRenderer.cs" />

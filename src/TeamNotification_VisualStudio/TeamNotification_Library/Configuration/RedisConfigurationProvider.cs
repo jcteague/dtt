@@ -5,11 +5,11 @@ using System.Text;
 
 namespace TeamNotification_Library.Configuration
 {
-    public class ServerConfiguration : IStoreConfiguration
+    public class RedisConfigurationProvider : IProvideConfiguration<RedisConfiguration>
     {
-        public string Uri
+        public IStoreConfiguration Get()
         {
-            get { return "http://dtt.local:3000/"; }
+            return new RedisConfiguration();
         }
     }
 }

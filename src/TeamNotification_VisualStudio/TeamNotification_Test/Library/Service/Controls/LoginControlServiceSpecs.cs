@@ -28,7 +28,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 configuration = fake.an<IStoreConfiguration>();
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
 
-                configuration.Stub(x => x.HREF).Return("blah href");
+                configuration.Stub(x => x.Uri).Return("blah href");
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
             };
 
@@ -46,7 +46,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 collection = fake.an<Collection>();
 
                 var collectionTask = Task.Factory.StartNew(() => collection);
-                httpClient.Stub(x => x.Get<Collection>(configuration.HREF)).Return(collectionTask);
+                httpClient.Stub(x => x.Get<Collection>(configuration.Uri)).Return(collectionTask);
             };
 
             Because of = () =>
@@ -87,7 +87,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 };
 
                 var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = true, user = user });
-                httpClient.Stub(x => x.Post<LoginResponse>(configuration.HREF, postData)).Return(loginResponseTask);
+                httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
 
             Because of = () =>
@@ -110,7 +110,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 };
 
                 var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = false });
-                httpClient.Stub(x => x.Post<LoginResponse>(configuration.HREF, postData)).Return(loginResponseTask);
+                httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
 
             Because of = () =>

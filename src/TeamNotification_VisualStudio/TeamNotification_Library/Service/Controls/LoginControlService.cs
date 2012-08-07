@@ -25,13 +25,13 @@ namespace TeamNotification_Library.Service.Controls
 
         public Collection GetCollection()
         {
-            return httpClient.Get<Collection>(configuration.Get().HREF).Result;
+            return httpClient.Get<Collection>(configuration.Get().Uri).Result;
         }
 
         public void HandleClick(IEnumerable<CollectionData> items)
         {
             var content = mapper.MapFrom(items);
-            httpClient.Post<LoginResponse>(configuration.Get().HREF, content)
+            httpClient.Post<LoginResponse>(configuration.Get().Uri, content)
                 .ContinueWith(x =>
                                   {
                                       if (x.Result.success) localStorageService.Store(x.Result.user);
