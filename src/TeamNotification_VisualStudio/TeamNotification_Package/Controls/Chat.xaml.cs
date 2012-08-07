@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -108,7 +109,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 //                    EventArgs clipChange = new EventArgs();
 //                    OnClipboardChanged(clipChange);
 
-                    clipboardEvents.OnClipboardChanged(this, new CustomEventArgs());
+                    clipboardEvents.OnClipboardChanged(this, new ClipboardHasChanged());
 
                     if (this.viewerHandle != IntPtr.Zero)
                     {

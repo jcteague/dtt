@@ -1,10 +1,12 @@
+using TeamNotification_Library.Service.Async.Models;
+
 namespace TeamNotification_Library.Service.Async
 {
     public class ClipboardEvents : AbstractEventHandler, IHandleClipboardEvents
     {
-        public event CustomEventHandler ClipboardHasChanged;
+        public event CustomEventHandler<ClipboardHasChanged> ClipboardHasChanged;
         
-        public void OnClipboardChanged(object source, CustomEventArgs args)
+        public void OnClipboardChanged(object source, ClipboardHasChanged args)
         {
             Handle(source, ClipboardHasChanged, args);
         }

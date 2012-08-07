@@ -1,14 +1,16 @@
-﻿namespace TeamNotification_Library.Service.Async
+﻿using TeamNotification_Library.Service.Async.Models;
+
+namespace TeamNotification_Library.Service.Async
 {
     public class AbstractEventHandler
     {
-        protected void Handle(object source, CustomEventHandler handler)
+        protected void Handle<T>(object source, CustomEventHandler<T> handler) where T : IHaveEventArguments, new()
         {
             if (handler != null)
-                handler(source, new CustomEventArgs());
+                handler(source, new T());
         }
 
-        protected void Handle(object source, CustomEventHandler handler, CustomEventArgs args)
+        protected void Handle<T>(object source, CustomEventHandler<T> handler, T args) where T : IHaveEventArguments
         {
             if (handler != null)
                 handler(source, args);

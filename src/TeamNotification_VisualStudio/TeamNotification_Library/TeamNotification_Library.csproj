@@ -102,6 +102,9 @@
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleLoginEvents.cs" />
     <Compile Include="Service\Async\LoginEvents.cs" />
+    <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
+    <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
+    <Compile Include="Service\Async\Models\UserAttemptedLogin.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
