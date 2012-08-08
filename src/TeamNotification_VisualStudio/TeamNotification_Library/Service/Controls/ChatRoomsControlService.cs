@@ -12,7 +12,6 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideUser userProvider;
         private ISendHttpRequests httpClient;
         private IProvideConfiguration<ServerConfiguration> configuration;
-
         public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration)
         {
             this.userProvider = userProvider;

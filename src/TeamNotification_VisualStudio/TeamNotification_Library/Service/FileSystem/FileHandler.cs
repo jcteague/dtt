@@ -15,22 +15,31 @@ namespace TeamNotification_Library.Service.FileSystem
             this.base64Encoder = base64Encoder;
         }
 
-        public void Write(User user)
+        public void Write(LoginResponse response)
         {
-            File.WriteAllLines(Globals.Paths.UserResource, user.SerializeForFile().Select(x => base64Encoder.Encode(x)));
+            File.WriteAllLines(Globals.Paths.UserResource, response.SerializeForFile().Select(x => base64Encoder.Encode(x)));
         }
 
-        public User Read()
+        public LoginResponse Read()
         {
             if (!File.Exists(Globals.Paths.UserResource))
                 return null;
 
             var lines = File.ReadAllLines(Globals.Paths.UserResource).Select(x => base64Encoder.Decode(x)).ToArray();
-            return new User
+            return new LoginResponse
                        {
-                           id = Convert.ToInt32(lines[0]),
-                           email = lines[1],
-                           password = lines[2]
+                           user = new User
+                                      {
+                                          id = Convert.ToInt32(lines[0]),
+                                          email = lines[1],
+                                          password = lines[2]
+                                      },
+                           success = true,
+                           redis = new Collection.RedisConfig
+                                    {
+                                        host = lines[3],
+                                        port = lines[4]
+                                    }
                        };
         }
     }

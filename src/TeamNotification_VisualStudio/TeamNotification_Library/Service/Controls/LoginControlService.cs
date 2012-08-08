@@ -41,11 +41,16 @@ namespace TeamNotification_Library.Service.Controls
             var itemsList = items.ToList();
             var content = mapper.MapFrom(itemsList);
             var task = httpClient.Post<LoginResponse>(configuration.Get().Uri, content);
-            
             var loginResponse = task.Result;
             if (loginResponse.success)
             {
-                localStorageService.Store(loginResponse.user, itemsList);
+                foreach (var item in items)
+                    if(item.type == "password")
+                    {
+                        loginResponse.user.password = item.value;
+                        break;
+                    }
+                localStorageService.Store(loginResponse, itemsList);
                 loginEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
             }
             else

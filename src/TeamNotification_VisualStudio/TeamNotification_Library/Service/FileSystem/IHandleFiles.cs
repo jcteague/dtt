@@ -5,8 +5,8 @@ namespace TeamNotification_Library.Service.FileSystem
 {
     public interface IHandleFiles
     {
-        void Write(User user);
+        void Write(LoginResponse response);
         
-        User Read();
+        LoginResponse Read();
     }
 }

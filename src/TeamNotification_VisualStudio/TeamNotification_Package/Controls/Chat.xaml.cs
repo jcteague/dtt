@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ using TeamNotification_Library.Service.Providers;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
+using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -86,9 +88,12 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageSender.SendMessage(message, this.roomId);
         }
 
+        ///Todo
+        /// Make the text selectionable by adding something like this bellow
+        /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
         private void AppendMessage(string username, string message)
         {
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0,0.0,0.0,5.0)})));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
             messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom() ));
         }
 

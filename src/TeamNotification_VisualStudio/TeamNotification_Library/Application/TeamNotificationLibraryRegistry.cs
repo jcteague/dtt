@@ -17,6 +17,7 @@ namespace TeamNotification_Library.Application
             });
 
             // For<IRedisConnection>().Use(new Service.Http.RedisConnection(new RedisConnection("dtt.local")));
+            For<IProvideConfiguration<RedisConfiguration>>().Singleton().Use<RedisConfigurationProvider>();
             For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
         }
     }

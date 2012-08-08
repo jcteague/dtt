@@ -7,8 +7,9 @@ namespace TeamNotification_Library.Service.Factories
 {
     public class UserFromResponseGetter : ICreateUserFromResponse
     {
-        public User Get(User userToStore, IEnumerable<CollectionData> items)
+        public User Get(LoginResponse response, IEnumerable<CollectionData> items)
         {
+            var userToStore = response.user;
             return new User
             {
                 id = userToStore.id,

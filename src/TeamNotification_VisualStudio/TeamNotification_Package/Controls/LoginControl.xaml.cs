@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
@@ -47,16 +48,20 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             var collection = loginControlService.GetCollection();
             Resources.Add("templateData", collection.template.data);
 
-            foreach (var panel in contentBuilder.GetContentFor(collection))
+            foreach (var panel in this.contentBuilder.GetContentFor(collection))
             {
                 templateContainer.Children.Add(panel);
             }
 
-            loginEvents.UserHasLogged += (sender, e) => { this.Content = Container.GetInstance<Chat>();
-                                                            redisConfigurationProvider.Get().Uri =
-                                                                e.RedisConfig.host + ":" + e.RedisConfig.port;
-            };
-            loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
+            this.loginEvents.UserHasLogged += this.OnUserHasLogged;
+            this.loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
+        }
+
+        private void OnUserHasLogged(object sender, UserHasLogged args  )
+        {
+            redisConfigurationProvider.Get().Uri =
+                args.RedisConfig.host + ":" + args.RedisConfig.port;
+            this.Content = Container.GetInstance<Chat>();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

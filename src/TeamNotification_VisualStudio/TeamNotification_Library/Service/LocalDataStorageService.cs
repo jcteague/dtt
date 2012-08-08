@@ -12,6 +12,7 @@ namespace TeamNotification_Library.Service
         private IHandleFiles resourceHandler;
         private ICreateUserFromResponse userFromResponseGetter;
         private User _user;
+        private Collection.RedisConfig _redisConfig;
 
         public LocalDataStorageService(IHandleFiles resourceHandler, ICreateUserFromResponse userFromResponseGetter)
         {
@@ -21,15 +22,29 @@ namespace TeamNotification_Library.Service
 
         public User GetUser()
         {
-            if (_user == null) 
-                _user = resourceHandler.Read();
+            if (_user == null )
+            {
+                var result = resourceHandler.Read();
+                if(result != null)
+                    _user = result.user;
+            }
             return _user;
         }
-        
-        public void Store(User userToStore, IEnumerable<CollectionData> items)
+        public Collection.RedisConfig GetRedisConfig()
         {
-            _user = userFromResponseGetter.Get(userToStore, items);
-            resourceHandler.Write(_user);
+            if (_redisConfig == null)
+            {
+                var result = resourceHandler.Read();
+                if (result != null)
+                    _redisConfig = result.redis;
+            }
+            return _redisConfig;
+        }
+
+        public void Store(LoginResponse response, IEnumerable<CollectionData> items)
+        {
+            //_user = userFromResponseGetter.Get(response, items);
+            resourceHandler.Write(response);
         }
     }
 }

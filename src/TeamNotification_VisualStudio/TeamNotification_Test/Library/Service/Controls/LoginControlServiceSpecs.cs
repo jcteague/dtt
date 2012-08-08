@@ -94,7 +94,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                                       host = "dtt.local",
                                       port = "9367"
                                   };
-
+                response = new LoginResponse {redis = redisConfig, success = true, user = user};
                 var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = true, user = user });
                 httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
@@ -103,13 +103,14 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasCalled(x => x.Store(user, collectionDataList));
+                localStorageService.AssertWasCalled(x => x.Store(response, collectionDataList));
 
             It should_call_the_on_login_success_event = () =>
                 loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut,new UserHasLogged(user,redisConfig)));
 
             private static User user;
             private static Collection.RedisConfig redisConfig;
+            private static LoginResponse response;
         }
 
         public class when_the_submit_button_is_clicked_and_the_user_and_password_are_not_correct : when_the_submit_button_is_clicked
@@ -130,7 +131,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_not_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
+                localStorageService.AssertWasNotCalled(x => x.Store(Arg<LoginResponse>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
 
             It should_call_the_on_login_fail_event = () =>
                 loginEvents.AssertWasCalled(x => x.OnLoginFail(sut));
