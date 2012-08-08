@@ -21,9 +21,11 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using Clipboard = System.Windows.Clipboard;
 using DataFormats = System.Windows.DataFormats;
+using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
+using Process = System.Diagnostics.Process;
 using TextSelection = System.Windows.Documents.TextSelection;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -63,6 +65,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
 
+            DataObject.AddPastingHandler(messageTextBox, new DataObjectPastingEventHandler(OnPaste));
             clipboardEvents.ClipboardHasChanged += (source, e) =>
                                                        {
                                                            Debug.WriteLine("{0} -> {1} -> {2}: {3}", e.Solution, e.Document, e.Line, e.Text);
@@ -71,13 +74,20 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                        };
         }
 
+        private void OnPaste(object sender, DataObjectPastingEventArgs e)
+        {
+            var text = e.SourceDataObject.GetData(DataFormats.Text) as string;
+            int a = 0;
+        }
+
         #region Win32_Clipboard
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
-            if (hwndSource != null)
+
+            if (hwndSource.IsNotNull())
             {
                 installedHandle = hwndSource.Handle;
                 viewerHandle = SetClipboardViewer(installedHandle);
@@ -117,29 +127,19 @@ namespace AvenidaSoftware.TeamNotification_Package
                     break;
 
                 case WM_DRAWCLIPBOARD:
-//                    EventArgs clipChange = new EventArgs();
-//                    OnClipboardChanged(clipChange);
                     var dte = (DTE) Package.GetGlobalService(typeof(DTE));
-                    var txt = dte.ActiveDocument.Object() as TextDocument;
-                    if (txt.IsNotNull())
-                    {
-                        var selection = txt.Selection;
-
-                        var clipboardArgs = new ClipboardHasChanged
-                        {
-                            Solution = dte.Solution.FullName,
-                            Document = dte.ActiveDocument.FullName,
-                            Text = selection.Text,
-                            Line = selection.CurrentLine
-                        };
-                        clipboardEvents.OnClipboardChanged(this, clipboardArgs);    
-                    }
+                    clipboardEvents.Raise(dte);
 
                     if (this.viewerHandle != IntPtr.Zero)
                     {
                         SendMessage(this.viewerHandle, msg, wParam, lParam);
                     }
 
+                    break;
+                case WM_PASTE:
+                case WM_CLIPBOARDUPDATE:
+                case WM_SIZECLIPBOARD:
+                    Debug.WriteLine("It has pasted");
                     break;
 
             }
@@ -192,12 +192,17 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         const int WM_DRAWCLIPBOARD = 0x308;
         const int WM_CHANGECBCHAIN = 0x30D;
+        const int WM_PASTE = 0x0302;
+        const int WM_CLIPBOARDUPDATE = 0x031D;
+        const int WM_SIZECLIPBOARD = 0x030B;
         [DllImport("user32.dll")]
         private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
         [DllImport("user32.dll")]
         private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        private static extern int GetForegroundWindow();
 
         #endregion
 
