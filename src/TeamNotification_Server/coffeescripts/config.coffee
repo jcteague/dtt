@@ -18,7 +18,7 @@ development_settings =
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'localhost'
+        host:'dtt.local'
         port: 6379
 
 test_settings =
@@ -32,7 +32,7 @@ test_settings =
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'localhost'
+        host:'dtt.local'
         port: 6379
 
 production_settings =
@@ -46,7 +46,7 @@ production_settings =
         url: 'http://ec2-107-21-171-44.compute-1.amazonaws.com'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'localhost'
+        host:'dtt.local'
         port: 6379
 
 module.exports = ->
