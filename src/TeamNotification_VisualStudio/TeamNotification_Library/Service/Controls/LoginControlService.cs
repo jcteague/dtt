@@ -6,6 +6,7 @@ using System.Windows.Data;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
@@ -45,7 +46,7 @@ namespace TeamNotification_Library.Service.Controls
             if (loginResponse.success)
             {
                 localStorageService.Store(loginResponse.user, itemsList);
-                loginEvents.OnLoginSuccess(this);
+                loginEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
             }
             else
             {

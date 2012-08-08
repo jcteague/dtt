@@ -21,6 +21,7 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.Configuration;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -33,14 +34,14 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IBuildContent contentBuilder;
         private IGetFieldValue fieldValueGetter;
         private readonly IHandleLoginEvents loginEvents;
-
-        public LoginControl(IServiceLoginControl loginControlService, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
+        private IProvideConfiguration<RedisConfiguration> redisConfigurationProvider;
+        public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
         {
             this.loginControlService = loginControlService;
             this.contentBuilder = contentBuilder;
             this.fieldValueGetter = fieldValueGetter;
             this.loginEvents = loginEvents;
-
+            this.redisConfigurationProvider = redisConfigurationProvider;
             InitializeComponent();
             
             var collection = loginControlService.GetCollection();
@@ -51,7 +52,10 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            loginEvents.UserHasLogged += (sender, e) => this.Content = Container.GetInstance<Chat>();
+            loginEvents.UserHasLogged += (sender, e) => { this.Content = Container.GetInstance<Chat>();
+                                                            redisConfigurationProvider.Get().Uri =
+                                                                e.RedisConfig.host + ":" + e.RedisConfig.port;
+            };
             loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 

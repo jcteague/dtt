@@ -16,7 +16,7 @@ namespace TeamNotification_Library.Application
                 scanner.RegisterConcreteTypesAgainstTheFirstInterface().OnAddedPluginTypes(x => x.Singleton());
             });
 
-           // For<IRedisConnection>().Use(new Service.Http.RedisConnection(new RedisConnection("dtt.local")));
+            // For<IRedisConnection>().Use(new Service.Http.RedisConnection(new RedisConnection("dtt.local")));
             For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
         }
     }

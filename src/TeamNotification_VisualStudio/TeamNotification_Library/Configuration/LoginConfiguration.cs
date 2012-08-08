@@ -7,6 +7,7 @@ namespace TeamNotification_Library.Configuration
         public string Uri
         {
             get { return _href; }
+            set { _href = value; }
         }
     }
 }
