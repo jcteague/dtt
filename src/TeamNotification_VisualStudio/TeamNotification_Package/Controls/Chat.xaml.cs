@@ -11,6 +11,9 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
@@ -21,6 +24,7 @@ using DataFormats = System.Windows.DataFormats;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
+using TextSelection = System.Windows.Documents.TextSelection;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -58,6 +62,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
+
+            clipboardEvents.ClipboardHasChanged += (source, e) =>
+                                                       {
+                                                           Debug.WriteLine("{0} -> {1} -> {2}: {3}", e.Solution, e.Document, e.Line, e.Text);
+                                                           Debug.WriteLineIf(Clipboard.ContainsData(DataFormats.Text),
+                                                                             Clipboard.GetText());
+                                                       };
         }
 
         #region Win32_Clipboard
@@ -108,8 +119,21 @@ namespace AvenidaSoftware.TeamNotification_Package
                 case WM_DRAWCLIPBOARD:
 //                    EventArgs clipChange = new EventArgs();
 //                    OnClipboardChanged(clipChange);
+                    var dte = (DTE) Package.GetGlobalService(typeof(DTE));
+                    var txt = dte.ActiveDocument.Object() as TextDocument;
+                    if (txt.IsNotNull())
+                    {
+                        var selection = txt.Selection;
 
-                    clipboardEvents.OnClipboardChanged(this, new ClipboardHasChanged());
+                        var clipboardArgs = new ClipboardHasChanged
+                        {
+                            Solution = dte.Solution.FullName,
+                            Document = dte.ActiveDocument.FullName,
+                            Text = selection.Text,
+                            Line = selection.CurrentLine
+                        };
+                        clipboardEvents.OnClipboardChanged(this, clipboardArgs);    
+                    }
 
                     if (this.viewerHandle != IntPtr.Zero)
                     {

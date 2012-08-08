@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
+using AvenidaSoftware.TeamNotification_Package.ServiceProviders;
+using EnvDTE;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -55,16 +57,30 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance6
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
-            {
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-            }
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+//            // Get the instance number 0 of this tool window. This window is single instance so this instance6
+//            // is actually the only one.
+//            // The last flag is set to true so that if the tool window does not exists it will be created.
+//            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
+//            if ((null == window) || (null == window.Frame))
+//            {
+//                throw new NotSupportedException(Resources.CanNotCreateWindow);
+//            }
+//            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+//            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+//            IVsSolution solution = (IVsSolution) Package.GetGlobalService(typeof(SVsSolution));
+//            string solutionDir;
+//            string solutionFile;
+//            string optsFile;
+//            var b = solution.GetSolutionInfo(out solutionDir, out solutionFile, out optsFile);
+
+//            var b = VsShellUtilities.GetProject(new SolutionServiceProvider(), "cs");
+
+//            DTE dte = (DTE) GetService(typeof (DTE));
+//            Debug.WriteLine(dte.Solution.FileName);
+//            Debug.WriteLine(dte.ActiveDocument);
+//            int a = 0;
+
         }
 
         /// <summary>
