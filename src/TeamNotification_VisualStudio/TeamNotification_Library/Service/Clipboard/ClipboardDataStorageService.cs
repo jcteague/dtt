@@ -1,5 +1,6 @@
 using System.Windows;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Http;
 using WindowsClipboard = System.Windows.Clipboard;
 
@@ -25,6 +26,7 @@ namespace TeamNotification_Library.Service.Clipboard
 
 //        public ClipboardHasChanged ToSend { get; set; }
         private bool CopyFlag { get; set; }
+        
         public void Store(ClipboardHasChanged clipboardArgs)
         {
             if (CopyFlag)
@@ -43,6 +45,16 @@ namespace TeamNotification_Library.Service.Clipboard
             WindowsClipboard.SetData(DataFormats.Text, data);
             CopyFlag = true;
 
+        }
+
+        public T Get<T>() where T : ChatMessageData
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool IsCode()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Documents;
 using TeamNotification_Library.Configuration;
+using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -16,13 +17,13 @@ namespace TeamNotification_Library.Service.Http
             this.serverConfiguration = serverConfiguration;
         }
 
-        public void SendMessage(string message, string roomId)
+        public void SendMessage(ChatMessageData message, string roomId)
         {           
             var sb = new StringBuilder(serverConfiguration.Get().HREF);
             var postValues = new List<KeyValuePair<string, string>>();
 
             sb.AppendFormat("room/{0}/messages", roomId);
-            postValues.Add(new KeyValuePair<string, string>("message", message));
+            postValues.Add(new KeyValuePair<string, string>("message", message.message));
 
             client.Post(sb.ToString(), postValues.ToArray());
         }

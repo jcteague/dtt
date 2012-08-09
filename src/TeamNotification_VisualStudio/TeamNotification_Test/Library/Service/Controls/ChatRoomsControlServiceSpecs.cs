@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using AvenidaSoftware.TeamNotification_Package;
 using EnvDTE;
 using Machine.Specifications;
@@ -11,6 +13,7 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
+using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Http;
@@ -32,6 +35,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                 httpClient = depends.on<ISendHttpRequests>();
                 clipboardEvents = depends.on<IHandleClipboardEvents>();
                 clipboardArgsFactory = depends.on<ICreateClipboardArguments>();
+                clipboardDataStorageService = depends.on<IStoreClipboardData>();
+                chatMessageSender = depends.on<ISendChatMessages>();
+                jsonSerializer = depends.on<ISerializeJSON>();
+                chatMessageDataFactory = depends.on<ICreateChatMessageData>();
             };
 
             protected static IProvideUser userProvider;
@@ -39,6 +46,10 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static ISendHttpRequests httpClient;
             protected static IHandleClipboardEvents clipboardEvents;
             protected static ICreateClipboardArguments clipboardArgsFactory;
+            protected static IStoreClipboardData clipboardDataStorageService;
+            protected static ISendChatMessages chatMessageSender;
+            protected static ISerializeJSON jsonSerializer;
+            protected static ICreateChatMessageData chatMessageDataFactory;
         }
 
         public class When_getting_a_collection : Concern
@@ -47,7 +58,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             {
                 string siteUrl = "MyUrl/";
                 roomId = "1";
-                IStoreConfiguration serverConfiguration = fake.an<IStoreConfiguration>();
+                var serverConfiguration = fake.an<IStoreConfiguration>();
                 collection = new Collection { href = "asd" };
                 messagesCollection = new Collection { href = "4509u245j" };
                 User user = new User { first_name = "foo", last_name = "bar", id = 1, email = "foo@bar.com", password = "123456789" };
@@ -83,6 +94,128 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static Collection result2;
             private static Collection collection;
             private static Collection messagesCollection;
+        }
+
+        public class when_handling_the_paste : Concern
+        {
+            Establish context = () =>
+            {
+                textBox = fake.an<TextBox>();
+                args = new DataObjectPastingEventArgs(new DataObject(DataFormats.Text, "foo"), false, DataFormats.Text);
+
+                clipboardText = "blah text";
+
+                var clipboardData = new PlainClipboardData
+                                        {
+                                            message = clipboardText
+                                        };
+                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
+            };
+
+            Because of = () =>
+                sut.HandlePaste(textBox, args);
+
+            It should_set_the_textbox_text_to_the_clipboard_message = () =>
+                textBox.Text.ShouldEqual(clipboardText);
+
+            private static TextBox textBox;
+            private static DataObjectPastingEventArgs args;
+            private static string clipboardText;
+        }
+
+        public abstract class when_sending_a_message : Concern
+        {
+            Establish context = () =>
+            {
+                textBox = new TextBox {Text = "foo message"};
+                roomId = "blah room id";
+            };
+
+            protected static TextBox textBox;
+            protected static string roomId;
+        }
+
+        public class when_sending_a_message_and_there_is_no_data_in_the_clipboard_buffer : when_sending_a_message
+        {
+            Establish context = () =>
+            {
+                var message = textBox.Text;
+                chatMessageData = new ChatMessageData
+                              {
+                                  message = message
+                              };
+                chatMessageDataFactory.Stub(x => x.Get(message)).Return(chatMessageData);
+            };
+
+            Because of = () =>
+            {
+                sut.HasClipboardData = false;
+                sut.SendMessage(textBox, roomId);
+            };
+            
+            It should_send_the_message_with_the_textbox_text = () =>
+                chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
+
+            It should_empty_the_text_box = () =>
+                textBox.Text.ShouldBeEmpty();
+
+            private static ChatMessageData chatMessageData;
+        }
+
+        public class when_sending_a_message_and_there_is_plain_data_on_the_clipboard_buffer : when_sending_a_message
+        {
+            Establish context = () =>
+            {
+                clipboardDataStorageService.Stub(x => x.IsCode()).Return(false);
+                
+                clipboardData = new PlainClipboardData { message = "foo message" };
+                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
+            };
+
+            Because of = () =>
+            {
+                sut.HasClipboardData = true;
+                sut.SendMessage(textBox, roomId);
+            };
+
+            It should_send_the_message_from_the_clipboard = () =>
+                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
+
+            It should_unset_the_has_clipboard_data_flag = () =>
+                sut.HasClipboardData.ShouldBeFalse();
+            
+            It should_empty_the_text_box = () =>
+                textBox.Text.ShouldBeEmpty();
+
+            private static PlainClipboardData clipboardData;
+        }
+
+        public class when_sending_a_message_and_there_is_code_data_on_the_clipboard_buffer : when_sending_a_message
+        {
+            Establish context = () =>
+            {
+                clipboardDataStorageService.Stub(x => x.IsCode()).Return(true);
+
+                clipboardData = new CodeClipboardData { message = "foo message", solution = "blah solution"};
+                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
+            };
+
+            Because of = () =>
+            {
+                sut.HasClipboardData = true;
+                sut.SendMessage(textBox, roomId);
+            };
+
+            It should_send_the_message_from_the_clipboard = () =>
+                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
+
+            It should_unset_the_has_clipboard_data_flag = () =>
+                sut.HasClipboardData.ShouldBeFalse();
+
+            It should_empty_the_text_box = () =>
+                textBox.Text.ShouldBeEmpty();
+
+            private static CodeClipboardData clipboardData;
         }
 
         // TODO: Find a way to mock DTE to test implementation

@@ -93,10 +93,13 @@
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\CodeClipboardData.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
+    <Compile Include="Models\ChatMessageData.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\MessageData.cs" />
+    <Compile Include="Models\PlainClipboardData.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
@@ -125,10 +128,12 @@
     <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
+    <Compile Include="Service\Factories\ChatMessageDataFactory.cs" />
     <Compile Include="Service\Factories\ClipboardHasChangedArgumentsFactory.cs" />
     <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
     <Compile Include="Service\Factories\HttpClientHandlerFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
+    <Compile Include="Service\Factories\ICreateChatMessageData.cs" />
     <Compile Include="Service\Factories\ICreateClipboardArguments.cs" />
     <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
