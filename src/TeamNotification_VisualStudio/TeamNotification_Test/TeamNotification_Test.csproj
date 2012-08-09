@@ -81,6 +81,7 @@
     <Compile Include="Library\Service\Http\ChatMessageSenderSpecs.cs" />
     <Compile Include="Library\Service\Http\HttpClientHandlerGetterSpecs.cs" />
     <Compile Include="Library\Service\Http\MessageListenerSpecs.cs" />
+    <Compile Include="Library\Service\Http\RedisClientSpecs.cs" />
     <Compile Include="Library\Service\LocalDataStorageServiceSpecs.cs" />
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Package\DynamicControlBuilderSpecs.cs" />
