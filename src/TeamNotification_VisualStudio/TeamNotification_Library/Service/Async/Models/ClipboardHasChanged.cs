@@ -2,12 +2,12 @@
 {
     public class ClipboardHasChanged : IHaveEventArguments
     {
-        public string Solution { get; set; }
+        public string solution { get; set; }
 
-        public string Document { get; set; }
+        public string document { get; set; }
 
-        public string Text { get; set; }
+        public string message { get; set; }
 
-        public int Line { get; set; }
+        public int line { get; set; }
     }
 }

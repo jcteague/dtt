@@ -1,5 +1,6 @@
 ﻿using StructureMap.Configuration.DSL;
 using TeamNotification_Library.Service;
+using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Http;
 using RedisConnection = BookSleeve.RedisConnection;
 
@@ -17,6 +18,7 @@ namespace TeamNotification_Library.Application
 
             For<IRedisConnection>().Use(new Service.Http.RedisConnection(new RedisConnection("dtt.local")));
             For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
+            For<IStoreClipboardData>().Singleton().Use<ClipboardDataStorageService>();
         }
     }
 }

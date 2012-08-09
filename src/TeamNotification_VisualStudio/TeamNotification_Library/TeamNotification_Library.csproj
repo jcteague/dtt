@@ -109,6 +109,8 @@
     <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
     <Compile Include="Service\Async\Models\UserAttemptedLogin.cs" />
+    <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
+    <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
@@ -123,9 +125,11 @@
     <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
     <Compile Include="Service\Controls\IServiceLoginControl.cs" />
     <Compile Include="Service\Controls\LoginControlService.cs" />
+    <Compile Include="Service\Factories\ClipboardHasChangedArgumentsFactory.cs" />
     <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
     <Compile Include="Service\Factories\HttpClientHandlerFactory.cs" />
     <Compile Include="Service\Factories\ICreateCallback.cs" />
+    <Compile Include="Service\Factories\ICreateClipboardArguments.cs" />
     <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
     <Compile Include="Service\Factories\ICreateInstances.cs" />
     <Compile Include="Service\Factories\ICreateUserFromResponse.cs" />
@@ -170,9 +174,7 @@
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Service\Renderer\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

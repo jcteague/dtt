@@ -9,5 +9,10 @@ namespace TeamNotification_Library.Service.Http
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
+
+        public string Serialize<T>(T obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
     }
 }
