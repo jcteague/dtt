@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
+using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -42,42 +43,53 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly ISerializeJSON serializeJson;
 
         readonly IHandleClipboardEvents clipboardEvents;
+        readonly IStoreClipboardData clipboardStorage;
 
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels; 
 
-        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IHandleClipboardEvents clipboardEvents)
+        public Chat(ISendChatMessages messageSender, IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IHandleClipboardEvents clipboardEvents, IStoreClipboardData clipboardStorage)
         {
+            Clipboard.Clear();
             this.chatRoomControlService = chatRoomControlService;
             this.messageSender = messageSender;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
             this.clipboardEvents = clipboardEvents;
+            this.clipboardStorage = clipboardStorage;
             this.subscribedChannels = new List<string>();
 
             InitializeComponent();
             connection.Open();
             var collection = chatRoomControlService.GetCollection();
-            var roomLinks = this.formatRooms(collection.rooms);
+            var roomLinks = formatRooms(collection.rooms);
 
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
 
             DataObject.AddPastingHandler(messageTextBox, new DataObjectPastingEventHandler(OnPaste));
-            clipboardEvents.ClipboardHasChanged += (source, e) =>
-                                                       {
-                                                           Debug.WriteLine("{0} -> {1} -> {2}: {3}", e.Solution, e.Document, e.Line, e.Text);
-                                                           Debug.WriteLineIf(Clipboard.ContainsData(DataFormats.Text),
-                                                                             Clipboard.GetText());
-                                                       };
+//            clipboardEvents.ClipboardHasChanged += (source, e) =>
+//                                                       {
+//                                                           Debug.WriteLine("{0} -> {1} -> {2}: {3}", e.Solution, e.Document, e.Line, e.Text);
+//                                                           Debug.WriteLineIf(Clipboard.ContainsData(DataFormats.Text),
+//                                                                             Clipboard.GetText());
+//                                                       };
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            var text = e.SourceDataObject.GetData(DataFormats.Text) as string;
-            int a = 0;
+            // IF Clipboard Data is code then do use the clipboard data to send to the backend
+            // ELSE use the normal text on the clipboard
+//            messageTextBox.Text = clipboardStorage.Data.Text;
+            var dataObject = serializeJson.Deserialize<ClipboardHasChanged>(Clipboard.GetText());
+//            messageTextBox.Text = dataObject.Text;
+            
+            // TODO: Code should not be modifiable and pretty printed
+            messageTextBox.Text = "Pasted Code";
+
+            e.CancelCommand();
         }
 
         #region Win32_Clipboard
@@ -127,8 +139,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                     break;
 
                 case WM_DRAWCLIPBOARD:
-                    var dte = (DTE) Package.GetGlobalService(typeof(DTE));
-                    clipboardEvents.Raise(dte);
+                    var dte = (DTE)Package.GetGlobalService(typeof(DTE));
+                    chatRoomControlService.UpdateClipboard(this, dte);
 
                     if (this.viewerHandle != IntPtr.Zero)
                     {
@@ -136,12 +148,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                     }
 
                     break;
-                case WM_PASTE:
-                case WM_CLIPBOARDUPDATE:
-                case WM_SIZECLIPBOARD:
-                    Debug.WriteLine("It has pasted");
-                    break;
-
             }
             return IntPtr.Zero;
         }
@@ -192,9 +198,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         const int WM_DRAWCLIPBOARD = 0x308;
         const int WM_CHANGECBCHAIN = 0x30D;
-        const int WM_PASTE = 0x0302;
-        const int WM_CLIPBOARDUPDATE = 0x031D;
-        const int WM_SIZECLIPBOARD = 0x030B;
+        
         [DllImport("user32.dll")]
         private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
         [DllImport("user32.dll")]
@@ -210,6 +214,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
+            // Here we should handle how to display the message formatted
             if (channel == currentChannel)
             {
                 var m = serializeJson.Deserialize<MessageData>(payload);
@@ -233,7 +238,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             var message = messageTextBox.Text;
             messageTextBox.Text = "";
-            messageSender.SendMessage(message, this.roomId);
+//            messageSender.SendMessage(message, this.roomId);
+            messageSender.SendMessage(Clipboard.GetText(), this.roomId);
         }
 
         private void AppendMessage(string username, string message)
@@ -253,6 +259,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Children.Clear()));
             AddMessages(newRoomId);
         }
+
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;

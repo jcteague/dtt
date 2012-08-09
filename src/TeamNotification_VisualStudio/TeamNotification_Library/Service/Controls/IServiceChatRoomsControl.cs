@@ -1,3 +1,4 @@
+using EnvDTE;
 using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Service.Controls
@@ -6,5 +7,6 @@ namespace TeamNotification_Library.Service.Controls
     {
         Collection GetCollection();
         Collection GetMessagesCollection(string roomId);
+        void UpdateClipboard(object source, DTE dte);
     }
 }
