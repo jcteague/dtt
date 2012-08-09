@@ -34,14 +34,13 @@ namespace TeamNotification_Test.Library.Service.Http
                 values = new KeyValuePair<string, string>("message", message);
             };
 
-            Because b = () =>
+            Because of = () =>
             {
                 sut.SendMessage(message, "1");
             };
 
             It should_send_the_message_in_the_url_using_the_client = () =>
                 httpRequestsClient.WasToldTo(x => x.Post(url, values));
-
 
             private static ISendHttpRequests httpRequestsClient;
             private static string message;
