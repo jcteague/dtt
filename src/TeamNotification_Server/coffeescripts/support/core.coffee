@@ -25,6 +25,7 @@ orm.then (db) ->
 
     _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
     _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
+    #_entity.ChatRoomMessage.sync()
 
 module.exports =
     core:
