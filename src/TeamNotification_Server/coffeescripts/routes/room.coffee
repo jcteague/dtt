@@ -90,7 +90,7 @@ methods.post_room_message = (req, res, next) ->
     values = req.body
     if values.message != ''
         room_id = req.param('id')
-        message_body = JSON.stringify({message:values.message})
+        message_body = JSON.stringify({JSON.parse(values.message)})
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date()}
         m = JSON.stringify newMessage
         if typeof req.in_test == 'undefined'
