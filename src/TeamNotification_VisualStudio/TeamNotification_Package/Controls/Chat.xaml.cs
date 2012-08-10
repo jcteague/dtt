@@ -32,7 +32,7 @@ using UserControl = System.Windows.Controls.UserControl;
 namespace AvenidaSoftware.TeamNotification_Package
 {
     /// <summary>
-    /// Interaction logic for MyControl.xaml
+    /// Interaction logic for Chat.xaml
     /// </summary>
     public partial class Chat : UserControl
     {

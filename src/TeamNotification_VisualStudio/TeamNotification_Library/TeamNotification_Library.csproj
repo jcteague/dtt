@@ -113,7 +113,9 @@
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
     <Compile Include="Service\Async\Models\UserAttemptedLogin.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
+    <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
+    <Compile Include="Service\Clipboard\SystemClipboardHandler.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />

@@ -63,52 +63,44 @@ namespace TeamNotification_Library.Service.Controls
             var txt = dte.ActiveDocument.Object() as TextDocument;
             if (txt.IsNull()) return;
             var selection = txt.Selection;
+//
+//            var clipboardArgs = clipboardArgumentsFactory.Get(dte.Solution.FullName, dte.ActiveDocument.FullName,
+//                                                              selection.Text, selection.CurrentLine);
 
-            var clipboardArgs = clipboardArgumentsFactory.Get(dte.Solution.FullName, dte.ActiveDocument.FullName,
-                                                              selection.Text, selection.CurrentLine);
+            var clipboardArgs = new CodeClipboardData
+                                    {
+                                        solution = dte.Solution.FullName,
+                                        document = dte.ActiveDocument.FullName,
+                                        message = selection.Text,
+                                        line = selection.CurrentLine
+                                    };
 
             clipboardStorage.Store(clipboardArgs);
-            clipboardEvents.OnClipboardChanged(source, clipboardArgs);
+            HasClipboardData = true;
+//            clipboardEvents.OnClipboardChanged(source, clipboardArgs);
         }
 
         public void HandlePaste(TextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            // IF Clipboard Data is code then do use the clipboard data to send to the backend
-            // ELSE use the normal text on the clipboard
-            //            messageTextBox.Text = clipboardStorage.Data.Text;
-            
-            
-//            var clipboard = serializer.Deserialize<ClipboardHasChanged>(Clipboard.GetText());
-//
-////             TODO: Code should not be modifiable and pretty printed
-//            //messageTextBox.Text = "Pasted Code";
-//            textBox.Text = clipboard.message;
             textBox.Text = clipboardStorage.Get<PlainClipboardData>().message;
             dataObjectPastingEventArgs.CancelCommand();
         }
 
         public void SendMessage(TextBox textBox, string roomId)
         {
-            ChatMessageData message;
             if (HasClipboardData)
             {
-                message = GetClipboardMessage();
+                if (clipboardStorage.IsCode)
+                    messageSender.SendMessage(clipboardStorage.Get<CodeClipboardData>(), roomId);
+                else
+                    messageSender.SendMessage(clipboardStorage.Get<PlainClipboardData>(), roomId);
             }
             else
             {
-                message = chatMessageDataFactory.Get(textBox.Text);
+                messageSender.SendMessage(chatMessageDataFactory.Get(textBox.Text), roomId);
             }
-            messageSender.SendMessage(message, roomId);
             textBox.Text = "";
             HasClipboardData = false;
-        }
-
-        private ChatMessageData GetClipboardMessage()
-        {
-            if (clipboardStorage.IsCode())
-                return clipboardStorage.Get<CodeClipboardData>();
-            
-            return clipboardStorage.Get<PlainClipboardData>();
         }
 
         public bool HasClipboardData { get; set; }

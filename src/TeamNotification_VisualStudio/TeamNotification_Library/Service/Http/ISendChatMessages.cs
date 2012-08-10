@@ -4,6 +4,6 @@ namespace TeamNotification_Library.Service.Http
 {
     public interface ISendChatMessages
     {
-        void SendMessage(ChatMessageData message, string roomId);
+        void SendMessage<T>(T message, string roomId) where T : ChatMessageData;
     }
 }

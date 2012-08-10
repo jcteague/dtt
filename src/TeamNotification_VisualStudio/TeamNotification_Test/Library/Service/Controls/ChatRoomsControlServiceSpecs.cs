@@ -166,7 +166,7 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                clipboardDataStorageService.Stub(x => x.IsCode()).Return(false);
+                clipboardDataStorageService.Stub(x => x.IsCode).Return(false);
                 
                 clipboardData = new PlainClipboardData { message = "foo message" };
                 clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
@@ -194,7 +194,7 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                clipboardDataStorageService.Stub(x => x.IsCode()).Return(true);
+                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
 
                 clipboardData = new CodeClipboardData { message = "foo message", solution = "blah solution"};
                 clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);

@@ -5,10 +5,8 @@ namespace TeamNotification_Library.Service.Clipboard
 {
     public interface IStoreClipboardData
     {
-        ClipboardHasChanged Data { get; }
-//        ClipboardHasChanged ToSend { get; set; }
-        void Store(ClipboardHasChanged clipboardArgs);
+        void Store<T>(T clipboardArgs) where T : ChatMessageData;
         T Get<T>() where T : ChatMessageData;
-        bool IsCode();
+        bool IsCode { get; }
     }
 }

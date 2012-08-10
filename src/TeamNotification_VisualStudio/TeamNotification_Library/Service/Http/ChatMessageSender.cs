@@ -17,7 +17,7 @@ namespace TeamNotification_Library.Service.Http
             this.serverConfiguration = serverConfiguration;
         }
 
-        public void SendMessage(ChatMessageData message, string roomId)
+        public void SendMessage<T>(T message, string roomId) where T : ChatMessageData
         {           
             var sb = new StringBuilder(serverConfiguration.Get().HREF);
             var postValues = new List<KeyValuePair<string, string>>();
