@@ -1,17 +1,13 @@
-using System.Collections.Concurrent;
 using System.Windows;
 using System.Windows.Controls;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
-using TeamNotification_Library.Service.Async;
-using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Providers;
-using System.Collections.Generic;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -20,22 +16,16 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideUser userProvider;
         private ISendHttpRequests httpClient;
         private IProvideConfiguration<ServerConfiguration> configuration;
-        private ICreateClipboardArguments clipboardArgumentsFactory;
-        private IHandleClipboardEvents clipboardEvents;
         private IStoreClipboardData clipboardStorage;
-        private ISerializeJSON serializer;
         private readonly ISendChatMessages messageSender;
         private ICreateChatMessageData chatMessageDataFactory;
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, ICreateClipboardArguments clipboardArgumentsFactory, IHandleClipboardEvents clipboardEvents, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ISerializeJSON serializer, ICreateChatMessageData chatMessageDataFactory)
+		
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
-            this.configuration = configuration;
-            this.clipboardArgumentsFactory = clipboardArgumentsFactory;
-            this.clipboardEvents = clipboardEvents;
             this.clipboardStorage = clipboardStorage;
             this.messageSender = messageSender;
-            this.serializer = serializer;
             this.chatMessageDataFactory = chatMessageDataFactory;
             this.configuration = configuration;
         }

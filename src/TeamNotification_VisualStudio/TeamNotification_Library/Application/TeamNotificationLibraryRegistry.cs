@@ -3,7 +3,6 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Http;
-using RedisConnection = BookSleeve.RedisConnection;
 
 namespace TeamNotification_Library.Application
 {

@@ -17,7 +17,6 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Async.Models;
-using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -41,12 +40,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
-        private readonly RedisClient redisClient;
         private string roomId { get; set; }
         private string currentChannel { get; set; }
-        private List<string> subscribedChannels; 
+        private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages messageListener, IRedisConnection connection, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreClipboardData clipboardStorage)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
         {
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;

@@ -176,6 +176,7 @@
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
+    <Compile Include="Service\Providers\DbConnectionProvider.cs" />
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
