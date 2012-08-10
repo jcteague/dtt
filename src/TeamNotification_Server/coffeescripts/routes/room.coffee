@@ -2,6 +2,7 @@ methods = {}
 support = require('../support/core').core
 express = require('express')
 routes_service = require('../support/routes_service')
+config = require('../config')()
 #cookies = require('cookies')
 build = routes_service.build
 
@@ -11,10 +12,9 @@ methods.user_authorized_in_room = (req, res, next) ->
         if is_user_in 
             return next() 
         res.redirect '/'
-
-redis1 = require("redis").createClient()
-redis2 = require("redis").createClient()
-redis3 = require("redis").createClient()
+redis1 = require("redis").createClient(config.redis.port, config.redis.host)
+redis2 = require("redis").createClient(config.redis.port, config.redis.host)
+redis3 = require("redis").createClient(config.redis.port, config.redis.host)
 
 list_of_listeners = {}
         

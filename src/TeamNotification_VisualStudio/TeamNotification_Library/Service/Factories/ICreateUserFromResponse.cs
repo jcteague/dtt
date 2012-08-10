@@ -5,6 +5,6 @@ namespace TeamNotification_Library.Service.Factories
 {
     public interface ICreateUserFromResponse
     {
-        User Get(User userToStore, IEnumerable<CollectionData> items);
+        User Get(LoginResponse responseToStore, IEnumerable<CollectionData> items);
     }
 }

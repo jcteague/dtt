@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -19,14 +21,14 @@ using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Providers;
 using Clipboard = System.Windows.Clipboard;
 using DataFormats = System.Windows.DataFormats;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
-using Process = System.Diagnostics.Process;
-using TextSelection = System.Windows.Documents.TextSelection;
+using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -39,7 +41,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
-
+        private readonly RedisClient redisClient;
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels; 
@@ -50,11 +52,11 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
             this.subscribedChannels = new List<string>();
-
             InitializeComponent();
-            connection.Open();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
+
+          //  var conn = connectionProvider.Get();
 
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
@@ -215,9 +217,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.SendMessage(messageTextBox, roomId);
         }
 
+        ///Todo
+        /// Make the text selectionable by adding something like this bellow
+        /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
         private void AppendMessage(string username, string message)
         {
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + " : " + message })));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom() ));
         }
 
         private void ChangeRoom(string newRoomId)

@@ -1,10 +1,15 @@
+using System;
 using System.Text;
+using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
 {
     public class MessageListener : IListenToMessages
     {
         readonly IConnectToRedis client;
+
+        private MessageReceivedAction onMessageReceivedAction;
+        private Action<string, byte[]> onMessageReceivedActionExcecution;
 
         public MessageListener(IConnectToRedis client)
         {
@@ -13,7 +18,15 @@ namespace TeamNotification_Library.Service.Http
 
         public void ListenOnChannel(string channel, MessageReceivedAction action)
         {
-            client.Subscribe(channel,(c,bytes)=> action(c, new UTF8Encoding().GetString(bytes)));
+            onMessageReceivedAction = action;
+            onMessageReceivedActionExcecution = (c, bytes) => 
+                onMessageReceivedAction(c, new UTF8Encoding().GetString(bytes));
+            client.Subscribe(channel, SubscribeResponse); // (c,bytes)=> action(c, new UTF8Encoding().GetString(bytes)));
+        }
+
+        public Action<string, byte[]> SubscribeResponse
+        {
+            get { return onMessageReceivedActionExcecution; }
         }
     }
 }

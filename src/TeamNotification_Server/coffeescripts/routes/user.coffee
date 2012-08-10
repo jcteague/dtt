@@ -2,6 +2,7 @@ build = require('../support/routes_service').build
 methods = {}
 express = require('express')
 sha256 = require('node_hash').sha256
+config = require('../config')()
 
 methods.get_user = (req, res) ->
     user_id = req.param('id')
@@ -48,7 +49,7 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
-            res.send({success: true, user:{id: user_data.id, email:user_data.email}})
+            res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email}})
         else
             res.send({})
           

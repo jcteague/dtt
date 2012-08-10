@@ -14,6 +14,6 @@ namespace TeamNotification_Library.Service.Async
         {
             if (handler != null)
                 handler(source, args);
-        } 
+        }
     }
 }

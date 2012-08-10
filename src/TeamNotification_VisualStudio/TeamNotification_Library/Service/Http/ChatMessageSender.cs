@@ -19,7 +19,7 @@ namespace TeamNotification_Library.Service.Http
 
         public void SendMessage<T>(T message, string roomId) where T : ChatMessageData
         {           
-            var sb = new StringBuilder(serverConfiguration.Get().HREF);
+            var sb = new StringBuilder(serverConfiguration.Get().Uri);
             var postValues = new List<KeyValuePair<string, string>>();
 
             sb.AppendFormat("room/{0}/messages", roomId);

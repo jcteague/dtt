@@ -6,6 +6,7 @@ using System.Windows.Data;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
@@ -32,20 +33,25 @@ namespace TeamNotification_Library.Service.Controls
 
         public Collection GetCollection()
         {
-            return httpClient.Get<Collection>(configuration.Get().HREF).Result;
+            return httpClient.Get<Collection>(configuration.Get().Uri).Result;
         }
 
         public void HandleClick(IEnumerable<CollectionData> items)
         {
             var itemsList = items.ToList();
             var content = mapper.MapFrom(itemsList);
-            var task = httpClient.Post<LoginResponse>(configuration.Get().HREF, content);
-            
+            var task = httpClient.Post<LoginResponse>(configuration.Get().Uri, content);
             var loginResponse = task.Result;
             if (loginResponse.success)
             {
-                localStorageService.Store(loginResponse.user, itemsList);
-                loginEvents.OnLoginSuccess(this);
+                foreach (var item in itemsList)
+                    if(item.type == Globals.Fields.Password)
+                    {
+                        loginResponse.user.password = item.value;
+                        break;
+                    }
+                localStorageService.Store(loginResponse);
+                loginEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
             }
             else
             {

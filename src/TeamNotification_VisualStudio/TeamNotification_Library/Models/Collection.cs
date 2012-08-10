@@ -20,6 +20,12 @@ namespace TeamNotification_Library.Models
             return "";
         }
 
+        public class RedisConfig
+        {
+            public string host { get; set; }
+            public string port { get; set; }
+        }
+
         public class Messages
         {
             public IEnumerable<CollectionData> data;

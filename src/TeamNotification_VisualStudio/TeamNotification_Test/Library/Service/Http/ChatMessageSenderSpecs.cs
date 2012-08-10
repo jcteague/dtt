@@ -30,28 +30,21 @@ namespace TeamNotification_Test.Library.Service.Http
 //                serverConfiguration.Stub(x => x.Uri).Return(siteUrl);
 //                configuration.Stub(x => x.Get()).Return(serverConfiguration);
 //
-//                chatMessageData = new CodeClipboardData
-//                                      {
-//                                          solution = "foo solution",
-//                                          document = "foo document",
-//                                          message = "foo message",
-//                                          line = 10
-//                                      };
-//
+//                message = "blah";
 //                url = siteUrl + "room/1/messages";
-//                values = new KeyValuePair<string, string>("message", chatMessageData);
+//                values = new KeyValuePair<string, string>("message", message);
 //            };
 //
 //            Because of = () =>
 //            {
-//                sut.SendMessage(chatMessageData, "1");
+//                sut.SendMessage(message, "1");
 //            };
 //
 //            It should_send_the_message_in_the_url_using_the_client = () =>
 //                httpRequestsClient.WasToldTo(x => x.Post(url, values));
 //
 //            private static ISendHttpRequests httpRequestsClient;
-//            private static CodeClipboardData chatMessageData;
+//            private static string message;
 //            private static string url;
 //            private static KeyValuePair<string, string> values;
 //        }

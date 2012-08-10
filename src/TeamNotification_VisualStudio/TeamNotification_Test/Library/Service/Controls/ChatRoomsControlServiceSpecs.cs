@@ -69,7 +69,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 string userUrl = siteUrl + "user/" + user.id;
                 string messagesUrl = siteUrl + "room/" + roomId + "/messages";
 
-                serverConfiguration.Stub(x => x.HREF).Return(siteUrl);
+                serverConfiguration.Stub(x => x.Uri).Return(siteUrl);
                 userProvider.Stub(x => x.GetUser()).Return(user);
                 configuration.Stub(x => x.Get()).Return(serverConfiguration);
 

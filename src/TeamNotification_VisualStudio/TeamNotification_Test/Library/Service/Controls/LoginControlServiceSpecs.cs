@@ -7,6 +7,7 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
@@ -30,7 +31,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 configuration = fake.an<IStoreConfiguration>();
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
 
-                configuration.Stub(x => x.HREF).Return("blah href");
+                configuration.Stub(x => x.Uri).Return("blah href");
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
             };
 
@@ -49,7 +50,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 collection = fake.an<Collection>();
 
                 var collectionTask = Task.Factory.StartNew(() => collection);
-                httpClient.Stub(x => x.Get<Collection>(configuration.HREF)).Return(collectionTask);
+                httpClient.Stub(x => x.Get<Collection>(configuration.Uri)).Return(collectionTask);
             };
 
             Because of = () =>
@@ -88,21 +89,28 @@ namespace TeamNotification_Test.Library.Service.Controls
                     id = 10,
                     email = "foo@bar.com"
                 };
-
-                var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = true, user = user });
-                httpClient.Stub(x => x.Post<LoginResponse>(configuration.HREF, postData)).Return(loginResponseTask);
+                redisConfig = new Collection.RedisConfig
+                                  {
+                                      host = "dtt.local",
+                                      port = "9367"
+                                  };
+                response = new LoginResponse {redis = redisConfig, success = true, user = user};
+                var loginResponseTask = Task.Factory.StartNew(() => response);
+                httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
 
             Because of = () =>
                 sut.HandleClick(collectionDataList);
 
             It should_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasCalled(x => x.Store(user, collectionDataList));
+                localStorageService.AssertWasCalled(x => x.Store(response));
 
             It should_call_the_on_login_success_event = () =>
-                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut));
+                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(Arg<IServiceLoginControl>.Is.Same(sut), Arg<UserHasLogged>.Matches(y => y.RedisConfig == redisConfig && y.User == user)));
 
             private static User user;
+            private static Collection.RedisConfig redisConfig;
+            private static LoginResponse response;
         }
 
         public class when_the_submit_button_is_clicked_and_the_user_and_password_are_not_correct : when_the_submit_button_is_clicked
@@ -116,14 +124,14 @@ namespace TeamNotification_Test.Library.Service.Controls
                 };
 
                 var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = false });
-                httpClient.Stub(x => x.Post<LoginResponse>(configuration.HREF, postData)).Return(loginResponseTask);
+                httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
 
             Because of = () =>
                 sut.HandleClick(collectionDataList);
 
             It should_not_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasNotCalled(x => x.Store(Arg<User>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
+                localStorageService.AssertWasNotCalled(x => x.Store(Arg<LoginResponse>.Is.Anything));
 
             It should_call_the_on_login_fail_event = () =>
                 loginEvents.AssertWasCalled(x => x.OnLoginFail(sut));
