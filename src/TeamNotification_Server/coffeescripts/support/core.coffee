@@ -12,7 +12,7 @@ orm.then (db) ->
         email : {type: 'string'},
         password : {type: 'string'}
     _entity.ChatRoomMessage = db.define 'chat_room_messages'
-        body : {type: 'string', length:250}
+        body : {type: 'string', length:1000}
         date : {type:'date', default:'now()'}
 
     _entity.ChatRoomUser = db.define 'chat_room_users'
@@ -25,6 +25,7 @@ orm.then (db) ->
 
     _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
     _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
+    #_entity.ChatRoomMessage.sync()
 
 module.exports =
     core:
