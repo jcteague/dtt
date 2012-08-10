@@ -1,9 +1,11 @@
 ﻿ using System.Collections.Generic;
  using System.Net.Http;
  using Machine.Specifications;
+ using TeamNotification_Library.Service.Factories;
  using TeamNotification_Library.Service.Mappers;
  using developwithpassion.specifications.rhinomocks;
  using developwithpassion.specifications.extensions;
+ using Rhino.Mocks;
 
 namespace TeamNotification_Test.Library.Service.Mappers
 {  
@@ -12,7 +14,13 @@ namespace TeamNotification_Test.Library.Service.Mappers
     {
         public abstract class Concern : Observes<IMapPropertiesToFormUrlEncodedContent, ObjectToFormUrlEncodedContentMapper>
         {
-        
+            Establish context = () =>
+            {
+                formFactory = depends.on<ICreateFormUrlEncodedContent>();
+
+            };
+
+            protected static ICreateFormUrlEncodedContent formFactory;
         }
 
    
@@ -31,7 +39,9 @@ namespace TeamNotification_Test.Library.Service.Mappers
                 var value2 = new KeyValuePair<string, string>("SecondProperty", "bar");
                 var value3 = new KeyValuePair<string, string>("IntegerProperty", "10");
                 var nameValueCollection = new List<KeyValuePair<string, string>> {value1, value2, value3};
+
                 form = new FormUrlEncodedContent(nameValueCollection);
+                formFactory.Stub(x => x.GetInstance(Arg<List<KeyValuePair<string, string>>>.List.ContainsAll(nameValueCollection))).Return(form);
             };
 
             Because of = () =>
