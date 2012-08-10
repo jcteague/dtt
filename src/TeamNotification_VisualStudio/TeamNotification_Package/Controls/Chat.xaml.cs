@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
@@ -21,12 +21,14 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Providers;
+using Brushes = System.Drawing.Brushes;
 using Clipboard = System.Windows.Clipboard;
 using DataFormats = System.Windows.DataFormats;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
+using Pen = System.Windows.Media.Pen;
 using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -220,8 +222,15 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
         private void AppendMessage(string username, string message)
         {
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom() ));
+            //messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
+            messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
+                    var b = new Bold();
+                    //b.Inlines.Add(new Run(username+ ": ") );
+                    //messageList.TextDecorations.Add(new TextDecoration(TextDecorationLocation.Baseline, new Pen(new SolidColorBrush(Colors.Black), 2.0), 5.0, TextDecorationUnit.FontRecommended, TextDecorationUnit.Pixel));
+                    //messageList.Text += b.ContentStart + message + "\n";
+                    messageList.Text += username + ": " + message + "\n";
+            }));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
 
         private void ChangeRoom(string newRoomId)
@@ -233,7 +242,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Children.Clear()));
+            messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Text = "" ));
             AddMessages(newRoomId);
         }
 
