@@ -1,4 +1,6 @@
-﻿namespace TeamNotification_Library.Extensions
+﻿using System;
+
+namespace TeamNotification_Library.Extensions
 {
     public static class ObjectExtensions
     {
@@ -10,6 +12,11 @@
         public static bool IsNotNull(this object obj)
         {
             return obj != null;
+        }
+
+        public static T Cast<T>(this object obj)
+        {
+            return (T) obj;
         }
     }
 }

@@ -174,6 +174,8 @@
     <Compile Include="Service\Http\RedisConnection.cs" />
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />
+    <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
+    <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
     <Compile Include="Service\Providers\DbConnectionProvider.cs" />

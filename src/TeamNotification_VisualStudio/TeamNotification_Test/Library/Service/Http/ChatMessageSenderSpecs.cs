@@ -15,7 +15,14 @@ namespace TeamNotification_Test.Library.Service.Http
 //    {
 //        public class Concern : Observes<ISendChatMessages, ChatMessageSender>
 //        {
+//            Establish context = () =>
+//            {
+//                configuration = depends.on<IProvideConfiguration<ServerConfiguration>>();
+//                httpRequestsClient = depends.on<ISendHttpRequests>();                                        
+//            };
 //
+//            protected static ISendHttpRequests httpRequestsClient;
+//            protected static IProvideConfiguration<ServerConfiguration> configuration;
 //        }
 //
 //        public class when_sending_a_message : Concern
@@ -23,28 +30,30 @@ namespace TeamNotification_Test.Library.Service.Http
 //            Establish context = () =>
 //            {
 //                string siteUrl = "MyUrl/";
-//                IProvideConfiguration<ServerConfiguration> configuration = depends.on<IProvideConfiguration<ServerConfiguration>>();
-//                IStoreConfiguration serverConfiguration = fake.an<IStoreConfiguration>();
-//                httpRequestsClient = depends.on<ISendHttpRequests>();
+//                var serverConfiguration = fake.an<IStoreConfiguration>();
 //
 //                serverConfiguration.Stub(x => x.Uri).Return(siteUrl);
 //                configuration.Stub(x => x.Get()).Return(serverConfiguration);
 //
-//                message = "blah";
+//                chatMessageData = new CodeClipboardData
+//                              {
+//                                  solution = "foo solution",
+//                                  document = "foo document",
+//                                  message = "foo message",
+//                                  line = 10
+//                              };
+//
 //                url = siteUrl + "room/1/messages";
-//                values = new KeyValuePair<string, string>("message", message);
+//                values = new KeyValuePair<string, string>("message", chatMessageData);
 //            };
 //
-//            Because of = () =>
-//            {
-//                sut.SendMessage(message, "1");
-//            };
+//            Because of = () => 
+//                sut.SendMessage(chatMessageData, "1");
 //
 //            It should_send_the_message_in_the_url_using_the_client = () =>
 //                httpRequestsClient.WasToldTo(x => x.Post(url, values));
 //
-//            private static ISendHttpRequests httpRequestsClient;
-//            private static string message;
+//            private static CodeClipboardData chatMessageData;
 //            private static string url;
 //            private static KeyValuePair<string, string> values;
 //        }
