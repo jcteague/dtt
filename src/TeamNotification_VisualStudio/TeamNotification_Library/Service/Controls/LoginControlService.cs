@@ -44,13 +44,13 @@ namespace TeamNotification_Library.Service.Controls
             var loginResponse = task.Result;
             if (loginResponse.success)
             {
-                foreach (var item in items)
-                    if(item.type == "password")
+                foreach (var item in itemsList)
+                    if(item.type == Globals.Fields.Password)
                     {
                         loginResponse.user.password = item.value;
                         break;
                     }
-                localStorageService.Store(loginResponse, itemsList);
+                localStorageService.Store(loginResponse);
                 loginEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
             }
             else

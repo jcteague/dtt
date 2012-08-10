@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
-using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.FileSystem;
 using System.Linq;
 
@@ -10,14 +9,12 @@ namespace TeamNotification_Library.Service
     public class LocalDataStorageService : IStoreDataLocally
     {
         private IHandleFiles resourceHandler;
-        private ICreateUserFromResponse userFromResponseGetter;
         private User _user;
         private Collection.RedisConfig _redisConfig;
 
-        public LocalDataStorageService(IHandleFiles resourceHandler, ICreateUserFromResponse userFromResponseGetter)
+        public LocalDataStorageService(IHandleFiles resourceHandler)
         {
             this.resourceHandler = resourceHandler;
-            this.userFromResponseGetter = userFromResponseGetter;
         }
 
         public User GetUser()
@@ -41,9 +38,8 @@ namespace TeamNotification_Library.Service
             return _redisConfig;
         }
 
-        public void Store(LoginResponse response, IEnumerable<CollectionData> items)
+        public void Store(LoginResponse response)
         {
-            //_user = userFromResponseGetter.Get(response, items);
             resourceHandler.Write(response);
         }
     }

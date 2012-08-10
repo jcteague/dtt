@@ -7,10 +7,12 @@ namespace TeamNotification_Library.Configuration
 {
     public class ServerConfiguration : IStoreConfiguration
     {
+        private string _uri = "http://dtt.local:3000/";
+        
         public string Uri
         {
-            get { return "http://dtt.local:3000/"; }
-            set { Uri = value; }
+            get { return _uri; }
+            set { _uri = value; }
         }
     }
 }

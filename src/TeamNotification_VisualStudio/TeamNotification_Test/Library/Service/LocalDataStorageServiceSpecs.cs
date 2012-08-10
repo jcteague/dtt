@@ -30,18 +30,15 @@ namespace TeamNotification_Test.Library.Service
             {
                 userObject = new User { first_name = "blah" };
                 response = new LoginResponse {user = userObject};
-                userFromResponseGetter.Stub(x => x.Get(response, items)).Return(userObject);
             };
 
             Because of = () =>
-                sut.Store(response, items);
+                sut.Store(response);
 
             It should_write_the_user_with_the_resource_handler = () =>
                 resourceHandler.AssertWasCalled(x => x.Write(response));
 
             private static LoginResponse response;
-            private static User user;
-            private static IEnumerable<CollectionData> items;
             private static User userObject;
         }
          

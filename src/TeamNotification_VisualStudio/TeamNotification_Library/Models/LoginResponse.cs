@@ -14,7 +14,7 @@ namespace TeamNotification_Library.Models
         {
             List<string> values = this.user.SerializeForFile().ToList();
             values.AddRange(this.redis.GetType().GetProperties().Select(prop => Convert.ToString(prop.GetValue(this.redis, null))));
-            return values; //GetType().GetProperties().Select(x => x.GetValue(this, null)).Where(x => x != null).Select(x => x.ToString());
+            return values;
         }
     }
 }

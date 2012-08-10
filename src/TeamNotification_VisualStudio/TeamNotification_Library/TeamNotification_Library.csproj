@@ -135,7 +135,6 @@
     <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
-    <Compile Include="Service\Factories\UserFromResponseGetter.cs" />
     <Compile Include="Service\FileSystem\Base64Encoder.cs" />
     <Compile Include="Service\FileSystem\FileHandler.cs" />
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />

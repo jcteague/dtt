@@ -95,7 +95,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                                       port = "9367"
                                   };
                 response = new LoginResponse {redis = redisConfig, success = true, user = user};
-                var loginResponseTask = Task.Factory.StartNew(() => new LoginResponse { success = true, user = user });
+                var loginResponseTask = Task.Factory.StartNew(() => response);
                 httpClient.Stub(x => x.Post<LoginResponse>(configuration.Uri, postData)).Return(loginResponseTask);
             };
 
@@ -103,10 +103,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasCalled(x => x.Store(response, collectionDataList));
+                localStorageService.AssertWasCalled(x => x.Store(response));
 
             It should_call_the_on_login_success_event = () =>
-                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(sut,new UserHasLogged(user,redisConfig)));
+                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(Arg<IServiceLoginControl>.Is.Same(sut), Arg<UserHasLogged>.Matches(y => y.RedisConfig == redisConfig && y.User == user)));
 
             private static User user;
             private static Collection.RedisConfig redisConfig;
@@ -131,7 +131,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandleClick(collectionDataList);
 
             It should_not_store_the_response_user_data_locally = () =>
-                localStorageService.AssertWasNotCalled(x => x.Store(Arg<LoginResponse>.Is.Anything, Arg<IEnumerable<CollectionData>>.Is.Anything));
+                localStorageService.AssertWasNotCalled(x => x.Store(Arg<LoginResponse>.Is.Anything));
 
             It should_call_the_on_login_fail_event = () =>
                 loginEvents.AssertWasCalled(x => x.OnLoginFail(sut));
