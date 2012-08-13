@@ -16,11 +16,14 @@ using System.Windows.Interop;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
+using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
 using DataFormats = System.Windows.DataFormats;
 using DataObject = System.Windows.DataObject;
@@ -40,19 +43,26 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
+        readonly IStoreGlobalState applicationGlobalState;
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState)
         {
+
+
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
+            this.applicationGlobalState = applicationGlobalState;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
+
+            Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
+            Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
           //  var conn = connectionProvider.Get();
 

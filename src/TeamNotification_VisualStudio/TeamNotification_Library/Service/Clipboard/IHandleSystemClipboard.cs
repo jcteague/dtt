@@ -2,7 +2,7 @@
 {
     public interface IHandleSystemClipboard
     {
-        string GetText();
+        string GetText(bool useInternal = false);
         void SetText(string text);
     }
 }

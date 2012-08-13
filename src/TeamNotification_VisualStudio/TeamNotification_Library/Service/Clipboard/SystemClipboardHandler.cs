@@ -4,14 +4,18 @@ namespace TeamNotification_Library.Service.Clipboard
 {
     public class SystemClipboardHandler : IHandleSystemClipboard
     {
-        public string GetText()
+        private string value;
+
+        public string GetText(bool useInternal = false)
         {
-            return System.Windows.Clipboard.GetText();
+            if (useInternal)
+                return System.Windows.Clipboard.GetText();
+            return value;
         }
 
         public void SetText(string text)
         {
-            System.Windows.Clipboard.SetData(DataFormats.Text, text);
+            value = text;
         }
     }
 }

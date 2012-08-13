@@ -1,4 +1,4 @@
-﻿namespace TeamNotification_Library.Service.System
+﻿namespace TeamNotification_Library.Service.LocalSystem
 {
     public interface IStoreGlobalState
     {

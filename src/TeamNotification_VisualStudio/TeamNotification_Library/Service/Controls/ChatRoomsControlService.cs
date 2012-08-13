@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using EnvDTE;
@@ -7,6 +8,7 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Controls
@@ -17,16 +19,21 @@ namespace TeamNotification_Library.Service.Controls
         private ISendHttpRequests httpClient;
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
+        readonly IStoreGlobalState applicationGlobalState;
+
         private readonly ISendChatMessages messageSender;
         private ICreateChatMessageData chatMessageDataFactory;
-		
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory)
+        private IHandleSystemClipboard systemClipboardHandler;
+
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
             this.clipboardStorage = clipboardStorage;
             this.messageSender = messageSender;
             this.chatMessageDataFactory = chatMessageDataFactory;
+            this.applicationGlobalState = applicationGlobalState;
+            this.systemClipboardHandler = systemClipboardHandler;
             this.configuration = configuration;
         }
 
@@ -47,27 +54,40 @@ namespace TeamNotification_Library.Service.Controls
 
         public void UpdateClipboard(object source, DTE dte)
         {
-            // IF we are copying text that is relevant solution code then store the CodeClipboardDataObject
-            // ELSE just store a PlainClipboardDataObject
-            var txt = dte.ActiveDocument.Object() as TextDocument;
-            if (txt.IsNull()) return;
-            var selection = txt.Selection;
-//
-//            var clipboardArgs = clipboardArgumentsFactory.Get(dte.Solution.FullName, dte.ActiveDocument.FullName,
-//                                                              selection.Text, selection.CurrentLine);
+            if (HasCopied)
+            {
+                HasCopied = false;
+                return;
+            }
 
-            var clipboardArgs = new CodeClipboardData
-                                    {
-                                        solution = dte.Solution.FullName,
-                                        document = dte.ActiveDocument.FullName,
-                                        message = selection.Text,
-                                        line = selection.CurrentLine
-                                    };
+            if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
+            {
+                var txt = dte.ActiveDocument.Object() as TextDocument;
+                if (txt.IsNull()) return;
+                var selection = txt.Selection;
+                var clipboard = new CodeClipboardData
+                {
+                    solution = dte.Solution.FullName,
+                    document = dte.ActiveDocument.FullName,
+                    message = selection.Text,
+                    line = selection.CurrentLine
+                };
 
-            clipboardStorage.Store(clipboardArgs);
+                clipboardStorage.Store(clipboard);
+                Debug.WriteLine("CODE is in the clipboard");
+            }
+            else
+            {
+                var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
+                clipboardStorage.Store(clipboard);
+                Debug.WriteLine("PLAIN is in the clipboard");
+            }
             HasClipboardData = true;
+            HasCopied = true;
 //            clipboardEvents.OnClipboardChanged(source, clipboardArgs);
         }
+
+        private bool HasCopied { get; set; }
 
         public void HandlePaste(TextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {

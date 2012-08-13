@@ -12,6 +12,7 @@ namespace TeamNotification_Library.Service.Clipboard
     public class ClipboardDataStorageService : IStoreClipboardData
     {
         public bool IsCode { get; private set; }
+        
         private readonly ISerializeJSON serializer;
         private IHandleSystemClipboard systemClipboardHandler;
 
@@ -26,22 +27,16 @@ namespace TeamNotification_Library.Service.Clipboard
         
         public void Store<T>(T clipboardArgs) where T : ChatMessageData
         {
-            if (CopyFlag)
-            {
-                CopyFlag = false;
-                return;
-            }
-
-            //var dataObject = WindowsClipboard.GetText();
-            //if (dataObject.IsNotNull()) return;
-
-//            var args = serializer.Deserialize<ClipboardHasChanged>(dataObject);
-//            if (args.Text != clipboardArgs.Text)
+//            if (CopyFlag)
+//            {
+//                CopyFlag = false;
+//                return;
+//            }
 
             IsCode = typeof (T) == typeof(CodeClipboardData);
             var data = serializer.Serialize(clipboardArgs);
             systemClipboardHandler.SetText(data);
-            CopyFlag = true;
+//            CopyFlag = true;
         }
 
         public T Get<T>() where T : ChatMessageData
