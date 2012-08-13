@@ -84,7 +84,6 @@ namespace TeamNotification_Library.Service.Controls
             }
             HasClipboardData = true;
             HasCopied = true;
-//            clipboardEvents.OnClipboardChanged(source, clipboardArgs);
         }
 
         private bool HasCopied { get; set; }

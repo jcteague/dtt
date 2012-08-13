@@ -1,36 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
-using TeamNotification_Library.Service;
-using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
-using TeamNotification_Library.Service.Providers;
 using Application = System.Windows.Application;
-using Clipboard = System.Windows.Clipboard;
-using DataFormats = System.Windows.DataFormats;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
-using MessageBox = System.Windows.MessageBox;
-using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -43,7 +30,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
-        readonly IStoreGlobalState applicationGlobalState;
+        
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
@@ -55,7 +42,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
-            this.applicationGlobalState = applicationGlobalState;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
@@ -63,8 +49,6 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
-
-          //  var conn = connectionProvider.Get();
 
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
@@ -89,7 +73,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 installedHandle = hwndSource.Handle;
                 viewerHandle = SetClipboardViewer(installedHandle);
-                hwndSource.AddHook(new HwndSourceHook(this.hwndSourceHook));
+                hwndSource.AddHook(hwndSourceHook);
             }
 
         }
@@ -116,10 +100,10 @@ namespace AvenidaSoftware.TeamNotification_Package
             switch (msg)
             {
                 case WM_CHANGECBCHAIN:
-                    this.viewerHandle = lParam;
-                    if (this.viewerHandle != IntPtr.Zero)
+                    viewerHandle = lParam;
+                    if (viewerHandle != IntPtr.Zero)
                     {
-                        SendMessage(this.viewerHandle, msg, wParam, lParam);
+                        SendMessage(viewerHandle, msg, wParam, lParam);
                     }
 
                     break;
@@ -128,56 +112,15 @@ namespace AvenidaSoftware.TeamNotification_Package
                     var dte = (DTE)Package.GetGlobalService(typeof(DTE));
                     chatRoomControlService.UpdateClipboard(this, dte);
 
-                    if (this.viewerHandle != IntPtr.Zero)
+                    if (viewerHandle != IntPtr.Zero)
                     {
-                        SendMessage(this.viewerHandle, msg, wParam, lParam);
+                        SendMessage(viewerHandle, msg, wParam, lParam);
                     }
 
                     break;
             }
             return IntPtr.Zero;
         }
-
-        private void OnClipboardChanged(EventArgs clipChange)
-        {
-            try
-            {
-                if (Clipboard.ContainsData(DataFormats.Text))
-                {
-//                    ImageSource = (System.Windows.Interop.InteropBitmap)Clipboard.GetData(DataFormats.Bitmap);
-                    Debug.WriteLine("Clipboard has changed and event has been raised");
-                    
-                }
-            }
-            catch
-            {
-                // Details: http://blogs.microsoft.co.il/blogs/tamir/archive/2007/10/24/clipboard-setdata-getdata-troubles-with-vpc-and-ts.aspx 
-            }
-        }
-
-//        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-//        {
-//            Microsoft.Win32.SaveFileDialog f = new Microsoft.Win32.SaveFileDialog();
-//            f.DefaultExt = ".jpg";
-//            f.Filter = "Jpeg images (.jpg)|*.jpg";
-//            if (f.ShowDialog() == true)
-//            {
-//                using (FileStream fs = new FileStream(f.FileName, FileMode.Create, FileAccess.Write))
-//                {
-//                    JpegBitmapEncoder enc = new JpegBitmapEncoder();
-//                    enc.Frames.Add(BitmapFrame.Create(ImageSource));
-//                    enc.Save(fs);
-//                    fs.Close();
-//                    fs.Dispose();
-//                }
-//            }
-//
-//        }
-//
-//        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-//        {
-//            e.CanExecute = ImageSource != default(BitmapSource);
-//        }
 
         IntPtr viewerHandle = IntPtr.Zero;
         IntPtr installedHandle = IntPtr.Zero;
@@ -191,9 +134,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
-        [DllImport("user32.dll")]
-        private static extern int GetForegroundWindow();
-
+        
         #endregion
 
 
