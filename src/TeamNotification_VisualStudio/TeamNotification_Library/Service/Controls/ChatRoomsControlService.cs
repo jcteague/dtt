@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
@@ -10,6 +11,7 @@ using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
+using TextRange = System.Windows.Documents.TextRange;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -88,13 +90,14 @@ namespace TeamNotification_Library.Service.Controls
 
         private bool HasCopied { get; set; }
 
-        public void HandlePaste(TextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
+        public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            textBox.Text = clipboardStorage.Get<PlainClipboardData>().message;
+            textBox.Document.Blocks.Clear();
+            textBox.Document.Blocks.Add(new Paragraph(new Run(clipboardStorage.Get<PlainClipboardData>().message)));
             dataObjectPastingEventArgs.CancelCommand();
         }
 
-        public void SendMessage(TextBox textBox, string roomId)
+        public void SendMessage(RichTextBox textBox, string roomId)
         {
             if (HasClipboardData)
             {
@@ -105,9 +108,14 @@ namespace TeamNotification_Library.Service.Controls
             }
             else
             {
-                messageSender.SendMessage(chatMessageDataFactory.Get(textBox.Text), roomId);
+                string str = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
+                str = str.Remove(str.Length - 2,2);
+                if (str != "")
+                {
+                    messageSender.SendMessage(chatMessageDataFactory.Get(str), roomId);
+                }
             }
-            textBox.Text = "";
+            textBox.Document.Blocks.Clear();
             HasClipboardData = false;
         }
 

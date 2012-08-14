@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using AvenidaSoftware.TeamNotification_Package;
 using EnvDTE;
 using Machine.Specifications;
@@ -20,6 +21,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Providers;
 using developwithpassion.specifications.rhinomocks;
 using Rhino.Mocks;
+using TextRange = System.Windows.Documents.TextRange;
 
 namespace TeamNotification_Test.Library.Service.Controls
 {
@@ -100,7 +102,8 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                textBox = fake.an<TextBox>();
+                textBox = new RichTextBox();
+                textBox.Document.Blocks.Clear();
                 args = new DataObjectPastingEventArgs(new DataObject(DataFormats.Text, "foo"), false, DataFormats.Text);
 
                 clipboardText = "blah text";
@@ -116,9 +119,12 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HandlePaste(textBox, args);
 
             It should_set_the_textbox_text_to_the_clipboard_message = () =>
-                textBox.Text.ShouldEqual(clipboardText);
+            {
+                var s = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
+                s.ShouldEqual(clipboardText + "\r\n");
+            };
 
-            private static TextBox textBox;
+            private static RichTextBox textBox;
             private static DataObjectPastingEventArgs args;
             private static string clipboardText;
         }
@@ -127,11 +133,12 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                textBox = new TextBox {Text = "foo message"};
+                textBox = new RichTextBox();
+                textBox.AppendText("foo message" );
                 roomId = "blah room id";
             };
 
-            protected static TextBox textBox;
+            protected static RichTextBox textBox;
             protected static string roomId;
         }
 
@@ -139,12 +146,12 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                var message = textBox.Text;
+                var message = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
                 chatMessageData = new ChatMessageData
                               {
-                                  message = message
+                                  message = message.Remove(message.Length - 2)
                               };
-                chatMessageDataFactory.Stub(x => x.Get(message)).Return(chatMessageData);
+                chatMessageDataFactory.Stub(x => x.Get(chatMessageData.message)).Return(chatMessageData);
             };
 
             Because of = () =>
@@ -157,7 +164,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
 
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static ChatMessageData chatMessageData;
         }
@@ -185,7 +192,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HasClipboardData.ShouldBeFalse();
             
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static PlainClipboardData clipboardData;
         }
@@ -213,7 +220,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HasClipboardData.ShouldBeFalse();
 
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static CodeClipboardData clipboardData;
         }

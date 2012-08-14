@@ -4,9 +4,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
@@ -14,10 +17,12 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
+using Brushes = System.Drawing.Brushes;
 using Application = System.Windows.Application;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
+using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -34,6 +39,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
+        private FlowDocument myFlowDoc;
 
         public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState)
         {
@@ -46,7 +52,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-
+            myFlowDoc = new FlowDocument();
+            messageList.Document = myFlowDoc;
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -156,7 +163,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+          if (e.Key == Key.Enter)
                 this.SendMessage();
         }
         #endregion
@@ -171,8 +178,22 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
         private void AppendMessage(string username, string message)
         {
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom() ));
+            //messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
+            messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
+                if (message == "Code!")
+                {
+                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = "var foo = \"sadfasf\"\nsdfguinsdgiunjsdgouinsgdoiunsgduionsdgoinsdg;\ndefoguinsweoginsdg", CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
+                    myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
+                }
+                else
+                {
+                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+                    userMessageParagraph.Inlines.Add(new Run(message));
+                    myFlowDoc.Blocks.Add(userMessageParagraph);
+                }
+            }));
+            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
 
         private void ChangeRoom(string newRoomId)
@@ -184,7 +205,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Children.Clear()));
+            //messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Text = "" ));
             AddMessages(newRoomId);
         }
 
