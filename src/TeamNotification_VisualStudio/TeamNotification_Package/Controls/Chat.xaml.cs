@@ -153,7 +153,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 var m = serializeJson.Deserialize<MessageData>(payload);
                 var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
-                AppendMessage(m.name, messageBody.message);
+                AppendMessage(m.name, messageBody);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -176,20 +176,21 @@ namespace AvenidaSoftware.TeamNotification_Package
         ///Todo
         /// Make the text selectionable by adding something like this bellow
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
-        private void AppendMessage(string username, string message)
+        private void AppendMessage(string username, MessageBody message)
         {
             //messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
-                if (message == "Code!")
+                if (!message.solution.IsNullOrEmpty())
                 {
-                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = "var foo = \"sadfasf\"\nsdfguinsdgiunjsdgouinsgdoiunsgduionsdgoinsdg;\ndefoguinsweoginsdg", CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
+//                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = "var foo = \"sadfasf\"\nsdfguinsdgiunjsdgouinsgdoiunsgduionsdgoinsdg;\ndefoguinsweoginsdg", CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
+                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
                     myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
                 }
                 else
                 {
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
                     userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
-                    userMessageParagraph.Inlines.Add(new Run(message));
+                    userMessageParagraph.Inlines.Add(new Run(message.message));
                     myFlowDoc.Blocks.Add(userMessageParagraph);
                 }
             }));
@@ -217,13 +218,16 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 var newMessage = Collection.getField(message.data, "body");
                 var username = Collection.getField(message.data, "user");
-                AppendMessage(username,newMessage);
+//                AppendMessage(username,newMessage);
+                AppendMessage(username, new MessageBody());
             }
         }
+        
         private List<Collection.Link> formatRooms(IEnumerable<Collection.Room> unformattedRoom)
         {
             return unformattedRoom.Select(room => new Collection.Link {name = Collection.getField(room.data, "name"), rel = Collection.getField(room.data,"id")}).ToList();
         }
+        
         private void OnRoomSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var roomData = (Collection.Link) e.AddedItems[0];
