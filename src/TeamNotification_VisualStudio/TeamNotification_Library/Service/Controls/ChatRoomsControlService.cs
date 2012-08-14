@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
@@ -93,7 +94,12 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             textBox.Document.Blocks.Clear();
-            textBox.Document.Blocks.Add(new Paragraph(new Run(clipboardStorage.Get<PlainClipboardData>().message)));
+            
+            if(clipboardStorage.IsCode){
+                textBox.Document.Blocks.Add(new BlockUIContainer(new SyntaxHighlightBox { Text = clipboardStorage.Get<PlainClipboardData>().message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] }));;
+            }else{
+                textBox.Document.Blocks.Add(new Paragraph(new Run(clipboardStorage.Get<PlainClipboardData>().message)));
+            }
             dataObjectPastingEventArgs.CancelCommand();
         }
 
@@ -115,9 +121,15 @@ namespace TeamNotification_Library.Service.Controls
                     messageSender.SendMessage(chatMessageDataFactory.Get(str), roomId);
                 }
             }
-            textBox.Document.Blocks.Clear();
+            ClearRichTextBox(textBox);
         }
 
         public bool HasClipboardData { get; set; }
+
+        public void ClearRichTextBox(RichTextBox textBox)
+        {
+            // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
+            textBox.Document = new FlowDocument();
+        }
     }
 }

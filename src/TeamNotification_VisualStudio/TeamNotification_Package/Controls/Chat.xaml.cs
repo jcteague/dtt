@@ -13,6 +13,7 @@ using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -212,6 +213,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
             myFlowDoc = new FlowDocument();
             messageList.Document = myFlowDoc;
+//            chatRoomControlService.ClearRichTextBox(messageList, myFlowDoc);
             
             AddMessages(newRoomId);
         }

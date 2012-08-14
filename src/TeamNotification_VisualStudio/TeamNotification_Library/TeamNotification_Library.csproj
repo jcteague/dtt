@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AurelienRibon.Ui.SyntaxHighlightBox">
+      <HintPath>..\packages\AurelienRibon.Ui.SyntaxHighlightBox\lib\AurelienRibon.Ui.SyntaxHighlightBox.dll</HintPath>
+    </Reference>
     <Reference Include="BookSleeve">
       <HintPath>..\packages\BookSleeve.1.1.0.7\lib\BookSleeve.dll</HintPath>
     </Reference>
@@ -181,6 +184,7 @@
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
+    <Compile Include="Service\MyHighlighter.cs" />
     <Compile Include="Service\Providers\DbConnectionProvider.cs" />
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
