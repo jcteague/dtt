@@ -11,7 +11,7 @@ class RoomMessagesCollection
             return {
                 "data": [
                     { 'name':'user', 'value': message.name}
-                    { 'name':'body', 'value': JSON.parse(message.body).message} 
+                    { 'name':'body', 'value': message.body} 
                     { 'name':'datetime', 'value':message.date }
                 ]
             }

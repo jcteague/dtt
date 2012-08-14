@@ -51,7 +51,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            ("<p><b>#{name}<span class='chat_message_date'>(#{parse_date(new Date(date),curr_date) })</span>:</b> #{body}</p>")
+            ("<p><b>#{name}<span class='chat_message_date'>(#{parse_date(new Date(date),curr_date) })</span>:</b> #{JSON.parse(body).message}</p>")
         append_to: (parent) ->
             @$el.appendTo parent
 
