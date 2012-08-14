@@ -178,12 +178,14 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
         private void AppendMessage(string username, MessageBody message)
         {
-            //messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
                 if (!message.solution.IsNullOrEmpty())
                 {
-//                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = "var foo = \"sadfasf\"\nsdfguinsdgiunjsdgouinsgdoiunsgduionsdgoinsdg;\ndefoguinsweoginsdg", CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
                     var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
+                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+
+                    myFlowDoc.Blocks.Add(userMessageParagraph);
                     myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
                 }
                 else
@@ -206,7 +208,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            //messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Text = "" ));
+
+            // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
+            myFlowDoc = new FlowDocument();
+            messageList.Document = myFlowDoc;
+            
             AddMessages(newRoomId);
         }
 
@@ -216,10 +222,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             var collection = chatRoomControlService.GetMessagesCollection(this.roomId);
             foreach (var message in collection.messages)
             {
-                var newMessage = Collection.getField(message.data, "body");
+                var newMessage = serializeJson.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
                 var username = Collection.getField(message.data, "user");
-//                AppendMessage(username,newMessage);
-                AppendMessage(username, new MessageBody());
+                AppendMessage(username, newMessage);
             }
         }
         

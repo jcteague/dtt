@@ -116,7 +116,6 @@ namespace TeamNotification_Library.Service.Controls
                 }
             }
             textBox.Document.Blocks.Clear();
-            HasClipboardData = false;
         }
 
         public bool HasClipboardData { get; set; }
