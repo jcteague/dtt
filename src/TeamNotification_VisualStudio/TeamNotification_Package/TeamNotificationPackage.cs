@@ -117,6 +117,22 @@ namespace AvenidaSoftware.TeamNotification_Package
             Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
+            IVsProfileDataManager pdm = GetService(typeof(SVsProfileDataManager)) as IVsProfileDataManager;
+
+
+            string settingsLocation;
+            pdm.GetDefaultSettingsLocation(out settingsLocation);
+            Debug.WriteLine(settingsLocation);
+            
+            IVsProfileSettingsTree settingsTree;
+            Debug.WriteLine(pdm.GetSettingsForExport(out settingsTree));
+
+            string fullPath;
+            settingsTree.GetFullPath(out fullPath);
+
+            int count;
+            settingsTree.GetChildCount(out count);
+
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if ( null != mcs )
