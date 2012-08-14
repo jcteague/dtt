@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using AvenidaSoftware.TeamNotification_Package;
 using EnvDTE;
 using Machine.Specifications;
@@ -127,11 +128,12 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                textBox = new TextBox {Text = "foo message"};
+                textBox = new RichTextBox();
+                textBox.AppendText("foo message" );
                 roomId = "blah room id";
             };
 
-            protected static TextBox textBox;
+            protected static RichTextBox textBox;
             protected static string roomId;
         }
 
@@ -139,7 +141,7 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                var message = textBox.Text;
+                var message = textBox.Document.ContentStart.GetTextInRun(LogicalDirection.Forward);
                 chatMessageData = new ChatMessageData
                               {
                                   message = message
@@ -157,7 +159,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
 
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static ChatMessageData chatMessageData;
         }
@@ -185,7 +187,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HasClipboardData.ShouldBeFalse();
             
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static PlainClipboardData clipboardData;
         }
@@ -213,7 +215,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 sut.HasClipboardData.ShouldBeFalse();
 
             It should_empty_the_text_box = () =>
-                textBox.Text.ShouldBeEmpty();
+                textBox.Document.Blocks.Count.ShouldEqual(0);
 
             private static CodeClipboardData clipboardData;
         }

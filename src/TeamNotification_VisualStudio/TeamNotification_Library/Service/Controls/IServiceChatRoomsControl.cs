@@ -11,7 +11,7 @@ namespace TeamNotification_Library.Service.Controls
         Collection GetMessagesCollection(string roomId);
         void UpdateClipboard(object source, DTE dte);
         void HandlePaste(TextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
-        void SendMessage(TextBox textBox, string roomId);
+        void SendMessage(RichTextBox textBox, string roomId);
         bool HasClipboardData { get; set; }
     }
 }

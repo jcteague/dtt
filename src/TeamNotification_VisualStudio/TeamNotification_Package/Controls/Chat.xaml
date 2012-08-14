@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
-             xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package" mc:Ignorable="d" 
+             xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package"
+             xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="424"
              Name="MyToolWindow">
             <UserControl.Resources>
@@ -20,16 +22,18 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Name="grid1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,45" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <Grid Name="grid1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,55" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
-                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" Background="White" Margin="2,2,2,2">
-                        <TextBox  Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" TextWrapping="Wrap" />
+                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" Background="White" Margin="2,2,2,10">
+                        <RichTextBox  Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" />
+                        <!--<shbox:SyntaxHighlightBox IsLineNumbersMarginVisible="True" x:Name="shbox" />-->
+                        <!--<TextBlock  Name="messageList"  Height="auto" Width="auto" TextWrapping="Wrap" />-->
                     </StackPanel>
                 </Border>
             </ScrollViewer>
         </Grid>
-        <Grid Name="roomsGrid" Width="auto" Grid.Row="0" Grid.Column="2" Margin="10,15,15,45" Grid.RowSpan="2">
+        <Grid Name="roomsGrid" Width="auto" Grid.Row="0" Grid.Column="2" Margin="10,15,15,55" Grid.RowSpan="2">
             <ListBox Name="lstRooms" Width="Auto" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="Single" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged" >
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="ListItem">
@@ -45,8 +49,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-            <TextBox Width="auto" HorizontalAlignment="Stretch" Height="24" Name="messageTextBox" Text="" VerticalAlignment="Bottom" Margin="15,0,0,15" KeyDown="CheckKeyboard"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-            <Button Content="Send" Height="24" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Grid.Column="1" />
+            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="45" Name="messageTextBox" VerticalAlignment="Bottom" Margin="15,0,0,5" KeyDown="CheckKeyboard"   VerticalScrollBarVisibility="Auto" >
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+            <Button Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,12" Grid.Column="1" />
         </Grid>
     </Grid>
 </UserControl>

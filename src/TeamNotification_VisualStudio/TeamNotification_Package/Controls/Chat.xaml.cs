@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
@@ -45,6 +46,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
+        private FlowDocument myFlowDoc;
 
         public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson)
         {
@@ -55,7 +57,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-
+            myFlowDoc = new FlowDocument();
+            messageList.Document = myFlowDoc;
           //  var conn = connectionProvider.Get();
 
             Resources.Add("rooms", roomLinks);
@@ -67,7 +70,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            chatRoomControlService.HandlePaste(messageTextBox, e);
+            //chatRoomControlService.HandlePaste(messageTextBox, e);
         }
 
         #region Win32_Clipboard
@@ -207,7 +210,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+          if (e.Key == Key.Enter)
                 this.SendMessage();
         }
         #endregion
@@ -224,11 +227,18 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             //messageList.Dispatcher.Invoke((MethodInvoker)(() => messageList.Children.Add(new Label { Content = username + ": " + message, Margin = new Thickness(5.0, 0.0, 0.0, 5.0) })));
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
-                    var b = new Bold();
-                    //b.Inlines.Add(new Run(username+ ": ") );
-                    //messageList.TextDecorations.Add(new TextDecoration(TextDecorationLocation.Baseline, new Pen(new SolidColorBrush(Colors.Black), 2.0), 5.0, TextDecorationUnit.FontRecommended, TextDecorationUnit.Pixel));
-                    //messageList.Text += b.ContentStart + message + "\n";
-                    messageList.Text += username + ": " + message + "\n";
+                if (message == "Code!")
+                {
+                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = "var foo = \"sadfasf\"\nsdfguinsdgiunjsdgouinsgdoiunsgduionsdgoinsdg;\ndefoguinsweoginsdg", CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
+                    myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
+                }
+                else
+                {
+                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+                    userMessageParagraph.Inlines.Add(new Run(message));
+                    myFlowDoc.Blocks.Add(userMessageParagraph);
+                }
             }));
             messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
@@ -242,7 +252,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Text = "" ));
+            //messageList.Dispatcher.Invoke((MethodInvoker) (() => messageList.Text = "" ));
             AddMessages(newRoomId);
         }
 
