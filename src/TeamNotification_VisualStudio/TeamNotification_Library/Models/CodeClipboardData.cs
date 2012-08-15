@@ -1,6 +1,8 @@
+using System.Windows;
+
 namespace TeamNotification_Library.Models
 {
-    public class CodeClipboardData : ChatMessageData
+    public class CodeClipboardData : ChatMessageData, ICanBeMappedAsResources
     {
         public string message { get; set; }
 
@@ -9,5 +11,16 @@ namespace TeamNotification_Library.Models
         public string document { get; set; }
 
         public int line { get; set; }
+
+        public ResourceDictionary AsResources()
+        {
+            var resources = new ResourceDictionary();
+            resources["solution"] = solution;
+            resources["document"] = document;
+            resources["line"] = line;
+            resources["message"] = message;
+
+            return resources;
+        }
     }
 }
