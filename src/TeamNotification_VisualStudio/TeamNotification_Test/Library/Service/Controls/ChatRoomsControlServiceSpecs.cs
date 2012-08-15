@@ -129,101 +129,116 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static string clipboardText;
         }
 
-        public abstract class when_sending_a_message : Concern
+        public class when_sending_a_message : Concern
         {
             Establish context = () =>
             {
                 textBox = new RichTextBox();
-                textBox.AppendText("foo message" );
-                roomId = "blah room id";
+                block1 = new Paragraph(new Run("Hello"));
+                textBox.Document.Blocks.Add(block1);
+                block2 = new BlockUIContainer(new UIElement());
+                textBox.Document.Blocks.Add(block2);
+            };
+
+            Because of = () =>
+                sut.SendMessage(textBox, roomId);
+
+            It should_send_the_messages_in_the_text_box = () =>
+            {
+                chatMessageSender.AssertWasCalled(x => x.SendMessage(block1, roomId));
+                chatMessageSender.AssertWasCalled(x => x.SendMessage(block2, roomId));
             };
 
             protected static RichTextBox textBox;
             protected static string roomId;
+            private static Paragraph block1;
+            private static BlockUIContainer block2;
         }
 
-        public class when_sending_a_message_and_there_is_no_data_in_the_clipboard_buffer : when_sending_a_message
-        {
-            Establish context = () =>
-            {
-                var message = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
-                chatMessageData = new ChatMessageData
-                              {
-                                  message = message.Remove(message.Length - 2)
-                              };
-                chatMessageDataFactory.Stub(x => x.Get(chatMessageData.message)).Return(chatMessageData);
-            };
 
-            Because of = () =>
-            {
-                sut.HasClipboardData = false;
-                sut.SendMessage(textBox, roomId);
-            };
-            
-            It should_send_the_message_with_the_textbox_text = () =>
-                chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
 
-            It should_empty_the_text_box = () =>
-                textBox.Document.Blocks.Count.ShouldEqual(0);
-
-            private static ChatMessageData chatMessageData;
-        }
-
-        public class when_sending_a_message_and_there_is_plain_data_on_the_clipboard_buffer : when_sending_a_message
-        {
-            Establish context = () =>
-            {
-                clipboardDataStorageService.Stub(x => x.IsCode).Return(false);
-                
-                clipboardData = new PlainClipboardData { message = "foo message" };
-                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
-            };
-
-            Because of = () =>
-            {
-                sut.HasClipboardData = true;
-                sut.SendMessage(textBox, roomId);
-            };
-
-            It should_send_the_message_from_the_clipboard = () =>
-                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
-
-            It should_unset_the_has_clipboard_data_flag = () =>
-                sut.HasClipboardData.ShouldBeFalse();
-            
-            It should_empty_the_text_box = () =>
-                textBox.Document.Blocks.Count.ShouldEqual(0);
-
-            private static PlainClipboardData clipboardData;
-        }
-
-        public class when_sending_a_message_and_there_is_code_data_on_the_clipboard_buffer : when_sending_a_message
-        {
-            Establish context = () =>
-            {
-                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
-
-                clipboardData = new CodeClipboardData { message = "foo message", solution = "blah solution"};
-                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
-            };
-
-            Because of = () =>
-            {
-                sut.HasClipboardData = true;
-                sut.SendMessage(textBox, roomId);
-            };
-
-            It should_send_the_message_from_the_clipboard = () =>
-                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
-
-            It should_unset_the_has_clipboard_data_flag = () =>
-                sut.HasClipboardData.ShouldBeFalse();
-
-            It should_empty_the_text_box = () =>
-                textBox.Document.Blocks.Count.ShouldEqual(0);
-
-            private static CodeClipboardData clipboardData;
-        }
+//        public class when_sending_a_message_and_there_is_no_data_in_the_clipboard_buffer : when_sending_a_message
+//        {
+//            Establish context = () =>
+//            {
+//                var message = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
+//                chatMessageData = new ChatMessageData
+//                              {
+//                                  message = message.Remove(message.Length - 2)
+//                              };
+//                chatMessageDataFactory.Stub(x => x.Get(chatMessageData.message)).Return(chatMessageData);
+//            };
+//
+//            Because of = () =>
+//            {
+//                sut.HasClipboardData = false;
+//                sut.SendMessage(textBox, roomId);
+//            };
+//            
+//            It should_send_the_message_with_the_textbox_text = () =>
+//                chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
+//
+//            It should_empty_the_text_box = () =>
+//                textBox.Document.Blocks.Count.ShouldEqual(0);
+//
+//            private static ChatMessageData chatMessageData;
+//        }
+//
+//        public class when_sending_a_message_and_there_is_plain_data_on_the_clipboard_buffer : when_sending_a_message
+//        {
+//            Establish context = () =>
+//            {
+//                clipboardDataStorageService.Stub(x => x.IsCode).Return(false);
+//                
+//                clipboardData = new PlainClipboardData { message = "foo message" };
+//                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
+//            };
+//
+//            Because of = () =>
+//            {
+//                sut.HasClipboardData = true;
+//                sut.SendMessage(textBox, roomId);
+//            };
+//
+//            It should_send_the_message_from_the_clipboard = () =>
+//                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
+//
+//            It should_unset_the_has_clipboard_data_flag = () =>
+//                sut.HasClipboardData.ShouldBeFalse();
+//            
+//            It should_empty_the_text_box = () =>
+//                textBox.Document.Blocks.Count.ShouldEqual(0);
+//
+//            private static PlainClipboardData clipboardData;
+//        }
+//
+//        public class when_sending_a_message_and_there_is_code_data_on_the_clipboard_buffer : when_sending_a_message
+//        {
+//            Establish context = () =>
+//            {
+//                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
+//
+//                clipboardData = new CodeClipboardData { message = "foo message", solution = "blah solution"};
+//                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
+//            };
+//
+//            Because of = () =>
+//            {
+//                sut.HasClipboardData = true;
+//                sut.SendMessage(textBox, roomId);
+//            };
+//
+//            It should_send_the_message_from_the_clipboard = () =>
+//                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
+//
+//            It should_unset_the_has_clipboard_data_flag = () =>
+//                sut.HasClipboardData.ShouldBeFalse();
+//
+//            It should_empty_the_text_box = () =>
+//                textBox.Document.Blocks.Count.ShouldEqual(0);
+//
+//            private static CodeClipboardData clipboardData;
+//        }
 
         // TODO: Find a way to mock DTE to test implementation
 //        public class when_updating_the_clipboard : Concern

@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -92,12 +95,10 @@ namespace TeamNotification_Library.Service.Controls
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            textBox.Document.Blocks.Clear();
-            
             if(clipboardStorage.IsCode)
             {
-                textBox.Document.Blocks.Add(new BlockUIContainer(new SyntaxHighlightBox { Text = clipboardStorage.Get<PlainClipboardData>().message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] }));;
-                HasClipboardData = true;
+                var data = clipboardStorage.Get<CodeClipboardData>();
+                textBox.Document.Blocks.Add(new BlockUIContainer(new SyntaxHighlightBox { Text = data.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] }){Resources = data.AsResources()});
             }
             else
             {
@@ -108,28 +109,9 @@ namespace TeamNotification_Library.Service.Controls
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            if (HasClipboardData)
-            {
-                if (clipboardStorage.IsCode)
-                    messageSender.SendMessage(clipboardStorage.Get<CodeClipboardData>(), roomId);
-                else
-                    messageSender.SendMessage(clipboardStorage.Get<PlainClipboardData>(), roomId);
-
-                HasClipboardData = false;
-            }
-            else
-            {
-                string str = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
-                str = str.Remove(str.Length - 2,2);
-                if (str != "")
-                {
-                    messageSender.SendMessage(chatMessageDataFactory.Get(str), roomId);
-                }
-            }
+            textBox.Document.Blocks.Each(x => messageSender.SendMessage(x, roomId));
             ClearRichTextBox(textBox);
         }
-
-        public bool HasClipboardData { get; set; }
 
         public void ClearRichTextBox(RichTextBox textBox)
         {

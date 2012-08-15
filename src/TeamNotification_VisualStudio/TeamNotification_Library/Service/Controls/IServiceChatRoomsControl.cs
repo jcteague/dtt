@@ -13,7 +13,6 @@ namespace TeamNotification_Library.Service.Controls
         void UpdateClipboard(object source, DTE dte);
         void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
         void SendMessage(RichTextBox textBox, string roomId);
-        bool HasClipboardData { get; set; }
         void ClearRichTextBox(RichTextBox textBox);
     }
 }

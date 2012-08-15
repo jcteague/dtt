@@ -96,12 +96,16 @@
     <Compile Include="Configuration\RedisConfigurationProvider.cs" />
     <Compile Include="Configuration\ServerConfiguration.cs" />
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\WPFExtensions.cs" />
     <Compile Include="Models\CodeClipboardData.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ChatMessageData.cs" />
+    <Compile Include="Models\ExtendedSyntaxHighlightBox.cs" />
+    <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\PlainClipboardData.cs" />
@@ -161,6 +165,7 @@
     <Compile Include="Service\FileSystem\FileHandler.cs" />
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
     <Compile Include="Service\Http\IGetHttpClientHandler.cs" />
