@@ -20,6 +20,7 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
 using Brushes = System.Drawing.Brushes;
 using Application = System.Windows.Application;
+using Button = System.Windows.Controls.Button;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
@@ -182,9 +183,17 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
                 if (!message.solution.IsNullOrEmpty())
                 {
+                    //messageList.IsDocumentEnabled = true;
                     var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                    myFlowDoc.IsEnabled = true;
+                    myFlowDoc.IsHyphenationEnabled = true;
+
+                    var pasteLink = new Hyperlink(new Run("Paste code")) { IsEnabled = true, CommandParameter = message };
+                    pasteLink.Click += new RoutedEventHandler(PasteCode);
+                    userMessageParagraph.IsHyphenationEnabled = true;
                     userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+                    userMessageParagraph.Inlines.Add(pasteLink);
 
                     myFlowDoc.Blocks.Add(userMessageParagraph);
                     myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
@@ -199,6 +208,14 @@ namespace AvenidaSoftware.TeamNotification_Package
             }));
             messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
+
+        private void PasteCode(object sender, EventArgs args)
+        {
+            var message = (MessageBody)((Hyperlink) sender).CommandParameter;
+
+            return;
+        }
+
 
         private void ChangeRoom(string newRoomId)
         {
