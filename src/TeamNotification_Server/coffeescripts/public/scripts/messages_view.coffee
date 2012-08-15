@@ -14,10 +14,11 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 me.$el.empty()
                 for message in me.model.attributes.messages
                     me.$el.append me.render_message message, newDate
+                prettyPrint()
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
                 
             if @model.has('messages')
-                #setInterval((() -> render_model() ), 10000)
+                setInterval((() -> render_model() ), 10000)
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}

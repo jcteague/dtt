@@ -5,6 +5,9 @@ html
     link(type='text/css', rel='stylesheet', href='/stylesheets/style.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/prettify.css')
+    
+  body
+    #content!= body
     script(type='text/javascript', src='/scripts/prettify/prettify.js')
     script(type='text/javascript', src='/scripts/prettify/lang-go.js')
     script(type='text/javascript', src='/scripts/prettify/lang-hs.js')
@@ -12,11 +15,4 @@ html
     script(type='text/javascript', src='/scripts/prettify/lang-ml.js')
     script(type='text/javascript', src='/scripts/prettify/lang-proto.js')
     script(type='text/javascript', src='/scripts/prettify/lang-scala.js')
-    script(type='text/javascript', src='/scripts/prettify/lang-sql.js')
-    script(type='text/javascript', src='/scripts/prettify/lang-wiki.js')
     script(type='text/javascript', src='/scripts/prettify/lang-vhdl.js')
-    script(type='text/javascript', src='/scripts/prettify/lang-vb.js')
-    script(type='text/javascript', src='/scripts/prettify/lang-yaml.js')
-    
-  body
-    #content!= body
