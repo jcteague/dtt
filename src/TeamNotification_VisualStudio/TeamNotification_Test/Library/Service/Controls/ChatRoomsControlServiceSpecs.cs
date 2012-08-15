@@ -17,6 +17,7 @@ using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories;
+using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Providers;
 using developwithpassion.specifications.rhinomocks;
@@ -41,6 +42,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 chatMessageSender = depends.on<ISendChatMessages>();
                 jsonSerializer = depends.on<ISerializeJSON>();
                 chatMessageDataFactory = depends.on<ICreateChatMessageData>();
+                syntaxBlockUIFactory = depends.on<ICreateSyntaxBlockUIInstances>();
             };
 
             protected static IProvideUser userProvider;
@@ -52,6 +54,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static ISendChatMessages chatMessageSender;
             protected static ISerializeJSON jsonSerializer;
             protected static ICreateChatMessageData chatMessageDataFactory;
+            protected static ICreateSyntaxBlockUIInstances syntaxBlockUIFactory;
         }
 
         public class When_getting_a_collection : Concern
@@ -98,20 +101,29 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static Collection messagesCollection;
         }
 
-        public class when_handling_the_paste : Concern
+        public abstract class when_handling_the_paste : Concern
         {
             Establish context = () =>
             {
                 textBox = new RichTextBox();
                 textBox.Document.Blocks.Clear();
                 args = new DataObjectPastingEventArgs(new DataObject(DataFormats.Text, "foo"), false, DataFormats.Text);
+            };
 
+            protected static RichTextBox textBox;
+            protected static DataObjectPastingEventArgs args;
+        }
+
+        public class when_handling_the_paste_and_the_clipboard_does_not_have_code : when_handling_the_paste
+        {
+            Establish context = () =>
+            {
                 clipboardText = "blah text";
 
                 var clipboardData = new PlainClipboardData
-                                        {
-                                            message = clipboardText
-                                        };
+                {
+                    message = clipboardText
+                };
                 clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
             };
 
@@ -124,9 +136,34 @@ namespace TeamNotification_Test.Library.Service.Controls
                 s.ShouldEqual(clipboardText + "\r\n");
             };
 
-            private static RichTextBox textBox;
-            private static DataObjectPastingEventArgs args;
             private static string clipboardText;
+        }
+
+        public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
+        {
+            Establish context = () =>
+            {
+                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
+
+                var clipboardData = new CodeClipboardData
+                {
+                    message = "blah message",
+                    solution = "blah solution",
+                    document = "blah document"
+                };
+                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
+                
+                syntaxHighlightBox = new BlockUIContainer();
+                syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
+            };
+
+            Because of = () =>
+                sut.HandlePaste(textBox, args);
+
+            It should_set_the_textbox_with_a_syntax_highlight_block = () =>
+                textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
+
+            private static BlockUIContainer syntaxHighlightBox;
         }
 
         public class when_sending_a_message : Concern
@@ -154,91 +191,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static Paragraph block1;
             private static BlockUIContainer block2;
         }
-
-
-
-//        public class when_sending_a_message_and_there_is_no_data_in_the_clipboard_buffer : when_sending_a_message
-//        {
-//            Establish context = () =>
-//            {
-//                var message = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
-//                chatMessageData = new ChatMessageData
-//                              {
-//                                  message = message.Remove(message.Length - 2)
-//                              };
-//                chatMessageDataFactory.Stub(x => x.Get(chatMessageData.message)).Return(chatMessageData);
-//            };
-//
-//            Because of = () =>
-//            {
-//                sut.HasClipboardData = false;
-//                sut.SendMessage(textBox, roomId);
-//            };
-//            
-//            It should_send_the_message_with_the_textbox_text = () =>
-//                chatMessageSender.AssertWasCalled(x => x.SendMessage(chatMessageData, roomId));
-//
-//            It should_empty_the_text_box = () =>
-//                textBox.Document.Blocks.Count.ShouldEqual(0);
-//
-//            private static ChatMessageData chatMessageData;
-//        }
-//
-//        public class when_sending_a_message_and_there_is_plain_data_on_the_clipboard_buffer : when_sending_a_message
-//        {
-//            Establish context = () =>
-//            {
-//                clipboardDataStorageService.Stub(x => x.IsCode).Return(false);
-//                
-//                clipboardData = new PlainClipboardData { message = "foo message" };
-//                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
-//            };
-//
-//            Because of = () =>
-//            {
-//                sut.HasClipboardData = true;
-//                sut.SendMessage(textBox, roomId);
-//            };
-//
-//            It should_send_the_message_from_the_clipboard = () =>
-//                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
-//
-//            It should_unset_the_has_clipboard_data_flag = () =>
-//                sut.HasClipboardData.ShouldBeFalse();
-//            
-//            It should_empty_the_text_box = () =>
-//                textBox.Document.Blocks.Count.ShouldEqual(0);
-//
-//            private static PlainClipboardData clipboardData;
-//        }
-//
-//        public class when_sending_a_message_and_there_is_code_data_on_the_clipboard_buffer : when_sending_a_message
-//        {
-//            Establish context = () =>
-//            {
-//                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
-//
-//                clipboardData = new CodeClipboardData { message = "foo message", solution = "blah solution"};
-//                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
-//            };
-//
-//            Because of = () =>
-//            {
-//                sut.HasClipboardData = true;
-//                sut.SendMessage(textBox, roomId);
-//            };
-//
-//            It should_send_the_message_from_the_clipboard = () =>
-//                chatMessageSender.AssertWasCalled(x => x.SendMessage(clipboardData, roomId));
-//
-//            It should_unset_the_has_clipboard_data_flag = () =>
-//                sut.HasClipboardData.ShouldBeFalse();
-//
-//            It should_empty_the_text_box = () =>
-//                textBox.Document.Blocks.Count.ShouldEqual(0);
-//
-//            private static CodeClipboardData clipboardData;
-//        }
 
         // TODO: Find a way to mock DTE to test implementation
 //        public class when_updating_the_clipboard : Concern

@@ -12,6 +12,7 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories;
+using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
@@ -26,20 +27,20 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
         readonly IStoreGlobalState applicationGlobalState;
+        readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
 
         private readonly ISendChatMessages messageSender;
-        private ICreateChatMessageData chatMessageDataFactory;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
             this.clipboardStorage = clipboardStorage;
             this.messageSender = messageSender;
-            this.chatMessageDataFactory = chatMessageDataFactory;
             this.applicationGlobalState = applicationGlobalState;
             this.systemClipboardHandler = systemClipboardHandler;
+            this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.configuration = configuration;
         }
 
@@ -97,12 +98,12 @@ namespace TeamNotification_Library.Service.Controls
         {
             if(clipboardStorage.IsCode)
             {
-                var data = clipboardStorage.Get<CodeClipboardData>();
-                textBox.Document.Blocks.Add(new BlockUIContainer(new SyntaxHighlightBox { Text = data.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] }){Resources = data.AsResources()});
+                textBox.Document.Blocks.Add(syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>()));
             }
             else
             {
-                textBox.Document.Blocks.Add(new Paragraph(new Run(clipboardStorage.Get<PlainClipboardData>().message)));
+                var message = clipboardStorage.Get<PlainClipboardData>().message;
+                textBox.Document.Blocks.Add(new Paragraph(new Run(message)));
             }
             dataObjectPastingEventArgs.CancelCommand();
         }
