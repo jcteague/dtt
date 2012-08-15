@@ -77,7 +77,8 @@ namespace TeamNotification_Library.Service.Controls
                     solution = dte.Solution.FullName,
                     document = dte.ActiveDocument.FullName,
                     message = selection.Text,
-                    line = selection.CurrentLine
+                    line = selection.CurrentLine,
+                    column = selection.CurrentColumn
                 };
 
                 clipboardStorage.Store(clipboard);
@@ -98,19 +99,17 @@ namespace TeamNotification_Library.Service.Controls
         {
             if(clipboardStorage.IsCode)
             {
-                textBox.Document.Blocks.Add(syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>()));
+                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+                textBox.Document.Blocks.Add(block);
+                textBox.CaretPosition = textBox.Document.ContentEnd;
+                dataObjectPastingEventArgs.CancelCommand();
             }
-            else
-            {
-                var message = clipboardStorage.Get<PlainClipboardData>().message;
-                textBox.Document.Blocks.Add(new Paragraph(new Run(message)));
-            }
-            dataObjectPastingEventArgs.CancelCommand();
         }
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            textBox.Document.Blocks.Each(x => messageSender.SendMessage(x, roomId));
+//            textBox.Document.Blocks.Each(x => messageSender.SendMessage(x, roomId));
+            messageSender.SendMessages(textBox.Document.Blocks, roomId);
             ClearRichTextBox(textBox);
         }
 

@@ -71,7 +71,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 sut.SendMessage(block, roomId);
 
             It should_send_the_message_in_the_url_using_the_client = () =>
-                httpRequestsClient.AssertWasCalled(x => x.Post<ServerResponse>(url, form));
+                httpRequestsClient.AssertWasCalled(x => x.PostSync<ServerResponse>(url, form));
 
             private static FormUrlEncodedContent form;
             private static CodeClipboardData chatMessageData;
@@ -99,7 +99,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 sut.SendMessage(block, roomId);
 
             It should_send_the_message_in_the_url_using_the_client = () =>
-                httpRequestsClient.AssertWasCalled(x => x.Post<ServerResponse>(url, form));
+                httpRequestsClient.AssertWasCalled(x => x.PostSync<ServerResponse>(url, form));
 
             private static FormUrlEncodedContent form;
             private static PlainClipboardData chatMessageData;

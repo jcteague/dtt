@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -50,6 +51,12 @@ namespace TeamNotification_Library.Service.Http
         {
             return httpClient.PostAsync(uri, content)
                     .ContinueWith(response => serializer.Deserialize<T>(response.Result.Content.ReadAsStringAsync().Result));
+        }
+
+        public T PostSync<T>(string uri, HttpContent content) where T : class
+        {
+            return httpClient.PostAsync(uri, content)
+                    .ContinueWith(response => serializer.Deserialize<T>(response.Result.Content.ReadAsStringAsync().Result)).Result;
         }
     }
 }

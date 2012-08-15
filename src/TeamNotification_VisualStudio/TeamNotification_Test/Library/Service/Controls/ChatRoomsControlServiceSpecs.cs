@@ -114,30 +114,30 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static DataObjectPastingEventArgs args;
         }
 
-        public class when_handling_the_paste_and_the_clipboard_does_not_have_code : when_handling_the_paste
-        {
-            Establish context = () =>
-            {
-                clipboardText = "blah text";
-
-                var clipboardData = new PlainClipboardData
-                {
-                    message = clipboardText
-                };
-                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
-            };
-
-            Because of = () =>
-                sut.HandlePaste(textBox, args);
-
-            It should_set_the_textbox_text_to_the_clipboard_message = () =>
-            {
-                var s = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
-                s.ShouldEqual(clipboardText + "\r\n");
-            };
-
-            private static string clipboardText;
-        }
+//        public class when_handling_the_paste_and_the_clipboard_does_not_have_code : when_handling_the_paste
+//        {
+//            Establish context = () =>
+//            {
+//                clipboardText = "blah text";
+//
+//                var clipboardData = new PlainClipboardData
+//                {
+//                    message = clipboardText
+//                };
+//                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
+//            };
+//
+//            Because of = () =>
+//                sut.HandlePaste(textBox, args);
+//
+//            It should_set_the_textbox_text_to_the_clipboard_message = () =>
+//            {
+//                var s = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
+//                s.ShouldEqual(clipboardText + "\r\n");
+//            };
+//
+//            private static string clipboardText;
+//        }
 
         public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
         {

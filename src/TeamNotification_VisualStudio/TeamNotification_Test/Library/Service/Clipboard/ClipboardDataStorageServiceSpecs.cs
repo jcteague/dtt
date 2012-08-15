@@ -73,5 +73,26 @@ namespace TeamNotification_Test.Library.Service.Clipboard
             private static ChatMessageData result;
             private static string message;
         }
+
+        public class when_getting_the_data_and_there_is_a_whitespace_string_in_the_clipboard : Concern
+        {
+            Establish context = () =>
+            {
+                message = "\r\n";
+                systemClipboardHandler.Stub(x => x.GetText()).Return(message);
+            };
+
+            Because of = () =>
+                result = sut.Get<ChatMessageData>();
+
+            It should_return_chat_message_data_with_the_clipboard_text = () =>
+            {
+                result.ShouldBeOfType<ChatMessageData>();
+                result.message.ShouldEqual(message);
+            };
+
+            private static ChatMessageData result;
+            private static string message;
+        }
     }
 }
