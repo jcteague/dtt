@@ -85,7 +85,6 @@ namespace TeamNotification_Library.Service.Controls
                 clipboardStorage.Store(clipboard);
                 Debug.WriteLine("PLAIN is in the clipboard");
             }
-            HasClipboardData = true;
             HasCopied = true;
         }
 
@@ -95,9 +94,13 @@ namespace TeamNotification_Library.Service.Controls
         {
             textBox.Document.Blocks.Clear();
             
-            if(clipboardStorage.IsCode){
+            if(clipboardStorage.IsCode)
+            {
                 textBox.Document.Blocks.Add(new BlockUIContainer(new SyntaxHighlightBox { Text = clipboardStorage.Get<PlainClipboardData>().message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] }));;
-            }else{
+                HasClipboardData = true;
+            }
+            else
+            {
                 textBox.Document.Blocks.Add(new Paragraph(new Run(clipboardStorage.Get<PlainClipboardData>().message)));
             }
             dataObjectPastingEventArgs.CancelCommand();
@@ -111,6 +114,8 @@ namespace TeamNotification_Library.Service.Controls
                     messageSender.SendMessage(clipboardStorage.Get<CodeClipboardData>(), roomId);
                 else
                     messageSender.SendMessage(clipboardStorage.Get<PlainClipboardData>(), roomId);
+
+                HasClipboardData = false;
             }
             else
             {
