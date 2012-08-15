@@ -52,7 +52,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
             parsedBody = JSON.parse(body)
-            return  read_message_data(name:name, date:date, body:parsedBody})
+            return  read_message_data({name:name, date:date, body:parsedBody})
             
         append_to: (parent) ->
             @$el.appendTo parent
@@ -66,7 +66,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             
         read_message_data: (message) ->
             name = message.name
-            date = parse_date  new Date(message.date), new Date())
+            date = parse_date  new Date(message.date), new Date()
             parsedBody = JSON.parse(message.body)
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> <pre class='prettyprint lang-js'>#{parsedBody.message}</pre></p>")
