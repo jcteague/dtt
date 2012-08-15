@@ -22,6 +22,9 @@ require.config
         'bootstrap': 'bootstrap.min'
         'bootstrap-dropdown': 'bootstrap-dropdown'
         'bootstrap-collapse': 'bootstrap-collapse'
+        'prettify': 'prettify/prettify'
+        'lang-ml': 'prettify/lang-ml'
+        'lang-proto': 'prettify/lang-proto'
 
     shim:
         'backbone':

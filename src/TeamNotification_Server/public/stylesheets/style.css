@@ -27,3 +27,7 @@ label { vertical-align: top;}
     overflow:auto;
     
 }
+pre {
+	font-weight: bolder;
+	border:0 !important; 
+}

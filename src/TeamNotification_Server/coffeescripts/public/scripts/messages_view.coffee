@@ -17,7 +17,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
                 
             if @model.has('messages')
-                setInterval((() -> render_model() ), 10000)
+                #setInterval((() -> render_model() ), 10000)
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}
@@ -51,20 +51,28 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            ("<p><b>#{name}<span class='chat_message_date'>(#{parse_date(new Date(date),curr_date) })</span>:</b> #{JSON.parse(body).message}</p>")
+            console.log body
+            #parsedBody = body#JSON.parse(body)
+            return  @read_message_data({name:name, date:date, body:body})
+            
         append_to: (parent) ->
             @$el.appendTo parent
 
         add_message: (message) =>
             m = JSON.parse message
             messages = @model.get('messages')
-            messages.push {data:[{name:"body", value: JSON.parse(m.body).message}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
+            messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
-            #@render_model()
-            @append_message(m)
-
-        append_message: (message) ->
+            @$el.append @read_message_data(m)
+            
+        read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
-            body = JSON.parse(message.body).message 
-            @$el.append("<p><b>#{name}(#{date}):</b> #{body}</p>")
+            parsedBody = JSON.parse(message.body)
+            if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
+                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+            else
+                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
+            
+        
+            
