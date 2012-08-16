@@ -2,6 +2,7 @@
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Clipboard;
+using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 
@@ -22,6 +23,7 @@ namespace TeamNotification_Library.Application
             For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
             For<IStoreClipboardData>().Singleton().Use<ClipboardDataStorageService>();
             For<IHandleSystemClipboard>().Singleton().Use<SystemClipboardHandler>();
+            For<ICreateSyntaxBlockUIInstances>().Singleton();
         }
     }
 }
