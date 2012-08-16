@@ -18,11 +18,11 @@ namespace TeamNotification_Library.Application
                 scanner.RegisterConcreteTypesAgainstTheFirstInterface().OnAddedPluginTypes(x => x.Singleton());
             });
 
-            For<IStoreGlobalState>().Singleton().Use<ApplicationGlobalState>();
             For<IProvideConfiguration<RedisConfiguration>>().Singleton().Use<RedisConfigurationProvider>();
-            For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
-            For<IStoreClipboardData>().Singleton().Use<ClipboardDataStorageService>();
-            For<IHandleSystemClipboard>().Singleton().Use<SystemClipboardHandler>();
+            For<IStoreGlobalState>().Singleton();
+            For<IStoreDataLocally>().Singleton();
+            For<IStoreClipboardData>().Singleton();
+            For<IHandleSystemClipboard>().Singleton();
             For<ICreateSyntaxBlockUIInstances>().Singleton();
         }
     }
