@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -166,9 +167,20 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-          if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
                 this.SendMessage();
         }
+
+        private void CheckTextChanged(object sender, TextChangedEventArgs e)
+        {
+//            if (Keyboard.IsKeyDown(Key.Delete))
+//            {
+//                var position = messageTextBox.CaretPosition;
+//                //                var a = position.GetNextInsertionPosition(LogicalDirection.Forward);
+//                position.DeleteTextInRun(10);
+//            }
+        }
+
         #endregion
 
         private string lastInsertedUsername = "";
