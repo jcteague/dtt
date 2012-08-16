@@ -73,11 +73,13 @@ namespace TeamNotification_Library.Service.Controls
                 var txt = dte.ActiveDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
+
+                var message = systemClipboardHandler.GetText(true);
                 var clipboard = new CodeClipboardData
                 {
                     solution = dte.Solution.FullName,
                     document = dte.ActiveDocument.FullName,
-                    message = selection.Text,
+                    message = message,
                     line = selection.CurrentLine,
                     column = selection.CurrentColumn
                 };
