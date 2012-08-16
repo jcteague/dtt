@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Windows;
 using System.Windows.Documents;
 using Machine.Specifications;
 using Rhino.Mocks;
@@ -28,82 +30,65 @@ namespace TeamNotification_Test.Library.Service.Http
             protected static IMapPropertiesToFormUrlEncodedContent objectToFormUrlEncodedContentMapper;
         }
 
-        public abstract class when_sending_a_message : Concern
+        public class when_sending_messages : Concern
         {
             Establish context = () =>
             {
                 roomId = "1";
-                string siteUrl = "MyUrl/";
+                var siteUrl = "MyUrl/";
                 var serverConfiguration = fake.an<IStoreConfiguration>();
-
                 serverConfiguration.Stub(x => x.Uri).Return(siteUrl);
                 configuration.Stub(x => x.Get()).Return(serverConfiguration);
 
+                var solution = "foo solution";
+                var document = "foo document";
+                var fooMessage = "foo message";
+                var resources = new ResourceDictionary();
+                resources["solution"] = solution;
+                resources["document"] = document;
+                resources["message"] = fooMessage;
+                resources["line"] = 1;
+                resources["column"] = 2;
+                var block1 = new BlockUIContainer {Resources = resources};
+
+
+                var barMessage = "bar message";
+                var block2 = new Paragraph(new Run(barMessage));
+                blocks = new List<Block> {block1, block2};
+
                 url = siteUrl + "room/" + roomId + "/messages";
+
+                var content1 = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>{new KeyValuePair<string, string>("solution", solution)});
+                objectToFormUrlEncodedContentMapper.Stub(
+                    mapper =>
+                        mapper.MapFrom(
+                            Arg<CodeClipboardData>.Matches(x => x.solution == solution && x.document == document && x.message == fooMessage)
+                       )
+                   ).Return(content1);
+                var message1 = new Tuple<string, HttpContent>(url, content1);
+
+                var content2 = new FormUrlEncodedContent(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("message", barMessage) });
+                objectToFormUrlEncodedContentMapper.Stub(
+                    mapper =>
+                        mapper.MapFrom(
+                            Arg<PlainClipboardData>.Matches(x => x.message == barMessage)
+                       )
+                   ).Return(content2);
+                var message2 = new Tuple<string, HttpContent>(url, content2);
+
+                messages = new List<Tuple<string, HttpContent>>() {message1, message2};
             };
 
-            protected static string url;
-            protected static string roomId;
-        }
+            Because of = () =>
+                sut.SendMessages(blocks, roomId);
 
-//        public class when_sending_a_message_and_the_block_is_code : when_sending_a_message
-//        {
-//            Establish context = () =>
-//            {
-//                chatMessageData = new CodeClipboardData
-//                {
-//                    solution = "foo solution",
-//                    document = "foo document",
-//                    message = "foo message",
-//                    line = 10
-//                };
-//                block = new BlockUIContainer {Resources = chatMessageData.AsResources()};
-//
-//                var value1 = new KeyValuePair<string, string>("solution", "foo solution");
-//                var value2 = new KeyValuePair<string, string>("document", "foo document");
-//                var values = new List<KeyValuePair<string, string>> { value1, value2 };
-//
-//                form = new FormUrlEncodedContent(values);
-//                objectToFormUrlEncodedContentMapper.Stub(x => x.MapFrom(Arg<CodeClipboardData>.Matches(y => y.solution == chatMessageData.solution && y.message == chatMessageData.message))).Return(form);
-//            };
-//
-//            Because of = () =>
-//                sut.SendMessage(block, roomId);
-//
-//            It should_send_the_message_in_the_url_using_the_client = () =>
-//                httpRequestsClient.AssertWasCalled(x => x.PostSync<ServerResponse>(url, form));
-//
-//            private static FormUrlEncodedContent form;
-//            private static CodeClipboardData chatMessageData;
-//            private static BlockUIContainer block;
-//        }
-//
-//        public class when_sending_a_message_and_the_block_is_a_paragraph : when_sending_a_message
-//        {
-//            Establish context = () =>
-//            {
-//                chatMessageData = new PlainClipboardData
-//                {
-//                    message = "foo message",
-//                };
-//                block = new Paragraph(new Run(chatMessageData.message));
-//
-//                var value1 = new KeyValuePair<string, string>("message", chatMessageData.message);
-//                var values = new List<KeyValuePair<string, string>> { value1 };
-//
-//                form = new FormUrlEncodedContent(values);
-//                objectToFormUrlEncodedContentMapper.Stub(x => x.MapFrom(Arg<PlainClipboardData>.Matches(y => y.message == chatMessageData.message))).Return(form);
-//            };
-//
-//            Because of = () =>
-//                sut.SendMessage(block, roomId);
-//
-//            It should_send_the_message_in_the_url_using_the_client = () =>
-//                httpRequestsClient.AssertWasCalled(x => x.PostSync<ServerResponse>(url, form));
-//
-//            private static FormUrlEncodedContent form;
-//            private static PlainClipboardData chatMessageData;
-//            private static Paragraph block;
-//        }
+            It should_post_the_formatted_messages_through_the_client = () =>
+                httpRequestsClient.AssertWasCalled(x => x.Post(messages));
+
+            private static string roomId;
+            private static IEnumerable<Block> blocks;
+            private static string url;
+            private static IEnumerable<Tuple<string, HttpContent>> messages;
+        }
     }
 }

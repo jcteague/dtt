@@ -109,8 +109,6 @@ namespace TeamNotification_Library.Service.Controls
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-//            textBox.Document.Blocks.Each(x => messageSender.SendMessage(x, roomId));
-
             messageSender.SendMessages(textBox.Document.Blocks, roomId);
             ClearRichTextBox(textBox);
         }

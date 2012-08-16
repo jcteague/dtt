@@ -60,33 +60,5 @@ namespace TeamNotification_Library.Service.Http
             var url = "{0}room/{1}/messages".FormatUsing(serverConfiguration.Get().Uri, roomId);
             return new Tuple<string, HttpContent>(url, objectToFormMapper.MapFrom(data));
         }
-
-        private void SendMessage(Block block, string roomId)
-        {
-            if (block.GetType() == typeof(BlockUIContainer))
-            {
-                var resources = block.Resources;
-                var data = new CodeClipboardData
-                               {
-                                   message = resources["message"].Cast<string>(),
-                                   solution = resources["solution"].Cast<string>(),
-                                   document = resources["document"].Cast<string>(),
-                                   line = resources["line"].Cast<int>(),
-                                   column = resources["column"].Cast<int>()
-                               };
-                SendMessage(data, roomId);
-            }
-            else
-            {
-                var data = new PlainClipboardData { message = ((Paragraph)block).GetText() };
-                SendMessage(data, roomId);
-            }
-        }
-
-        private void SendMessage<T>(T message, string roomId) where T : ChatMessageData
-        {           
-            var url = "{0}room/{1}/messages".FormatUsing(serverConfiguration.Get().Uri, roomId);
-            client.PostSync(url, objectToFormMapper.MapFrom(message));
-        }
     }
 }
