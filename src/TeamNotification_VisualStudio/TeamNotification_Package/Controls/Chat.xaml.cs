@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
+using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
@@ -36,19 +37,20 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
+        private ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
         private FlowDocument myFlowDoc;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
         {
-
-
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
+            this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
+
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
@@ -182,21 +184,30 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AppendMessage(string username, MessageBody message)
         {
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
-                var lineStarter = lastInsertedUsername != username ? username + ":" : "    ";
                 if (!message.solution.IsNullOrEmpty())
                 {
-                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
-                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
-
-                    myFlowDoc.Blocks.Add(userMessageParagraph);
-                    myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
+                    if (lastInsertedUsername != username)
+                    {
+                        var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                        userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
+                        myFlowDoc.Blocks.Add(userMessageParagraph);    
+                    }
+                    var codeClipboardData = new CodeClipboardData
+                                                {
+                                                    message = message.message, 
+                                                    solution = message.solution, 
+                                                    document = message.document,
+                                                    line = message.line,
+                                                    column = message.column
+                                                };
+                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
+                    myFlowDoc.Blocks.Add(syntaxBlock);
                 }
                 else
                 {
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
 
+                    var lineStarter = lastInsertedUsername != username ? username + ":" : "    ";
                     userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     userMessageParagraph.Inlines.Add(new Run(message.message));
