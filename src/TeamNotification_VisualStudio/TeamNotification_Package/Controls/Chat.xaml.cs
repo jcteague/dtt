@@ -169,6 +169,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
         #endregion
 
+        private string lastInsertedUsername = "";
+
         private void SendMessage()
         {
             chatRoomControlService.SendMessage(messageTextBox, roomId);
@@ -180,11 +182,13 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AppendMessage(string username, MessageBody message)
         {
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
+                var lineStarter = lastInsertedUsername != username ? username + ":" : "    ";
                 if (!message.solution.IsNullOrEmpty())
                 {
                     var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     myFlowDoc.Blocks.Add(userMessageParagraph);
                     myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
@@ -192,16 +196,20 @@ namespace AvenidaSoftware.TeamNotification_Package
                 else
                 {
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
+
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
+
                     userMessageParagraph.Inlines.Add(new Run(message.message));
                     myFlowDoc.Blocks.Add(userMessageParagraph);
                 }
+                lastInsertedUsername = username;
             }));
             messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
 
         private void ChangeRoom(string newRoomId)
         {
+            lastInsertedUsername = "";
             currentChannel = "chat " + newRoomId;
             
             if (!subscribedChannels.Contains(currentChannel))
