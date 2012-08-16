@@ -166,31 +166,31 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static BlockUIContainer syntaxHighlightBox;
         }
 
-        public class when_sending_a_message : Concern
-        {
-            Establish context = () =>
-            {
-                textBox = new RichTextBox();
-                block1 = new Paragraph(new Run("Hello"));
-                textBox.Document.Blocks.Add(block1);
-                block2 = new BlockUIContainer(new UIElement());
-                textBox.Document.Blocks.Add(block2);
-            };
-
-            Because of = () =>
-                sut.SendMessage(textBox, roomId);
-
-            It should_send_the_messages_in_the_text_box = () =>
-            {
-                chatMessageSender.AssertWasCalled(x => x.SendMessage(block1, roomId));
-                chatMessageSender.AssertWasCalled(x => x.SendMessage(block2, roomId));
-            };
-
-            protected static RichTextBox textBox;
-            protected static string roomId;
-            private static Paragraph block1;
-            private static BlockUIContainer block2;
-        }
+//        public class when_sending_a_message : Concern
+//        {
+//            Establish context = () =>
+//            {
+//                textBox = new RichTextBox();
+//                block1 = new Paragraph(new Run("Hello"));
+//                textBox.Document.Blocks.Add(block1);
+//                block2 = new BlockUIContainer(new UIElement());
+//                textBox.Document.Blocks.Add(block2);
+//            };
+//
+//            Because of = () =>
+//                sut.SendMessage(textBox, roomId);
+//
+//            It should_send_the_messages_in_the_text_box = () =>
+//            {
+//                chatMessageSender.AssertWasCalled(x => x.SendMessage(block1, roomId));
+//                chatMessageSender.AssertWasCalled(x => x.SendMessage(block2, roomId));
+//            };
+//
+//            protected static RichTextBox textBox;
+//            protected static string roomId;
+//            private static Paragraph block1;
+//            private static BlockUIContainer block2;
+//        }
 
         // TODO: Find a way to mock DTE to test implementation
 //        public class when_updating_the_clipboard : Concern
