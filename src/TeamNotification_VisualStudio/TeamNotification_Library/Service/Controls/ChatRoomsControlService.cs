@@ -101,6 +101,13 @@ namespace TeamNotification_Library.Service.Controls
             if(clipboardStorage.IsCode)
             {
                 var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+//                // To solve bug in SyntaxClipboard implementation
+//                if (textBox.Document.Blocks.LastBlock.IsNotNull() && textBox.Document.Blocks.LastBlock.GetType() == typeof(Paragraph))
+//                {
+////                    textBox.Document.Blocks.Add(new Paragraph());
+//                    ((Paragraph)textBox.Document.Blocks.LastBlock).Inlines.Add(new Run(" "));
+//                }
+
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();

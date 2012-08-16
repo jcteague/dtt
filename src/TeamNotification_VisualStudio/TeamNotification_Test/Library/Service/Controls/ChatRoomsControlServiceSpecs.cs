@@ -114,31 +114,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static DataObjectPastingEventArgs args;
         }
 
-//        public class when_handling_the_paste_and_the_clipboard_does_not_have_code : when_handling_the_paste
-//        {
-//            Establish context = () =>
-//            {
-//                clipboardText = "blah text";
-//
-//                var clipboardData = new PlainClipboardData
-//                {
-//                    message = clipboardText
-//                };
-//                clipboardDataStorageService.Stub(x => x.Get<PlainClipboardData>()).Return(clipboardData);
-//            };
-//
-//            Because of = () =>
-//                sut.HandlePaste(textBox, args);
-//
-//            It should_set_the_textbox_text_to_the_clipboard_message = () =>
-//            {
-//                var s = new TextRange(textBox.Document.ContentStart, textBox.Document.ContentEnd).Text;
-//                s.ShouldEqual(clipboardText + "\r\n");
-//            };
-//
-//            private static string clipboardText;
-//        }
-
         public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
         {
             Establish context = () =>
@@ -166,31 +141,31 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static BlockUIContainer syntaxHighlightBox;
         }
 
-//        public class when_sending_a_message : Concern
-//        {
-//            Establish context = () =>
-//            {
-//                textBox = new RichTextBox();
-//                block1 = new Paragraph(new Run("Hello"));
-//                textBox.Document.Blocks.Add(block1);
-//                block2 = new BlockUIContainer(new UIElement());
-//                textBox.Document.Blocks.Add(block2);
-//            };
-//
-//            Because of = () =>
-//                sut.SendMessage(textBox, roomId);
-//
-//            It should_send_the_messages_in_the_text_box = () =>
-//            {
-//                chatMessageSender.AssertWasCalled(x => x.SendMessage(block1, roomId));
-//                chatMessageSender.AssertWasCalled(x => x.SendMessage(block2, roomId));
-//            };
-//
-//            protected static RichTextBox textBox;
-//            protected static string roomId;
-//            private static Paragraph block1;
-//            private static BlockUIContainer block2;
-//        }
+        public class when_sending_a_message : Concern
+        {
+            Establish context = () =>
+            {
+                textBox = new RichTextBox();
+                block1 = new Paragraph(new Run("Hello"));
+                textBox.Document.Blocks.Add(block1);
+                block2 = new BlockUIContainer(new UIElement());
+                textBox.Document.Blocks.Add(block2);
+
+                blocks = new List<Block> {block1, block2};
+            };
+
+            Because of = () =>
+                sut.SendMessage(textBox, roomId);
+
+            It should_send_the_messages_in_the_text_box = () => 
+                chatMessageSender.AssertWasCalled(x => x.SendMessages(Arg<IEnumerable<Block>>.List.ContainsAll(blocks), Arg<string>.Is.Same(roomId)));
+
+            protected static RichTextBox textBox;
+            protected static string roomId;
+            private static Paragraph block1;
+            private static BlockUIContainer block2;
+            private static IEnumerable<Block> blocks;
+        }
 
         // TODO: Find a way to mock DTE to test implementation
 //        public class when_updating_the_clipboard : Concern
