@@ -171,16 +171,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 this.SendMessage();
         }
 
-        private void CheckTextChanged(object sender, TextChangedEventArgs e)
-        {
-//            if (Keyboard.IsKeyDown(Key.Delete))
-//            {
-//                var position = messageTextBox.CaretPosition;
-//                //                var a = position.GetNextInsertionPosition(LogicalDirection.Forward);
-//                position.DeleteTextInRun(10);
-//            }
-        }
-
         #endregion
 
         private string lastInsertedUsername = "";
