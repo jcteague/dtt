@@ -118,13 +118,11 @@
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleLoginEvents.cs" />
-    <Compile Include="Service\Async\IHandleTasksQueue.cs" />
     <Compile Include="Service\Async\LoginEvents.cs" />
     <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
     <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
-    <Compile Include="Service\Async\TaskQueueHandler.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
