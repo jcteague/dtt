@@ -36,5 +36,6 @@ application.txt
 *.ncrunchproject
 *.ncrunchsolution
 *.swo
+.DS_Store
 
 config.js
