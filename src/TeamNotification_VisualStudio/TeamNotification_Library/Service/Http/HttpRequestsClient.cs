@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -50,6 +51,18 @@ namespace TeamNotification_Library.Service.Http
         {
             return httpClient.PostAsync(uri, content)
                     .ContinueWith(response => serializer.Deserialize<T>(response.Result.Content.ReadAsStringAsync().Result));
+        }
+
+        public void Post(IEnumerable<Tuple<string, HttpContent>> values)
+        {
+            var backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += (o, args) => values.Each(x => PostSync(x.Item1, x.Item2));
+            backgroundWorker.RunWorkerAsync();
+        }
+
+        public HttpResponseMessage PostSync(string uri, HttpContent content)
+        {
+            return httpClient.PostAsync(uri, content).Result;
         }
     }
 }

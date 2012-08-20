@@ -13,11 +13,8 @@ namespace TeamNotification_Library.Models
         public string user_id { get; set; }
     }
 
-    public class MessageBody
+    public class MessageBody : CodeClipboardData
     {
-        public string message { get; set; }
-        public string solution { get; set; }
-        public string document { get; set; }
-        public int line { get; set; }
+        
     }
 }

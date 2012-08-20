@@ -1,5 +1,7 @@
+using System;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Clipboard
 {
@@ -23,9 +25,22 @@ namespace TeamNotification_Library.Service.Clipboard
             systemClipboardHandler.SetText(data);
         }
 
-        public T Get<T>() where T : ChatMessageData
+        public T Get<T>() where T : ChatMessageData, new()
         {
-            return serializer.Deserialize<T>(systemClipboardHandler.GetText());
+            var text = systemClipboardHandler.GetText();
+            if (text.IsNullOrWhiteSpace())
+                return new T { message = text };
+
+            T value;
+            try
+            {
+                value = serializer.Deserialize<T>(text);
+            }
+            catch (Exception)
+            {
+                value = new T {message = text};
+            }
+            return value;
         }
     }
 }

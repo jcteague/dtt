@@ -1,4 +1,5 @@
 using System.Windows;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Clipboard
 {
@@ -8,8 +9,10 @@ namespace TeamNotification_Library.Service.Clipboard
 
         public string GetText(bool useInternal = false)
         {
-            if (useInternal)
+            if (useInternal || value.IsNullOrEmpty())
+            {
                 return System.Windows.Clipboard.GetText();
+            }
             return value;
         }
 

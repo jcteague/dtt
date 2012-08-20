@@ -11,6 +11,8 @@ namespace TeamNotification_Library.Models
         public string document { get; set; }
 
         public int line { get; set; }
+        
+        public int column { get; set; }
 
         public ResourceDictionary AsResources()
         {
@@ -19,6 +21,7 @@ namespace TeamNotification_Library.Models
             resources["document"] = document;
             resources["line"] = line;
             resources["message"] = message;
+            resources["column"] = column;
 
             return resources;
         }
