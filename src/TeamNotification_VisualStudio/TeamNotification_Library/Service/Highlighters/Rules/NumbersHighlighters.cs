@@ -6,16 +6,15 @@ namespace TeamNotification_Library.Service.Highlighters.Rules
 {
     public class NumbersHighlighters : IHighlightNumbers
     {
-        private readonly ICreateInstances<HighlightNumbersRule> highlightNumbersRuleFactory;
+        private HighlightNumbersRule rule;
 
-        public NumbersHighlighters(ICreateInstances<HighlightNumbersRule> highlightNumbersRuleFactory)
+        public NumbersHighlighters()
         {
-            this.highlightNumbersRuleFactory = highlightNumbersRuleFactory;
+            rule = new HighlightNumbersRule();
         }
 
         public int Format(FormattedText text, int previousBlockCode)
         {
-            var rule = highlightNumbersRuleFactory.GetInstance();
             Regex regexRgx = new Regex(rule.Expression);
             foreach (Match m in regexRgx.Matches(text.Text))
             {

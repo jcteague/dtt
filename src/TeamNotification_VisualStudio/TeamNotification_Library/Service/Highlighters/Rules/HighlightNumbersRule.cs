@@ -8,7 +8,7 @@
         public HighlightNumbersRule()
         {
             Options = new RuleOptions("#0000FF", "Normal", "Normal");
-            Expression = "\b([0-9]+)\b";
+            Expression = @"\b([0-9]+)\b";
         }
     }
 }
