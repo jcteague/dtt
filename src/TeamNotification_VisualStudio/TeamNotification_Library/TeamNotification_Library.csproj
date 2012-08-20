@@ -168,6 +168,8 @@
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Highlighters\CSharpSyntaxHighligher.cs" />
     <Compile Include="Service\Highlighters\ExampleCSharp.cs" />
+    <Compile Include="Service\Highlighters\HighlightWordsRule.cs" />
+    <Compile Include="Service\Highlighters\RuleOptions.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
