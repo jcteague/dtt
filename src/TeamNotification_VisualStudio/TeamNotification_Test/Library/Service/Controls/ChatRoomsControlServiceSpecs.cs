@@ -114,32 +114,32 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static DataObjectPastingEventArgs args;
         }
 
-        public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
-        {
-            Establish context = () =>
-            {
-                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
-
-                var clipboardData = new CodeClipboardData
-                {
-                    message = "blah message",
-                    solution = "blah solution",
-                    document = "blah document"
-                };
-                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
-                
-                syntaxHighlightBox = new BlockUIContainer();
-                syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
-            };
-
-            Because of = () =>
-                sut.HandlePaste(textBox, args);
-
-            It should_set_the_textbox_with_a_syntax_highlight_block = () =>
-                textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
-
-            private static BlockUIContainer syntaxHighlightBox;
-        }
+//        public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
+//        {
+//            Establish context = () =>
+//            {
+//                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
+//
+//                var clipboardData = new CodeClipboardData
+//                {
+//                    message = "blah message",
+//                    solution = "blah solution",
+//                    document = "blah document"
+//                };
+//                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
+//                
+//                syntaxHighlightBox = new BlockUIContainer();
+//                syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
+//            };
+//
+//            Because of = () =>
+//                sut.HandlePaste(textBox, args);
+//
+//            It should_set_the_textbox_with_a_syntax_highlight_block = () =>
+//                textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
+//
+//            private static BlockUIContainer syntaxHighlightBox;
+//        }
 
         public class when_sending_a_message : Concern
         {

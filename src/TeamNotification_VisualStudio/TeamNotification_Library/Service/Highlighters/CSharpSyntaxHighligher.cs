@@ -8,7 +8,7 @@ namespace TeamNotification_Library.Service.Highlighters
 {
     public class CSharpSyntaxHighligher : IHighlighter
     {
-        private readonly IHighlightWords wordsHighlighter;
+        private IHighlightWords wordsHighlighter;
 
         public CSharpSyntaxHighligher(IHighlightWords wordsHighlighter)
         {
@@ -17,6 +17,7 @@ namespace TeamNotification_Library.Service.Highlighters
 
         public int Highlight(FormattedText text, int previousBlockCode)
         {
+            wordsHighlighter.Format(text, previousBlockCode);
 
             return 0;
         }

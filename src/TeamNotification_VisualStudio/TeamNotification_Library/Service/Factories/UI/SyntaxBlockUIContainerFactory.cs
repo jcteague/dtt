@@ -7,22 +7,20 @@ namespace TeamNotification_Library.Service.Factories.UI
 {
     public class SyntaxBlockUIContainerFactory : ICreateSyntaxBlockUIInstances
     {
-        private IHighlighter highlighter;
-
-        public SyntaxBlockUIContainerFactory()
+        private readonly IProvideSyntaxHighlighter syntaxHighlighterProvider;
+        
+        public SyntaxBlockUIContainerFactory(IProvideSyntaxHighlighter syntaxHighlighterProvider)
         {
-//            highlighter = HighlighterManager.Instance.Highlighters["cSharp"];
-//            highlighter = new CSharpSyntaxHighligher();
-            highlighter = new ExampleCSharp();
+            this.syntaxHighlighterProvider = syntaxHighlighterProvider;
         }
 
-        public BlockUIContainer Get(CodeClipboardData clipboardData)
+        public BlockUIContainer Get(CodeClipboardData clipboardData, int programmingLanguage)
         {
             return new BlockUIContainer(
                 new SyntaxHighlightBox
                 {
                     Text = clipboardData.message,
-                    CurrentHighlighter = highlighter
+                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programmingLanguage)
                 }) { Resources = clipboardData.AsResources() };
         }
     }

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace TeamNotification_Library.Service.Highlighters
+namespace TeamNotification_Library.Service.Highlighters.Rules
 {
     public class HighlightWordsRule
     {

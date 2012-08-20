@@ -27,6 +27,8 @@ using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
 using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
+using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
+
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -202,7 +204,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                     line = message.line,
                                                     column = message.column
                                                 };
-                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
+                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData, ProgrammingLanguages.CSharp);
                     myFlowDoc.Blocks.Add(syntaxBlock);
                 }
                 else

@@ -13,6 +13,8 @@ namespace TeamNotification_Library.Models
         public int line { get; set; }
         
         public int column { get; set; }
+        
+        public int programmingLanguage { get; set; }
 
         public ResourceDictionary AsResources()
         {

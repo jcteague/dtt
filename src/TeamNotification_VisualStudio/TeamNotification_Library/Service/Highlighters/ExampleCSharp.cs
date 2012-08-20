@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
 using AurelienRibon.Ui.SyntaxHighlightBox;
+using TeamNotification_Library.Service.Highlighters.Rules;
 
 namespace TeamNotification_Library.Service.Highlighters
 {

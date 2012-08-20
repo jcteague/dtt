@@ -1,8 +1,8 @@
-﻿using System.Windows.Media;
+using System.Windows.Media;
 
 namespace TeamNotification_Library.Service.Highlighters.Rules
 {
-    public interface IHighlightWords : IFormatSyntaxAccordingToRule
+    public interface IFormatSyntaxAccordingToRule
     {
         int Format(FormattedText text, int previousBlockCode);
     }

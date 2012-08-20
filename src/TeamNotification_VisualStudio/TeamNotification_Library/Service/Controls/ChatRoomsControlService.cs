@@ -19,6 +19,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
 using TextRange = System.Windows.Documents.TextRange;
+using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -101,7 +102,7 @@ namespace TeamNotification_Library.Service.Controls
         {
             if(clipboardStorage.IsCode)
             {
-                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>(), ProgrammingLanguages.CSharp);
 //                var clipboardData = clipboardStorage.Get<CodeClipboardData>();
 //                var block = new BlockUIContainer(
 //                                new SyntaxHighlightBox
