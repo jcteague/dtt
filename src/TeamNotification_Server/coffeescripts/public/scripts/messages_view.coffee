@@ -18,7 +18,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 newDate = new Date()
                 $('.chat_message_date').each (idx, element) ->
                     message_date = get_field 'datetime', me.model.attributes.messages[idx].data
-                    element.innerHTML = "("+(parse_date new Date(message_date), newDate)+"):"
+                    element.innerHTML = (parse_date new Date(message_date), newDate)
                 
             render_model = () ->
                 newDate = new Date()
@@ -85,9 +85,9 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             parsedBody = JSON.parse(message.body)
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                return ("<p><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b> <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
+                return ("<p><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b> #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
             
         
             
