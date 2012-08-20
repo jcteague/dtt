@@ -97,12 +97,12 @@ methods.post_room_message = (req, res, next) ->
             redis2.publish("chat #{room_id}", m)
             redis3.zadd("room:#{room_id}:messages", new Date().getTime(), JSON.stringify(newMessage))
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
-        #room_message.save (err,saved_message) ->
-        #    if !err
-        res.send({success:true, newMessage:newMessage})
-         #   else 
-         #       console.log err
-         #       next(new Error(err.code,err.message))
+        room_message.save (err,saved_message) ->
+            if !err
+                res.send({success:true, newMessage:saved_message})
+            else 
+                console.log err
+                next(new Error(err.code,err.message))
 
 socket_middleware = require('../support/middlewares').socket_io
    
