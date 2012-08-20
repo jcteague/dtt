@@ -14,6 +14,7 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
@@ -85,13 +86,11 @@ namespace TeamNotification_Library.Service.Controls
                 };
 
                 clipboardStorage.Store(clipboard);
-                Debug.WriteLine("CODE is in the clipboard");
             }
             else
             {
                 var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
                 clipboardStorage.Store(clipboard);
-                Debug.WriteLine("PLAIN is in the clipboard");
             }
             HasCopied = true;
         }
@@ -103,6 +102,14 @@ namespace TeamNotification_Library.Service.Controls
             if(clipboardStorage.IsCode)
             {
                 var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+//                var clipboardData = clipboardStorage.Get<CodeClipboardData>();
+//                var block = new BlockUIContainer(
+//                                new SyntaxHighlightBox
+//                                {
+//                                    Text = clipboardData.message,
+//                                    CurrentHighlighter = new ExampleCSharp()
+//                                }) { Resources = clipboardData.AsResources() };
+//                textBox.Document.Blocks.Add(block);
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();

@@ -104,7 +104,6 @@
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ChatMessageData.cs" />
-    <Compile Include="Models\ExtendedSyntaxHighlightBox.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\MessageData.cs" />
@@ -167,6 +166,8 @@
     <Compile Include="Service\FileSystem\FileHandler.cs" />
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Highlighters\CSharpSyntaxHighligher.cs" />
+    <Compile Include="Service\Highlighters\ExampleCSharp.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
@@ -191,7 +192,6 @@
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
-    <Compile Include="Service\MyHighlighter.cs" />
     <Compile Include="Service\Providers\DbConnectionProvider.cs" />
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />

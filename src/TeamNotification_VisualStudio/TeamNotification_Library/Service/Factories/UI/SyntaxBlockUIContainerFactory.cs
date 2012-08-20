@@ -1,6 +1,7 @@
 using System.Windows.Documents;
 using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Highlighters;
 
 namespace TeamNotification_Library.Service.Factories.UI
 {
@@ -10,7 +11,9 @@ namespace TeamNotification_Library.Service.Factories.UI
 
         public SyntaxBlockUIContainerFactory()
         {
-            highlighter = HighlighterManager.Instance.Highlighters["cSharp"];
+//            highlighter = HighlighterManager.Instance.Highlighters["cSharp"];
+//            highlighter = new CSharpSyntaxHighligher();
+            highlighter = new ExampleCSharp();
         }
 
         public BlockUIContainer Get(CodeClipboardData clipboardData)
