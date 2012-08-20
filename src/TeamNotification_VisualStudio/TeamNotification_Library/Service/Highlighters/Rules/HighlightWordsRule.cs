@@ -10,7 +10,7 @@ namespace TeamNotification_Library.Service.Highlighters.Rules
         public HighlightWordsRule()
         {
             Words = new List<string>();
-            Options = new RuleOptions("#00FFFF", "Bold", "Normal");
+            Options = new RuleOptions("#FF0000", "Bold", "Normal");
 
             string[] words = ruleWords.ToArray();
 

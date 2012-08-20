@@ -174,11 +174,14 @@
     <Compile Include="Service\Highlighters\IProvideSyntaxRules.cs" />
     <Compile Include="Service\Highlighters\RuleOptions.cs" />
     <Compile Include="Service\Highlighters\Rules\HighlightNumbersRule.cs" />
+    <Compile Include="Service\Highlighters\Rules\HighlightStringsRule.cs" />
     <Compile Include="Service\Highlighters\Rules\HighlightWordsRule.cs" />
     <Compile Include="Service\Highlighters\Rules\IFormatSyntaxAccordingToRule.cs" />
     <Compile Include="Service\Highlighters\Rules\IHighlightNumbers.cs" />
+    <Compile Include="Service\Highlighters\Rules\IHighlightStrings.cs" />
     <Compile Include="Service\Highlighters\Rules\IHighlightWords.cs" />
     <Compile Include="Service\Highlighters\Rules\NumbersHighlighters.cs" />
+    <Compile Include="Service\Highlighters\Rules\StringsHighlighter.cs" />
     <Compile Include="Service\Highlighters\Rules\WordsHighlighter.cs" />
     <Compile Include="Service\Highlighters\SampleHighlighter.cs" />
     <Compile Include="Service\Highlighters\SyntaxHighlighterProvider.cs" />

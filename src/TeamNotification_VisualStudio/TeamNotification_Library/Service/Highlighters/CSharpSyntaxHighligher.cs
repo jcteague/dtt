@@ -10,11 +10,13 @@ namespace TeamNotification_Library.Service.Highlighters
     {
         private IHighlightWords wordsHighlighter;
         private IHighlightNumbers numbersHighlighter;
+        private IHighlightStrings stringsHighlighter;
 
-        public CSharpSyntaxHighligher(IHighlightWords wordsHighlighter, IHighlightNumbers numbersHighlighter)
+        public CSharpSyntaxHighligher(IHighlightWords wordsHighlighter, IHighlightNumbers numbersHighlighter, IHighlightStrings stringsHighlighter)
         {
             this.wordsHighlighter = wordsHighlighter;
             this.numbersHighlighter = numbersHighlighter;
+            this.stringsHighlighter = stringsHighlighter;
         }
 
         public int Highlight(FormattedText text, int previousBlockCode)
@@ -22,6 +24,8 @@ namespace TeamNotification_Library.Service.Highlighters
             wordsHighlighter.Format(text, previousBlockCode);
 
             numbersHighlighter.Format(text, previousBlockCode);
+
+            stringsHighlighter.Format(text, previousBlockCode);
 
             return 0;
         }
