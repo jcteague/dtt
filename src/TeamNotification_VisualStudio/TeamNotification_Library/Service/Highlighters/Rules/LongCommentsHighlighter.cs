@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Media;
 using TeamNotification_Library.Extensions;
 
@@ -16,25 +17,28 @@ namespace TeamNotification_Library.Service.Highlighters.Rules
 
         public int Format(FormattedText text, int previousBlockCode)
         {
-            string textStr = text.Text;
-            if (previousBlockCode == BlockCodes.LongCommentStarted)
-            {
-                FormatText(text, 0, textStr.Length);
-                return BlockCodes.LongCommentStarted;
-            }
-            
-            var indexOfStartComment = textStr.IndexOf("/*");
-            if (indexOfStartComment != -1)
-            {
-                FormatText(text, indexOfStartComment, textStr.Length - indexOfStartComment);
-                return BlockCodes.LongCommentStarted;    
-            }
+//            var textStr = text.Text;
+//
+//            var indexOfStartComment = textStr.IndexOf("/*");
+//            if (indexOfStartComment != -1)
+//            {
+//                var indexOfEndComment = textStr.IndexOf("*/");
+//                if (indexOfEndComment != -1)
+//                {
+//                    FormatText(text, indexOfStartComment, indexOfEndComment);
+//                }
+//                else
+//                {
+//                    FormatText(text, indexOfStartComment, textStr.Length);
+//                }
+//            }
 
-            var indexOfEndComment = textStr.IndexOf("*/");
-            if (indexOfEndComment != -1)
+            Regex regexRgx = new Regex(rule.Expression);
+            foreach (Match m in regexRgx.Matches(text.Text))
             {
-                FormatText(text, 0, indexOfEndComment);
-                return BlockCodes.LongCommentStarted;    
+                text.SetForegroundBrush(rule.Options.Foreground, m.Index, m.Length);
+                text.SetFontWeight(rule.Options.FontWeight, m.Index, m.Length);
+                text.SetFontStyle(rule.Options.FontStyle, m.Index, m.Length);
             }
 
             return BlockCodes.Ok;
