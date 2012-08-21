@@ -45,7 +45,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
-//        private FlowDocument myFlowDoc;
 
         public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
         {
@@ -58,7 +57,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-//            myFlowDoc = new FlowDocument();
             messageList.Document = new FlowDocument();
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
@@ -194,7 +192,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                     {
                         var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
                         userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
-//                        myFlowDoc.Blocks.Add(userMessageParagraph);    
                         messageList.Document.Blocks.Add(userMessageParagraph);    
                     }
                     var codeClipboardData = new CodeClipboardData
@@ -207,7 +204,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                     programmingLanguage = message.programmingLanguage
                                                 };
                     var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
-//                    myFlowDoc.Blocks.Add(syntaxBlock);
                     messageList.Document.Blocks.Add(syntaxBlock);
                 }
                 else
@@ -218,7 +214,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                     userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     userMessageParagraph.Inlines.Add(new Run(message.message));
-//                    myFlowDoc.Blocks.Add(userMessageParagraph);
                     messageList.Document.Blocks.Add(userMessageParagraph);
                 }
                 lastInsertedUsername = username;

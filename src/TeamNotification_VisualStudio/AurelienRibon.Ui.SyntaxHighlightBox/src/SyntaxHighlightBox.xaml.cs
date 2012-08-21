@@ -64,9 +64,15 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 				lineNumbersCanvas = (DrawingControl)Template.FindName("PART_LineNumbersCanvas", this);
 				scrollViewer = (ScrollViewer)Template.FindName("PART_ContentHost", this);
 
-				lineNumbersCanvas.Width = GetFormattedTextWidth(string.Format("{0:0000}", totalLineCount)) + 5;
+                if (lineNumbersCanvas != null)
+                {
+                    lineNumbersCanvas.Width = GetFormattedTextWidth(string.Format("{0:0000}", totalLineCount)) + 5;
+                }
 
-				scrollViewer.ScrollChanged += OnScrollChanged;
+                if (scrollViewer != null)
+                {
+                    scrollViewer.ScrollChanged += OnScrollChanged;
+                }
 
 				InvalidateBlocks(0);
 				InvalidateVisual();
