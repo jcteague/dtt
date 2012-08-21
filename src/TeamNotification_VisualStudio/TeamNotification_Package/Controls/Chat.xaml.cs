@@ -216,7 +216,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void PasteCode(object sender, EventArgs args)
         {
             var message = (MessageBody)((Hyperlink)sender).CommandParameter;
-            //return;
             var solutionFileInfo = new FileInfo(message.solution);
             var dteHandler = dteHandlerCreator.Get(((DTE)Package.GetGlobalService(typeof(DTE))).Solution);
 
@@ -226,9 +225,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                 if (fileHandler!=null)
                 {
                     var option = PasteOptions.Insert;
-                    if (String.IsNullOrWhiteSpace(fileHandler.GetText(1)))
+                    if (!String.IsNullOrWhiteSpace(fileHandler.GetText(1)))
                     {
-                        var result = CustomMessageBox.Show("There's currently code at the requested position",
+                        var result = CustomMessageBox.Show("There's currently code at the requested position. What would you like to do with the code?",
                                                            new CustomMessageBoxResult[3]
                                                                {
                                                                    new CustomMessageBoxResult{Label="Append", Value="append"},
@@ -247,9 +246,14 @@ namespace AvenidaSoftware.TeamNotification_Package
                             case "overwrite":
                                 option = PasteOptions.Overwrite;
                                 break;
+                            default:
+                                return;
                         }
                     }
                     dteHandler.PasteCode(fileHandler, message.message,option);
+                }else
+                {
+                    CustomMessageBox.Show("The specified file does not exist.");
                 }
             }
             else
@@ -257,7 +261,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 CustomMessageBox.Show("You need to have the appropriate solution open in order to paste the code.");
             }
         }
-
 
         private void ChangeRoom(string newRoomId)
         {

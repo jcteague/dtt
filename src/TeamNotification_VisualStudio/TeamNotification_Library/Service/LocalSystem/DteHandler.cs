@@ -10,15 +10,18 @@ namespace TeamNotification_Library.Service.LocalSystem
     public class DteHandler : IHandleDte
     {
         private const string vsViewKindCode = "{7651A701-06E5-11D1-8EBD-00A0C90F26EA}";
+
+        public bool IsValidSolution { get { return (CurrentSolution.FileName != ""); } }
+        public bool HasTextOnLine { get; private set; }
         public FileInfo Solution { get; private set; }
         public Projects Projects { get; private set; }
-        public bool HasTextOnLine { get; private set; }
 
         public EnvDTE.Solution CurrentSolution { get; private set; }
 
         public DteHandler(EnvDTE.Solution solution)
         {
             CurrentSolution = solution;
+            if (!IsValidSolution) return;
             this.Solution = new FileInfo(solution.FileName);
             this.Projects = solution.Projects;
             this.HasTextOnLine = false;
@@ -33,10 +36,14 @@ namespace TeamNotification_Library.Service.LocalSystem
                 {
                     if (d.Name == fileInfo.Name)
                     {
-                        Window w = d.Open(vsViewKindCode);
-                        w.Visible = true;
-                        w.Activate();
-                        return d.Document;
+                        try{  
+                            Window w = d.Open(vsViewKindCode);
+                            w.Visible = true;
+                            w.Activate();
+                            return d.Document;
+                        }catch(FileNotFoundException fne){
+                            return null;
+                        }
                     }
                 }
                 break;
@@ -79,7 +86,7 @@ namespace TeamNotification_Library.Service.LocalSystem
                     objEditPt.Delete(code.Length);
                     break;
                 case PasteOptions.Append:
-                    objEditPt.EndOfDocument();// code.Length);
+                    objEditPt.EndOfDocument();
                     break;
             }
             objEditPt.Insert(c);
