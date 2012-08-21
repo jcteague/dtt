@@ -15,6 +15,7 @@ namespace TeamNotification_Library.Models
 
     public class MessageBody
     {
+        public string project { get; set; }
         public string message { get; set; }
         public string solution { get; set; }
         public string document { get; set; }

@@ -29,6 +29,7 @@ namespace TeamNotification_Library.Service.Http
                 var resources = block.Resources;
                 var data = new CodeClipboardData
                                {
+                                   project = resources["project"].Cast<string>(),
                                    message = resources["message"].Cast<string>(),
                                    solution = resources["solution"].Cast<string>(),
                                    document = resources["document"].Cast<string>(),

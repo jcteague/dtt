@@ -72,8 +72,10 @@ namespace TeamNotification_Library.Service.Controls
                 var txt = dte.ActiveDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
+                var activeProjects = dte.ActiveSolutionProjects[0];
                 var clipboard = new CodeClipboardData
                 {
+                    project = activeProjects.UniqueName,
                     solution = dte.Solution.FullName,
                     document = dte.ActiveDocument.FullName,
                     message = selection.Text,

@@ -4,6 +4,8 @@ namespace TeamNotification_Library.Models
 {
     public class CodeClipboardData : ChatMessageData, ICanBeMappedAsResources
     {
+        public string project { get; set; }
+
         public string message { get; set; }
 
         public string solution { get; set; }
@@ -16,6 +18,7 @@ namespace TeamNotification_Library.Models
         {
             var resources = new ResourceDictionary();
             resources["solution"] = solution;
+            resources["project"] = project;
             resources["document"] = document;
             resources["line"] = line;
             resources["message"] = message;

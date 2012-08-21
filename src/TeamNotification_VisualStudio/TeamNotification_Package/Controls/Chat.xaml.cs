@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using AurelienRibon.Ui.SyntaxHighlightBox;
+using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
@@ -24,6 +27,8 @@ using Button = System.Windows.Controls.Button;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Label = System.Windows.Controls.Label;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -35,21 +40,20 @@ namespace AvenidaSoftware.TeamNotification_Package
     public partial class Chat : UserControl
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
+        readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages messageListener;
         readonly ISerializeJSON serializeJson;
-        
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
         private FlowDocument myFlowDoc;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator)
         {
-
-
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
+            this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
@@ -211,9 +215,47 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void PasteCode(object sender, EventArgs args)
         {
-            var message = (MessageBody)((Hyperlink) sender).CommandParameter;
+            var message = (MessageBody)((Hyperlink)sender).CommandParameter;
+            //return;
+            var solutionFileInfo = new FileInfo(message.solution);
+            var dteHandler = dteHandlerCreator.Get(((DTE)Package.GetGlobalService(typeof(DTE))).Solution);
 
-            return;
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.Solution.Name == solutionFileInfo.Name)
+            {
+                var fileHandler = dteHandler.GetEditPoint(message.project, message.document, message.line);
+                if (fileHandler!=null)
+                {
+                    var option = PasteOptions.Insert;
+                    if (String.IsNullOrWhiteSpace(fileHandler.GetText(1)))
+                    {
+                        var result = CustomMessageBox.Show("There's currently code at the requested position",
+                                                           new CustomMessageBoxResult[3]
+                                                               {
+                                                                   new CustomMessageBoxResult{Label="Append", Value="append"},
+                                                                   new CustomMessageBoxResult{Label="Insert", Value="insert"},
+                                                                   new CustomMessageBoxResult{Label="Overwrite", Value="overwrite"}
+                                                               });
+                        if (result == null) return;
+                        switch (result.Value)
+                        {
+                            case "insert":
+                                option = PasteOptions.Insert;
+                                break;
+                            case "append":
+                                option = PasteOptions.Append;
+                                break;
+                            case "overwrite":
+                                option = PasteOptions.Overwrite;
+                                break;
+                        }
+                    }
+                    dteHandler.PasteCode(fileHandler, message.message,option);
+                }
+            }
+            else
+            {
+                CustomMessageBox.Show("You need to have the appropriate solution open in order to paste the code.");
+            }
         }
 
 

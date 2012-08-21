@@ -186,6 +186,10 @@
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />
+    <Compile Include="Service\LocalSystem\DteHandler.cs" />
+    <Compile Include="Service\LocalSystem\DteHandlerCreator.cs" />
+    <Compile Include="Service\LocalSystem\IHandleDTE.cs" />
+    <Compile Include="Service\LocalSystem\ICreateDteHandler.cs" />
     <Compile Include="Service\LocalSystem\IStoreGlobalState.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
@@ -201,7 +205,6 @@
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

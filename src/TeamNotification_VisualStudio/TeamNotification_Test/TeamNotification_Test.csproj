@@ -45,7 +45,8 @@
       <HintPath>..\packages\developwithpassion.specifications.rhinomocks.0.5.1\lib\developwithpassion.specifications.rhinomocks.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Machine.Fakes">
       <HintPath>..\packages\Machine.Fakes.0.5.1\lib\net40\Machine.Fakes.dll</HintPath>
@@ -87,6 +88,7 @@
     <Compile Include="Library\Service\Http\MessageListenerSpecs.cs" />
     <Compile Include="Library\Service\Http\RedisClientSpecs.cs" />
     <Compile Include="Library\Service\LocalDataStorageServiceSpecs.cs" />
+    <Compile Include="Library\Service\LocalSystem\DteHandlerSpecs.cs" />
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Library\Service\Mappers\ObjectToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

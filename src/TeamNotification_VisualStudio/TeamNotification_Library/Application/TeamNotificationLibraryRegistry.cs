@@ -22,6 +22,7 @@ namespace TeamNotification_Library.Application
             For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
             For<IStoreClipboardData>().Singleton().Use<ClipboardDataStorageService>();
             For<IHandleSystemClipboard>().Singleton().Use<SystemClipboardHandler>();
+            For<ICreateDteHandler>().Use<DteHandlerCreator>();
         }
     }
 }
