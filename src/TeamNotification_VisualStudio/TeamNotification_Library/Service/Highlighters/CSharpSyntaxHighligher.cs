@@ -11,12 +11,16 @@ namespace TeamNotification_Library.Service.Highlighters
         private IHighlightWords wordsHighlighter;
         private IHighlightNumbers numbersHighlighter;
         private IHighlightStrings stringsHighlighter;
+        private IHighlightLineComments lineCommentsHighlighter;
+        private IHighlightLongComments longCommentsHighlighter;
 
-        public CSharpSyntaxHighligher(IHighlightWords wordsHighlighter, IHighlightNumbers numbersHighlighter, IHighlightStrings stringsHighlighter)
+        public CSharpSyntaxHighligher(IHighlightWords wordsHighlighter, IHighlightNumbers numbersHighlighter, IHighlightStrings stringsHighlighter, IHighlightLineComments lineCommentsHighlighter, IHighlightLongComments longCommentsHighlighter)
         {
             this.wordsHighlighter = wordsHighlighter;
             this.numbersHighlighter = numbersHighlighter;
             this.stringsHighlighter = stringsHighlighter;
+            this.lineCommentsHighlighter = lineCommentsHighlighter;
+            this.longCommentsHighlighter = longCommentsHighlighter;
         }
 
         public int Highlight(FormattedText text, int previousBlockCode)
@@ -27,7 +31,11 @@ namespace TeamNotification_Library.Service.Highlighters
 
             stringsHighlighter.Format(text, previousBlockCode);
 
-            return 0;
+            lineCommentsHighlighter.Format(text, previousBlockCode);
+
+            var code = longCommentsHighlighter.Format(text, previousBlockCode);
+
+            return code;
         }
     }
 }

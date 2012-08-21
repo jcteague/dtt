@@ -22,7 +22,7 @@ namespace TeamNotification_Library.Service.Highlighters.Rules
                 text.SetFontStyle(rule.Options.FontStyle, m.Index, m.Length);
             }
 
-            return 0;
+            return BlockCodes.Ok;
         }
     }
 }

@@ -1,22 +1,21 @@
 using System.Text.RegularExpressions;
 using System.Windows.Media;
-using TeamNotification_Library.Service.Factories;
 
 namespace TeamNotification_Library.Service.Highlighters.Rules
 {
-    public class NumbersHighlighters : IHighlightNumbers
+    public class LineCommentsHighlighter : IHighlightLineComments
     {
-        private HighlightNumbersRule rule;
+        private HighlightLineCommentRule rule;
 
-        public NumbersHighlighters()
+        public LineCommentsHighlighter()
         {
-            rule = new HighlightNumbersRule();
+            rule = new HighlightLineCommentRule();
         }
 
         public int Format(FormattedText text, int previousBlockCode)
         {
-            Regex regexRgx = new Regex(rule.Expression);
-            foreach (Match m in regexRgx.Matches(text.Text))
+            Regex lineRgx = new Regex(Regex.Escape(rule.LineStart) + ".*");
+            foreach (Match m in lineRgx.Matches(text.Text))
             {
                 text.SetForegroundBrush(rule.Options.Foreground, m.Index, m.Length);
                 text.SetFontWeight(rule.Options.FontWeight, m.Index, m.Length);

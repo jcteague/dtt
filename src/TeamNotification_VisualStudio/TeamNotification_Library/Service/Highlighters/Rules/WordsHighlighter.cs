@@ -42,7 +42,7 @@ namespace TeamNotification_Library.Service.Highlighters.Rules
                 }
             }
 
-            return 0;
+            return BlockCodes.Ok;
         }
     }
 }
