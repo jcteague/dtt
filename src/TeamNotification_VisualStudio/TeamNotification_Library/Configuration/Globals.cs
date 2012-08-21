@@ -15,6 +15,7 @@
 
         public static class ProgrammingLanguages
         {
+            public const int Unknown = -1;
             public const int CSharp = 1;
             public const int JavaScript = 2;
             public const int VisualBasic = 3;

@@ -41,7 +41,8 @@ namespace TeamNotification_Library.Service.Http
                         solution = resources["solution"].Cast<string>(),
                         document = resources["document"].Cast<string>(),
                         line = resources["line"].Cast<int>(),
-                        column = resources["column"].Cast<int>()
+                        column = resources["column"].Cast<int>(),
+                        programmingLanguage = resources["programmingLanguage"].Cast<int>()
                     };
                     messages.Add(GetMessage(data, roomId));
                 }

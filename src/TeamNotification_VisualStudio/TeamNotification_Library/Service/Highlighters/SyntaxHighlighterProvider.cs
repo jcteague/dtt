@@ -10,13 +10,11 @@ namespace TeamNotification_Library.Service.Highlighters
         private IHighlighter VBHighlighter;
         private IHighlighter JavaScriptHighlighter;
 
-        public SyntaxHighlighterProvider(IHighlighter cSharpHighlighter)
+        public SyntaxHighlighterProvider()
         {
-            CSharpHighlighter = cSharpHighlighter;
-//            CSharpHighlighter = HighlighterManager.Instance.Highlighters["cSharp"];
-//            CSharpHighlighter = new CSharpSyntaxHighligher();
-//            VBHighlighter = HighlighterManager.Instance.Highlighters["visualBasic"];
-//            JavaScriptHighlighter = HighlighterManager.Instance.Highlighters["javaScript"];
+            CSharpHighlighter = HighlighterManager.Instance.Highlighters["cSharp"];
+            VBHighlighter = HighlighterManager.Instance.Highlighters["vBNET"];
+            JavaScriptHighlighter = HighlighterManager.Instance.Highlighters["javaScript"];
         }
 
         public IHighlighter GetFor(int programmingLanguageIdentifier)

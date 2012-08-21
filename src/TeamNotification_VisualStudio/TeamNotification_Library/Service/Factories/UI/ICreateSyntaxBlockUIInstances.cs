@@ -5,6 +5,6 @@ namespace TeamNotification_Library.Service.Factories.UI
 {
     public interface ICreateSyntaxBlockUIInstances
     {
-        BlockUIContainer Get(CodeClipboardData clipboardData, int programmingLanguage);
+        BlockUIContainer Get(CodeClipboardData clipboardData);
     }
 }

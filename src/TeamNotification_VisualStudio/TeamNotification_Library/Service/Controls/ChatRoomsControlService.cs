@@ -12,7 +12,6 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Clipboard;
-using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
@@ -35,7 +34,7 @@ namespace TeamNotification_Library.Service.Controls
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateChatMessageData chatMessageDataFactory, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -72,7 +71,8 @@ namespace TeamNotification_Library.Service.Controls
 
             if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
             {
-                var txt = dte.ActiveDocument.Object() as TextDocument;
+                var activeDocument = dte.ActiveDocument;
+                var txt = activeDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
 
@@ -80,10 +80,11 @@ namespace TeamNotification_Library.Service.Controls
                 var clipboard = new CodeClipboardData
                 {
                     solution = dte.Solution.FullName,
-                    document = dte.ActiveDocument.FullName,
+                    document = activeDocument.FullName,
                     message = message,
                     line = selection.CurrentLine,
-                    column = selection.CurrentColumn
+                    column = selection.CurrentColumn,
+                    programmingLanguage = activeDocument.GetProgrammingLanguage()
                 };
 
                 clipboardStorage.Store(clipboard);
@@ -102,15 +103,7 @@ namespace TeamNotification_Library.Service.Controls
         {
             if(clipboardStorage.IsCode)
             {
-                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>(), ProgrammingLanguages.CSharp);
-//                var clipboardData = clipboardStorage.Get<CodeClipboardData>();
-//                var block = new BlockUIContainer(
-//                                new SyntaxHighlightBox
-//                                {
-//                                    Text = clipboardData.message,
-//                                    CurrentHighlighter = new ExampleCSharp()
-//                                }) { Resources = clipboardData.AsResources() };
-//                textBox.Document.Blocks.Add(block);
+                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();

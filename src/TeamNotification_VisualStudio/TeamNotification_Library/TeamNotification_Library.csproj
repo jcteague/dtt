@@ -37,9 +37,6 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AurelienRibon.Ui.SyntaxHighlightBox">
-      <HintPath>..\packages\AurelienRibon.Ui.SyntaxHighlightBox\lib\AurelienRibon.Ui.SyntaxHighlightBox.dll</HintPath>
-    </Reference>
     <Reference Include="BookSleeve">
       <HintPath>..\packages\BookSleeve.1.1.0.7\lib\BookSleeve.dll</HintPath>
     </Reference>
@@ -96,6 +93,7 @@
     <Compile Include="Configuration\RedisConfigurationProvider.cs" />
     <Compile Include="Configuration\ServerConfiguration.cs" />
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
+    <Compile Include="Extensions\DTEExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -225,7 +223,12 @@
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
+      <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
+      <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

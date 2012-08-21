@@ -67,7 +67,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
 
-            DataObject.AddPastingHandler(messageTextBox, new DataObjectPastingEventHandler(OnPaste));
+            DataObject.AddPastingHandler(messageTextBox, OnPaste);
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -202,9 +202,10 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                     solution = message.solution, 
                                                     document = message.document,
                                                     line = message.line,
-                                                    column = message.column
+                                                    column = message.column,
+                                                    programmingLanguage = message.programmingLanguage
                                                 };
-                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData, ProgrammingLanguages.CSharp);
+                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
                     myFlowDoc.Blocks.Add(syntaxBlock);
                 }
                 else

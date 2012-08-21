@@ -24,6 +24,7 @@ namespace TeamNotification_Library.Models
             resources["line"] = line;
             resources["message"] = message;
             resources["column"] = column;
+            resources["programmingLanguage"] = programmingLanguage;
 
             return resources;
         }

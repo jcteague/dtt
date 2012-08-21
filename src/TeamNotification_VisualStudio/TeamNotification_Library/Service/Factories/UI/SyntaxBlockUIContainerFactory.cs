@@ -14,13 +14,13 @@ namespace TeamNotification_Library.Service.Factories.UI
             this.syntaxHighlighterProvider = syntaxHighlighterProvider;
         }
 
-        public BlockUIContainer Get(CodeClipboardData clipboardData, int programmingLanguage)
+        public BlockUIContainer Get(CodeClipboardData clipboardData)
         {
             return new BlockUIContainer(
                 new SyntaxHighlightBox
                 {
                     Text = clipboardData.message,
-                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programmingLanguage)
+                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(clipboardData.programmingLanguage)
                 }) { Resources = clipboardData.AsResources() };
         }
     }
