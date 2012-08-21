@@ -43,12 +43,15 @@ namespace TeamNotification_Test.Library.Service.Http
                 var solution = "foo solution";
                 var document = "foo document";
                 var fooMessage = "foo message";
+                var programmingLanguage = 10;
+
                 var resources = new ResourceDictionary();
                 resources["solution"] = solution;
                 resources["document"] = document;
                 resources["message"] = fooMessage;
                 resources["line"] = 1;
                 resources["column"] = 2;
+                resources["programmingLanguage"] = programmingLanguage;
                 var block1 = new BlockUIContainer {Resources = resources};
 
 
@@ -62,7 +65,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 objectToFormUrlEncodedContentMapper.Stub(
                     mapper =>
                         mapper.MapFrom(
-                            Arg<CodeClipboardData>.Matches(x => x.solution == solution && x.document == document && x.message == fooMessage)
+                            Arg<CodeClipboardData>.Matches(x => x.solution == solution && x.document == document && x.message == fooMessage && x.programmingLanguage == programmingLanguage)
                        )
                    ).Return(content1);
                 var message1 = new Tuple<string, HttpContent>(url, content1);

@@ -45,7 +45,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
-        private FlowDocument myFlowDoc;
+//        private FlowDocument myFlowDoc;
 
         public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
         {
@@ -58,8 +58,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-            myFlowDoc = new FlowDocument();
-            messageList.Document = myFlowDoc;
+//            myFlowDoc = new FlowDocument();
+            messageList.Document = new FlowDocument();
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -67,6 +67,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
 
+            messageTextBox.Document.Blocks.Clear();
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
         }
 
@@ -80,8 +81,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
 
+            var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             if (hwndSource.IsNotNull())
             {
                 installedHandle = hwndSource.Handle;
@@ -154,7 +155,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
-            // Here we should handle how to display the message formatted
             if (channel == currentChannel)
             {
                 var m = serializeJson.Deserialize<MessageData>(payload);
@@ -194,7 +194,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                     {
                         var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
                         userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
-                        myFlowDoc.Blocks.Add(userMessageParagraph);    
+//                        myFlowDoc.Blocks.Add(userMessageParagraph);    
+                        messageList.Document.Blocks.Add(userMessageParagraph);    
                     }
                     var codeClipboardData = new CodeClipboardData
                                                 {
@@ -206,7 +207,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                     programmingLanguage = message.programmingLanguage
                                                 };
                     var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
-                    myFlowDoc.Blocks.Add(syntaxBlock);
+//                    myFlowDoc.Blocks.Add(syntaxBlock);
+                    messageList.Document.Blocks.Add(syntaxBlock);
                 }
                 else
                 {
@@ -216,7 +218,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                     userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     userMessageParagraph.Inlines.Add(new Run(message.message));
-                    myFlowDoc.Blocks.Add(userMessageParagraph);
+//                    myFlowDoc.Blocks.Add(userMessageParagraph);
+                    messageList.Document.Blocks.Add(userMessageParagraph);
                 }
                 lastInsertedUsername = username;
             }));
@@ -235,9 +238,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
 
             // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
-            myFlowDoc = new FlowDocument();
-            messageList.Document = myFlowDoc;
-//            chatRoomControlService.ClearRichTextBox(messageList, myFlowDoc);
+            chatRoomControlService.ClearRichTextBox(messageList);
             
             AddMessages(newRoomId);
         }
