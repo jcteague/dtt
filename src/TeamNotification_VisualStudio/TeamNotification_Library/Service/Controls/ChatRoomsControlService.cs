@@ -118,8 +118,7 @@ namespace TeamNotification_Library.Service.Controls
 
         public void ClearRichTextBox(RichTextBox textBox)
         {
-            // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
-            textBox.Document = new FlowDocument();
+            textBox.Document.Blocks.Clear();
         }
     }
 }
