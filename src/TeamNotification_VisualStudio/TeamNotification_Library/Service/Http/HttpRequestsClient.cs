@@ -56,7 +56,12 @@ namespace TeamNotification_Library.Service.Http
         public void Post(IEnumerable<Tuple<string, HttpContent>> values)
         {
             var backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += (o, args) => values.Each(x => PostSync(x.Item1, x.Item2));
+            backgroundWorker.WorkerSupportsCancellation = true;
+            backgroundWorker.DoWork += (o, args) =>
+                                           {
+                                               values.Each(x => PostSync(x.Item1, x.Item2));
+                                               args.Cancel = true;
+                                           };
             backgroundWorker.RunWorkerAsync();
         }
 
