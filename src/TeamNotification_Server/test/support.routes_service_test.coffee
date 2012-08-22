@@ -103,6 +103,26 @@ describe 'Routes Service', ->
                     sinon.assert.calledWith(deferred.resolve, {success: true, messages: ["user added"]})
                     done()
 
+            describe 'and the user is not the owner of the room', ->
+
+                beforeEach (done) ->
+                    chat_room['users'] = [{id: 100}]
+                    chat_room['owner_id'] = user_id
+                    result = sut.add_user_to_chat_room(user_id, room_id)
+                    done()
+
+                it 'should not create the user on the database', (done) ->
+                    sinon.assert.notCalled(chat_room.addUsers)
+                    done()
+
+                it 'should return a promise', (done) ->
+                    expect(result).to.eql expected_result
+                    done()
+
+                it 'should resolve the promise with the not sucessful message', (done) ->
+                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"]})
+                    done()
+
             describe 'and the user is already in the room', ->
 
                 beforeEach (done) ->

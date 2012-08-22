@@ -31,8 +31,8 @@ methods.get_email_registered_handler = (req, res) ->
         else
             user_repository = new Repository('User')
             user_data = 
-                first_name: req.body.first_name
-                last_name: req.body.last_name
+                first_name: trim(req.body.first_name)
+                last_name: trim(req.body.last_name)
                 email: req.body.email
                 password: node_hash.sha256(req.body.password)
 
@@ -45,11 +45,12 @@ methods.get_email_registered_handler = (req, res) ->
                         email: user.email
                 }
 
+trim = (str) -> str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
 methods.is_valid_user = (user_data) ->
     validator = new Validator()
-    validator.check(user_data.first_name, 'First name is invalid').isAlphanumeric().notEmpty()
-    validator.check(user_data.last_name, 'Last name is invalid').isAlphanumeric().notEmpty()
+    validator.check(user_data.first_name, 'First name is invalid').is(/^[A-Za-z]'?[- a-zA-Z]+$/).notEmpty()
+    validator.check(user_data.last_name, 'Last name is invalid').is(/^[A-Za-z]'?[- a-zA-Z]+$/).notEmpty()
     validator.check(user_data.email, 'Email is invalid').isEmail().notEmpty()
     validator.check(user_data.password, 'Password must contain at least 6 characters').len(6, 48).notEmpty()
     validator.check(user_data.password, 'Password contains invalid characters').is(/^[A-Za-z0-9\!\@\#\$\%\^\&\*]+$/)
