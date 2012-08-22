@@ -11,6 +11,7 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Extensions;
+using System.Linq;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -29,11 +30,14 @@ namespace TeamNotification_Library.Service.Http
 
         public void SendMessages(IEnumerable<Block> blocks, string roomId)
         {
+            var plainMessage = "";
             var messages = new List<Tuple<string, HttpContent>>();
             foreach (var block in blocks)
             {
                 if (block.GetType() == typeof(BlockUIContainer))
                 {
+                    AppendPlainMessage(messages, plainMessage, roomId);
+
                     var resources = block.Resources;
                     var data = new CodeClipboardData
                     {
@@ -45,15 +49,26 @@ namespace TeamNotification_Library.Service.Http
                         programmingLanguage = resources["programmingLanguage"].Cast<int>()
                     };
                     messages.Add(GetMessage(data, roomId));
+                    plainMessage = "";
                 }
                 else
                 {
-                    var data = new PlainClipboardData { message = ((Paragraph)block).GetText() };
-                    messages.Add(GetMessage(data, roomId));
+                    plainMessage = plainMessage + "\r\n" + ((Paragraph) block).GetText();
                 }    
             }
 
+            AppendPlainMessage(messages, plainMessage, roomId);
+
             client.Post(messages);
+        }
+
+        private void AppendPlainMessage(List<Tuple<string, HttpContent>> messages, string plainMessage, string roomId)
+        {
+            if (!plainMessage.IsNullOrWhiteSpace())
+            {
+                var plainData = new PlainClipboardData { message = plainMessage };
+                messages.Add(GetMessage(plainData, roomId));
+            }
         }
 
         private Tuple<string, HttpContent> GetMessage<T>(T data, string roomId) where T : ChatMessageData
