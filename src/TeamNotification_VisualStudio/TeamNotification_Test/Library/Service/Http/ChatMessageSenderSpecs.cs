@@ -52,6 +52,7 @@ namespace TeamNotification_Test.Library.Service.Http
             {
                 chatMessageData = new CodeClipboardData
                 {
+                    project = "foo project",
                     solution = "foo solution",
                     document = "foo document",
                     message = "foo message",

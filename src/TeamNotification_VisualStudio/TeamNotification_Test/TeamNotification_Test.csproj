@@ -88,7 +88,9 @@
     <Compile Include="Library\Service\Http\MessageListenerSpecs.cs" />
     <Compile Include="Library\Service\Http\RedisClientSpecs.cs" />
     <Compile Include="Library\Service\LocalDataStorageServiceSpecs.cs" />
-    <Compile Include="Library\Service\LocalSystem\DteHandlerSpecs.cs" />
+    <Compile Include="Library\Service\LocalSystem\DteHandlerSpecs.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Library\Service\Mappers\ObjectToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

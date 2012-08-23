@@ -7,6 +7,6 @@ namespace TeamNotification_Library.Service.LocalSystem
 {
     public interface ICreateDteHandler
     {
-        IHandleDte Get(EnvDTE.Solution solution);
+        IHandleDte Get(IStoreDTE dteStore);
     }
 }

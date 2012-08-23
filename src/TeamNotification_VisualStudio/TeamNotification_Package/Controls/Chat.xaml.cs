@@ -47,9 +47,12 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
         private FlowDocument myFlowDoc;
+        private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore)
         {
+            dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
+            this.dteStore = dteStore; 
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
             this.serializeJson = serializeJson;
@@ -193,7 +196,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                     myFlowDoc.IsEnabled = true;
                     myFlowDoc.IsHyphenationEnabled = true;
 
-                    var pasteLink = new Hyperlink(new Run("Paste code")) { IsEnabled = true, CommandParameter = message };
+                    var pasteLink = new Hyperlink(new Run("Paste code to: {0} - {1} - {2}".FormatUsing(message.solution, message.project, message.document))) { IsEnabled = true, CommandParameter = message };
                     pasteLink.Click += new RoutedEventHandler(PasteCode);
                     userMessageParagraph.IsHyphenationEnabled = true;
                     userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
@@ -216,39 +219,26 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void PasteCode(object sender, EventArgs args)
         {
             var message = (MessageBody)((Hyperlink)sender).CommandParameter;
-            var solutionFileInfo = new FileInfo(message.solution);
-            var dteHandler = dteHandlerCreator.Get(((DTE)Package.GetGlobalService(typeof(DTE))).Solution);
+            var dteHandler = dteHandlerCreator.Get(dteStore);
 
-            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.Solution.Name == solutionFileInfo.Name)
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.solution)
             {
-                var fileHandler = dteHandler.GetEditPoint(message.project, message.document, message.line);
+                var document = dteHandler.OpenFile(message.project, message.document);
+                var fileHandler = dteHandler.GetEditPoint(document, message.line);
                 if (fileHandler!=null)
                 {
                     var option = PasteOptions.Insert;
-                    if (!String.IsNullOrWhiteSpace(fileHandler.GetText(1)))
+                    if (!String.IsNullOrWhiteSpace(fileHandler.GetLines(message.line, message.line+1)))
                     {
-                        var result = CustomMessageBox.Show("There's currently code at the requested position. What would you like to do with the code?",
-                                                           new CustomMessageBoxResult[3]
+                        var result = CustomMessageBox.Show<PasteOptions>("There's currently code at the requested position. What would you like to do with the code?",
+                                                           new CustomMessageBoxResult<PasteOptions>[3]
                                                                {
-                                                                   new CustomMessageBoxResult{Label="Append", Value="append"},
-                                                                   new CustomMessageBoxResult{Label="Insert", Value="insert"},
-                                                                   new CustomMessageBoxResult{Label="Overwrite", Value="overwrite"}
+                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Append", Value=PasteOptions.Append},
+                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Insert", Value=PasteOptions.Insert},
+                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Overwrite", Value=PasteOptions.Overwrite}
                                                                });
-                        if (result == null) return;
-                        switch (result.Value)
-                        {
-                            case "insert":
-                                option = PasteOptions.Insert;
-                                break;
-                            case "append":
-                                option = PasteOptions.Append;
-                                break;
-                            case "overwrite":
-                                option = PasteOptions.Overwrite;
-                                break;
-                            default:
-                                return;
-                        }
+                        if (result.Label == "cancel") return;
+                        option = result.Value;
                     }
                     dteHandler.PasteCode(fileHandler, message.message,option);
                 }else

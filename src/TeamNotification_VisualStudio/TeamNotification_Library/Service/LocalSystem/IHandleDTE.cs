@@ -13,11 +13,9 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         bool HasTextOnLine { get; }
         bool IsValidSolution { get; }
-        FileInfo Solution { get; }
-        Solution CurrentSolution { get; }
-        Projects Projects{ get;  }
-        Document OpenFile(string projectName, string fileName);
-        EditPoint GetEditPoint(string projectName, string fileName, int line);
+        IWrapSolution CurrentSolution { get; }
+        IWrapDocument OpenFile(string projectName, string fileName);
+        EditPoint GetEditPoint(IWrapDocument document, int line);
         void PasteCode(EditPoint objEditPt, string code, PasteOptions pasteOption);
     }
 }
