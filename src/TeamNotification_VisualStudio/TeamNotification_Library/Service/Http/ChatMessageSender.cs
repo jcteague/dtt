@@ -53,8 +53,9 @@ namespace TeamNotification_Library.Service.Http
                 }
                 else
                 {
-                    plainMessage = plainMessage + "\r\n" + ((Paragraph) block).GetText();
-                }    
+                    var text = ((Paragraph) block).GetText();
+                    plainMessage = plainMessage.IsNullOrEmpty() ? text : plainMessage + "\r\n" + text;
+                }
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
