@@ -213,7 +213,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 {
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
 
-                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "    ";
+                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "";
                     userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     userMessageParagraph.Inlines.Add(new Run(message.message));
