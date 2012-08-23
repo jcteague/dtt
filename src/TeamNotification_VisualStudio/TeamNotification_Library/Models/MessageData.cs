@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Models
 {
@@ -11,10 +12,10 @@ namespace TeamNotification_Library.Models
         public string date { get; set; }
         public string name { get; set; }
         public string user_id { get; set; }
-    }
 
-    public class MessageBody : CodeClipboardData
-    {
-        
+        public int GetUserId()
+        {
+            return user_id.ParseToInteger();
+        }
     }
 }

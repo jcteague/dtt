@@ -16,5 +16,10 @@
         {
             return string.IsNullOrWhiteSpace(str);
         }
+
+        public static int ParseToInteger(this string str)
+        {
+            return int.Parse(str);
+        }
     }
 }

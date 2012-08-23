@@ -157,7 +157,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 var m = serializeJson.Deserialize<MessageData>(payload);
                 var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
-                AppendMessage(m.name, messageBody);
+                AppendMessage(m.name, m.GetUserId(), messageBody);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -176,7 +176,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         #endregion
 
-        private string lastInsertedUsername = "";
+        private int lastUserThatInserted = -1;
 
         private void SendMessage()
         {
@@ -186,12 +186,12 @@ namespace AvenidaSoftware.TeamNotification_Package
         ///Todo
         /// Make the text selectionable by adding something like this bellow
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
-        private void AppendMessage(string username, MessageBody message)
+        private void AppendMessage(string username, int userId, MessageBody message)
         {
             messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
                 if (!message.solution.IsNullOrEmpty())
                 {
-                    if (lastInsertedUsername != username)
+                    if (lastUserThatInserted != userId)
                     {
                         var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
                         userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
@@ -213,20 +213,20 @@ namespace AvenidaSoftware.TeamNotification_Package
                 {
                     var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
 
-                    var lineStarter = lastInsertedUsername != username ? username + ":" : "    ";
+                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "    ";
                     userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
 
                     userMessageParagraph.Inlines.Add(new Run(message.message));
                     messageList.Document.Blocks.Add(userMessageParagraph);
                 }
-                lastInsertedUsername = username;
+                lastUserThatInserted = userId;
             }));
             messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
         }
 
         private void ChangeRoom(string newRoomId)
         {
-            lastInsertedUsername = "";
+            lastUserThatInserted = -1;
             currentChannel = "chat " + newRoomId;
             
             if (!subscribedChannels.Contains(currentChannel))
@@ -249,7 +249,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 var newMessage = serializeJson.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
                 var username = Collection.getField(message.data, "user");
-                AppendMessage(username, newMessage);
+                var userId =  Collection.getField(message.data, "user_id");
+                AppendMessage(username, userId.ParseToInteger(), newMessage);
             }
         }
         

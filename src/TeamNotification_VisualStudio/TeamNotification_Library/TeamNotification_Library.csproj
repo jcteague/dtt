@@ -104,6 +104,7 @@
     <Compile Include="Models\ChatMessageData.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\MessageBody.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\PlainClipboardData.cs" />
     <Compile Include="Models\ServerResponse.cs" />
