@@ -37,7 +37,7 @@ class RoomMessagesCollection
             ]
             template:
                 'data':[
-                    {'name':'message', 'label':'Send Message', 'type':'string-big', 'maxlength':100}
+                    {'name':'message', 'label':'Send Message', 'type':'string-big'}
                 ]
             messages: m
             user_rooms: r

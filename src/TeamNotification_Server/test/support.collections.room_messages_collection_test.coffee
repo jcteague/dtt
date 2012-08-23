@@ -64,7 +64,7 @@ describe 'Room Messages Collection', ->
 
                 it 'should contain template data for the message', (done) ->
                     template = result['template']['data']
-                    expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big', 'maxlength': 100}
+                    expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big'}
                     done()
 
     describe 'and there are not any room messages', ->
@@ -109,5 +109,5 @@ describe 'Room Messages Collection', ->
 
             it 'should contain template data for the message', (done) ->
                 template = result['template']['data']
-                expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big', 'maxlength': 100}
+                expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big'}
                 done()

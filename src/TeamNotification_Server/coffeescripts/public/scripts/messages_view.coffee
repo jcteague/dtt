@@ -84,10 +84,14 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             date = parse_date  new Date(message.date), new Date()
             parsedBody = JSON.parse(message.body)
 
-            name_and_date = if !@last_user_id_that_posted? or @last_user_id_that_posted isnt message.user_id then "<b>#{name}(<span class='chat_message_date'>#{date}</span>):</b>" else ''
+            $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
+
+            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
+                $name_and_date.children().hide() 
+
             @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                return ("<p>#{name_and_date} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                return ("<p>#{$name_and_date.html()} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p>#{name_and_date} #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
+                return ("<p>#{$name_and_date.html()} #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
