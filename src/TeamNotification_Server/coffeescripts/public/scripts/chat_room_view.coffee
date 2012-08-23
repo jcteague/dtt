@@ -4,6 +4,9 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
         
         id: 'chatroom-container'
 
+        events:
+            'keydown textarea': 'keydown_textarea'
+
         initialize: ->
             @user_rooms = new UserRoomsView(model:@model)
             @form_view = new FormView(model: @model)
@@ -40,3 +43,12 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
 
         append_to: (parent) ->
             @$el.appendTo parent
+
+        keydown_textarea: (event) ->
+            textarea = $(event.currentTarget)
+            key = if event.keyCode? then event.keyCode else event.which
+            if key is @ENTER and not event.shiftKey
+                @$('input[type=submit]').click()
+                event.preventDefault()
+
+        ENTER: 13

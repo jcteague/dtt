@@ -53,7 +53,7 @@ describe 'Room Messages Collection', ->
                     message = result['messages'][0]
                     room_message_parsed = JSON.parse(room_messages[0])
                     
-                    expect(message['data']).to.eql [{ 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': JSON.stringify(body)}, { 'name':'datetime', 'value':room_message_parsed.date }]
+                    expect(message['data']).to.eql [{ 'name':'user_id', 'value': room_message_parsed.user_id}, { 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': JSON.stringify(body)}, { 'name':'datetime', 'value':room_message_parsed.date }]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->

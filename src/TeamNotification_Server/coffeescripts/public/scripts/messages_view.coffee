@@ -2,8 +2,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
-        initialize: ->
-            #@model.on 'change:messages', @render, @
+        initialize: -> 
         added_code: false
         render: ->
             me = @
@@ -59,11 +58,12 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 for field in data
                     if field.name is field_name
                         return field.value
+
+            user_id = get_field 'user_id', message.data
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            #parsedBody = body#JSON.parse(body)
-            return  @read_message_data({name:name, date:date, body:body})
+            @read_message_data({user_id: user_id, name:name, date:date, body:body})
             
         append_to: (parent) ->
             @$el.appendTo parent
@@ -83,11 +83,11 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
             parsedBody = JSON.parse(message.body)
+
+            name_and_date = if !@last_user_id_that_posted? or @last_user_id_that_posted isnt message.user_id then "<b>#{name}(<span class='chat_message_date'>#{date}</span>):</b>" else ''
+            @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                return ("<p><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b> <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                return ("<p>#{name_and_date} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b> #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
-            
-        
-            
+                return ("<p>#{name_and_date} #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
