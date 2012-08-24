@@ -8,6 +8,7 @@ using System.Diagnostics.Contracts;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace AurelienRibon.Ui.SyntaxHighlightBox {
 	public partial class SyntaxHighlightBox : TextBox {
@@ -16,7 +17,7 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 		// Attributes
 		// --------------------------------------------------------------------
 
-		public double LineHeight {
+	    public double LineHeight {
 			get { return lineHeight; }
 			set {
 				if (value != lineHeight) {
@@ -277,11 +278,11 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 		private void FormatBlock(InnerTextBlock currentBlock, InnerTextBlock previousBlock) {
 			currentBlock.FormattedText = GetFormattedText(currentBlock.RawText);
 			if (CurrentHighlighter != null) {
-//				ThreadPool.QueueUserWorkItem(p => {
+				ThreadPool.QueueUserWorkItem(p => {
 					int previousCode = previousBlock != null ? previousBlock.Code : -1;
 					currentBlock.Code = CurrentHighlighter.Highlight(currentBlock.FormattedText, previousCode);
-//                    InvalidateVisual();
-//				});
+				    Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(InvalidateVisual));
+				});
 			}
 		}
 
