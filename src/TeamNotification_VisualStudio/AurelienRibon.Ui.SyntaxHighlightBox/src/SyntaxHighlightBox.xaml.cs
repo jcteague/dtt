@@ -277,10 +277,11 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 		private void FormatBlock(InnerTextBlock currentBlock, InnerTextBlock previousBlock) {
 			currentBlock.FormattedText = GetFormattedText(currentBlock.RawText);
 			if (CurrentHighlighter != null) {
-				ThreadPool.QueueUserWorkItem(p => {
+//				ThreadPool.QueueUserWorkItem(p => {
 					int previousCode = previousBlock != null ? previousBlock.Code : -1;
 					currentBlock.Code = CurrentHighlighter.Highlight(currentBlock.FormattedText, previousCode);
-				});
+//                    InvalidateVisual();
+//				});
 			}
 		}
 
