@@ -1,25 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Threading;
-using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
-using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
-using TextRange = System.Windows.Documents.TextRange;
-using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -30,13 +21,17 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
         private ISerializeJSON jsonSerializer;
+        private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
+        private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
+        private IHandleChatMessages chatMessagesService;
+        
         readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
 
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -46,6 +41,9 @@ namespace TeamNotification_Library.Service.Controls
             this.systemClipboardHandler = systemClipboardHandler;
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
+            this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
+            this.chatMessagesService = chatMessagesService;
+            this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.configuration = configuration;
         }
 
@@ -129,59 +127,14 @@ namespace TeamNotification_Library.Service.Controls
             var collection = GetMessagesCollection(currentRoomId);
             foreach (var message in collection.messages)
             {
-                var newMessage = jsonSerializer.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
-                var username = Collection.getField(message.data, "user");
-                var userId = Collection.getField(message.data, "user_id");
-                AppendMessage(messageList, scrollviewer, username, userId.ParseToInteger(), newMessage);
+                chatMessagesService.AppendMessage(messageList, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
             }
         }
 
-        public void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string channel, string messageData)
+        public void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string messageData)
         {
             var m = jsonSerializer.Deserialize<MessageData>(messageData);
-            var messageBody = jsonSerializer.Deserialize<MessageBody>(m.body);
-            AppendMessage(messageList, scrollviewer, m.name, m.GetUserId(), messageBody);
-        }
-
-        private int lastUserThatInserted = 0;
-
-        private void AppendMessage(RichTextBox messageList, ScrollViewer scrollViewer, string username, int userId, MessageBody message)
-        {
-            messageList.Dispatcher.Invoke(new Action(() =>
-            {
-                if (!message.solution.IsNullOrEmpty())
-                {
-                    if (lastUserThatInserted != userId)
-                    {
-                        var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                        userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
-                        messageList.Document.Blocks.Add(userMessageParagraph);
-                    }
-                    var codeClipboardData = new CodeClipboardData
-                    {
-                        message = message.message,
-                        solution = message.solution,
-                        document = message.document,
-                        line = message.line,
-                        column = message.column,
-                        programmingLanguage = message.programmingLanguage
-                    };
-                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
-                    messageList.Document.Blocks.Add(syntaxBlock);
-                }
-                else
-                {
-                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-
-                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "";
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
-
-                    userMessageParagraph.Inlines.Add(new Run(message.message));
-                    messageList.Document.Blocks.Add(userMessageParagraph);
-                }
-                lastUserThatInserted = userId;
-            }));
-            messageList.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
+            chatMessagesService.AppendMessage(messageList, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));
         }
     }
 }

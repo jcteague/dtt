@@ -14,7 +14,7 @@ namespace TeamNotification_Library.Service.Controls
         void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
         void SendMessage(RichTextBox textBox, string roomId);
         void ClearRichTextBox(RichTextBox textBox);
-        void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string channel, string messageData);
+        void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string messageData);
         void AddMessages(RichTextBox messageList, ScrollViewer scrollviewer, string currentRoomId);
     }
 }

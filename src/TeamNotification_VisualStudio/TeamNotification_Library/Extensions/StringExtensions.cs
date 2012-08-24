@@ -1,4 +1,6 @@
-﻿namespace TeamNotification_Library.Extensions
+﻿using System;
+
+namespace TeamNotification_Library.Extensions
 {
     public static class StringExtensions
     {
@@ -20,6 +22,11 @@
         public static int ParseToInteger(this string str)
         {
             return int.Parse(str);
+        }
+
+        public static DateTime ToDateTime(this string str)
+        {
+            return DateTime.Parse(str);
         }
     }
 }

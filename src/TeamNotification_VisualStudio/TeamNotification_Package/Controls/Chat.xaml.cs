@@ -155,7 +155,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(messageList, scrollViewer1, channel, payload);
+                chatRoomControlService.AddReceivedMessage(messageList, scrollViewer1, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)

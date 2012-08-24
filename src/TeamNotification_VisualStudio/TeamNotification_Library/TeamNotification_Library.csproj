@@ -98,6 +98,7 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Models\ChatMessageModel.cs" />
     <Compile Include="Models\CodeClipboardData.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
@@ -121,6 +122,12 @@
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
     <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
+    <Compile Include="Service\Chat\ChatMessagesService.cs" />
+    <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\IHandleChatMessages.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
@@ -187,7 +194,9 @@
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />
     <Compile Include="Service\LocalSystem\IStoreGlobalState.cs" />
+    <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
+    <Compile Include="Service\Mappers\MessageDataToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
