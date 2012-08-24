@@ -9,10 +9,12 @@ namespace TeamNotification_Library.Service.Chat.Formatters
     public class CodeMessagesFormatter : IFormatCodeMessages
     {
         private ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
+        private IFormatUserIndicator userIndicatorFormatter;
 
-        public CodeMessagesFormatter(ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
+        public CodeMessagesFormatter(ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, IFormatUserIndicator userIndicatorFormatter)
         {
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
+            this.userIndicatorFormatter = userIndicatorFormatter;
         }
 
         public IEnumerable<Block> GetFormattedElement(ChatMessageModel chatMessage, int lastUserThatInserted)
@@ -21,7 +23,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             if (lastUserThatInserted != chatMessage.UserId)
             {
                 var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                userMessageParagraph.Inlines.Add(new Bold(new Run(chatMessage.UserName + ":")));
+                userMessageParagraph.Inlines.Add(userIndicatorFormatter.Get(chatMessage));
                 blocks.Add(userMessageParagraph);
             }
             

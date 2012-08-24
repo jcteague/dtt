@@ -7,11 +7,20 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 {
     public class PlainMessagesFormatter : IFormatPlainMessages
     {
+        private IFormatUserIndicator userIndicatorFormatter;
+
+        public PlainMessagesFormatter(IFormatUserIndicator userIndicatorFormatter)
+        {
+            this.userIndicatorFormatter = userIndicatorFormatter;
+        }
+
         public IEnumerable<Block> GetFormattedElement(ChatMessageModel chatMessage, int lastUserThatInserted)
         {
             var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-            var lineStarter = lastUserThatInserted != chatMessage.UserId ? chatMessage.UserName + ":" : "";
-            userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
+            if (lastUserThatInserted != chatMessage.UserId)
+            {
+                userMessageParagraph.Inlines.Add(userIndicatorFormatter.Get(chatMessage));
+            }
             userMessageParagraph.Inlines.Add(new Run(chatMessage.Message));
             
             return new List<Block> {userMessageParagraph};

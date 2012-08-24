@@ -126,7 +126,9 @@
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
     <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\UserMessageIndicatorFormatter.cs" />
     <Compile Include="Service\Chat\IHandleChatMessages.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
