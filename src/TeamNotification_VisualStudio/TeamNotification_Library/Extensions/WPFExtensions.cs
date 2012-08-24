@@ -8,5 +8,11 @@ namespace TeamNotification_Library.Extensions
         {
             return new TextRange(paragraph.ContentStart, paragraph.ContentEnd).Text;
         }
+
+        // TODO: This should just be a Generic
+        public static string GetText(this Bold content)
+        {
+            return new TextRange(content.ContentStart, content.ContentEnd).Text;
+        }
     }
 }
