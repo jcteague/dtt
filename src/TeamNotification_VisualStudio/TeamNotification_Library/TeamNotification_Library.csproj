@@ -95,6 +95,7 @@
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
     <Compile Include="Extensions\DTEExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
@@ -124,7 +125,9 @@
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
     <Compile Include="Service\Chat\ChatMessagesService.cs" />
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
     <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
