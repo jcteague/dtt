@@ -155,9 +155,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                var m = serializeJson.Deserialize<MessageData>(payload);
-                var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
-                AppendMessage(m.name, m.GetUserId(), messageBody);
+                chatRoomControlService.AddReceivedMessage(messageList, scrollViewer1, channel, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -186,43 +184,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         ///Todo
         /// Make the text selectionable by adding something like this bellow
         /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
-        private void AppendMessage(string username, int userId, MessageBody message)
-        {
-            messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
-                if (!message.solution.IsNullOrEmpty())
-                {
-                    if (lastUserThatInserted != userId)
-                    {
-                        var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                        userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
-                        messageList.Document.Blocks.Add(userMessageParagraph);    
-                    }
-                    var codeClipboardData = new CodeClipboardData
-                                                {
-                                                    message = message.message, 
-                                                    solution = message.solution, 
-                                                    document = message.document,
-                                                    line = message.line,
-                                                    column = message.column,
-                                                    programmingLanguage = message.programmingLanguage
-                                                };
-                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
-                    messageList.Document.Blocks.Add(syntaxBlock);
-                }
-                else
-                {
-                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-
-                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "";
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
-
-                    userMessageParagraph.Inlines.Add(new Run(message.message));
-                    messageList.Document.Blocks.Add(userMessageParagraph);
-                }
-                lastUserThatInserted = userId;
-            }));
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
-        }
 
         private void ChangeRoom(string newRoomId)
         {
@@ -244,14 +205,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;
-            var collection = chatRoomControlService.GetMessagesCollection(this.roomId);
-            foreach (var message in collection.messages)
-            {
-                var newMessage = serializeJson.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
-                var username = Collection.getField(message.data, "user");
-                var userId =  Collection.getField(message.data, "user_id");
-                AppendMessage(username, userId.ParseToInteger(), newMessage);
-            }
+            chatRoomControlService.AddMessages(messageList, scrollViewer1, currentRoomId);
         }
         
         private List<Collection.Link> formatRooms(IEnumerable<Collection.Room> unformattedRoom)

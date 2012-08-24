@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
@@ -28,13 +29,14 @@ namespace TeamNotification_Library.Service.Controls
         private ISendHttpRequests httpClient;
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
+        private ISerializeJSON jsonSerializer;
         readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
 
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -43,6 +45,7 @@ namespace TeamNotification_Library.Service.Controls
             this.applicationGlobalState = applicationGlobalState;
             this.systemClipboardHandler = systemClipboardHandler;
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
+            this.jsonSerializer = jsonSerializer;
             this.configuration = configuration;
         }
 
@@ -119,6 +122,66 @@ namespace TeamNotification_Library.Service.Controls
         public void ClearRichTextBox(RichTextBox textBox)
         {
             textBox.Document.Blocks.Clear();
+        }
+
+        public void AddMessages(RichTextBox messageList, ScrollViewer scrollviewer, string currentRoomId)
+        {
+            var collection = GetMessagesCollection(currentRoomId);
+            foreach (var message in collection.messages)
+            {
+                var newMessage = jsonSerializer.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
+                var username = Collection.getField(message.data, "user");
+                var userId = Collection.getField(message.data, "user_id");
+                AppendMessage(messageList, scrollviewer, username, userId.ParseToInteger(), newMessage);
+            }
+        }
+
+        public void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string channel, string messageData)
+        {
+            var m = jsonSerializer.Deserialize<MessageData>(messageData);
+            var messageBody = jsonSerializer.Deserialize<MessageBody>(m.body);
+            AppendMessage(messageList, scrollviewer, m.name, m.GetUserId(), messageBody);
+        }
+
+        private int lastUserThatInserted = 0;
+
+        private void AppendMessage(RichTextBox messageList, ScrollViewer scrollViewer, string username, int userId, MessageBody message)
+        {
+            messageList.Dispatcher.Invoke(new Action(() =>
+            {
+                if (!message.solution.IsNullOrEmpty())
+                {
+                    if (lastUserThatInserted != userId)
+                    {
+                        var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+                        userMessageParagraph.Inlines.Add(new Bold(new Run(username + ":")));
+                        messageList.Document.Blocks.Add(userMessageParagraph);
+                    }
+                    var codeClipboardData = new CodeClipboardData
+                    {
+                        message = message.message,
+                        solution = message.solution,
+                        document = message.document,
+                        line = message.line,
+                        column = message.column,
+                        programmingLanguage = message.programmingLanguage
+                    };
+                    var syntaxBlock = syntaxBlockUIContainerFactory.Get(codeClipboardData);
+                    messageList.Document.Blocks.Add(syntaxBlock);
+                }
+                else
+                {
+                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
+
+                    var lineStarter = lastUserThatInserted != userId ? username + ":" : "";
+                    userMessageParagraph.Inlines.Add(new Bold(new Run(lineStarter)));
+
+                    userMessageParagraph.Inlines.Add(new Run(message.message));
+                    messageList.Document.Blocks.Add(userMessageParagraph);
+                }
+                lastUserThatInserted = userId;
+            }));
+            messageList.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
         }
     }
 }
