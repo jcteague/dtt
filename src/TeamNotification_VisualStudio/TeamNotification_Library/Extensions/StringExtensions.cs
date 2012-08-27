@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace TeamNotification_Library.Extensions
 {
     public static class StringExtensions
     {
+        public static string[] Split(this string str, string splitter)
+        {
+            return Regex.Split(str, "\r\n");
+        }
+
         public static string FormatUsing(this string str, params string[] values)
         {
             return string.Format(str, values);

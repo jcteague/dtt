@@ -177,7 +177,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void SendMessage()
         {
-            chatRoomControlService.SendMessage(GetMessagesContainer(), roomId);
+            chatRoomControlService.SendMessage(messageTextBox, roomId);
         }
 
         ///Todo

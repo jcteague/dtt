@@ -14,35 +14,40 @@ namespace TeamNotification_Library.Service.Chat
         private int lastUserThatInserted = 0;
         private IFormatCodeMessages codeMessageFormatter;
         private IFormatPlainMessages plainMessageFormatter;
+        private IFormatUserIndicator userMessageFormatter;
+        private IFormatDateTime dateMessageFormatter;
 
-        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter)
+        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter)
         {
             this.codeMessageFormatter = codeMessageFormatter;
             this.plainMessageFormatter = plainMessageFormatter;
+            this.userMessageFormatter = userMessageFormatter;
+            this.dateMessageFormatter = dateMessageFormatter;
         }
 
         public void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
         {
-            var user = "";
-            if (lastUserThatInserted != chatMessage.UserId)
-            {
-                user = chatMessage.UserName;
-            }
-            messagesContainer.UsersList.Document.Blocks.Add(new Paragraph(new Bold(new Run(user))));
-
             messagesContainer.MessagesList.Dispatcher.Invoke(new Action(() =>
             {
+                userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messagesContainer.UsersList.Document.Blocks.Add);
+                dateMessageFormatter.GetFormattedElement(chatMessage).Each(messagesContainer.DatesList.Document.Blocks.Add);
+
                 if (chatMessage.IsCode())
                 {
-                    codeMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messagesContainer.MessagesList.Document.Blocks.Add);
+                    codeMessageFormatter.GetFormattedElement(chatMessage).Each(messagesContainer.MessagesList.Document.Blocks.Add);
                 }
                 else
                 {
-                    plainMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messagesContainer.MessagesList.Document.Blocks.Add);
+                    plainMessageFormatter.GetFormattedElement(chatMessage).Each(messagesContainer.MessagesList.Document.Blocks.Add);
                 }
                 lastUserThatInserted = chatMessage.UserId;
             }));
             messagesContainer.MessagesList.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
+        }
+
+        public void ResetUser()
+        {
+            lastUserThatInserted = 0;
         }
     }
 }

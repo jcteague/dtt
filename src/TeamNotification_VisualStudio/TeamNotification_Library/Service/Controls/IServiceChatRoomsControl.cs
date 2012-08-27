@@ -13,7 +13,7 @@ namespace TeamNotification_Library.Service.Controls
         Collection GetMessagesCollection(string roomId);
         void UpdateClipboard(object source, DTE dte);
         void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
-        void SendMessage(MessagesContainer textBox, string roomId);
+        void SendMessage(RichTextBox textBox, string roomId);
         void ClearRichTextBox(MessagesContainer textBox);
         void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData);
         void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId);

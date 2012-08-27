@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
@@ -112,10 +113,10 @@ namespace TeamNotification_Library.Service.Controls
             }
         }
 
-        public void SendMessage(MessagesContainer messagesContainer, string roomId)
+        public void SendMessage(RichTextBox textBox, string roomId)
         {
-            messageSender.SendMessages(messagesContainer.MessagesList.Document.Blocks, roomId);
-            ClearRichTextBox(messagesContainer);
+            messageSender.SendMessages(textBox.Document.Blocks, roomId);
+            textBox.Document.Blocks.Clear();
         }
 
         public void ClearRichTextBox(MessagesContainer messagesContainer)
@@ -129,6 +130,7 @@ namespace TeamNotification_Library.Service.Controls
 
         public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
         {
+            chatMessagesService.ResetUser();
             var collection = GetMessagesCollection(currentRoomId);
             foreach (var message in collection.messages)
             {

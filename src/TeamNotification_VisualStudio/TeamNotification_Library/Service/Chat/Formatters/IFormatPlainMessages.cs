@@ -6,6 +6,6 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 {
     public interface IFormatPlainMessages
     {
-        IEnumerable<Block> GetFormattedElement(ChatMessageModel chatMessage, int lastUserThatInserted);
+        Maybe<Block> GetFormattedElement(ChatMessageModel chatMessage);
     }
 }
