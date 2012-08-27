@@ -4,6 +4,7 @@ using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
@@ -111,30 +112,34 @@ namespace TeamNotification_Library.Service.Controls
             }
         }
 
-        public void SendMessage(RichTextBox textBox, string roomId)
+        public void SendMessage(MessagesContainer messagesContainer, string roomId)
         {
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            ClearRichTextBox(textBox);
+            messageSender.SendMessages(messagesContainer.MessagesList.Document.Blocks, roomId);
+            ClearRichTextBox(messagesContainer);
         }
 
-        public void ClearRichTextBox(RichTextBox textBox)
+        public void ClearRichTextBox(MessagesContainer messagesContainer)
         {
-            textBox.Document.Blocks.Clear();
+            messagesContainer.MessagesList.Document.Blocks.Clear();
+
+            messagesContainer.UsersList.Document.Blocks.Clear();
+
+            messagesContainer.DatesList.Document.Blocks.Clear();
         }
 
-        public void AddMessages(RichTextBox messageList, ScrollViewer scrollviewer, string currentRoomId)
+        public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
         {
             var collection = GetMessagesCollection(currentRoomId);
             foreach (var message in collection.messages)
             {
-                chatMessagesService.AppendMessage(messageList, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
+                chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
             }
         }
 
-        public void AddReceivedMessage(RichTextBox messageList, ScrollViewer scrollviewer, string messageData)
+        public void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var m = jsonSerializer.Deserialize<MessageData>(messageData);
-            chatMessagesService.AppendMessage(messageList, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));
+            chatMessagesService.AppendMessage(messagesContainer, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));
         }
     }
 }

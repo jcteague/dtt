@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Extensions;
 
@@ -20,21 +21,28 @@ namespace TeamNotification_Library.Service.Chat
             this.plainMessageFormatter = plainMessageFormatter;
         }
 
-        public void AppendMessage(RichTextBox messageList, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
+        public void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
         {
-            messageList.Dispatcher.Invoke(new Action(() =>
+            var user = "";
+            if (lastUserThatInserted != chatMessage.UserId)
+            {
+                user = chatMessage.UserName;
+            }
+            messagesContainer.UsersList.Document.Blocks.Add(new Paragraph(new Bold(new Run(user))));
+
+            messagesContainer.MessagesList.Dispatcher.Invoke(new Action(() =>
             {
                 if (chatMessage.IsCode())
                 {
-                    codeMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messageList.Document.Blocks.Add);
+                    codeMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messagesContainer.MessagesList.Document.Blocks.Add);
                 }
                 else
                 {
-                    plainMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messageList.Document.Blocks.Add);
+                    plainMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Each(messagesContainer.MessagesList.Document.Blocks.Add);
                 }
                 lastUserThatInserted = chatMessage.UserId;
             }));
-            messageList.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
+            messagesContainer.MessagesList.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
         }
     }
 }

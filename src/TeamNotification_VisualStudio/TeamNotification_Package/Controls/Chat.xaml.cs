@@ -14,6 +14,7 @@ using AurelienRibon.Ui.SyntaxHighlightBox;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories.UI;
@@ -155,7 +156,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(messageList, scrollViewer1, payload);
+                chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -174,11 +175,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         #endregion
 
-        private int lastUserThatInserted = -1;
-
         private void SendMessage()
         {
-            chatRoomControlService.SendMessage(messageTextBox, roomId);
+            chatRoomControlService.SendMessage(GetMessagesContainer(), roomId);
         }
 
         ///Todo
@@ -187,7 +186,6 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
-            lastUserThatInserted = -1;
             currentChannel = "chat " + newRoomId;
             
             if (!subscribedChannels.Contains(currentChannel))
@@ -197,7 +195,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
 
             // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
-            chatRoomControlService.ClearRichTextBox(messageList);
+            chatRoomControlService.ClearRichTextBox(GetMessagesContainer());
             
             AddMessages(newRoomId);
         }
@@ -205,7 +203,17 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;
-            chatRoomControlService.AddMessages(messageList, scrollViewer1, currentRoomId);
+            chatRoomControlService.AddMessages(GetMessagesContainer(), scrollViewer1, currentRoomId);
+        }
+
+        private MessagesContainer GetMessagesContainer()
+        {
+            return new MessagesContainer
+            {
+                MessagesList = messageList,
+                UsersList = userList,
+                DatesList = dateList
+            };
         }
         
         private List<Collection.Link> formatRooms(IEnumerable<Collection.Room> unformattedRoom)

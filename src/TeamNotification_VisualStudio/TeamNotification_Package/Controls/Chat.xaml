@@ -25,11 +25,18 @@
         <Grid Name="grid1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,55" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
-                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" Background="White" Margin="2,2,2,10">
-                        <RichTextBox  Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" />
+                    <Grid Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <RichTextBox Grid.Column="0" Name="userList" Height="auto" Width="auto" IsReadOnly="true" />
+                        <RichTextBox Grid.Column="1" Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" />
+                        <RichTextBox Grid.Column="2" Name="dateList" Height="auto" Width="auto" IsReadOnly="true" />
                         <!--<shbox:SyntaxHighlightBox IsLineNumbersMarginVisible="True" x:Name="shbox" />-->
                         <!--<TextBlock  Name="messageList"  Height="auto" Width="auto" TextWrapping="Wrap" />-->
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </ScrollViewer>
         </Grid>
