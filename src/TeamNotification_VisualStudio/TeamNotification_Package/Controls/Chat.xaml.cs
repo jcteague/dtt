@@ -193,10 +193,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-
-            // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
             chatRoomControlService.ResetContainer(GetMessagesContainer());
-            
             AddMessages(newRoomId);
         }
 
@@ -210,9 +207,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             return new MessagesContainer
             {
-//                MessagesList = messageList,
-//                UsersList = userList,
-//                DatesList = dateList,
                 Container = messagesContainer,
                 MessagesTable = messagesTable
             };

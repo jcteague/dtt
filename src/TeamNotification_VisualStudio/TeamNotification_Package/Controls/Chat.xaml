@@ -35,17 +35,6 @@
                                 </Table.Columns>
                             </Table>
                         </FlowDocument>
-                        
-<!--                        <Grid.ColumnDefinitions>-->
-<!--                            <ColumnDefinition Width="75" />-->
-<!--                            <ColumnDefinition Width="*" />-->
-<!--                            <ColumnDefinition Width="100" />-->
-<!--                        </Grid.ColumnDefinitions>-->
-<!--                        <RichTextBox Grid.Column="0" Name="userList" Height="auto" Width="auto" IsReadOnly="true" />-->
-<!--                        <RichTextBox Grid.Column="1" Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" />-->
-<!--                        <RichTextBox Grid.Column="2" Name="dateList" Height="auto" Width="auto" IsReadOnly="true" />-->
-                        <!--<shbox:SyntaxHighlightBox IsLineNumbersMarginVisible="True" x:Name="shbox" />-->
-                        <!--<TextBlock  Name="messageList"  Height="auto" Width="auto" TextWrapping="Wrap" />-->
                     </RichTextBox>
                 </Border>
             </ScrollViewer>

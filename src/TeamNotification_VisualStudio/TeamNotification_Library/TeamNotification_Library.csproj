@@ -143,10 +143,12 @@
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
     <Compile Include="Service\Content\IBuildContent.cs" />
+    <Compile Include="Service\Content\IBuildTable.cs" />
     <Compile Include="Service\Content\ICreateElementsFromFields.cs" />
     <Compile Include="Service\Content\IBuildStackPanels.cs" />
     <Compile Include="Service\Content\IGetFieldValue.cs" />
     <Compile Include="Service\Content\StackPanelBuilder.cs" />
+    <Compile Include="Service\Content\TableBuilder.cs" />
     <Compile Include="Service\Controls\ChatRoomsControlService.cs" />
     <Compile Include="Service\Controls\FormControlHelpers.cs" />
     <Compile Include="Service\Controls\IHelpControls.cs" />

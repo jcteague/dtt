@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
@@ -121,24 +120,7 @@ namespace TeamNotification_Library.Service.Controls
 
         public void ResetContainer(MessagesContainer messagesContainer)
         {
-//            messagesContainer.Container.Document.Blocks.Clear();
             messagesContainer.MessagesTable.RowGroups.Clear();
-//            messagesContainer.Container.Document.Blocks.Add(GetTable());
-//            messagesContainer.MessagesList.Document.Blocks.Clear();
-//
-//            messagesContainer.UsersList.Document.Blocks.Clear();
-//
-//            messagesContainer.DatesList.Document.Blocks.Clear();
-        }
-
-        private Table GetTable()
-        {
-            var table = new Table {Name = "messagesTable"};
-            table.Columns.Add(new TableColumn());
-            table.Columns.Add(new TableColumn());
-            table.Columns.Add(new TableColumn());
-
-            return table;
         }
 
         public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
