@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TeamNotification_Library.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="site" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://dtt.local:3000/</Value>
+    </Setting>
+    <Setting Name="redis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dtt.local:6379</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

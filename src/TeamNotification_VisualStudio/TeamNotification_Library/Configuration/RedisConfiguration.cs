@@ -7,10 +7,10 @@ namespace TeamNotification_Library.Configuration
 {
     public class RedisConfiguration : IStoreConfiguration
     {
-        private string _href = "dtt.local:6379";
+        private string _href = "";
         public string Uri
         {
-            get { return _href; }
+            get { return Properties.Settings.Default.redis; }
             set { _href = value; }
         }
     }
