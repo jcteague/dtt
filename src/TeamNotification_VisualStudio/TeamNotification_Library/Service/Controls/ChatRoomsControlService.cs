@@ -119,13 +119,26 @@ namespace TeamNotification_Library.Service.Controls
             textBox.Document.Blocks.Clear();
         }
 
-        public void ClearRichTextBox(MessagesContainer messagesContainer)
+        public void ResetContainer(MessagesContainer messagesContainer)
         {
-            messagesContainer.MessagesList.Document.Blocks.Clear();
+//            messagesContainer.Container.Document.Blocks.Clear();
+            messagesContainer.MessagesTable.RowGroups.Clear();
+//            messagesContainer.Container.Document.Blocks.Add(GetTable());
+//            messagesContainer.MessagesList.Document.Blocks.Clear();
+//
+//            messagesContainer.UsersList.Document.Blocks.Clear();
+//
+//            messagesContainer.DatesList.Document.Blocks.Clear();
+        }
 
-            messagesContainer.UsersList.Document.Blocks.Clear();
+        private Table GetTable()
+        {
+            var table = new Table {Name = "messagesTable"};
+            table.Columns.Add(new TableColumn());
+            table.Columns.Add(new TableColumn());
+            table.Columns.Add(new TableColumn());
 
-            messagesContainer.DatesList.Document.Blocks.Clear();
+            return table;
         }
 
         public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)

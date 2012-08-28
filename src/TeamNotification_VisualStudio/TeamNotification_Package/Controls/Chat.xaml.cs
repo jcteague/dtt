@@ -58,7 +58,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-            messageList.Document = new FlowDocument();
+//            messageList.Document = new FlowDocument();
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -195,7 +195,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
 
             // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
-            chatRoomControlService.ClearRichTextBox(GetMessagesContainer());
+            chatRoomControlService.ResetContainer(GetMessagesContainer());
             
             AddMessages(newRoomId);
         }
@@ -210,9 +210,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             return new MessagesContainer
             {
-                MessagesList = messageList,
-                UsersList = userList,
-                DatesList = dateList
+//                MessagesList = messageList,
+//                UsersList = userList,
+//                DatesList = dateList,
+                Container = messagesContainer,
+                MessagesTable = messagesTable
             };
         }
         
