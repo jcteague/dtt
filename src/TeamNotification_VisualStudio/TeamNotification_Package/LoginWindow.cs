@@ -40,6 +40,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 base.Content = Container.GetInstance<LoginControl>();
             }
-        }       
+        }      
     }
 }

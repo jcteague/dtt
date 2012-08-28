@@ -17,7 +17,6 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Controls;
-using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
@@ -40,25 +39,20 @@ namespace AvenidaSoftware.TeamNotification_Package
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly IListenToMessages messageListener;
-        readonly ISerializeJSON serializeJson;
-        private ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
-        
+
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState)
         {
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
-            this.serializeJson = serializeJson;
-            this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
 
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-//            messageList.Document = new FlowDocument();
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -89,24 +83,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                 hwndSource.AddHook(hwndSourceHook);
             }
 
-        }
+//            Unloaded += (s, arg) => ChangeClipboardChain(this.installedHandle, this.viewerHandle);
 
-        // TODO: Must do this for deregistration? Where?
-//        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-//        {
-//            ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//            int error = System.Runtime.InteropServices.Marshal.GetLastWin32Error();
-//            e.Cancel = error != 0;
-//
-//            base.OnClosing(e);
-//        }
-//
-//        protected override void OnClosed(EventArgs e)
-//        {
-//            this.viewerHandle = IntPtr.Zero;
-//            this.installedHandle = IntPtr.Zero;
-//            base.OnClosed(e);
-//        }
+        }
 
         IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {

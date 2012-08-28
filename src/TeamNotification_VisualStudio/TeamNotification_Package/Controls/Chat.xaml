@@ -29,9 +29,9 @@
                         <FlowDocument>
                             <Table Name="messagesTable">
                                 <Table.Columns>
-                                    <TableColumn Width="75" />
+                                    <TableColumn Width="75"/>
                                     <TableColumn Width="Auto" />
-                                    <TableColumn Width="100" />
+                                    <TableColumn Width="70" />
                                 </Table.Columns>
                             </Table>
                         </FlowDocument>
