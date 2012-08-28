@@ -25,7 +25,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://ec2-107-21-171-44.compute-1.amazonaws.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://ec2-107-21-171-44.compute-1.amazonaws.com/")]
         public string site {
             get {
                 return ((string)(this["site"]));

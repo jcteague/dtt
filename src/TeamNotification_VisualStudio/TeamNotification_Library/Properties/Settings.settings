@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com</Value>
+      <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com/</Value>
     </Setting>
     <Setting Name="redis" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ec2-107-21-171-44.compute-1.amazonaws.com:6379</Value>
