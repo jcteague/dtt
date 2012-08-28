@@ -77,6 +77,7 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             if @added_code is true
                 @added_code = false
                 prettyPrint()
+                @$('.prettyprint').removeClass('prettyprint')
             @$el.scrollTop(@$el.prop('scrollHeight'))
             
         read_message_data: (message) ->
@@ -94,4 +95,4 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 @added_code = true
                 return ("<p>#{$name_and_date.html()} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p>#{$name_and_date.html()} #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
+                return ("<p>#{$name_and_date.html()} #{parsedBody.message}</p>")
