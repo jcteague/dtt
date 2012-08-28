@@ -34,10 +34,10 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             return dateTime.ToString("mm/dd/yyyy");
         }
 
-        public Maybe<Paragraph> GetFormattedElement(ChatMessageModel chatMessage)
+        public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
             var dateTime = FormatDate(chatMessage.DateTime);
-            return new Maybe<Paragraph>(new Paragraph(new Bold(new Run(dateTime))) { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) });
+            return new Paragraph(new Bold(new Run(dateTime))) { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
         }
 
         private string FormatDate(DateTime dateTime)

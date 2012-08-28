@@ -6,7 +6,7 @@ namespace TeamNotification_Library.Service.Chat
 {
     public interface IHandleChatMessages
     {
-        void AppendMessage(MessagesContainer messageList, ScrollViewer scrollViewer, ChatMessageModel chatMessage);
+        void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage);
         void ResetUser();
     }
 }

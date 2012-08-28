@@ -6,6 +6,7 @@
  using TeamNotification_Library.Models;
  using TeamNotification_Library.Service.Chat;
  using TeamNotification_Library.Service.Chat.Formatters;
+ using TeamNotification_Library.Service.Content;
  using developwithpassion.specifications.rhinomocks;
  using developwithpassion.specifications.extensions;
  using Rhino.Mocks;
@@ -13,19 +14,25 @@
 namespace TeamNotification_Test.Library.Service.Chat
 {
     //TODO: Find a way to mock the FlowDocument
-    [Subject(typeof(ChatMessagesService))]  
-    public class ChatMessagesServiceSpecs
-    {
+//    [Subject(typeof(ChatMessagesService))]  
+//    public class ChatMessagesServiceSpecs
+//    {
 //        public abstract class Concern : Observes<IHandleChatMessages, ChatMessagesService>
 //        {
 //            Establish context = () =>
 //            {
 //                codeMessageFormatter = depends.on<IFormatCodeMessages>();
 //                plainMessageFormatter = depends.on<IFormatPlainMessages>();
+//                userIndicatorFormatter = depends.on<IFormatUserIndicator>();
+//                dateTimeFormatter = depends.on<IFormatDateTime>();
+//                tableBuilder = depends.on<IBuildTable>();
 //            };
 //
 //            protected static IFormatCodeMessages codeMessageFormatter;
 //            protected static IFormatPlainMessages plainMessageFormatter;
+//            protected static IFormatUserIndicator userIndicatorFormatter;
+//            protected static IFormatDateTime dateTimeFormatter;
+//            protected static IBuildTable tableBuilder;
 //        }
 //
 //        public abstract class when_appending_a_message : Concern
@@ -85,5 +92,5 @@ namespace TeamNotification_Test.Library.Service.Chat
 //            private static Paragraph block1;
 //            private static Paragraph block2;
 //        }
-    }
+//    }
 }

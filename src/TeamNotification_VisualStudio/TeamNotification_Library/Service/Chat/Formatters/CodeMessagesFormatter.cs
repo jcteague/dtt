@@ -15,7 +15,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
         }
 
-        public Maybe<Block> GetFormattedElement(ChatMessageModel chatMessage)
+        public Block GetFormattedElement(ChatMessageModel chatMessage)
         {
             var codeClipboardData = new CodeClipboardData
             {
@@ -26,7 +26,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
                 column = chatMessage.Column,
                 programmingLanguage = chatMessage.ProgrammingLanguage
             };
-            return new Maybe<Block>(syntaxBlockUIContainerFactory.Get(codeClipboardData));
+            return syntaxBlockUIContainerFactory.Get(codeClipboardData);
         }
     }
 }

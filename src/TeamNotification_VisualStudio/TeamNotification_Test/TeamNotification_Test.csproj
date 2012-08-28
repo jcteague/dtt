@@ -79,9 +79,11 @@
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
     <Compile Include="Library\Service\Chat\ChatMessagesServiceSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\CodeMessagesFormatterSpecs.cs" />
+    <Compile Include="Library\Service\Chat\Formatters\DateTimeFormatterSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\PlainMessagesFormatterSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\UserMessageIndicatorFormatterSpecs.cs" />
     <Compile Include="Library\Service\Clipboard\ClipboardDataStorageServiceSpecs.cs" />
+    <Compile Include="Library\Service\Content\TableBuilderSpecs.cs" />
     <Compile Include="Library\Service\Controls\ChatRoomsControlServiceSpecs.cs" />
     <Compile Include="Library\Service\Content\ContentBuilderSpecs.cs" />
     <Compile Include="Library\Service\Content\StackPanelBuilderSpecs.cs" />

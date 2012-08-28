@@ -13,47 +13,43 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
     [Subject(typeof(UserMessageIndicatorFormatter))]  
     public class UserMessageIndicatorFormatterSpecs
     {
-        public abstract class concern : Observes<IFormatUserIndicator,
+        public abstract class Concern : Observes<IFormatUserIndicator,
                                             UserMessageIndicatorFormatter>
         {
-            Establish context = () =>
-            {
-                dateTimeFormatter = depends.on<IFormatDateTime>();
-            };
-
-            protected static IFormatDateTime dateTimeFormatter;
         }
 
-   
-        public class when_formatting_a_chat_message : concern
+        public abstract class when_getting_the_formatted_element : Concern
         {
             Establish context = () =>
             {
-                chatMessage = new ChatMessageModel
-                    {
-                        UserId = 9,
-                        UserName = "foo user",
-                        Message = "foo message",
-                        DateTime = DateTime.Now
-                    };
-
-                dateTimeText = "blah dateTime";
-                dateTimeFormatter.Stub(x => x.Format(chatMessage.DateTime)).Return(dateTimeText);
+                userId = 10;
+                chatMessage = new ChatMessageModel {UserId = userId, UserName = "Blah User"};
             };
 
+            protected static int userId;
+            protected static ChatMessageModel chatMessage;
+        }
+
+        public class when_getting_the_formatted_element_and_the_user_that_last_inserted_is_the_same : when_getting_the_formatted_element
+        {
             Because of = () =>
-                result = sut.Get(chatMessage);
+                result = sut.GetFormattedElement(chatMessage, userId);
 
-            It should_return_a_message_bolded = () =>
-            {
-                result.ShouldBeOfType<Bold>();
-                result.GetText().ShouldEqual("{0}({1}):".FormatUsing(chatMessage.UserName, dateTimeFormatter.Format(chatMessage.DateTime)));
-            };
-            
-                
-            private static ChatMessageModel chatMessage;
-            private static Bold result;
-            private static string dateTimeText;
+            It should_return_an_empty_paragraph = () =>
+                result.GetText().ShouldBeEmpty();
+
+            private static Paragraph result;
+        }
+
+        public class when_getting_the_formatted_element_and_the_user_that_last_inserted_is_not_the_same : when_getting_the_formatted_element
+        {
+            Because of = () =>
+                result = sut.GetFormattedElement(chatMessage, 99);
+
+            It should_return_an_empty_paragraph = () =>
+                result.GetText().ShouldEqual(chatMessage.UserName);
+
+            private static Paragraph result;
         }
     }
 }

@@ -32,11 +32,11 @@ namespace TeamNotification_Library.Service.Chat
         {
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(() =>
             {
-                var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted).Value;
-                var date = dateMessageFormatter.GetFormattedElement(chatMessage).Value;
+                var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
+                var date = dateMessageFormatter.GetFormattedElement(chatMessage);
                 var message = chatMessage.IsCode()
-                                  ? codeMessageFormatter.GetFormattedElement(chatMessage).Value
-                                  : plainMessageFormatter.GetFormattedElement(chatMessage).Value;
+                                  ? codeMessageFormatter.GetFormattedElement(chatMessage)
+                                  : plainMessageFormatter.GetFormattedElement(chatMessage);
 
                 var columns = new Tuple<Block, Block, Block>(user, message, date);
                 messagesContainer.MessagesTable.RowGroups.Add(tableBuilder.GetContentFor(columns));

@@ -5,7 +5,6 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 {
     public interface IFormatUserIndicator
     {
-        Bold Get(ChatMessageModel chatMessage);
-        Maybe<Paragraph> GetFormattedElement(ChatMessageModel chatMessage, int lastUserThatInserted);
+        Paragraph GetFormattedElement(ChatMessageModel chatMessage, int lastUserThatInserted);
     }
 }

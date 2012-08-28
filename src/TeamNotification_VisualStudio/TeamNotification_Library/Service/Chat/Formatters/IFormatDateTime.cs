@@ -7,6 +7,6 @@ namespace TeamNotification_Library.Service.Chat.Formatters
     public interface IFormatDateTime
     {
         string Format(DateTime dateTime);
-        Maybe<Paragraph> GetFormattedElement(ChatMessageModel chatMessage);
+        Paragraph GetFormattedElement(ChatMessageModel chatMessage);
     }
 }
