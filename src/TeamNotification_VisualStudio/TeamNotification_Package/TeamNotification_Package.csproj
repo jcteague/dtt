@@ -82,6 +82,9 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
+    <Reference Include="WPFToolkit.Extended">
+      <HintPath>..\packages\WPFToolkit.Extended\lib\WPFToolkit.Extended.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -142,6 +145,9 @@
   <ItemGroup>
     <Compile Include="BackgroundService\ClipboardViewer.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\AskingPaste.xaml.cs">
+      <DependentUpon>AskingPaste.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
@@ -203,6 +209,10 @@
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AskingPaste.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\CustomMessageBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -58,17 +58,29 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
                 _doc.ShouldBeNull();
 
             private static IWrapDocument _doc;
-            private static string _projectName;
         }
         public class and_the_file_is_valid : when_opening_a_solution_file
         {
+            Establish context = () =>
+            {
+                windowMock = fake.an<Window>();
+                DocumentMock = fake.an<IWrapDocument>();
+                ProjectItem.Stub(x => x.Open(vsViewKindCode)).Return(windowMock);
+                ProjectItem.Stub(x => x.Document).Return(DocumentMock);
+                filename = "an awesome filename ;D";
+                Solution.Stub(x => x.FileName).Return(filename);
+            };
             Because of = () =>
                 Doc = sut.OpenFile(ValidProjectName, ValidDocumentName);
 
             It should_return_a_valid_document_instance = () =>
-                Doc.ShouldNotBeNull();
+                Doc.ShouldEqual(DocumentMock);
 
-            protected static IWrapDocument Doc;
+            private static string filename;
+            private static Window windowMock;
+            private static string vsViewKindCode = "{7651A701-06E5-11D1-8EBD-00A0C90F26EA}";
+            private static IWrapDocument Doc;
+            private static IWrapDocument DocumentMock;
         }
 
         public class when_asking_for_the_editpoint : Concern
@@ -76,12 +88,12 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
             Establish context = () =>
             {
                 Line = 1;
-                var fakeTextDoc = fake.an<TextDocument>();
+                fakeTextDoc = fake.an<IWrapTextDocument>();
                 fakeDoc = fake.an<IWrapDocument>();
                 fakeEditPoint = fake.an<EditPoint>();
-                fakeDoc.Stub(x => x.GetTextDocument()).Return(fakeTextDoc);
                 ProjectItem.Stub(x => x.Document).Return(fakeDoc);
                 fakeTextDoc.Stub(x => x.CreateEditPoint()).Return(fakeEditPoint);
+                fakeDoc.Stub(x => x.TextDocument).Return(fakeTextDoc);
             };
             Because of = () =>
                 ep = sut.GetEditPoint(fakeDoc, Line);
@@ -93,6 +105,7 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
             private static EditPoint fakeEditPoint;
             private static int Line;
             private static IWrapDocument fakeDoc;
+            private static IWrapTextDocument fakeTextDoc;
         }
 
         public abstract class when_pasting_some_code : Concern

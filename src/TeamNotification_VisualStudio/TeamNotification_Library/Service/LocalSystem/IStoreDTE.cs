@@ -36,7 +36,30 @@ namespace TeamNotification_Library.Service.LocalSystem
 
     public interface IWrapDocument
     {
+        IWrapTextDocument TextDocument { get; }
+        IWrapSelection Selection { get; }
         bool ReadOnly { get; set; }
-        TextDocument GetTextDocument();
+        int Length { get; }
+        int Lines { get; }
+        void Paste(int line, string text, PasteOptions option);
+        void Paste(int line, PasteOptions option);
+        void Undo();
+    }
+
+    public interface IWrapSelection
+    {
+        void Copy();
+        void Cut();
+        void Select(int line, int lines = 1);
+        string Text { get; }
+        int Lines { get; }
+    }
+
+    public interface IWrapTextDocument
+    {
+        TextSelection Selection { get; }
+        EditPoint CreateEditPoint();
+        TextPoint EndPoint { get; }
+        TextPoint StartPoint { get; }
     }
 }

@@ -38,30 +38,29 @@ namespace TeamNotification_Library.Service.LocalSystem
                 w.Visible = true;
                 w.Activate();
                 return d.Document;
-            }catch{ }
-            return new DocumentWrapper(null);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public EditPoint GetEditPoint(IWrapDocument document, int line)
         {
-            if (document != null)
-            {
-                var editDoc = document.GetTextDocument();
-                var objEditPt = editDoc.CreateEditPoint();
-                objEditPt.StartOfDocument();
-                document.ReadOnly = false;
+            var editDoc = document.TextDocument;
+            var objEditPt = editDoc.CreateEditPoint();
+            objEditPt.StartOfDocument();
+            document.ReadOnly = false;
 
-                var i = 1;
-                while (!objEditPt.AtEndOfDocument && i < line)
-                {
-                    objEditPt.LineDown();
-                    ++i;
-                }
-                HasTextOnLine = !(objEditPt.AtEndOfDocument);
-                return objEditPt;
+            var i = 1;
+            while (!objEditPt.AtEndOfDocument && i < line)
+            {
+                objEditPt.LineDown();
+                ++i;
             }
-            return null;
-        }
+            HasTextOnLine = !(objEditPt.AtEndOfDocument);
+            return objEditPt;
+         }
 
         public void PasteCode(EditPoint objEditPt, string code, PasteOptions pasteOption)
         {

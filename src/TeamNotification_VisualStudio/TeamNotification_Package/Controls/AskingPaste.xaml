@@ -1,0 +1,31 @@
+﻿<Window x:Class="AvenidaSoftware.TeamNotification_Package.Controls.AskingPaste"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Height="115" Width="245" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" Topmost="True">
+    <Window.Resources>
+        <ResourceDictionary Source="Themes/BureauBlue.xaml"/>
+    </Window.Resources>
+    <Grid Margin="5,5,5,5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="86"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="125">
+            <xctk:IntegerUpDown Name="dudLine" Watermark="Line" FormatString="N0" Increment="1" Minimum="1" Maximum="10000" Width="116"  Height="18" />
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" >
+                <RadioButton Name="rbAppend" Content="Append"></RadioButton>
+                <RadioButton Name="rbOverwrite" Content="Overwrite"></RadioButton>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1">
+            <Button Name="btnPaste" Content="Paste code" Width="76" IsDefault="True"  ></Button>
+            <Button Name="btnCancel" Content="Cancel"  Width="76" IsCancel="True" Margin="5"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

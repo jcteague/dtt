@@ -45,7 +45,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             cmb.ShowDialog();
             if (cmb.DialogResult.HasValue && cmb.DialogResult.Value)
                 return (CustomMessageBoxResult<T>)cmb.LastResult;
-            return new CustomMessageBoxResult<T> { Label = "cancel"};
+            return new CustomMessageBoxResult<T> { Value = default(T)};
         }
 
         public void HandleClick<T>(object sender, EventArgs args)

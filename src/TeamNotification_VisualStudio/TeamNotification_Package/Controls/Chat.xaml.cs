@@ -224,23 +224,19 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.solution)
             {
                 var document = dteHandler.OpenFile(message.project, message.document);
-                var fileHandler = dteHandler.GetEditPoint(document, message.line);
-                if (fileHandler!=null)
+                if (document != null)
                 {
-                    var option = PasteOptions.Insert;
-                    if (!String.IsNullOrWhiteSpace(fileHandler.GetLines(message.line, message.line+1)))
+                    var originalText = document.TextDocument.CreateEditPoint().GetText(document.TextDocument.EndPoint);
+                    var pasteResponse = AskingPaste.Show(document, originalText, message.message, message.line);
+                    if(pasteResponse.pasteOption == PasteOptions.Abort)
                     {
-                        var result = CustomMessageBox.Show<PasteOptions>("There's currently code at the requested position. What would you like to do with the code?",
-                                                           new CustomMessageBoxResult<PasteOptions>[3]
-                                                               {
-                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Append", Value=PasteOptions.Append},
-                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Insert", Value=PasteOptions.Insert},
-                                                                   new CustomMessageBoxResult<PasteOptions>{Label="Overwrite", Value=PasteOptions.Overwrite}
-                                                               });
-                        if (result.Label == "cancel") return;
-                        option = result.Value;
+                        var textDocument = document.TextDocument;
+                        var editPoint = textDocument.CreateEditPoint();
+                        textDocument.Selection.SelectAll();
+                        textDocument.Selection.Cut();
+                        editPoint.MoveToLineAndOffset(1, 1);
+                        editPoint.Insert(originalText);
                     }
-                    dteHandler.PasteCode(fileHandler, message.message,option);
                 }else
                 {
                     CustomMessageBox.Show("The specified file does not exist.");

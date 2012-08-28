@@ -8,7 +8,7 @@ using EnvDTE;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
-    public enum PasteOptions { Insert = 0, Append, Overwrite }
+    public enum PasteOptions { Abort=0, Insert, Append, Overwrite }
     public interface IHandleDte
     {
         bool HasTextOnLine { get; }

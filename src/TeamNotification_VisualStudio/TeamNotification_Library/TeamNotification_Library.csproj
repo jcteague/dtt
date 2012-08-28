@@ -188,6 +188,7 @@
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />
+    <Compile Include="Service\LocalSystem\DocumentWrapper.cs" />
     <Compile Include="Service\LocalSystem\DteHandler.cs" />
     <Compile Include="Service\LocalSystem\DteHandlerCreator.cs" />
     <Compile Include="Service\LocalSystem\DteStore.cs" />
@@ -195,6 +196,10 @@
     <Compile Include="Service\LocalSystem\ICreateDteHandler.cs" />
     <Compile Include="Service\LocalSystem\IStoreDTE.cs" />
     <Compile Include="Service\LocalSystem\IStoreGlobalState.cs" />
+    <Compile Include="Service\LocalSystem\PastingResponse.cs" />
+    <Compile Include="Service\LocalSystem\SelectionWrapper.cs" />
+    <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
+    <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
