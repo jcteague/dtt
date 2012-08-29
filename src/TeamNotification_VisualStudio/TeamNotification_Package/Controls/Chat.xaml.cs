@@ -71,7 +71,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
-                lstRooms.SelectedIndex = 0;
+                comboRooms.SelectedIndex = 0;
 
             messageTextBox.Document.Blocks.Clear();
             DataObject.AddPastingHandler(messageTextBox, OnPaste);

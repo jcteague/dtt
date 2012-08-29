@@ -14,6 +14,7 @@
             </UserControl.Resources>
     <Grid Height="auto">
         <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
             <RowDefinition Height="*" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
@@ -22,7 +23,17 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Name="grid1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="buttonLogout" VerticalAlignment="Center" Width="60" />
+        <ComboBox Grid.Row="0" Grid.Column="2" Height="25" HorizontalAlignment="Stretch" Name="comboRooms" Margin="15,5,15,5" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Label Content="{Binding Path=name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Grid Name="grid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="auto" Margin="15,15,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
                     <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
@@ -38,17 +49,6 @@
                     </RichTextBox>
                 </Border>
             </ScrollViewer>
-        </Grid>
-        <Grid Name="roomsGrid" Width="auto" Grid.Row="0" Grid.Column="2" Margin="10,15,15,5">
-            <ListBox Name="lstRooms" Width="Auto" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="Single" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged" >
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="ListItem">
-                        <StackPanel Name="stack1">
-                            <Label Content="{Binding Path=name}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
