@@ -73,13 +73,17 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
-            @$el.append @read_message_data(m)
+            p = $(@read_message_data(m))
+            p.attr('class','new_message')
+            @$el.append p
             if @added_code is true
                 @added_code = false
                 prettyPrint()
                 @$('.prettyprint').removeClass('prettyprint')
             @$el.scrollTop(@$el.prop('scrollHeight'))
-            
+            p.animate {backgroundColor: '#F5F5F5'}, 500, () ->
+                p.removeClass('new_message')
+
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()

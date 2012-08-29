@@ -27,6 +27,14 @@ label { vertical-align: top;}
     overflow:auto;
     
 }
+.new_message
+{
+    background-color:#cc3300;
+}
+.new_message pre
+{
+    background-color:#cc3300 !important;
+}
 pre {
 	font-weight: bolder;
 	border:0 !important; 
