@@ -17,7 +17,7 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="125">
-            <xctk:IntegerUpDown Name="dudLine" Watermark="Line" FormatString="N0" Increment="1" Minimum="1" Maximum="10000" Width="116"  Height="18" />
+            <xctk:IntegerUpDown Name="iudLine" Watermark="Line" FormatString="N0" Increment="1" Minimum="1" Maximum="10000" Width="116"  Height="18" />
             <!--<StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" >
                 <RadioButton Name="rbAppend" Content="Append"></RadioButton>
                 <RadioButton Name="rbOverwrite" Content="Overwrite"></RadioButton>

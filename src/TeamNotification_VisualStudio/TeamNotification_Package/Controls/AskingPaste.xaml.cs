@@ -36,7 +36,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         {
             InitializeComponent();
             btnPaste.Click += HandleClick;
-            dudLine.ValueChanged += DudLine_OnValueChanged;
+            iudLine.ValueChanged += DudLine_OnValueChanged;
             chkOverwrite.Checked += HandleCheck;
             this.document = document;
             this.originalText = originalText;
@@ -49,15 +49,19 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             var textToPasteLines = CountLines(textToPaste);
             document.Paste(1, textToPaste, PasteOptions.Insert);
             document.Selection.Select(1, textToPasteLines);
+            
             var ap = new AskingPaste(document, originalText, textToPaste)
             {
                 lines = textToPasteLines,
-                dudLine = {Maximum = (document.Lines - document.Selection.Lines) + 1, Value = line}
+                iudLine = { Maximum = (document.Lines - document.Selection.Lines) + 1, Value = line }
             };
-            ap.dudLine.Focus();
+
+            ap.iudLine.Focus();
             ap.ShowDialog();
-            if (ap.DialogResult.HasValue && ap.DialogResult.Value && ap.dudLine.Value != null)
-                return new PastingResponse { line = (int)ap.dudLine.Value, pasteOption = ap.chkOverwrite.IsChecked != null && (ap.chkOverwrite.IsChecked.Value) ?  PasteOptions.Overwrite : PasteOptions.Append };
+
+            if (ap.DialogResult.HasValue && ap.DialogResult.Value && ap.iudLine.Value != null)
+                return new PastingResponse { line = (int)ap.iudLine.Value, pasteOption = ap.chkOverwrite.IsChecked != null && (ap.chkOverwrite.IsChecked.Value) ? PasteOptions.Overwrite : PasteOptions.Append };
+            
             return new PastingResponse { line = -1, pasteOption = PasteOptions.Abort };
         }
 
@@ -80,11 +84,25 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             editPoint.Insert(originalText);
         }
 
+
+        private void DudLine_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (iudLine.Value != null)
+                MoveCode(lines, (int)iudLine.Value);
+        }
+
+        private void HandleCheck(object sender, RoutedEventArgs e)
+        {
+            if (iudLine.Value == null) return;
+            RewriteFile();
+            MoveCode(lines, (int)iudLine.Value);
+        }
+
         private void MoveCode(int lines, int lineTo)
         {
             var opt = PasteOptions.Insert;
             var isChecked = this.chkOverwrite.IsChecked;
-            if((isChecked != null && (bool)isChecked))
+            if ((isChecked != null && (bool)isChecked))
             {
                 opt = PasteOptions.Overwrite;
                 RewriteFile();
@@ -95,20 +113,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             }
             document.Selection.Cut();
             document.Paste(lineTo, opt);
-            document.Selection.Select(lineTo,lines);
-        }
-
-        private void DudLine_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (dudLine.Value != null) 
-                MoveCode(lines, (int)dudLine.Value);
-        }
-
-        private void HandleCheck(object sender, RoutedEventArgs e)
-        {
-            if (dudLine.Value == null) return;
-            RewriteFile();
-            MoveCode(lines, (int) dudLine.Value);
+            document.Selection.Select(lineTo, lines);
         }
 
         private void HandleClick(object sender, EventArgs args) { DialogResult = true; }
