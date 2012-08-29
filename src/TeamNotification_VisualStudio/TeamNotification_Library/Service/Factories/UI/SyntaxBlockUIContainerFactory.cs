@@ -1,27 +1,20 @@
 using System.Windows.Documents;
-using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
-using TeamNotification_Library.Service.Highlighters;
 
 namespace TeamNotification_Library.Service.Factories.UI
 {
     public class SyntaxBlockUIContainerFactory : ICreateSyntaxBlockUIInstances
     {
-        private readonly IProvideSyntaxHighlighter syntaxHighlighterProvider;
+        private readonly ICreateSyntaxHighlightBox syntaxHighlightBoxFactory;
         
-        public SyntaxBlockUIContainerFactory(IProvideSyntaxHighlighter syntaxHighlighterProvider)
+        public SyntaxBlockUIContainerFactory(ICreateSyntaxHighlightBox syntaxHighlightBoxFactory)
         {
-            this.syntaxHighlighterProvider = syntaxHighlighterProvider;
+            this.syntaxHighlightBoxFactory = syntaxHighlightBoxFactory;
         }
 
         public BlockUIContainer Get(CodeClipboardData clipboardData)
         {
-            return new BlockUIContainer(
-                new SyntaxHighlightBox
-                {
-                    Text = clipboardData.message,
-                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(clipboardData.programmingLanguage)
-                }) { Resources = clipboardData.AsResources() };
+            return new BlockUIContainer(syntaxHighlightBoxFactory.Get(clipboardData.message, clipboardData.programmingLanguage)) { Resources = clipboardData.AsResources() };
         }
     }
 }

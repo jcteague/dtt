@@ -28,7 +28,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             protected static IFormatUserIndicator userIndicatorFormatter;
         }
 
-        public abstract class when_gettting_the_formatted_element : Concern
+        public class when_gettting_the_formatted_element : Concern
         {
             Establish context = () =>
             {
@@ -36,6 +36,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                                   {
                                       UserId = 9,
                                       Message = "foo message",
+                                      Project = "foo project",
                                       Solution = "foo solution",
                                       Document = "foo document",
                                       Line = 10,
@@ -67,7 +68,6 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                 result.ShouldEqual(syntaxBlock);
 
             private static Block result;
-
             private static ChatMessageModel chatMessage;
             private static BlockUIContainer syntaxBlock;
         }

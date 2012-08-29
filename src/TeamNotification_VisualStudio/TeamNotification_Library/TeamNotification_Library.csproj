@@ -181,10 +181,12 @@
     <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
     <Compile Include="Service\Factories\UI\ICreateLabels.cs" />
     <Compile Include="Service\Factories\UI\ICreateSyntaxBlockUIInstances.cs" />
+    <Compile Include="Service\Factories\UI\ICreateSyntaxHighlightBox.cs" />
     <Compile Include="Service\Factories\UI\ICreateUIElements.cs" />
     <Compile Include="Service\Factories\UI\LabelFactory.cs" />
     <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
     <Compile Include="Service\Factories\UI\SyntaxBlockUIContainerFactory.cs" />
+    <Compile Include="Service\Factories\UI\SyntaxHighlightBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
     <Compile Include="Service\FileSystem\Base64Encoder.cs" />
