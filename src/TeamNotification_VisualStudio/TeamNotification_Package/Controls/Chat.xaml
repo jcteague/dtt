@@ -14,17 +14,17 @@
             </UserControl.Resources>
     <Grid Height="auto">
         <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
+            <RowDefinition Height="35" />
             <RowDefinition Height="*" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
         <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="buttonLogout" VerticalAlignment="Center" Width="60" />
-        <ComboBox Grid.Row="0" Grid.Column="2" Height="25" HorizontalAlignment="Stretch" Name="comboRooms" Margin="15,5,15,5" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+        <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Stretch" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -33,7 +33,7 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Grid Name="grid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="auto" Margin="15,15,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <Grid Name="grid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="auto" Margin="15,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
                     <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
