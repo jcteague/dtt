@@ -25,11 +25,17 @@
         <Grid Name="grid1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Width="auto" Margin="15,15,5,55" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
-                    <StackPanel Height="auto" Width="auto" Orientation="Vertical" Background="White" Margin="2,2,2,10">
-                        <RichTextBox  Name="messageList"  Height="auto" Width="auto"  IsReadOnly="True" IsDocumentEnabled="True" />
-                        <!--<shbox:SyntaxHighlightBox IsLineNumbersMarginVisible="True" x:Name="shbox" />-->
-                        <!--<TextBlock  Name="messageList"  Height="auto" Width="auto" TextWrapping="Wrap" />-->
-                    </StackPanel>
+                    <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
+                        <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
+                            <Table Name="messagesTable">
+                                <Table.Columns>
+                                    <TableColumn Width="75"/>
+                                    <TableColumn Width="Auto" />
+                                    <TableColumn Width="70" />
+                                </Table.Columns>
+                            </Table>
+                        </FlowDocument>
+                    </RichTextBox>
                 </Border>
             </ScrollViewer>
         </Grid>
@@ -49,7 +55,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="45" Name="messageTextBox" VerticalAlignment="Bottom" Margin="15,0,0,5" KeyDown="CheckKeyboard"   VerticalScrollBarVisibility="Auto" >
+            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="45" Name="messageTextBox" VerticalAlignment="Bottom" Margin="15,0,0,5" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0"/>

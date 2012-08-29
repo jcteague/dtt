@@ -31,3 +31,9 @@ pre {
 	font-weight: bolder;
 	border:0 !important; 
 }
+
+#messages-container p {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

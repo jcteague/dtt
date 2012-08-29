@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using EnvDTE;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Models.UI;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -13,6 +14,8 @@ namespace TeamNotification_Library.Service.Controls
         void UpdateClipboard(object source, DTE dte);
         void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
         void SendMessage(RichTextBox textBox, string roomId);
-        void ClearRichTextBox(RichTextBox textBox);
+        void ResetContainer(MessagesContainer textBox);
+        void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData);
+        void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,7 +15,9 @@ using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -31,6 +32,9 @@ using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
+using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
+
+
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -42,27 +46,26 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages messageListener;
-        readonly ISerializeJSON serializeJson;
+        private IHandleCodePaste codePasteEvents;
+        
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
-        private FlowDocument myFlowDoc;
         private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore)
+        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
         {
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
-            this.dteStore = dteStore; 
+            this.dteStore = dteStore;
+            this.codePasteEvents = codePasteEvents;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
-            this.serializeJson = serializeJson;
+
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
-            myFlowDoc = new FlowDocument();
-            messageList.Document = myFlowDoc;
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -70,7 +73,10 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 lstRooms.SelectedIndex = 0;
 
-            DataObject.AddPastingHandler(messageTextBox, new DataObjectPastingEventHandler(OnPaste));
+            messageTextBox.Document.Blocks.Clear();
+            DataObject.AddPastingHandler(messageTextBox, OnPaste);
+
+            codePasteEvents.CodePasteWasClicked += PasteCode;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -83,8 +89,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
 
+            var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             if (hwndSource.IsNotNull())
             {
                 installedHandle = hwndSource.Handle;
@@ -92,24 +98,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                 hwndSource.AddHook(hwndSourceHook);
             }
 
-        }
+//            Unloaded += (s, arg) => ChangeClipboardChain(this.installedHandle, this.viewerHandle);
 
-        // TODO: Must do this for deregistration? Where?
-//        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-//        {
-//            ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//            int error = System.Runtime.InteropServices.Marshal.GetLastWin32Error();
-//            e.Cancel = error != 0;
-//
-//            base.OnClosing(e);
-//        }
-//
-//        protected override void OnClosed(EventArgs e)
-//        {
-//            this.viewerHandle = IntPtr.Zero;
-//            this.installedHandle = IntPtr.Zero;
-//            base.OnClosed(e);
-//        }
+        }
 
         IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -157,12 +148,9 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
-            // Here we should handle how to display the message formatted
             if (channel == currentChannel)
             {
-                var m = serializeJson.Deserialize<MessageData>(payload);
-                var messageBody = serializeJson.Deserialize<MessageBody>(m.body);
-                AppendMessage(m.name, messageBody);
+                chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -172,9 +160,13 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-          if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+            {
                 this.SendMessage();
+                e.Handled = true;
+            }
         }
+
         #endregion
 
         private void SendMessage()
@@ -182,52 +174,18 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.SendMessage(messageTextBox, roomId);
         }
 
-        ///Todo
-        /// Make the text selectionable by adding something like this bellow
-        /// <TextBox Background="Transparent" BorderThickness="0" Text="{Binding Text}" IsReadOnly="True" TextWrapping="Wrap"/>
-        private void AppendMessage(string username, MessageBody message)
-        {
-            messageList.Dispatcher.Invoke((MethodInvoker) (() =>{
-                if (!message.solution.IsNullOrEmpty())
-                {
-                    //messageList.IsDocumentEnabled = true;
-                    var syntaxHighlightBox = new SyntaxHighlightBox { Text = message.message, CurrentHighlighter = HighlighterManager.Instance.Highlighters["cSharp"] };
-                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                    myFlowDoc.IsEnabled = true;
-                    myFlowDoc.IsHyphenationEnabled = true;
-
-                    var pasteLink = new Hyperlink(new Run("Paste code to: {0} - {1} - {2}".FormatUsing(message.solution, message.project, message.document))) { IsEnabled = true, CommandParameter = message };
-                    pasteLink.Click += new RoutedEventHandler(PasteCode);
-                    userMessageParagraph.IsHyphenationEnabled = true;
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
-                    userMessageParagraph.Inlines.Add(pasteLink);
-
-                    myFlowDoc.Blocks.Add(userMessageParagraph);
-                    myFlowDoc.Blocks.Add(new BlockUIContainer(syntaxHighlightBox));
-                }
-                else
-                {
-                    var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-                    userMessageParagraph.Inlines.Add(new Bold(new Run(username + ": ")));
-                    userMessageParagraph.Inlines.Add(new Run(message.message));
-                    myFlowDoc.Blocks.Add(userMessageParagraph);
-                }
-            }));
-            messageList.Dispatcher.Invoke((MethodInvoker)(() => scrollViewer1.ScrollToBottom()));
-        }
-
         private void PasteCode(object sender, EventArgs args)
         {
             var message = GetMessageBodyFromLink(sender);
             var dteHandler = dteHandlerCreator.Get(dteStore);
 
-            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.solution)
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.Solution)
             {
-                var document = dteHandler.OpenFile(message.project, message.document);
+                var document = dteHandler.OpenFile(message.Project, message.Document);
                 if (document != null)
                 {
                     var originalText = document.TextDocument.CreateEditPoint().GetText(document.TextDocument.EndPoint);
-                    var pasteResponse = AskingPaste.Show(document, originalText, message.message, message.line);
+                    var pasteResponse = AskingPaste.Show(document, originalText, message.Message, message.Line);
                     if(pasteResponse.pasteOption == PasteOptions.Abort)
                     {
                         var textDocument = document.TextDocument;
@@ -248,9 +206,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
         }
 
-        private static MessageBody GetMessageBodyFromLink(object sender)
+        private static ChatMessageModel GetMessageBodyFromLink(object sender)
         {
-            return (MessageBody)((Hyperlink)sender).CommandParameter;
+            return (ChatMessageModel)((Hyperlink)sender).CommandParameter;
         }
 
         private void ChangeRoom(string newRoomId)
@@ -262,25 +220,23 @@ namespace AvenidaSoftware.TeamNotification_Package
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-
-            // TODO: Find the way to be able to clear the Document with Document.Clear. SyntaxHighlighter has non-serializable properties
-            myFlowDoc = new FlowDocument();
-            messageList.Document = myFlowDoc;
-//            chatRoomControlService.ClearRichTextBox(messageList, myFlowDoc);
-            
+            chatRoomControlService.ResetContainer(GetMessagesContainer());
             AddMessages(newRoomId);
         }
 
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;
-            var collection = chatRoomControlService.GetMessagesCollection(this.roomId);
-            foreach (var message in collection.messages)
+            chatRoomControlService.AddMessages(GetMessagesContainer(), scrollViewer1, currentRoomId);
+        }
+
+        private MessagesContainer GetMessagesContainer()
+        {
+            return new MessagesContainer
             {
-                var newMessage = serializeJson.Deserialize<MessageBody>(Collection.getField(message.data, "body"));
-                var username = Collection.getField(message.data, "user");
-                AppendMessage(username, newMessage);
-            }
+                Container = messagesContainer,
+                MessagesTable = messagesTable
+            };
         }
         
         private List<Collection.Link> formatRooms(IEnumerable<Collection.Room> unformattedRoom)

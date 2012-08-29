@@ -1,13 +1,21 @@
+using System.Configuration;
+
 namespace TeamNotification_Library.Configuration
 {
     public class LoginConfiguration : IStoreConfiguration
     {
-        private string _href = "http://dtt.local:3000/user/login";
+        private string _href = "user/login";
 
         public string Uri
         {
-            get { return _href; }
-            set { _href = value; }
+            get
+            {
+                return Properties.Settings.Default.site + _href;
+            }
+            set
+            {
+                _href = value;
+            }
         }
     }
 }

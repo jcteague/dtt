@@ -1,7 +1,10 @@
-﻿using StructureMap.Configuration.DSL;
+﻿using AurelienRibon.Ui.SyntaxHighlightBox;
+using StructureMap.Configuration.DSL;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Clipboard;
+using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 
@@ -17,12 +20,14 @@ namespace TeamNotification_Library.Application
                 scanner.RegisterConcreteTypesAgainstTheFirstInterface().OnAddedPluginTypes(x => x.Singleton());
             });
 
-            For<IStoreGlobalState>().Singleton().Use<ApplicationGlobalState>();
             For<IProvideConfiguration<RedisConfiguration>>().Singleton().Use<RedisConfigurationProvider>();
-            For<IStoreDataLocally>().Singleton().Use<LocalDataStorageService>();
-            For<IStoreClipboardData>().Singleton().Use<ClipboardDataStorageService>();
-            For<IHandleSystemClipboard>().Singleton().Use<SystemClipboardHandler>();
-            For<IStoreDTE>().Singleton();
+            For<IStoreGlobalState>().Singleton();
+            For<IStoreDataLocally>().Singleton();
+            For<IStoreClipboardData>().Singleton();
+            For<IHandleSystemClipboard>().Singleton();
+            For<ICreateSyntaxBlockUIInstances>().Singleton();
+            For<IProvideSyntaxHighlighter>().Singleton();
+			For<IStoreDTE>().Singleton();
             For<ICreateDteHandler>().Use<DteHandlerCreator>();
         }
     }

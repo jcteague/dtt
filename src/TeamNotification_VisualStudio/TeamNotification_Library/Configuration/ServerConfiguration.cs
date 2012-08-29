@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 
@@ -7,11 +8,11 @@ namespace TeamNotification_Library.Configuration
 {
     public class ServerConfiguration : IStoreConfiguration
     {
-        private string _uri = "http://dtt.local:3000/";
+        private string _uri = "";
         
         public string Uri
         {
-            get { return _uri; }
+            get { return Properties.Settings.Default.site; }
             set { _uri = value; }
         }
     }

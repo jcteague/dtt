@@ -10,6 +10,7 @@ class RoomMessagesCollection
         get_data_for = (message) ->
             return {
                 "data": [
+                    { 'name':'user_id', 'value': message.user_id}
                     { 'name':'user', 'value': message.name}
                     { 'name':'body', 'value': message.body} 
                     { 'name':'datetime', 'value':message.date }
@@ -36,7 +37,7 @@ class RoomMessagesCollection
             ]
             template:
                 'data':[
-                    {'name':'message', 'label':'Send Message', 'type':'string-big', 'maxlength':100}
+                    {'name':'message', 'label':'Send Message', 'type':'string-big'}
                 ]
             messages: m
             user_rooms: r

@@ -26,7 +26,7 @@ methods.get_users = (req, res)->
     
 methods.redir_user = (req, res) ->
     user_id = req.user.id
-    res.redirect("http://localhost:3000/user/#{user_id}")
+    res.redirect("#{config.site.url}/user/#{user_id}")
     
 methods.login = (req, res) ->
     r =

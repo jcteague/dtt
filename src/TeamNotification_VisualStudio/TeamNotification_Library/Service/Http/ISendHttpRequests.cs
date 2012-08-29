@@ -16,5 +16,9 @@ namespace TeamNotification_Library.Service.Http
         Task<T> Get<T>(string uri) where T : class;
 
         Task<T> Post<T>(string uri, HttpContent content) where T : class;
+
+        void Post(IEnumerable<Tuple<string, HttpContent>> values);
+
+        HttpResponseMessage PostSync(string uri, HttpContent content);
     }
 }

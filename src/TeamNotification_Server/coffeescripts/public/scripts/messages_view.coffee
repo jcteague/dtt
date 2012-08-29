@@ -2,23 +2,32 @@ define 'messages_view', ['general_view'], (GeneralView) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
-        initialize: ->
-            #@model.on 'change:messages', @render, @
-            
+        initialize: -> 
+        added_code: false
         render: ->
             me = @
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
+            update_dates = () -> 
+            
+                get_field = (field_name, data) ->
+                    for field in data
+                        if field.name is field_name
+                            return field.value
+                newDate = new Date()
+                $('.chat_message_date').each (idx, element) ->
+                    message_date = get_field 'datetime', me.model.attributes.messages[idx].data
+                    element.innerHTML = (parse_date new Date(message_date), newDate)
+                
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
                     me.$el.append me.render_message message, newDate
-                prettyPrint()
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
                 
             if @model.has('messages')
-                setInterval((() -> render_model() ), 10000)
+                setInterval((() -> update_dates() ), 10000)
                 if @socket?
                     @socket.removeAllListeners()
                     @socket.$events = {}
@@ -49,12 +58,12 @@ define 'messages_view', ['general_view'], (GeneralView) ->
                 for field in data
                     if field.name is field_name
                         return field.value
+
+            user_id = get_field 'user_id', message.data
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            console.log body
-            #parsedBody = body#JSON.parse(body)
-            return  @read_message_data({name:name, date:date, body:body})
+            @read_message_data({user_id: user_id, name:name, date:date, body:body})
             
         append_to: (parent) ->
             @$el.appendTo parent
@@ -65,15 +74,25 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
             @$el.append @read_message_data(m)
+            if @added_code is true
+                @added_code = false
+                prettyPrint()
+                @$('.prettyprint').removeClass('prettyprint')
+            @$el.scrollTop(@$el.prop('scrollHeight'))
             
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
             parsedBody = JSON.parse(message.body)
+
+            $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
+
+            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
+                $name_and_date.children().hide() 
+
+            @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
-                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                @added_code = true
+                return ("<p>#{$name_and_date.html()} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p><b>#{name}<span class='chat_message_date'>(#{date})</span>:</b> #{parsedBody.message.replace(/\n/g,'<br/>')}</p>")
-            
-        
-            
+                return ("<p>#{$name_and_date.html()} #{parsedBody.message}</p>")

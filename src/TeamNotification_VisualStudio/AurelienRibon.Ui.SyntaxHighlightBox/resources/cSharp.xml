@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Syntax name="cSharp">
+  <!-- Words rules will only highlight the provided words -->
+  <HighlightWordsRule name="Blue words">
+    <Words>
+      abstract as base bool break byte case catch char checked class const continue
+      decimal default delegate do double else enum event explicit extern
+      false finally fixed float for foreach goto if implicit in int interface internal
+      is lock long namespace new null object operator out override params private
+      protected public readonly ref return sbyte sealed short sizeof stackalloc
+      static string struct switch this throw true try typeof uint ulong unchecked
+      unsafe ushort using virtual void volatile while var
+    </Words>
+    <IgnoreCase>true</IgnoreCase>
+    <Foreground>#0000FF</Foreground>
+    <FontWeight>Bold</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </HighlightWordsRule>
+
+  <!-- Line rules will highlight the LineStart token as well as the rest of the line -->
+  <HighlightLineRule name="Comments">
+    <LineStart>//</LineStart>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#008800</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </HighlightLineRule>
+
+  <!-- Advanced rules use a regular expression to find what they must highlight -->
+  <!-- Do not overuse them, as they have a great computer time cost -->
+  <AdvancedHighlightRule name="Numbers">
+    <Expression>\b([0-9]+)\b</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#0022FF</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+
+  <AdvancedHighlightRule name="Strings">
+    <Expression>"(?:[^"\\]+|\\.)*"</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#AA0000</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+
+  <AdvancedHighlightRule name="MultiLineComments">
+    <Expression>(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#008800</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+</Syntax>

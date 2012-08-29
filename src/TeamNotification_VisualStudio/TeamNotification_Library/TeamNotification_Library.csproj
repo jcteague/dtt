@@ -37,9 +37,6 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AurelienRibon.Ui.SyntaxHighlightBox">
-      <HintPath>..\packages\AurelienRibon.Ui.SyntaxHighlightBox\lib\AurelienRibon.Ui.SyntaxHighlightBox.dll</HintPath>
-    </Reference>
     <Reference Include="BookSleeve">
       <HintPath>..\packages\BookSleeve.1.1.0.7\lib\BookSleeve.dll</HintPath>
     </Reference>
@@ -98,33 +95,56 @@
     <Compile Include="Configuration\RedisConfigurationProvider.cs" />
     <Compile Include="Configuration\ServerConfiguration.cs" />
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
+    <Compile Include="Extensions\DTEExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Models\ChatMessageModel.cs" />
     <Compile Include="Models\CodeClipboardData.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ChatMessageData.cs" />
-    <Compile Include="Models\ExtendedSyntaxHighlightBox.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\Maybe.cs" />
+    <Compile Include="Models\MessageBody.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\PlainClipboardData.cs" />
     <Compile Include="Models\ServerResponse.cs" />
+    <Compile Include="Models\UI\MessagesContainer.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
     <Compile Include="Service\Async\ClipboardEvents.cs" />
+    <Compile Include="Service\Async\CodePasteEvents.cs" />
     <Compile Include="Service\Async\CustomEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
+    <Compile Include="Service\Async\IHandleCodePaste.cs" />
     <Compile Include="Service\Async\IHandleLoginEvents.cs" />
     <Compile Include="Service\Async\LoginEvents.cs" />
     <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
+    <Compile Include="Service\Async\Models\CodePasteWasClicked.cs" />
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
     <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
+    <Compile Include="Service\Chat\ChatMessagesService.cs" />
+    <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
+    <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\UserMessageIndicatorFormatter.cs" />
+    <Compile Include="Service\Chat\IHandleChatMessages.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
@@ -133,10 +153,12 @@
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
     <Compile Include="Service\Content\IBuildContent.cs" />
+    <Compile Include="Service\Content\IBuildTable.cs" />
     <Compile Include="Service\Content\ICreateElementsFromFields.cs" />
     <Compile Include="Service\Content\IBuildStackPanels.cs" />
     <Compile Include="Service\Content\IGetFieldValue.cs" />
     <Compile Include="Service\Content\StackPanelBuilder.cs" />
+    <Compile Include="Service\Content\TableBuilder.cs" />
     <Compile Include="Service\Controls\ChatRoomsControlService.cs" />
     <Compile Include="Service\Controls\FormControlHelpers.cs" />
     <Compile Include="Service\Controls\IHelpControls.cs" />
@@ -169,6 +191,8 @@
     <Compile Include="Service\FileSystem\FileHandler.cs" />
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
+    <Compile Include="Service\Highlighters\SyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
@@ -201,18 +225,31 @@
     <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
     <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
+    <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
-    <Compile Include="Service\MyHighlighter.cs" />
+    <Compile Include="Service\Mappers\MessageDataToChatMessageModelMapper.cs" />
     <Compile Include="Service\Providers\DbConnectionProvider.cs" />
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />
     <Compile Include="Service\Providers\UserProvider.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Key.snk" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
+      <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
+      <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

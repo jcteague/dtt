@@ -10,7 +10,7 @@ define 'config', [], ->
         site:
             host: 'localhost'
             port: 3000
-            url: 'http://localhost:3000'
+            url: 'http://dtt.local:3000'
 
     if has('production')
         return production_settings

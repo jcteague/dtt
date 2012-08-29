@@ -40,7 +40,6 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
 
             # To prevent duplicate results
             $('.acResults').remove()
-            #input.autocomplete("http://localhost:3000#{template.href}", {
             input.autocomplete("#{config.site.url}#{template.href}", {
                 remoteDataType: 'json'
                 processData: processor
