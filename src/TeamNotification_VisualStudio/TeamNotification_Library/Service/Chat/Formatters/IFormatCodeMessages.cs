@@ -6,6 +6,6 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 {
     public interface IFormatCodeMessages
     {
-        Block GetFormattedElement(ChatMessageModel chatMessage);
+        Paragraph GetFormattedElement(ChatMessageModel chatMessage);
     }
 }

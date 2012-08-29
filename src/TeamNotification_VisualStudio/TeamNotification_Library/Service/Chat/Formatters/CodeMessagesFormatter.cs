@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Documents;
-using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
-using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Factories.UI;
 
 namespace TeamNotification_Library.Service.Chat.Formatters
@@ -21,7 +17,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             this.syntaxHighlightBoxFactory = syntaxHighlightBoxFactory;
         }
 
-        public Block GetFormattedElement(ChatMessageModel chatMessage)
+        public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
             var link = new Hyperlink(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.Project, chatMessage.Document, chatMessage.Line.ToString()))) { IsEnabled = true, CommandParameter = chatMessage };
             link.Click += codePasteEvents.OnCodePasteClick;
