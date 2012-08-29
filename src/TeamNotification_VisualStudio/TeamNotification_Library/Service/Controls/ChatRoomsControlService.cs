@@ -65,12 +65,6 @@ namespace TeamNotification_Library.Service.Controls
 
         public void UpdateClipboard(object source, DTE dte)
         {
-            if (HasCopied)
-            {
-                HasCopied = false;
-                return;
-            }
-
             if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
             {
                 var activeDocument = dte.ActiveDocument;
@@ -96,10 +90,7 @@ namespace TeamNotification_Library.Service.Controls
                 var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
                 clipboardStorage.Store(clipboard);
             }
-            HasCopied = true;
         }
-
-        private bool HasCopied { get; set; }
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
