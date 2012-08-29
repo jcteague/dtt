@@ -23,7 +23,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 
         public Block GetFormattedElement(ChatMessageModel chatMessage)
         {
-            var link = new Hyperlink(new Run("Paste code to: {0} - {1} - {2}".FormatUsing(chatMessage.Solution, chatMessage.Project, chatMessage.Document))) { IsEnabled = true, CommandParameter = chatMessage };
+            var link = new Hyperlink(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.Project, chatMessage.Document, chatMessage.Line.ToString()))) { IsEnabled = true, CommandParameter = chatMessage };
             link.Click += codePasteEvents.OnCodePasteClick;
 
             var codeClipboardData = new CodeClipboardData
