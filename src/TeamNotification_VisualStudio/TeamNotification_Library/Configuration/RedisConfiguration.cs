@@ -7,10 +7,10 @@ namespace TeamNotification_Library.Configuration
 {
     public class RedisConfiguration : IStoreConfiguration
     {
-        private string _href = "";
+        private string _href = Properties.Settings.Default.redis;
         public string Uri
         {
-            get { return Properties.Settings.Default.redis; }
+            get { return _href; }
             set { _href = value; }
         }
     }
