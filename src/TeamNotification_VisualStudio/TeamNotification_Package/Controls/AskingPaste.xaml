@@ -18,10 +18,11 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="125">
             <xctk:IntegerUpDown Name="dudLine" Watermark="Line" FormatString="N0" Increment="1" Minimum="1" Maximum="10000" Width="116"  Height="18" />
-            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" >
+            <!--<StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" >
                 <RadioButton Name="rbAppend" Content="Append"></RadioButton>
                 <RadioButton Name="rbOverwrite" Content="Overwrite"></RadioButton>
-            </StackPanel>
+            </StackPanel>-->
+            <CheckBox Name="chkOverwrite" Content="Overwrite code" Margin="5,10,5,5"></CheckBox>
         </StackPanel>
         <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1">
             <Button Name="btnPaste" Content="Paste code" Width="76" IsDefault="True"  ></Button>

@@ -24,7 +24,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private readonly IWrapDocument document;
         private string originalText;
         private string textToPaste;
-        private int lines = 1;
+        private int lines;
         public AskingPaste()
         {
             InitializeComponent();
@@ -37,8 +37,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             InitializeComponent();
             btnPaste.Click += HandleClick;
             dudLine.ValueChanged += DudLine_OnValueChanged;
-            rbAppend.Checked += HandleCheck;
-            rbOverwrite.Checked += HandleCheck;
+            chkOverwrite.Checked += HandleCheck;
             this.document = document;
             this.originalText = originalText;
             this.textToPaste = textToPaste;
@@ -46,22 +45,30 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         public static PastingResponse Show(IWrapDocument document, string originalText, string textToPaste, int line)
         {
-            if (textToPaste[textToPaste.Length - 1] != '\n')
-                textToPaste += '\n';
+            textToPaste = AppendNewLine(textToPaste);
+            var textToPasteLines = CountLines(textToPaste);
             document.Paste(1, textToPaste, PasteOptions.Insert);
-            var textToPasteLines = textToPaste.Split('\n').Count(messageLine => messageLine != "");
             document.Selection.Select(1, textToPasteLines);
             var ap = new AskingPaste(document, originalText, textToPaste)
             {
-                rbAppend = { IsChecked = true },
-                dudLine = {Maximum = (document.Lines - document.Selection.Lines) + 1, Value = line},
-                lines = textToPasteLines
+                lines = textToPasteLines,
+                dudLine = {Maximum = (document.Lines - document.Selection.Lines) + 1, Value = line}
             };
             ap.dudLine.Focus();
             ap.ShowDialog();
             if (ap.DialogResult.HasValue && ap.DialogResult.Value && ap.dudLine.Value != null)
-                return new PastingResponse { line = (int) ap.dudLine.Value, pasteOption = ap.rbAppend.IsChecked != null && (ap.rbAppend.IsChecked.Value) ? PasteOptions.Append : PasteOptions.Overwrite };
+                return new PastingResponse { line = (int)ap.dudLine.Value, pasteOption = ap.chkOverwrite.IsChecked != null && (ap.chkOverwrite.IsChecked.Value) ?  PasteOptions.Overwrite : PasteOptions.Append };
             return new PastingResponse { line = -1, pasteOption = PasteOptions.Abort };
+        }
+
+        private static string AppendNewLine(string textToPaste)
+        {
+            if (textToPaste[textToPaste.Length - 1] != '\n') textToPaste += '\n';
+            return textToPaste;
+        }
+        private static int CountLines(string text)
+        {
+            return text.Split('\n').Count(textLine => textLine != "");
         }
 
         private void RewriteFile()
@@ -76,7 +83,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private void MoveCode(int lines, int lineTo)
         {
             var opt = PasteOptions.Insert;
-            var isChecked = this.rbOverwrite.IsChecked;
+            var isChecked = this.chkOverwrite.IsChecked;
             if((isChecked != null && (bool)isChecked))
             {
                 opt = PasteOptions.Overwrite;

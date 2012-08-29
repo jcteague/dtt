@@ -218,7 +218,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void PasteCode(object sender, EventArgs args)
         {
-            var message = (MessageBody)((Hyperlink)sender).CommandParameter;
+            var message = GetMessageBodyFromLink(sender);
             var dteHandler = dteHandlerCreator.Get(dteStore);
 
             if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.solution)
@@ -246,6 +246,11 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 CustomMessageBox.Show("You need to have the appropriate solution open in order to paste the code.");
             }
+        }
+
+        private static MessageBody GetMessageBodyFromLink(object sender)
+        {
+            return (MessageBody)((Hyperlink)sender).CommandParameter;
         }
 
         private void ChangeRoom(string newRoomId)
