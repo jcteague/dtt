@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view'], (GeneralView) ->
+define 'messages_view', ['general_view','jquery-ui','prettify'], (GeneralView,Ui,Prettify) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -76,13 +76,13 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             p = $(@read_message_data(m))
             p.attr('class','new_message')
             @$el.append p
-            if @added_code is true
-                @added_code = false
-                prettyPrint()
-                @$('.prettyprint').removeClass('prettyprint')
             @$el.scrollTop(@$el.prop('scrollHeight'))
             p.animate {backgroundColor: '#F5F5F5'}, 500, () ->
                 p.removeClass('new_message')
+                if @added_code is true
+                    @added_code = false
+                    prettyPrint()
+                    @$('.prettyprint').removeClass('prettyprint')
 
         read_message_data: (message) ->
             name = message.name

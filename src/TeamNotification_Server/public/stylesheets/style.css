@@ -30,11 +30,11 @@ label { vertical-align: top;}
 .new_message
 {
     background-color:#cc3300;
-}
+}/*
 .new_message pre
 {
-    background-color:#cc3300 !important;
-}
+    background-color:#cc3300;
+}*/
 pre {
 	font-weight: bolder;
 	border:0 !important; 
