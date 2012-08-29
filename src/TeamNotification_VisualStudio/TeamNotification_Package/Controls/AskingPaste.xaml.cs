@@ -102,7 +102,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         {
             var opt = PasteOptions.Insert;
             var isChecked = this.chkOverwrite.IsChecked;
-            if ((isChecked != null && (bool)isChecked))
+            if ((bool)isChecked)
             {
                 opt = PasteOptions.Overwrite;
                 RewriteFile();
