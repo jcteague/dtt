@@ -38,6 +38,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             btnPaste.Click += HandleClick;
             iudLine.ValueChanged += DudLine_OnValueChanged;
             chkOverwrite.Checked += HandleCheck;
+            chkOverwrite.Unchecked += HandleCheck;
             this.document = document;
             this.originalText = originalText;
             this.textToPaste = textToPaste;
@@ -80,7 +81,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             var textDocument = document.TextDocument;
             var editPoint = textDocument.CreateEditPoint();
             textDocument.Selection.SelectAll();
-            textDocument.Selection.Cut();
+            textDocument.Selection.Delete();
             editPoint.Insert(originalText);
         }
 
