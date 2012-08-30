@@ -68,7 +68,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private static string AppendNewLine(string textToPaste)
         {
-            if (textToPaste[textToPaste.Length - 1] != '\n') textToPaste += '\n';
+            if (textToPaste[textToPaste.Length - 1] != '\n') textToPaste += "\r\n";
             return textToPaste;
         }
         private static int CountLines(string text)
