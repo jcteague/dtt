@@ -29,12 +29,10 @@ label { vertical-align: top;}
 }
 .new_message
 {
+    1border: solid 5px #cc3300; 
     background-color:#cc3300;
-}/*
-.new_message pre
-{
-    background-color:#cc3300;
-}*/
+    
+}
 pre {
 	font-weight: bolder;
 	border:0 !important; 
