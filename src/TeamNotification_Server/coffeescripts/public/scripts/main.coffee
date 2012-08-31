@@ -43,6 +43,9 @@ require.config
         'jquery.autocomplete':
             deps: ['jquery']
 
+        'jquery-ui':
+            deps: ['jquery']
+
         'jquery.validate':
             deps: ['jquery']
 
