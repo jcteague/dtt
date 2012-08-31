@@ -23,6 +23,7 @@ require.config
         'bootstrap-dropdown': 'bootstrap-dropdown'
         'bootstrap-collapse': 'bootstrap-collapse'
         'prettify': 'prettify/prettify'
+        'prettify-languages': 'prettify-languages'
         'lang-go': 'prettify/lang-go'
         'lang-hs': 'prettify/lang-hs'
         'lang-lisp': 'prettify/lang-lisp'
@@ -32,8 +33,8 @@ require.config
         'lang-vhdl': 'prettify/lang-vhdl'
 
     shim:
-        'prettify' :
-            deps: ['lang-go','lang-hs','lang-lisp','lang-ml','lang-proto','lang-scala','lang-vhdl']
+        'prettify-languages':
+            deps: ['prettify']
 
         'backbone':
             deps: ['underscore', 'jquery']

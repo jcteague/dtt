@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view','prettify'], (GeneralView,Prettify) ->
+define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Prettify) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
