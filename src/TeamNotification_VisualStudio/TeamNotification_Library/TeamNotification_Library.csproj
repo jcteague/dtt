@@ -151,7 +151,9 @@
     <Compile Include="Service\Clipboard\SystemClipboardHandler.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
+    <Compile Include="Service\Content\ControlHighLightAnimator.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
+    <Compile Include="Service\Content\IAnimateControl.cs" />
     <Compile Include="Service\Content\IBuildContent.cs" />
     <Compile Include="Service\Content\IBuildTable.cs" />
     <Compile Include="Service\Content\ICreateElementsFromFields.cs" />

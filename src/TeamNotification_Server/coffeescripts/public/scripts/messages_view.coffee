@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view'], (GeneralView) ->
+define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Prettify) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -63,28 +63,37 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            @read_message_data({user_id: user_id, name:name, date:date, body:body})
+            r = $(@read_message_data({user_id: user_id, name:name, date:date, body:body}))
+            r.removeClass('new_message')
+            r
             
         append_to: (parent) ->
             @$el.appendTo parent
 
         add_message: (message) =>
+            fade_in_message = () ->
+                if @added_code is true
+                    @added_code = false
+                    prettyPrint()
+                    @$('.prettyprint').removeClass('prettyprint')
             m = JSON.parse message
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
             @model.set({messages: messages}, {silent: true})
             @$el.append @read_message_data(m)
-            if @added_code is true
-                @added_code = false
-                prettyPrint()
-                @$('.prettyprint').removeClass('prettyprint')
             @$el.scrollTop(@$el.prop('scrollHeight'))
-            
+            me = @
+            $('.new_message').animate {backgroundColor: '#F07746'}, 300, () ->
+                $('.new_message').removeClass('new_message')
+                if me.added_code is true
+                    me.added_code = false
+                    prettyPrint()
+                    me.$('.prettyprint').removeClass('prettyprint')
+
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
             parsedBody = JSON.parse(message.body)
-
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
             if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
@@ -93,6 +102,6 @@ define 'messages_view', ['general_view'], (GeneralView) ->
             @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                return ("<p>#{$name_and_date.html()} <pre class='prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                return ("<p>#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre></p>")
             else
-                return ("<p>#{$name_and_date.html()} #{parsedBody.message}</p>")
+                return ("<p class='new_message'>#{$name_and_date.html()} #{parsedBody.message}</p>")

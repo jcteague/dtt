@@ -33,7 +33,7 @@ namespace AvenidaSoftware.TeamNotification_Package
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
-    [ProvideToolWindow(typeof(MyToolWindow))]
+    //[ProvideToolWindow(typeof(MyToolWindow))]
     [ProvideToolWindow(typeof(LoginWindow))]
     [Guid(GuidList.guidTeamNotificationPkgString)]
     public sealed class TeamNotificationPackage : Package
@@ -132,9 +132,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
                 mcs.AddCommand( menuItem );
                 // Create the command for the tool window
-                CommandID toolwndCommandID = new CommandID(GuidList.guidTeamNotificationCmdSet, (int)PkgCmdIDList.openTeamNotificationWindow);
-                MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
-                mcs.AddCommand( menuToolWin );
+                //CommandID toolwndCommandID = new CommandID(GuidList.guidTeamNotificationCmdSet, (int)PkgCmdIDList.openTeamNotificationWindow);
+                //MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
+                //mcs.AddCommand( menuToolWin );
             }
 
 

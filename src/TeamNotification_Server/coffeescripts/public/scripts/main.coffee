@@ -23,10 +23,19 @@ require.config
         'bootstrap-dropdown': 'bootstrap-dropdown'
         'bootstrap-collapse': 'bootstrap-collapse'
         'prettify': 'prettify/prettify'
+        'prettify-languages': 'prettify-languages'
+        'lang-go': 'prettify/lang-go'
+        'lang-hs': 'prettify/lang-hs'
+        'lang-lisp': 'prettify/lang-lisp'
         'lang-ml': 'prettify/lang-ml'
         'lang-proto': 'prettify/lang-proto'
+        'lang-scala': 'prettify/lang-scala'
+        'lang-vhdl': 'prettify/lang-vhdl'
 
     shim:
+        'prettify-languages':
+            deps: ['prettify']
+
         'backbone':
             deps: ['underscore', 'jquery']
             exports: 'Backbone'
