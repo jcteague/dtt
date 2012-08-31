@@ -18,6 +18,7 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
@@ -144,6 +145,19 @@ namespace AvenidaSoftware.TeamNotification_Package
         
         #endregion
 
+        [StructLayout(LayoutKind.Sequential)]
+        private struct FLASHWINFO
+        {
+            public UInt32 cbSize; //The size of the structure in bytes.
+            public IntPtr hwnd; //A Handle to the Window to be Flashed. The window can be either opened or minimized.
+            public UInt32 dwFlags; //The Flash Status.
+            public UInt32 uCount; // number of times to flash the window
+            public UInt32 dwTimeout; //The rate at which the Window is to be flashed, in milliseconds. If Zero, the function uses the default cursor blink rate.
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 
         #region Events
         public void ChatMessageArrived(string channel, string payload)
@@ -151,6 +165,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (channel == currentChannel)
             {
                 chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
+                
+                    //dteStore.dte.MainWindow.Activate();// .FlashWindow(5);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -235,7 +251,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             return new MessagesContainer
             {
                 Container = messagesContainer,
-                MessagesTable = messagesTable
+                MessagesTable = messagesTable,
+                StatusBar = dteStore.dte.StatusBar
             };
         }
         
@@ -248,6 +265,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             var roomData = (Collection.Link) e.AddedItems[0];
             this.ChangeRoom(roomData.rel);
+        }
+
+        private void ClearStatusBar(object sender, RoutedEventArgs e)
+        {
+            dteStore.dte.StatusBar.Text = "";
         }
     }
 }

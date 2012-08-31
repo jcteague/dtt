@@ -41,8 +41,18 @@ namespace TeamNotification_Library.Service.Chat
                 var columns = new Tuple<Block, Block, Block>(user, message, date);
                 messagesContainer.MessagesTable.RowGroups.Add(tableBuilder.GetContentFor(columns));
                 lastUserThatInserted = chatMessage.UserId;
+
             }));
+            var m = stripMessage(chatMessage.Message);
+            messagesContainer.StatusBar.Text = chatMessage.UserName + " says: " + m;
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
+        }
+        private string stripMessage(string message)
+        {
+            var m = message;
+            if (m.Length > 15)
+                m = m.Remove(14) + "...";
+            return m;
         }
 
         public void ResetUser()

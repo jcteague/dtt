@@ -34,7 +34,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dtt.local:3000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("dtt.local:6379")]
         public string redis {
             get {
                 return ((string)(this["redis"]));
