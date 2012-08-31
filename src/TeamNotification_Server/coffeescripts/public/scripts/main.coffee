@@ -6,7 +6,6 @@ require.config
         'backbone': 'backbone-min'
         'jquery.autocomplete': 'jquery.autocomplete'
         'jquery.validate': 'jquery.validate.min'
-        'jquery-ui': 'jquery-ui.min'
         'config': 'config'
         'client_view': 'client_view'
         'client_router': 'client_router'
@@ -41,9 +40,6 @@ require.config
             exports: 'Backbone'
 
         'jquery.autocomplete':
-            deps: ['jquery']
-
-        'jquery-ui':
             deps: ['jquery']
 
         'jquery.validate':

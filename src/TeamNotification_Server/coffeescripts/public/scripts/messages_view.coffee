@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view','jquery-ui'],(GeneralView, Ui) -> #,'prettify'], (GeneralView,Ui,Prettify) ->
+define 'messages_view', ['general_view','prettify'], (GeneralView,Prettify) ->
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -83,7 +83,7 @@ define 'messages_view', ['general_view','jquery-ui'],(GeneralView, Ui) -> #,'pre
             @$el.append @read_message_data(m)
             @$el.scrollTop(@$el.prop('scrollHeight'))
             me = @
-            $('.new_message').animate {backgroundColor: '#F5F5F5'}, 300, () ->
+            $('.new_message').animate {backgroundColor: '#F07746'}, 300, () ->
                 $('.new_message').removeClass('new_message')
                 if me.added_code is true
                     me.added_code = false

@@ -122,8 +122,7 @@ describe 'Room Messages', ->
                 message_to_post = null
                 beforeEach (done) ->
                     message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
-                    browser2.visit('http://localhost:3000/client#/room/1/messages').then( -> console.log browser2.html())
-                    console.log browser2.html()
+                    browser2.visit('http://localhost:3000/client#/room/1/messages').then( -> )
                     browser.visit('http://localhost:3000/client#/room/1/messages').
                         then( -> 
                             browser.fill("message", message_to_post)).
