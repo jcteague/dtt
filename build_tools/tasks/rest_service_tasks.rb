@@ -34,6 +34,7 @@ namespace :rest_service do
         end
         sh "cp #{File.join(RestServiceBuildTools, 'templates', 'nodejitsu_package.json')} package.json"
         sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+        sh "coffee -c app.coffee"
         sh "jitsu deploy"
       end
   end
