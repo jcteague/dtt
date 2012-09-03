@@ -1,4 +1,4 @@
-redis = require('redis').createClient()
+redis = require('../redis/redis_gateway').open()
 Q = require('q')
 chat_rooms = require('chat_rooms_by_owner_id_or_member_strategy')
 

@@ -18,10 +18,24 @@ routes_service_mock =
     add_user_to_chat_room: sinon.stub()
     is_user_in_room: sinon.stub()
 
+redis_mock =
+    open: sinon.stub()
+
+client_mock =
+    auth: sinon.stub()
+    publish: sinon.stub()
+    subscribe: sinon.stub()
+    on: sinon.stub()
+    zadd: sinon.stub()
+
+config = require('../config')()
+redis_mock.open.returns(client_mock)
+
 sut = module_loader.require('../routes/room.js', {
     requires:
         '../support/core': support_mock
         'express': express_mock
+        '../support/redis/redis_gateway': redis_mock
         '../support/routes_service': routes_service_mock
         '../support/repository': repository_class_mock
         '../support/middlewares': middleware_mock
@@ -29,6 +43,16 @@ sut = module_loader.require('../routes/room.js', {
 
 
 describe 'Room', ->
+
+    beforeEach (done) ->
+        client_mock[key].reset() for key, val of client_mock
+        done()
+
+    describe 'when required', ->
+
+        it 'should have created the clients for redis', (done) ->
+            sinon.assert.callCount(redis_mock.open, 3)
+            done()
 
     describe 'build_routes', ->
         app = null
@@ -48,7 +72,6 @@ describe 'Room', ->
         it 'should configure the routes with its corresponding callback', (done) ->
             sinon.assert.calledWith(app.get,'/room', sut.methods.get_room)
             sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
-            #sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, sut.methods.get_room_messages)
             sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages)
             sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
@@ -217,7 +240,7 @@ describe 'Room', ->
                     
                     req.param.withArgs('id').returns(room_id)
                     
-                    req.socket_io = {of: sinon.stub() } #.withArgs('id').returns(room_id)
+                    req.socket_io = {of: sinon.stub() }
                     req.socket_io.of.withArgs(listener_name).returns(socket_mock)
 
                     sinon.stub(sut.methods, 'set_socket_events')
@@ -269,7 +292,6 @@ describe 'Room', ->
                             callback(false, saved_message)
                     
                     req.body = {message: 'Dolorem Ipsum'}
-                    req.in_test = true
                     message = JSON.stringify(req.body)
                     request_values =
                         body: message
@@ -288,6 +310,14 @@ describe 'Room', ->
 
                 it 'should have asked to create the ChatRoomMessage with the correct request values', (done) ->
                     sinon.assert.called(support_mock.core.entity_factory.create, 'ChatRoomMessage', request_values)
+                    done()
+
+                it 'should publish the message in the chat room', (done) ->
+                    sinon.assert.calledWith(client_mock.publish, "chat #{room_id}", sinon.match.string)
+                    done()
+
+                it 'should add the message in redis with the corresponding key', (done) ->
+                    sinon.assert.calledWith(client_mock.zadd, "room:#{room_id}:messages", sinon.match.number, sinon.match.string)
                     done()
 
                 it 'should create the message on the database', (done) ->

@@ -20,6 +20,7 @@ development_settings =
     redis:
         host:'dtt.local'
         port: 6379
+        password: 'welc0me'
 
 test_settings =
     db:
@@ -33,7 +34,8 @@ test_settings =
         whitelisted_paths: whitelisted_paths
     redis:
         host:'dtt.local'
-        port: 6379
+        port: 6380
+        password: 'welc0me'
 
 production_settings =
     db:
@@ -46,8 +48,9 @@ production_settings =
         url: 'http://dtt.jit.su'
         whitelisted_paths: whitelisted_paths
     redis:
-        host: ''
-        port: 6379
+        host: 'chubb.redistogo.com'
+        port: 9438
+        password: '15439fde8d415f7ab4a3cc9b389badea'
 
 module.exports = ->
     switch process.env.NODE_ENV
