@@ -2,6 +2,7 @@ require.config
     baseUrl: 'scripts'
     paths:
         'jquery': 'jquery-1.7.2.min'
+        'base64': 'base64'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'jquery.autocomplete': 'jquery.autocomplete'
@@ -41,6 +42,9 @@ require.config
             exports: 'Backbone'
 
         'jquery.autocomplete':
+            deps: ['jquery']
+            
+        'base64':
             deps: ['jquery']
 
         'jquery.validate':

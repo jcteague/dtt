@@ -1,4 +1,4 @@
-define 'form_view', ['general_view', 'form_template_renderer'], (GeneralView, FormTemplateRenderer) ->
+define 'form_view', ['general_view', 'form_template_renderer','base64'], (GeneralView, FormTemplateRenderer, Base64) ->
 
     class FormView extends GeneralView
 
@@ -31,6 +31,7 @@ define 'form_view', ['general_view', 'form_template_renderer'], (GeneralView, Fo
             $('textarea').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
+                
             $.post @$('form').attr('action'), data, (res) => 
                 @trigger 'messages:display', res.messages if res.messages?
                 @trigger 'response:received', res

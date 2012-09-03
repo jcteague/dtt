@@ -43,6 +43,7 @@ methods.login = (req, res) ->
 
 methods.authenticate = (req, res, next) ->
     values = req.body
+    console.log req.authorization
     email = values.username
     pass = sha256(values.password)
     
