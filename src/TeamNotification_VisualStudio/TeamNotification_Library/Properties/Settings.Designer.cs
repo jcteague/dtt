@@ -25,25 +25,25 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://ec2-107-21-171-44.compute-1.amazonaws.com/")]
-        public string site {
+        [global::System.Configuration.DefaultSettingValueAttribute("http://dtt.jit.su/")]
+        public string Site {
             get {
-                return ((string)(this["site"]));
+                return ((string)(this["Site"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ec2-107-21-171-44.compute-1.amazonaws.com:6379")]
-        public string redis {
+        [global::System.Configuration.DefaultSettingValueAttribute("chubb.redistogo.com:9438")]
+        public string Redis {
             get {
-                return ((string)(this["redis"]));
+                return ((string)(this["Redis"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://ec2-107-21-171-44.compute-1.amazonaws.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://dtt.jit.su/")]
         public string siteb {
             get {
                 return ((string)(this["siteb"]));
@@ -52,10 +52,31 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ec2-107-21-171-44.compute-1.amazonaws.com:6379")]
+        [global::System.Configuration.DefaultSettingValueAttribute("chubb.redistogo.com:9438")]
         public string redisb {
             get {
                 return ((string)(this["redisb"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15439fde8d415f7ab4a3cc9b389badea")]
+        public string RedisAuth {
+            get {
+                return ((string)(this["RedisAuth"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15439fde8d415f7ab4a3cc9b389badea")]
+        public string RedisAuthB {
+            get {
+                return ((string)(this["RedisAuthB"]));
+            }
+            set {
+                this["RedisAuthB"] = value;
             }
         }
     }

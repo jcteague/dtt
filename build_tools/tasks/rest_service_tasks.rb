@@ -17,8 +17,9 @@ namespace :rest_service do
     :compile_coffeescript,
     #:test, # This should run on staging env
     :migrate,
-    :package,
-    :run_production
+    :package_and_deploy
+    #:package,
+    #:run_production
   ]
 
   task :deploy => [
@@ -29,10 +30,12 @@ namespace :rest_service do
 
   task :package_and_deploy do
       Dir.make_temp_dir(RestDeployFolder) do |deploy|
-        Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "node_modules", "db", "test"].include? f.split('/').last}.each do |f|
+        Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
           sh "cp -r #{f} #{deploy}"
         end
+        sh "cp #{File.join(RestServiceBuildTools, 'templates', 'nodejitsu_package.json')} package.json"
         sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+        sh "coffee -c app.coffee"
         sh "jitsu deploy"
       end
   end

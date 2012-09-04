@@ -3,8 +3,12 @@ support = require('../support/core').core
 express = require('express')
 routes_service = require('../support/routes_service')
 config = require('../config')()
-#cookies = require('cookies')
 build = routes_service.build
+redis_connector = require('../support/redis/redis_gateway')
+
+redis1 = redis_connector.open()
+redis2 = redis_connector.open()
+redis3 = redis_connector.open()
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -12,9 +16,6 @@ methods.user_authorized_in_room = (req, res, next) ->
         if is_user_in 
             return next() 
         res.redirect '/'
-redis1 = require("redis").createClient(config.redis.port, config.redis.host)
-redis2 = require("redis").createClient(config.redis.port, config.redis.host)
-redis3 = require("redis").createClient(config.redis.port, config.redis.host)
 
 list_of_listeners = {}
         
@@ -79,7 +80,6 @@ methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
     
-    #res.cookie('user_token', JSON.stringify(req.user), { maxAge: 3600000, path: '/' })
     methods.set_socket_events(req.socket_io, room_id)
     callback = (collection) ->
         res.json collection.to_json()
@@ -93,9 +93,8 @@ methods.post_room_message = (req, res, next) ->
         message_body = JSON.stringify(values)
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date()}
         m = JSON.stringify newMessage
-        if typeof req.in_test == 'undefined'
-            redis2.publish("chat #{room_id}", m)
-            redis3.zadd("room:#{room_id}:messages", new Date().getTime(), m)
+        redis2.publish("chat #{room_id}", m)
+        redis3.zadd("room:#{room_id}:messages", new Date().getTime(), m)
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
         room_message.save (err,saved_message) ->
             if !err

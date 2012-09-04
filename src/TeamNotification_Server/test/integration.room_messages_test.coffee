@@ -35,8 +35,6 @@ chat_rooms =
     ]
 
 generate_message = (i) ->
-
-    #newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date()}
     return {
         "id": i
         "body": JSON.stringify({"message":"The real test"})

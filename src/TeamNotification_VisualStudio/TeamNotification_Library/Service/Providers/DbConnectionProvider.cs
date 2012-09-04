@@ -28,7 +28,8 @@ namespace TeamNotification_Library.Service.Providers
 
         public void Set(string host, int port)
         {
-            redisConnection = new RedisConnection(new BookSleeve.RedisConnection(host, port));
+            // TODO: The RedisAuth must be public, but it shouldn't be transferred from the Server; still must find a better way to handle this
+            redisConnection = new RedisConnection(new BookSleeve.RedisConnection(host, port, password: Properties.Settings.Default.RedisAuth));
         }
     }
 }

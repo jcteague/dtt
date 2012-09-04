@@ -49,7 +49,7 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
-            res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email}})
+            res.send({success: true, redis: {host: config.redis.host, port: config.redis.port}, user:{id: user_data.id, email:user_data.email}})
         else
             res.send({})
           

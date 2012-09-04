@@ -10,7 +10,7 @@ namespace TeamNotification_Library.Configuration
         {
             get
             {
-                return Properties.Settings.Default.site + _href;
+                return Properties.Settings.Default.Site + _href;
             }
             set
             {
