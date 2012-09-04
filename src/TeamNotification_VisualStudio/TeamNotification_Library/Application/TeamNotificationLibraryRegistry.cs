@@ -29,6 +29,8 @@ namespace TeamNotification_Library.Application
             For<IProvideSyntaxHighlighter>().Singleton();
 			For<IStoreDTE>().Singleton();
             For<ICreateDteHandler>().Use<DteHandlerCreator>();
+            
+            For<IListenToMessages>().Use<SocketIOMessageListener>();
         }
     }
 }

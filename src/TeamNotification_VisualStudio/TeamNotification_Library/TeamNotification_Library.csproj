@@ -48,6 +48,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SocketIO4Net">
+      <HintPath>..\packages\SocketIO4Net.Client.0.6.26\SocketIO4Net.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
@@ -213,6 +216,7 @@
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\Http\SocketIOMessageListener.cs" />
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />
