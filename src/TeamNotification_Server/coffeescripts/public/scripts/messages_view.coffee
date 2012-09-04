@@ -33,6 +33,14 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                     @socket.$events = {}
                 @socket = new window.io.connect("#{@model.get('href')}")
                 @socket.on 'message', @add_message
+
+                if @new_socket?
+                    @new_socket.removeAllListeners()
+                    @new_socket.$events = {}
+                @new_socket = new window.io.connect("http://dtt.local:3000")
+                @new_socket.on 'messagesocket', (m) -> 
+                    console.log 'through socket'
+                    console.log m
                 render_model()
             @
 

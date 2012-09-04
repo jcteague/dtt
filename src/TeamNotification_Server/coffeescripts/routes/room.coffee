@@ -19,19 +19,20 @@ methods.user_authorized_in_room = (req, res, next) ->
 
 list_of_listeners = {}
         
-methods.socket_callback = (redis1, room_id) ->
+methods.socket_callback = (redis1, room_id, io) ->
     return (client) ->
         room_channel = "chat #{room_id}"
         redis1.subscribe(room_channel)
         redis1.on "message", (channel, message) ->
             if(channel == "chat #{room_id}")
+                io.sockets.emit('messagesocket', message)
                 client.send(message)
                 
 methods.set_socket_events = (io, room_id) ->
     listener_name = "/room/#{room_id}/messages"
     if typeof list_of_listeners[listener_name] == 'undefined'
         list_of_listeners[listener_name] = true
-        io.of(listener_name).on 'connection', methods.socket_callback(redis1,room_id)  
+        io.of(listener_name).on 'connection', methods.socket_callback(redis1,room_id,io)  
 
             
 methods.post_room = (req, res, next) ->
