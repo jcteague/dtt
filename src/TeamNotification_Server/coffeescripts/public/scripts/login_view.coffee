@@ -1,4 +1,4 @@
-define 'login_view', ['general_view', 'base64',  'form_view','links_view'], (GeneralView, Base64, FormView, LinksView) ->
+define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cookie'], (GeneralView, Base64, FormView, LinksView, Cookie) ->
 
     class LoginView extends GeneralView
     
@@ -11,13 +11,17 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view'], (Gen
                 beforeSend: (jqXHR) ->
                     email = $('input[name=username]').val()
                     password = $('input[name=password]').val()
-                    jqXHR.setRequestHeader('Authorization', "Basic " + encodeBase64(email + ":" + password))
+                    authToken = "Basic " + encodeBase64(email + ":" + password)
+                    jqXHR.setRequestHeader('Authorization', authToken )
             @form_view.on 'response:received', @checkLogin
         
         checkLogin: (res) ->
-            console.log res
             if res.success is true
-                window.location = "client#/user/#{res.user.id}"
+                $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
+                redirect = "client#/user/#{res.user.id}"
+                if(window.location.href.contains('user/login')
+                    window.location.href = redirect
+                window.location.reload(true)
         
         render: () ->
             @$el.empty()

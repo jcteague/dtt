@@ -24,21 +24,14 @@ class Authentication
             done(null, id: user.id, email: user.email, name: user.first_name)
 
 	authenticate: (request, response, next) ->
-       # console.log 'Here i am'
-       # console.log request.path
-       # console.log request.method
-        #if @is_whitelisted(request.path)
-        #    next()
-        #else
-        #    console.log request.authorization
-        #    passport.authenticate 'basic', {session:false}, (req, res) ->
-        #        redirect('/user/'+req.user.id)
-
         if @is_whitelisted(request.path)
             next()
         else
-           passport.authenticate('basic', {session:false})(request, response, next)
+            request.headers.authorization = request.cookies.authtoken
+            passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)
 
+        
+        
     is_whitelisted: (path) ->
         whitelisted_paths.indexOf(path) isnt -1
 

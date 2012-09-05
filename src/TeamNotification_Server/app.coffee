@@ -4,13 +4,14 @@ Module dependencies.
 
 express = require('express')
 config = require('./config')()
-
 Authentication = require('./support/authentication')
 auth = new Authentication()
 
 app = module.exports = express.createServer()
 require('./helper')(app)
 io = require('socket.io').listen(app)
+
+
 
 ###
   Mock Database
@@ -26,6 +27,7 @@ error = (status, msg) ->
 app.configure(->
     app.set('views', __dirname + '/views')
     app.set('view engine', 'jade')
+    app.use(express.cookieParser())
     app.use(express.bodyParser())
     app.use(express.methodOverride())
 
@@ -43,7 +45,7 @@ app.configure(->
     )
 
     app.use(express.static(__dirname + '/public'))
-
+    
     app.use(auth.initializeAuth())
     
     app.use(app.router)
