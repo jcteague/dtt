@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://dtt.jit.su/</Value>
+      <Value Profile="(Default)">http://dtt.local:3000/</Value>
     </Setting>
     <Setting Name="Redis" Type="System.String" Scope="Application">
       <Value Profile="(Default)">chubb.redistogo.com:9438</Value>
