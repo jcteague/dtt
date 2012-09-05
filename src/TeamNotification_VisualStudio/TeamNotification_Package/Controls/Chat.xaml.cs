@@ -165,8 +165,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (channel == currentChannel)
             {
                 chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
-                
-                    //dteStore.dte.MainWindow.Activate();// .FlashWindow(5);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
