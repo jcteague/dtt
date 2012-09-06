@@ -28,40 +28,8 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
-                ###
-                if @socket?
-                    @socket.removeAllListeners()
-                    @socket.$events = {}
-                @socket = new window.io.connect("#{@model.get('href')}")
-                @socket.on 'message', @add_message
-                ###
-
-                ###
-                if @new_socket?
-                    @new_socket.removeAllListeners()
-                    @new_socket.$events = {}
-                ###
-
-                @new_socket = new window.io.connect("http://dtt.local:3000")
-                @new_socket.on 'messagesocket', (m) -> 
-                    console.log 'WITHOUT NAMESPACE', m
-
-                @new_socket.on 'messagesocket-broad', (m) ->
-                    console.log 'BROAD MESSAGE', m
-
-                console.log @model.get('href')
-                @namespaced_socket = new window.io.connect(@model.get('href'))
-                @namespaced_socket.on 'messagesocket', (m) -> 
-                    console.log 'WITHOUT NAMESPACE', m
-
-                ###
-                @new_socket.on 'connect', =>
-                    console.log 'connected'
-                    console.log @model.get('href')
-                    @new_socket.on 'messagesocket', (m) -> 
-                        console.log 'through socket'
-                        console.log m
-                ###
+                socket = new window.io.connect(@model.get('href'))
+                socket.on 'message', @add_message
                 render_model()
             @
 

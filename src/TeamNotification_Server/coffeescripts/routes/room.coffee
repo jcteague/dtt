@@ -34,22 +34,13 @@ methods.set_socket_events = (io, room_id) ->
     listener_name = "/room/#{room_id}/messages"
     if typeof list_of_listeners[listener_name] == 'undefined'
         list_of_listeners[listener_name] = true
-        console.log 'subscribing'
-        #io.of(listener_name).on 'connection', methods.socket_callback(redis1,room_id,io)  
-        #io.of(listener_name).on 'message', console.log('message in callback')
-        #methods.socket_callback(redis1,room_id,io)
-
         listener_name = "/room/#{room_id}/messages"
         namespace_io = io.of(listener_name)
         room_channel = "chat #{room_id}"
         redis1.subscribe(room_channel)
         redis1.on "message", (channel, message) ->
             if(channel == "chat #{room_id}")
-                console.log "sending on socket message to OUTSIDE: #{listener_name}"
-                #io.of(listener_name).send(message)
-                namespace_io.emit('messagesocket', message)
-                io.sockets.emit('messagesocket-broad', message)
-
+                namespace_io.send(message)
             
 methods.post_room = (req, res, next) ->
     values = req.body
