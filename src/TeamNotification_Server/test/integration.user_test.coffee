@@ -69,7 +69,8 @@ describe 'User ', ->
                     then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
             it 'should give the right response', (done)->
-                expect(browser.lastResponse.body).to.equal JSON.stringify({"success":true,redis:config.redis, "user":{"id":1,"email":"foo@bar.com"}})
+                #expect(browser.site).to.equal('http://localhost:3000/client#/user/login') 
+                expect(browser.lastResponse.body).to.equal JSON.stringify({"success":true,redis:config.redis, "user":{"id":1,"email":"foo@bar.com", "authtoken":"Basic Zm9vQGJhci5jb206MTIzNA=="}})
                 done()
                     
     describe 'Set Up', ->
