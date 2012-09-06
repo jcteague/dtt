@@ -34,7 +34,7 @@ methods.set_socket_events = (io, room_id) ->
         methods.set_up_message_transmission(io, room_id, listener_name)
 
 methods.is_listener_registered = (listener_name) ->
-    list_of_listeners[list_of_listeners]
+    list_of_listeners[listener_name]?
             
 methods.post_room = (req, res, next) ->
     values = req.body
