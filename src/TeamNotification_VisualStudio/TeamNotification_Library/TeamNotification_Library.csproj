@@ -215,11 +215,13 @@
     <Compile Include="Service\Http\ISendChatMessages.cs" />
     <Compile Include="Service\Http\ChatMessageSender.cs" />
     <Compile Include="Service\Http\ISerializeJSON.cs" />
+    <Compile Include="Service\Http\ISubscribeToPubSub.cs" />
     <Compile Include="Service\Http\JSONSerializer.cs" />
     <Compile Include="Service\Http\MessageListener.cs" />
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\Http\SocketIOClient.cs" />
     <Compile Include="Service\Http\SocketIOMessageListener.cs" />
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />

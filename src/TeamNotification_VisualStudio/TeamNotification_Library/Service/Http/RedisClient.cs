@@ -3,7 +3,8 @@ using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
 {
-    public class RedisClient : IConnectToRedis
+//    public class RedisClient : IConnectToRedis
+    public class RedisClient : ISubscribeToPubSub<Action<string, byte[]>>
     {
         readonly IRedisConnection conn;
 

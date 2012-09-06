@@ -6,12 +6,14 @@ namespace TeamNotification_Library.Service.Http
 {
     public class MessageListener : IListenToMessages
     {
-        readonly IConnectToRedis client;
+//        readonly IConnectToRedis client;
+        readonly ISubscribeToPubSub<Action<string, byte[]>> client;
 
         private MessageReceivedAction onMessageReceivedAction;
         private Action<string, byte[]> onMessageReceivedActionExcecution;
 
-        public MessageListener(IConnectToRedis client)
+//        public MessageListener(IConnectToRedis client)
+        public MessageListener(ISubscribeToPubSub<Action<string, byte[]>> client)
         {
             this.client = client;
         }

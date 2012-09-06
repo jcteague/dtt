@@ -7,29 +7,16 @@ namespace TeamNotification_Library.Service.Http
     public class SocketIOMessageListener : IListenToMessages
     {
         private Client socket;
+        readonly ISubscribeToPubSub<Action<string, string>> client;
 
-        public SocketIOMessageListener()
+        public SocketIOMessageListener(ISubscribeToPubSub<Action<string, string>> client)
         {
-            socket = new Client(Properties.Settings.Default.Site);
+            this.client = client;
         }
 
         public void ListenOnChannel(string channel, MessageReceivedAction action)
         {
-            socket.Message += OnSocketMessage;
-
-            socket.On("messagesocket", (data) =>
-            {
-                int a = 0;
-                Debug.WriteLine(data);
-            });
-
-            socket.Connect();
-        }
-
-        private void OnSocketMessage(object sender, MessageEventArgs e)
-        {
-            int a = 0;
-            Debug.WriteLine(e);
+            client.Subscribe(channel, (c, payload) => action(c, payload));
         }
 
         public Action<string, byte[]> SubscribeResponse
