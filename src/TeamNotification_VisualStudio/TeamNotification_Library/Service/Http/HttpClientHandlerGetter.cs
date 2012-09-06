@@ -1,5 +1,7 @@
+using System;
 using System.Net;
 using System.Net.Http;
+using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Providers;
 
@@ -9,10 +11,13 @@ namespace TeamNotification_Library.Service.Http
     {
         private IProvideUser userProvider;
         private ICreateInstances<HttpClientHandler> httpClientHandlerFactory;
+        private IProvideConfiguration<ServerConfiguration> serverConfigurationProvider;
 
-        public HttpClientHandlerGetter(IProvideUser userProvider, ICreateInstances<HttpClientHandler> httpClientHandlerFactory)
+        public HttpClientHandlerGetter(IProvideUser userProvider, ICreateInstances<HttpClientHandler> httpClientHandlerFactory, IProvideConfiguration<ServerConfiguration> serverConfigurationProvider)
         {
             this.userProvider = userProvider;
+            this.serverConfigurationProvider = serverConfigurationProvider;
+
             this.httpClientHandlerFactory = httpClientHandlerFactory;
         }
 
@@ -21,8 +26,12 @@ namespace TeamNotification_Library.Service.Http
             var handler = httpClientHandlerFactory.GetInstance();
 
             var user = userProvider.GetUser();
-            if(user != null)
+            if (user != null){
                 handler.Credentials = new NetworkCredential(user.email, user.password);
+                var userPass =  System.Text.Encoding.UTF8.GetBytes((user.email+":"+user.password));
+                var encrypted = Convert.ToBase64String(userPass);
+                handler.CookieContainer.Add(new Uri(serverConfigurationProvider.Get().Uri), new Cookie("authtoken", "Basic "+encrypted,"/"));
+            }
 
             return handler;
         }
