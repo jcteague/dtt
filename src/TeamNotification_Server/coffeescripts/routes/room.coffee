@@ -18,29 +18,23 @@ methods.user_authorized_in_room = (req, res, next) ->
         res.redirect '/'
 
 list_of_listeners = {}
+
+methods.set_up_message_transmission = (io, room_id, listener_name) ->
+    namespace_io = io.of(listener_name)
+    room_channel = "chat #{room_id}"
+    redis1.subscribe(room_channel)
+    redis1.on "message", (channel, message) ->
+        if(channel == "chat #{room_id}")
+            namespace_io.send(message)
         
-methods.socket_callback = (redis1, room_id, io) ->
-    return (client) ->
-        room_channel = "chat #{room_id}"
-        redis1.subscribe(room_channel)
-        redis1.on "message", (channel, message) ->
-            if(channel == "chat #{room_id}")
-                listener_name = "/room/#{room_id}/messages"
-                console.log "sending on socket message to: #{listener_name}"
-                io.of(listener_name).emit('messagesocket', message)
-                client.send(message)
-                
 methods.set_socket_events = (io, room_id) ->
     listener_name = "/room/#{room_id}/messages"
-    if typeof list_of_listeners[listener_name] == 'undefined'
+    unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
-        listener_name = "/room/#{room_id}/messages"
-        namespace_io = io.of(listener_name)
-        room_channel = "chat #{room_id}"
-        redis1.subscribe(room_channel)
-        redis1.on "message", (channel, message) ->
-            if(channel == "chat #{room_id}")
-                namespace_io.send(message)
+        methods.set_up_message_transmission(io, room_id, listener_name)
+
+methods.is_listener_registered = (listener_name) ->
+    list_of_listeners[list_of_listeners]
             
 methods.post_room = (req, res, next) ->
     values = req.body
