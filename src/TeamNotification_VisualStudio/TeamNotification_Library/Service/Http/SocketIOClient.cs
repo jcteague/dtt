@@ -17,27 +17,13 @@ namespace TeamNotification_Library.Service.Http
 
         public void Subscribe(string channel, Action<string, string> callback)
         {
-//            socket.Message += OnSocketMessage;
             var socketNamespace = "/room/{0}/messages".FormatUsing(channel.Split(' ')[1]);
-
             var roomSocket = socket.Connect(socketNamespace);
-            roomSocket.On("messagesocket", (data) =>
+            roomSocket.On("message", (data) =>
             {
-                callback(channel, data.Json.Args[0]);
+                callback(channel, data.MessageText);
             });
 
-//            socket.On("messagesocket", socketNamespace, (data) =>
-//            {
-//                callback(channel, data.Json.Args[0]);
-//            });
-//
-//            socket.Connect(socketNamespace);
-        }
-
-        private void OnSocketMessage(object sender, MessageEventArgs e)
-        {
-            int a = 0;
-            Debug.WriteLine(e);
         }
     }
 }

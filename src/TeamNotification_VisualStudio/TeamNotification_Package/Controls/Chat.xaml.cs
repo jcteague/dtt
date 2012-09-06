@@ -65,6 +65,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
+            
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
@@ -228,14 +229,15 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void ChangeRoom(string newRoomId)
         {
             currentChannel = "chat " + newRoomId;
-            
+
+            chatRoomControlService.ResetContainer(GetMessagesContainer());
+            AddMessages(newRoomId);
+
             if (!subscribedChannels.Contains(currentChannel))
             {
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            chatRoomControlService.ResetContainer(GetMessagesContainer());
-            AddMessages(newRoomId);
         }
 
         private void AddMessages(string currentRoomId)
