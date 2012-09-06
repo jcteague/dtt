@@ -2,9 +2,9 @@ using System;
 
 namespace TeamNotification_Library.Service.Http
 {
-    public interface IListenToMessages
+    public interface IListenToMessages<T>
     {
         void ListenOnChannel(string channel,MessageReceivedAction action);
-        Action<string, byte[]> SubscribeResponse { get; }
+        T SubscribeResponse { get; }
     }
 }

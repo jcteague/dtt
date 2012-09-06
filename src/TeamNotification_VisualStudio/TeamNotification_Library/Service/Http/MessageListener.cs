@@ -4,15 +4,13 @@ using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
 {
-    public class MessageListener : IListenToMessages
+    public class MessageListener : IListenToMessages<Action<string, byte[]>>
     {
-//        readonly IConnectToRedis client;
         readonly ISubscribeToPubSub<Action<string, byte[]>> client;
 
         private MessageReceivedAction onMessageReceivedAction;
         private Action<string, byte[]> onMessageReceivedActionExcecution;
 
-//        public MessageListener(IConnectToRedis client)
         public MessageListener(ISubscribeToPubSub<Action<string, byte[]>> client)
         {
             this.client = client;
@@ -23,7 +21,7 @@ namespace TeamNotification_Library.Service.Http
             onMessageReceivedAction = action;
             onMessageReceivedActionExcecution = (c, bytes) => 
                 onMessageReceivedAction(c, new UTF8Encoding().GetString(bytes));
-            client.Subscribe(channel, SubscribeResponse); // (c,bytes)=> action(c, new UTF8Encoding().GetString(bytes)));
+            client.Subscribe(channel, SubscribeResponse);
         }
 
         public Action<string, byte[]> SubscribeResponse

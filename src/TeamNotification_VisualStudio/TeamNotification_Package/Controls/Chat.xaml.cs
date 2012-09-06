@@ -46,7 +46,7 @@ namespace AvenidaSoftware.TeamNotification_Package
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly ICreateDteHandler dteHandlerCreator;
-        readonly IListenToMessages messageListener;
+        readonly IListenToMessages<Action<string, string>> messageListener;
         private IHandleCodePaste codePasteEvents;
         
         private string roomId { get; set; }
@@ -54,7 +54,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private List<string> subscribedChannels;
         private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
         {
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;

@@ -103,6 +103,8 @@
     <Compile Include="Library\Service\Http\HttpClientHandlerGetterSpecs.cs" />
     <Compile Include="Library\Service\Http\MessageListenerSpecs.cs" />
     <Compile Include="Library\Service\Http\RedisClientSpecs.cs" />
+    <Compile Include="Library\Service\Http\SocketIOPubSubClientSpecs.cs" />
+    <Compile Include="Library\Service\Http\SocketIOMessageListenerSpecs.cs" />
     <Compile Include="Library\Service\LocalDataStorageServiceSpecs.cs" />
     <Compile Include="Library\Service\LocalSystem\DteHandlerSpecs.cs">
       <SubType>Code</SubType>
@@ -119,6 +121,10 @@
     <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
       <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
       <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIO\SocketIOClient.csproj">
+      <Project>{352C9BC1-F74C-4741-A09D-7227BC60C057}</Project>
+      <Name>SocketIOClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\TeamNotification_Library\TeamNotification_Library.csproj">
       <Project>{DDCC2E40-EFCB-43DD-97F4-8DE50AF26173}</Project>

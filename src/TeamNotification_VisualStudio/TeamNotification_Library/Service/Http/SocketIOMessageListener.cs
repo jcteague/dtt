@@ -4,9 +4,8 @@ using SocketIOClient;
 
 namespace TeamNotification_Library.Service.Http
 {
-    public class SocketIOMessageListener : IListenToMessages
+    public class SocketIOMessageListener : IListenToMessages<Action<string, string>>
     {
-        private Client socket;
         readonly ISubscribeToPubSub<Action<string, string>> client;
 
         public SocketIOMessageListener(ISubscribeToPubSub<Action<string, string>> client)
@@ -16,12 +15,10 @@ namespace TeamNotification_Library.Service.Http
 
         public void ListenOnChannel(string channel, MessageReceivedAction action)
         {
-            client.Subscribe(channel, (c, payload) => action(c, payload));
+            SubscribeResponse = (c, payload) => action(c, payload);
+            client.Subscribe(channel, SubscribeResponse);
         }
 
-        public Action<string, byte[]> SubscribeResponse
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public Action<string, string> SubscribeResponse { get; private set; }
     }
 }
