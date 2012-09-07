@@ -5,8 +5,8 @@ redis = require("redis")
 
 get_connection = ->
     client = redis.createClient(config.port, config.host)
-    client.auth config.password, (err) ->
-        console.log(err) if err?
+    #client.auth config.password, (err) ->
+    #    console.log(err) if err?
     client
 
 module.exports =
