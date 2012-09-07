@@ -3,22 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="Site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://dtt.local:3000/</Value>
+      <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com/</Value>
     </Setting>
     <Setting Name="Redis" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">chubb.redistogo.com:9438</Value>
+      <Value Profile="(Default)">ec2-107-21-171-44.compute-1.amazonaws.com:6379</Value>
     </Setting>
     <Setting Name="siteb" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://dtt.jit.su/</Value>
+      <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com/</Value>
     </Setting>
     <Setting Name="redisb" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">chubb.redistogo.com:9438</Value>
-    </Setting>
-    <Setting Name="RedisAuth" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">15439fde8d415f7ab4a3cc9b389badea</Value>
-    </Setting>
-    <Setting Name="RedisAuthB" Type="System.String" Scope="User">
-      <Value Profile="(Default)">15439fde8d415f7ab4a3cc9b389badea</Value>
+      <Value Profile="(Default)">ec2-107-21-171-44.compute-1.amazonaws.com:6379</Value>
     </Setting>
   </Settings>
 </SettingsFile>
