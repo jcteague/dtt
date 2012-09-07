@@ -4,6 +4,7 @@ require 'yaml'
 
 namespace :rest_service do
   task :build_local =>[
+    :test_redis,
     :dev_environment,
     :update_packages,
     :compile_coffeescript,

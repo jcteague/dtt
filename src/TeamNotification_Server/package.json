@@ -10,7 +10,7 @@
     "socket.io": "0.9.x",
     "redis": "0.7.x",
     "underscore": "1.3.x",
-    "pg": "https://github.com/eespinal/node-postgres/tarball/master",
+    "pg": "*",
     "async": "0.1.x",
     "passport": "0.1.x",
     "passport-http": "0.1.x",
