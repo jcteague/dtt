@@ -17,9 +17,9 @@ namespace :rest_service do
     :compile_coffeescript,
     #:test, # This should run on staging env
     :migrate,
-    :package_and_deploy
+    #:package_and_deploy
     #:package,
-    #:run_production
+    :run_production
   ]
 
   task :deploy => [
