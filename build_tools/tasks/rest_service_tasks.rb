@@ -18,7 +18,7 @@ namespace :rest_service do
     #:test, # This should run on staging env
     :migrate,
     #:package_and_deploy
-    #:package,
+    :package,
     :run_production
   ]
 
