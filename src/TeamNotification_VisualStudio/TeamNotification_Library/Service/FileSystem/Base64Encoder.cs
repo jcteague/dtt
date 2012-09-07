@@ -7,12 +7,12 @@ namespace TeamNotification_Library.Service.FileSystem
         public string Decode(string encodedData)
         {
             var encodedDataAsBytes = Convert.FromBase64String(encodedData);
-            return System.Text.Encoding.Unicode.GetString(encodedDataAsBytes);
+            return System.Text.Encoding.ASCII.GetString(encodedDataAsBytes);
         }
 
         public string Encode(string value)
         {
-            byte[] toEncodeAsBytes = System.Text.Encoding.Unicode.GetBytes(value);
+            byte[] toEncodeAsBytes = System.Text.Encoding.ASCII.GetBytes(value);
             return Convert.ToBase64String(toEncodeAsBytes);
         }
     }
