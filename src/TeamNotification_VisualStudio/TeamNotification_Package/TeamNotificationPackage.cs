@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using AvenidaSoftware.TeamNotification_Package.ServiceProviders;
 using EnvDTE;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
