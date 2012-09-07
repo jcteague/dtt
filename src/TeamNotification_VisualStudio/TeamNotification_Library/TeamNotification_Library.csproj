@@ -48,9 +48,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="SocketIOClient, Version=0.6.26.0, Culture=neutral, PublicKeyToken=244f73b38a296440, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\SocketIOClient.dll</HintPath>
+    <Reference Include="SocketIOClient">
+      <HintPath>..\packages\SocketIOCustom\SocketIOClient.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>

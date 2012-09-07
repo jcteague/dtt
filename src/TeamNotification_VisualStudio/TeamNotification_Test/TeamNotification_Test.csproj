@@ -75,6 +75,10 @@
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="SocketIOClient, Version=0.6.26.0, Culture=neutral, PublicKeyToken=244f73b38a296440, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SocketIOCustom\SocketIOClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -121,10 +125,6 @@
     <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
       <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
       <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SocketIO\SocketIOClient.csproj">
-      <Project>{352C9BC1-F74C-4741-A09D-7227BC60C057}</Project>
-      <Name>SocketIOClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\TeamNotification_Library\TeamNotification_Library.csproj">
       <Project>{DDCC2E40-EFCB-43DD-97F4-8DE50AF26173}</Project>
