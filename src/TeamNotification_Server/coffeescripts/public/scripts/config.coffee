@@ -2,9 +2,9 @@ define 'config', [], ->
 
     production_settings =
         site:
-            host: 'dtt.jit.su'
+            host: 'ec2-107-21-171-44.compute-1.amazonaws.com'
             port: 80
-            url: 'http://dtt.jit.su'
+            url: 'http://ec2-107-21-171-44.compute-1.amazonaws.com'
 
     development_settings =
         site:
