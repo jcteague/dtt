@@ -18,7 +18,7 @@ class OAuthAuthentication
             callbackURL: "http://#{globals.site.url}/auth/redirect"
         new OAuth2Strategy(options, @verify)
 
-    verify: ->
+    verify: (accessToken, refreshToken, profile, done) ->
 
 
     initializeAuth: ->

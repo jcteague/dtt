@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace TeamNotification_Library.Service.Content
+namespace TeamNotification_Library.Service.Controls
 {
     public interface IAnimateControl<T> where T : IAnimatable
     {

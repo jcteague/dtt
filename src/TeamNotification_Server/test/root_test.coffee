@@ -46,7 +46,7 @@ describe 'Root', ->
                 collection_action =
                     fetch_to: (callback) ->
                         callback(collection)
-                collection_factory.for.withArgs(user_id).returns(collection_action)
+                collection_factory.for.withArgs().returns(collection_action)
 
                 res = 
                     json: sinon.spy()

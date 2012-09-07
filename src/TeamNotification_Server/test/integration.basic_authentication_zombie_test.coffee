@@ -29,14 +29,14 @@ describe 'Basic Authentication Test', ->
     describe 'When an unauthenticated request is received', ->
 
         response = null
-
+        login_div_id = 'login-container'
         beforeEach (done) ->
-            browser.visit 'http://localhost:3000/', (e, browser, status) ->
+            browser.visit 'http://localhost:3000/client#/user/1', (e, browser, status) ->
                 response = status
                 done()
 
-        it 'should return a 401', (done) ->
-            expect(response).to.equal 401
+        it 'should redirect to the login page', (done) ->
+            expect(browser.html()).to.contain login_div_id
             done()
 
     describe 'When an authenticated header is found', ->
