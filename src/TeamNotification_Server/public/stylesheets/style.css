@@ -27,11 +27,9 @@ label { vertical-align: top;}
     overflow:auto;
     
 }
-.new_message
-{
-    1border: solid 5px #cc3300; 
-    background-color:#cc3300;
-    
+
+.new_message {
+    background-color:#fcf9ce;
 }
 pre {
 	font-weight: bolder;

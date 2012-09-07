@@ -18,7 +18,7 @@ namespace TeamNotification_Test.Library.Service.Http
     [Subject(typeof(MessageListener))]
     public class MessageListenerSpecs
     {
-        public class Concern : Observes<IListenToMessages, MessageListener>
+        public class Concern : Observes<IListenToMessages<Action<string, byte[]>>, MessageListener>
         {
         }
 
@@ -26,11 +26,11 @@ namespace TeamNotification_Test.Library.Service.Http
         {
             Establish context = () =>
             {
-                iConnectToRedis = depends.on<IConnectToRedis>();
-                action = fake.an<MessageReceivedAction>();// (MessageReceivedAction x) => result = x.Result;
+                iConnectToRedis = depends.on<ISubscribeToPubSub<Action<string, byte[]>>>();
+                action = fake.an<MessageReceivedAction>();
                 channel = "test";
-              //  subscribeResponse = (c, bytes) =>
-               //     action(channel, new UTF8Encoding().GetString(bytes));
+                subscribeResponse = (c, bytes) =>
+                    action(channel, new UTF8Encoding().GetString(bytes));
             };
 
             private Because of = () =>
@@ -38,10 +38,11 @@ namespace TeamNotification_Test.Library.Service.Http
                 sut.ListenOnChannel(channel, action);
                 subscribeResponse = sut.SubscribeResponse;
             };
+
             private It should_call_the_action_with_the_result_from_the_request = () =>
                 iConnectToRedis.AssertWasCalled(x => x.Subscribe(channel, subscribeResponse));
 
-            private static IConnectToRedis iConnectToRedis;
+            private static ISubscribeToPubSub<Action<string, byte[]>> iConnectToRedis;
             private static MessageReceivedAction action;
             private static string channel;
             private static Action<string, byte[]> subscribeResponse;

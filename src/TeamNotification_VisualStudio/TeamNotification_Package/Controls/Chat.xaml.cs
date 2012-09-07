@@ -46,7 +46,7 @@ namespace AvenidaSoftware.TeamNotification_Package
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly ICreateDteHandler dteHandlerCreator;
-        readonly IListenToMessages messageListener;
+        readonly IListenToMessages<Action<string, string>> messageListener;
         private IHandleCodePaste codePasteEvents;
         
         private string roomId { get; set; }
@@ -54,7 +54,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private List<string> subscribedChannels;
         private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages messageListener, IServiceChatRoomsControl chatRoomControlService, ISerializeJSON serializeJson, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
         {
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
@@ -65,6 +65,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             InitializeComponent();
+            
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = formatRooms(collection.rooms);
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
@@ -165,8 +166,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (channel == currentChannel)
             {
                 chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
-                
-                    //dteStore.dte.MainWindow.Activate();// .FlashWindow(5);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -230,14 +229,15 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void ChangeRoom(string newRoomId)
         {
             currentChannel = "chat " + newRoomId;
-            
+
+            chatRoomControlService.ResetContainer(GetMessagesContainer());
+            AddMessages(newRoomId);
+
             if (!subscribedChannels.Contains(currentChannel))
             {
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
                 subscribedChannels.Add(currentChannel);
             }
-            chatRoomControlService.ResetContainer(GetMessagesContainer());
-            AddMessages(newRoomId);
         }
 
         private void AddMessages(string currentRoomId)

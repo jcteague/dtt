@@ -126,38 +126,68 @@ describe 'Room', ->
                     sinon.assert.calledWith(res.redirect, '/')
                     done()
 
-        describe 'socket_callback', ->
-            redis = callback_function = room_id = room_channel = null
+        describe 'set_up_message_transmission', ->
+            io = room_id = listener_name = room_channel = null
+
             beforeEach (done) ->
+                io =
+                    of: sinon.stub()
                 room_id = 1
+                listener_name = 'blah listener'
+
+                namespace_io = 
+                    send: sinon.stub()
+                io.of.withArgs(listener_name).returns(namespace_io)
+
                 room_channel = "chat #{room_id}"
-                redis = { 
-                    on:sinon.spy(),
-                    subscribe:sinon.spy()
-                }
-                callback_function = sut.methods.socket_callback(redis,room_id)
-                done()
-                
-            it 'should return a function', (done) ->
-                expect(typeof callback_function).to.be("function")
+                sut.methods.set_up_message_transmission(io, room_id, listener_name)
                 done()
 
-                describe 'socket_callback callback function', ->
-                    client = null
-                    beforeEach (done) ->
-                        client  = 
-                            send: sinon.stub()
-                        callback_function(client)
-                        done()
-                    it 'should subscribe to the chat room on the redis server', (done) ->
-                        sinon.assert.calledWith(redis.subscribe, room_channel )
-                        done()
-                    
-                    it 'should set the on message event', (done) ->
-                        sinon.assert.called(redis.on)
-                        done()
-                    
-                
+            it 'should subscribe to the room channel', (done) ->
+                sinon.assert.calledWith(client_mock.subscribe, room_channel)
+                done()
+
+            it 'should set up the message event', (done) ->
+                sinon.assert.calledWith(client_mock.on, 'message', sinon.match.func)
+                done()
+
+        describe 'set_socket_events', ->
+
+            io = room_id = listener_name = null
+
+            beforeEach (done) ->
+                io = 'socket io'
+                room_id = 9
+                listener_name = "/room/#{room_id}/messages"
+                sinon.stub(sut.methods, 'set_up_message_transmission')
+                done()
+
+            afterEach (done) ->
+                sut.methods.is_listener_registered.restore()
+                sut.methods.set_up_message_transmission.restore()
+                done()
+
+            describe 'and there is not a listener for that room', ->
+
+                beforeEach (done) ->
+                    sinon.stub(sut.methods, 'is_listener_registered').returns false
+                    sut.methods.set_socket_events(io, room_id)
+                    done()
+
+                it 'should set up the message transmission for that listener', (done) ->
+                    sinon.assert.calledWith(sut.methods.set_up_message_transmission, io, room_id, listener_name)
+                    done()
+
+            describe 'and there is a listener for that room', ->
+
+                beforeEach (done) ->
+                    sinon.stub(sut.methods, 'is_listener_registered').returns true
+                    sut.methods.set_socket_events(io, room_id)
+                    done()
+
+                it 'should not set up the message transmission for that listener', (done) ->
+                    sinon.assert.notCalled(sut.methods.set_up_message_transmission)
+                    done()
                 
         describe 'for a room with id', ->
 

@@ -48,6 +48,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SocketIOClient, Version=0.6.26.0, Culture=neutral, PublicKeyToken=244f73b38a296440, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\SocketIOClient.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
@@ -82,6 +86,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net">
+      <HintPath>..\packages\WebSocket4Net.0.8\lib\net40\WebSocket4Net.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +185,7 @@
     <Compile Include="Service\Factories\ICreateInstances.cs" />
     <Compile Include="Service\Factories\ICreateUserFromResponse.cs" />
     <Compile Include="Service\Factories\PanelFactory.cs" />
+    <Compile Include="Service\Factories\SocketIOClientFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
@@ -208,11 +216,16 @@
     <Compile Include="Service\Http\ISendChatMessages.cs" />
     <Compile Include="Service\Http\ChatMessageSender.cs" />
     <Compile Include="Service\Http\ISerializeJSON.cs" />
+    <Compile Include="Service\Http\ISubscribeToPubSub.cs" />
+    <Compile Include="Service\Http\IWrapSocketIOClient.cs" />
     <Compile Include="Service\Http\JSONSerializer.cs" />
     <Compile Include="Service\Http\MessageListener.cs" />
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\Http\SocketIOClientWrapper.cs" />
+    <Compile Include="Service\Http\SocketIOPubSubClient.cs" />
+    <Compile Include="Service\Http\SocketIOMessageListener.cs" />
     <Compile Include="Service\IStoreDataLocally.cs" />
     <Compile Include="Service\LocalDataStorageService.cs" />
     <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />

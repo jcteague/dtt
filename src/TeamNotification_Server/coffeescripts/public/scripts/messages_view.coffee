@@ -28,11 +28,8 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
-                if @socket?
-                    @socket.removeAllListeners()
-                    @socket.$events = {}
-                @socket = new window.io.connect("#{@model.get('href')}")
-                @socket.on 'message', @add_message
+                socket = new window.io.connect(@model.get('href'))
+                socket.on 'message', @add_message
                 render_model()
             @
 
