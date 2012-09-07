@@ -11,8 +11,6 @@ app = module.exports = express.createServer()
 require('./helper')(app)
 io = require('socket.io').listen(app)
 
-
-
 ###
   Mock Database
 ###
@@ -67,6 +65,7 @@ app.configure('test', ->
 )
 
 app.configure('production', ->
+    io.set 'log level', 1
     app.use(express.errorHandler())
 )
 
