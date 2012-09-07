@@ -5,7 +5,7 @@ orm = require('orm')
 db_config = require('../config')().db
 
 get_db_connection = ->
-    client = new pg.native.Client(db_config.connection_string)
+    client = new pg.Client(db_config.connection_string)
     client.connect()
     defer = q.defer()
     orm.connect 'postgres', client, (success, db) ->

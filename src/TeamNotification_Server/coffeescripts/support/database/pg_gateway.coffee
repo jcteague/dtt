@@ -1,5 +1,5 @@
 q = require('q')
-pg = require('pg').native
+pg = require('pg')
 db_config = require('../../config')().db
 
 open_normal_connection = (callback) ->
