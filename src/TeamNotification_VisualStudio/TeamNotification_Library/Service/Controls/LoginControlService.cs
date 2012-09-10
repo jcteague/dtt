@@ -45,7 +45,7 @@ namespace TeamNotification_Library.Service.Controls
             if (loginResponse.success)
             {
                 foreach (var item in itemsList)
-                    if(item.type == Globals.Fields.Password)
+                    if(item.type == GlobalConstants.Fields.Password)
                     {
                         loginResponse.user.password = item.value;
                         break;

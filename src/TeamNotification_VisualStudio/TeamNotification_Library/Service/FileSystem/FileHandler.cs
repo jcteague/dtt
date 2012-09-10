@@ -17,15 +17,15 @@ namespace TeamNotification_Library.Service.FileSystem
 
         public void Write(LoginResponse response)
         {
-            File.WriteAllLines(Globals.Paths.UserResource, response.SerializeForFile().Select(x => base64Encoder.Encode(x)));
+            File.WriteAllLines(GlobalConstants.Paths.UserResource, response.SerializeForFile().Select(x => base64Encoder.Encode(x)));
         }
 
         public LoginResponse Read()
         {
-            if (!File.Exists(Globals.Paths.UserResource))
+            if (!File.Exists(GlobalConstants.Paths.UserResource))
                 return null;
 
-            var lines = File.ReadAllLines(Globals.Paths.UserResource).Select(x => base64Encoder.Decode(x)).ToArray();
+            var lines = File.ReadAllLines(GlobalConstants.Paths.UserResource).Select(x => base64Encoder.Decode(x)).ToArray();
             return new LoginResponse
                        {
                            user = new User

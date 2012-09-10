@@ -49,7 +49,7 @@ namespace TeamNotification_Test.Library.Service.Content
         {
             Establish context = () =>
             {
-                collectionData.type = Globals.Fields.Password;
+                collectionData.type = GlobalConstants.Fields.Password;
                 
                 passwordBox = new PasswordBox {Name = collectionData.name};
                 passwordFactory.Stub(x => x.Get(collectionData.name)).Return(passwordBox);
@@ -74,7 +74,7 @@ namespace TeamNotification_Test.Library.Service.Content
         {
             Establish context = () =>
             {
-                collectionData.type = Globals.Fields.TextBox;
+                collectionData.type = GlobalConstants.Fields.TextBox;
                 
                 textBox = new TextBox { Name = collectionData.name };
                 textBoxFactory.Stub(x => x.Get(collectionData.name)).Return(textBox);

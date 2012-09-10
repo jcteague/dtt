@@ -6,6 +6,7 @@ using System.Windows.Shapes;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using Container = TeamNotification_Library.Service.Container;
 
@@ -46,9 +47,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         public override void OnToolWindowCreated()
         {
             base.OnToolWindowCreated();
-
-            var handler = new ToolWindowEvents((TeamNotificationPackage)this.Package);
-            
+            var handler = new ToolWindowEvents((TeamNotificationPackage)this.Package, Container.GetInstance<IHandleToolWindowEvents>());
             ((IVsWindowFrame)this.Frame).SetProperty((int)__VSFPROPID.VSFPROPID_ViewHelper, handler);
         }
     }

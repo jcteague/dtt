@@ -11,6 +11,13 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         DTE dte { get; set; }
         IWrapSolution Solution { get; }
+        IWrapWindow MainWindow { get; }
+    }
+
+    public interface IWrapWindow
+    {
+        int Width { get; }
+        int Height { get; }
     }
 
     public interface IWrapSolution

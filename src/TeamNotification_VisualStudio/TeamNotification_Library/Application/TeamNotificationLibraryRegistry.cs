@@ -28,7 +28,6 @@ namespace TeamNotification_Library.Application
             For<ICreateSyntaxBlockUIInstances>().Singleton();
             For<IProvideSyntaxHighlighter>().Singleton();
 			For<IStoreDTE>().Singleton();
-            For<ICreateDteHandler>().Use<DteHandlerCreator>();
         }
     }
 }

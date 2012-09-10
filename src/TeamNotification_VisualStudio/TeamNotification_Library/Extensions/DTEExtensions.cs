@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using EnvDTE;
-using Globals = TeamNotification_Library.Configuration.Globals;
+using TeamNotification_Library.Configuration;
 
 namespace TeamNotification_Library.Extensions
 {
@@ -13,16 +13,16 @@ namespace TeamNotification_Library.Extensions
              switch (extension)
              {
                  case "cs":
-                     return Globals.ProgrammingLanguages.CSharp;
+                     return GlobalConstants.ProgrammingLanguages.CSharp;
 
                  case "vb":
-                     return Globals.ProgrammingLanguages.VisualBasic;
+                     return GlobalConstants.ProgrammingLanguages.VisualBasic;
 
                  case "js":
-                     return Globals.ProgrammingLanguages.JavaScript;
+                     return GlobalConstants.ProgrammingLanguages.JavaScript;
 
                  default:
-                     return Globals.ProgrammingLanguages.Unknown;
+                     return GlobalConstants.ProgrammingLanguages.Unknown;
              }
          }
     }

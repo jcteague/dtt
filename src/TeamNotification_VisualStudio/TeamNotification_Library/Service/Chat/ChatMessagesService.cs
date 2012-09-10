@@ -28,7 +28,7 @@ namespace TeamNotification_Library.Service.Chat
             this.tableBuilder = tableBuilder;
         }
 
-        public void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
+        public void AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
         {
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(() =>
             {

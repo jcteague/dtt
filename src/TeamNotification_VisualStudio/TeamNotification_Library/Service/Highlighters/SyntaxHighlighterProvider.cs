@@ -21,13 +21,13 @@ namespace TeamNotification_Library.Service.Highlighters
         {
             switch (programmingLanguageIdentifier)
             {
-                case Globals.ProgrammingLanguages.CSharp:
+                case GlobalConstants.ProgrammingLanguages.CSharp:
                     return CSharpHighlighter;
 
-                case Globals.ProgrammingLanguages.VisualBasic:
+                case GlobalConstants.ProgrammingLanguages.VisualBasic:
                     return VBHighlighter;
 
-                case Globals.ProgrammingLanguages.JavaScript:
+                case GlobalConstants.ProgrammingLanguages.JavaScript:
                     return JavaScriptHighlighter;
 
                 default:

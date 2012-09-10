@@ -11,6 +11,28 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         public DTE dte { get; set; }
         public IWrapSolution Solution { get { return new SolutionWrapper(dte.Solution); } }
+        public IWrapWindow MainWindow { get { return new WindowWrapper(dte.MainWindow);} }
+        
+    }
+
+    public class WindowWrapper : IWrapWindow
+    {
+        private Window window;
+
+        public WindowWrapper(Window window)
+        {
+            this.window = window;
+        }
+
+        public int Width
+        {
+            get { return window.Width; }
+        }
+
+        public int Height
+        {
+            get { return window.Height; }
+        }
     }
 
     public class ProjectWrapper : IWrapProject

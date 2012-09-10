@@ -24,6 +24,7 @@ using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.Service.ToolWindow;
 using developwithpassion.specifications.rhinomocks;
 using Rhino.Mocks;
 using TextRange = System.Windows.Documents.TextRange;
@@ -50,6 +51,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 chatMessagesService = depends.on<IHandleChatMessages>();
                 collectionMessagesToChatMessageModelMapper = depends.on<IMapEntities<Collection.Messages, ChatMessageModel>>();
                 messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
+                toolWindowActionGetter = depends.on<IGetToolWindowAction>();
             };
 
             protected static IProvideUser userProvider;
@@ -65,6 +67,8 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IHandleChatMessages chatMessagesService;
             protected static IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
             protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
+            protected static IGetToolWindowAction toolWindowActionGetter;
+
         }
 
         public abstract class when_getting_a_collection_context : Concern
@@ -194,7 +198,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             Establish context = () =>
             {
                 var messageList = new RichTextBox();
-                messagesContainer = new MessagesContainer
+                messagesContainer = new ChatUIElements
                                         {
                                             Container = messageList,
                                             MessagesTable = new Table()
@@ -220,7 +224,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static ChatMessageModel chatMessage1;
             private static ChatMessageModel chatMessage2;
             private static ScrollViewer scrollViewer;
-            private static MessagesContainer messagesContainer;
+            private static ChatUIElements messagesContainer;
         }
 
         public class when_adding_a_received_message : Concern
@@ -228,7 +232,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             Establish context = () =>
             {
                 var messageList = new RichTextBox();
-                messagesContainer = new MessagesContainer
+                messagesContainer = new ChatUIElements
                 {
                     Container = messageList,
                     MessagesTable = new Table()
@@ -253,7 +257,34 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static string messageData;
             private static ScrollViewer scrollviewer;
             private static ChatMessageModel chatMessage;
-            private static MessagesContainer messagesContainer;
+            private static ChatUIElements messagesContainer;
+        }
+
+        public class when_handling_the_dock : Concern
+        {
+            Establish context = () =>
+            {
+                chatUIElements = new ChatUIElements();
+                toolWindowWasDockedArgs = new ToolWindowWasDocked
+                                              {
+                                                  x = 9,
+                                                  y = 10,
+                                                  w = 11,
+                                                  h = 12
+                                              };
+                action = fake.an<IActOnChatElements>();
+                toolWindowActionGetter.Stub(x => x.Get(toolWindowWasDockedArgs)).Return(action);
+            };
+
+            Because of = () =>
+                sut.HandleDock(chatUIElements, toolWindowWasDockedArgs);
+
+            It should_execute_the_action_for_the_position_on_the_chat_ui_elements = () =>
+                action.AssertWasCalled(x => x.ExecuteOn(chatUIElements));
+
+            private static ChatUIElements chatUIElements;
+            private static ToolWindowWasDocked toolWindowWasDockedArgs;
+            private static IActOnChatElements action;
         }
 
         // TODO: Find a way to mock DTE to test implementation
