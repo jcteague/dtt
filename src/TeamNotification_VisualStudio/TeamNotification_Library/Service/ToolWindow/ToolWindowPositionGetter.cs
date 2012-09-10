@@ -5,6 +5,7 @@ using System.Linq;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.ToolWindow
 {
@@ -27,7 +28,7 @@ namespace TeamNotification_Library.Service.ToolWindow
 
             foreach (Window win in dteStore.dte.Windows)
             {
-                if (win.ObjectKind.ToLower() == "{052b3fa5-4a40-4588-9614-5b99dce7120d}")
+                if (win.IsPluginWindow())
                 {
                     var left = win.Left < xc && h > yc;
                     var top = win.Top < yc && w > xc;

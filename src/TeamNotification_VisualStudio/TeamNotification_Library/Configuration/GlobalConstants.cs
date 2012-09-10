@@ -29,5 +29,10 @@
             public const int Bottom = 3;
             public const int Left = 4;
         }
+
+        public static class Guids
+        {
+            public const string LoginWindowPersistanceString = "052b3fa5-4a40-4588-9614-5b99dce7120d";
+        }
     }
 }
