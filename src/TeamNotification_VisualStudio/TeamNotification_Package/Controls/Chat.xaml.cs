@@ -260,11 +260,17 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             return new ChatUIElements
             {
+                OuterGridRow3 = outerGridRow3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
                 MessageInput = messageTextBox,
-                MessageTextBoxBorder = messageTextBoxBorder,
+                MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
+                MessageRow1 = messageRow1,
+                MessageRow2 = messageRow2,
+                MessageColumn1 = messageColumn1,
+                MessageColumn2 = messageColumn2,
+                SendMessageButton = btnSendMessageButton,
                 StatusBar = dteStore.dte.StatusBar
             };
         }

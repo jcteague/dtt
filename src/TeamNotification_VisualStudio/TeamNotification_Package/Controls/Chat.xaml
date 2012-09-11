@@ -16,15 +16,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="70" />
+            <RowDefinition Name="outerGridRow3" Height="70" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 <!--        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="buttonLogout" VerticalAlignment="Center" Width="60" />-->
-        <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Stretch" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+        <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Right" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -48,15 +48,23 @@
                 </RichTextBox>
             </ScrollViewer>
         </Border>
-        <Border Name="messageTextBoxBorder" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0,0,2" CornerRadius="0">
-            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="65" Name="messageTextBox" VerticalAlignment="Bottom" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
+        <Grid Name="messageTextBoxGrid" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="auto" Margin="5,0,5,2">
+            <Grid.RowDefinitions>
+                <RowDefinition Name="messageRow1" Height="*" />
+                <RowDefinition Name="messageRow2" Height="0" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Name="messageColumn1" Width="*" />
+                <ColumnDefinition Name="messageColumn2" Width="100" />
+            </Grid.ColumnDefinitions>
+            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0"/>
                     </Style>
                 </RichTextBox.Resources>
             </RichTextBox>
-        </Border>
-        <Button Grid.Row="2" Grid.Column="2"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,18" />       
+            <Button Grid.Row="0" Grid.Column="1"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,18" />
+        </Grid>
     </Grid>
 </UserControl>
