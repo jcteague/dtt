@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using EnvDTE;
@@ -74,7 +75,7 @@ namespace TeamNotification_Library.Service.Controls
                 var txt = activeDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
-				var activeProjects = dte.ActiveSolutionProjects[0];
+                var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
                 var message = systemClipboardHandler.GetText(true);
                 var clipboard = new CodeClipboardData
                 {
