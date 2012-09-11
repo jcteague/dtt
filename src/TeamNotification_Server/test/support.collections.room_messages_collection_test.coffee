@@ -14,8 +14,8 @@ describe 'Room Messages Collection', ->
             room_id = 1
             body = {message: 'blah!'}
             room_messages = [ 
-                JSON.stringify({ "id":10, "body":JSON.stringify(body), "date":'2012-06-29 11:11', "user_id":1, "name":"james", "room_id":room_id })
-                JSON.stringify({ "id":11, "body":JSON.stringify(body), "date":'2012-06-29 11:12', "user_id":1, "name":"jhon", "room_id":room_id })
+                JSON.stringify({ "id":10, "body":JSON.stringify(body), "date":'2012-06-29 11:11', "user_id":1, "name":"james", "room_id":room_id, 'stamp':1234 })
+                JSON.stringify({ "id":11, "body":JSON.stringify(body), "date":'2012-06-29 11:12', "user_id":1, "name":"jhon", "room_id":room_id,'stamp':1234 })
                 ]
             user = {id:1, name:'James'}
             rooms = []
@@ -53,7 +53,7 @@ describe 'Room Messages Collection', ->
                     message = result['messages'][0]
                     room_message_parsed = JSON.parse(room_messages[0])
                     
-                    expect(message['data']).to.eql [{ 'name':'user_id', 'value': room_message_parsed.user_id}, { 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': JSON.stringify(body)}, { 'name':'datetime', 'value':room_message_parsed.date }]
+                    expect(message['data']).to.eql [{ 'name':'user_id', 'value': room_message_parsed.user_id}, { 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': JSON.stringify(body)}, { 'name':'datetime', 'value':room_message_parsed.date }, {'name':'stamp', 'value':1234}]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->

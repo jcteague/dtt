@@ -92,13 +92,26 @@ methods.post_room_message = (req, res, next) ->
     values = req.body
     if values.message != ''
         room_id = req.param('id')
+        newMessage = ''
+        message_date = ''
+        message_stamp = ''
+        setname = "room:#{room_id}:messages"
+        console.log values
+        if typeof values.stamp != 'undefined' && values.stamp != ''
+            message_stamp = values.stamp
+            message_date = values.date
+            redis3.zremrangebyscore(setname, message_stamp, message_stamp)
+        else
+            message_date =  new Date()
+            message_stamp =  message_date.getTime()
+            values.stamp = message_stamp
+            values.date = message_date
+            
         message_body = JSON.stringify(values)
-        message_date =  new Date()
-        message_stamp =  message_date.getTime()
-        newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":new Date(), "stamp": message_stamp}
+        newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp} 
         m = JSON.stringify newMessage
         redis2.publish("chat #{room_id}", m)
-        redis3.zadd("room:#{room_id}:messages",message_stamp, m)
+        redis3.zadd(setname,message_stamp, m)
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
         room_message.save (err,saved_message) ->
             if !err
