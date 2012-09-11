@@ -175,7 +175,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(GetChatUIElements(), scrollViewer1, payload);
+                chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -253,7 +253,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;
-            chatRoomControlService.AddMessages(GetChatUIElements(), scrollViewer1, currentRoomId);
+            chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);
         }
 
         private ChatUIElements GetChatUIElements()

@@ -33,30 +33,30 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Grid Name="grid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="auto" Margin="15,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
-                <Border Name="messageContainerBorder" BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
-                    <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
-                        <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
-                            <Table Name="messagesTable">
-                                <Table.Columns>
-                                    <TableColumn Width="75"/>
-                                    <TableColumn Width="Auto" />
-                                    <TableColumn Width="70" />
-                                </Table.Columns>
-                            </Table>
-                        </FlowDocument>
-                    </RichTextBox>
-                </Border>
+        <Border Name="messageContainerBorder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0">
+            <ScrollViewer Name="messageScroll" Height="auto"  Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
+                    <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
+                        <Table Name="messagesTable">
+                            <Table.Columns>
+                                <TableColumn Width="75"/>
+                                <TableColumn Width="Auto" />
+                                <TableColumn Width="70" />
+                            </Table.Columns>
+                        </Table>
+                    </FlowDocument>
+                </RichTextBox>
             </ScrollViewer>
-        </Grid>
-        <RichTextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Width="auto" HorizontalAlignment="Stretch" Height="65" Name="messageTextBox" VerticalAlignment="Bottom" GotFocus="ClearStatusBar" Margin="15,0,0,5" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
-            <RichTextBox.Resources>
-                <Style TargetType="{x:Type Paragraph}">
-                    <Setter Property="Margin" Value="0"/>
-                </Style>
-            </RichTextBox.Resources>
-        </RichTextBox>
+        </Border>
+        <Border Name="messageTextBoxBorder" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0,0,2" CornerRadius="0">
+            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="65" Name="messageTextBox" VerticalAlignment="Bottom" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+        </Border>
         <Button Grid.Row="2" Grid.Column="2"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,18" />       
     </Grid>
 </UserControl>

@@ -256,6 +256,8 @@
     <Compile Include="Service\ToolWindow\IActOnChatElements.cs" />
     <Compile Include="Service\ToolWindow\IGetToolWindowAction.cs" />
     <Compile Include="Service\ToolWindow\IGetToolWindowPosition.cs" />
+    <Compile Include="Service\ToolWindow\MessageInputAtBottom.cs" />
+    <Compile Include="Service\ToolWindow\MessageInputAtRight.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowActionGetter.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowPositionGetter.cs" />
     <Compile Include="Settings.cs" />
