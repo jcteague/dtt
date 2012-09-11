@@ -22,18 +22,18 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
         {
             Establish context = () =>
             {
-                userId = 10;
-                chatMessage = new ChatMessageModel {UserId = userId, UserName = "Blah User"};
+                userId = "10";
+                chatMessage = new ChatMessageModel {user_id = userId, username = "Blah User"};
             };
 
-            protected static int userId;
+            protected static string userId;
             protected static ChatMessageModel chatMessage;
         }
 
         public class when_getting_the_formatted_element_and_the_user_that_last_inserted_is_the_same : when_getting_the_formatted_element
         {
             Because of = () =>
-                result = sut.GetFormattedElement(chatMessage, userId);
+                result = sut.GetFormattedElement(chatMessage, userId.ParseToInteger());
 
             It should_return_an_empty_paragraph = () =>
                 result.GetText().ShouldBeEmpty();
@@ -47,7 +47,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                 result = sut.GetFormattedElement(chatMessage, 99);
 
             It should_return_an_empty_paragraph = () =>
-                result.GetText().ShouldEqual(chatMessage.UserName);
+                result.GetText().ShouldEqual(chatMessage.username);
 
             private static Paragraph result;
         }

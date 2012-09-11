@@ -6,23 +6,23 @@ namespace TeamNotification_Library.Extensions
 {
     public static class DTEExtensions
     {
-         public static int GetProgrammingLanguage(this Document document)
+         public static int Getprogramminglanguage(this Document document)
          {
              var extension = document.FullName.Split('\\').Last().Split('.').Last().ToLower();
 
              switch (extension)
              {
                  case "cs":
-                     return Globals.ProgrammingLanguages.CSharp;
+                     return Globals.programminglanguages.CSharp;
 
                  case "vb":
-                     return Globals.ProgrammingLanguages.VisualBasic;
+                     return Globals.programminglanguages.VisualBasic;
 
                  case "js":
-                     return Globals.ProgrammingLanguages.JavaScript;
+                     return Globals.programminglanguages.JavaScript;
 
                  default:
-                     return Globals.ProgrammingLanguages.Unknown;
+                     return Globals.programminglanguages.Unknown;
              }
          }
     }

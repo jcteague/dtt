@@ -103,21 +103,18 @@
     <Compile Include="Configuration\ServerConfigurationProvider.cs" />
     <Compile Include="Extensions\DTEExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\FlowDocumentExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Models\ChatMessageBody.cs" />
     <Compile Include="Models\ChatMessageModel.cs" />
-    <Compile Include="Models\CodeClipboardData.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
-    <Compile Include="Models\ChatMessageData.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\Maybe.cs" />
-    <Compile Include="Models\MessageBody.cs" />
-    <Compile Include="Models\MessageData.cs" />
-    <Compile Include="Models\PlainClipboardData.cs" />
     <Compile Include="Models\ServerResponse.cs" />
     <Compile Include="Models\UI\MessagesContainer.cs" />
     <Compile Include="Models\User.cs" />
@@ -239,12 +236,13 @@
     <Compile Include="Service\LocalSystem\SelectionWrapper.cs" />
     <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
     <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
+    <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
-    <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
     <Compile Include="Service\Mappers\IMapEntities.cs" />
-    <Compile Include="Service\Mappers\MessageDataToChatMessageModelMapper.cs" />
     <Compile Include="Service\Providers\DbConnectionProvider.cs" />
     <Compile Include="Service\Providers\IProvideDbConnection.cs" />
     <Compile Include="Service\Providers\IProvideUser.cs" />

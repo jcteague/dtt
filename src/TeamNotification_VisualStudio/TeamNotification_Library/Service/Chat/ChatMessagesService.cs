@@ -34,17 +34,17 @@ namespace TeamNotification_Library.Service.Chat
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
                 var date = dateMessageFormatter.GetFormattedElement(chatMessage);
-                var message = chatMessage.IsCode()
+                var message = chatMessage.chatMessageBody.IsCode
                                   ? codeMessageFormatter.GetFormattedElement(chatMessage)
                                   : plainMessageFormatter.GetFormattedElement(chatMessage);
 
                 var columns = new Tuple<Block, Block, Block>(user, message, date);
                 messagesContainer.MessagesTable.RowGroups.Add(tableBuilder.GetContentFor(columns));
-                lastUserThatInserted = chatMessage.UserId;
+                lastUserThatInserted = chatMessage.user_id.ParseToInteger();
 
             }));
-            var m = stripMessage(chatMessage.Message);
-            messagesContainer.StatusBar.Text = chatMessage.UserName + " says: " + m;
+            var m = stripMessage(chatMessage.chatMessageBody.message);
+            messagesContainer.StatusBar.Text = chatMessage.username + " says: " + m;
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
         }
         private string stripMessage(string message)

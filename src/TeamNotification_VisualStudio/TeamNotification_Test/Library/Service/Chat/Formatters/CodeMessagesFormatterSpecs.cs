@@ -37,18 +37,21 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             {
                 chatMessage = new ChatMessageModel
                                   {
-                                      UserId = 9,
-                                      Message = "foo message",
-                                      Project = "foo project",
-                                      Solution = "foo solution",
-                                      Document = "foo document",
-                                      Line = 10,
-                                      Column = 99,
-                                      ProgrammingLanguage = 1
+                                      user_id = "9",
+                                      chatMessageBody = new ChatMessageBody
+                                      {
+                                          message = "foo message",
+                                          project = "foo project",
+                                          solution = "foo solution",
+                                          document = "foo document",
+                                          line = 10,
+                                          column = 99,
+                                          programminglanguage = 1
+                                      }
                                   };
 
-                syntaxBlock = new SyntaxHighlightBox {Text = chatMessage.Message};
-                syntaxHighlightBoxFactory.Stub(x =>x.Get(chatMessage.Message, chatMessage.ProgrammingLanguage)).Return(syntaxBlock);
+                syntaxBlock = new SyntaxHighlightBox { Text = chatMessage.chatMessageBody.message };
+                syntaxHighlightBoxFactory.Stub(x => x.Get(chatMessage.chatMessageBody.message, chatMessage.chatMessageBody.programminglanguage)).Return(syntaxBlock);
             };
 
             Because of = () =>
@@ -57,7 +60,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             It should_return_a_paragraph_with_a_link_as_the_first_inline = () =>
             {
                 var firstInline = result.Inlines.FirstInline;
-                firstInline.GetText().ShouldEqual("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.Project, chatMessage.Document, chatMessage.Line.ToString()));
+                firstInline.GetText().ShouldEqual("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString()));
             };
 
             It should_add_an_event_handler_for_the_click_of_the_link = () =>

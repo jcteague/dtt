@@ -2,13 +2,13 @@ using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Service.Factories
 {
-    public class ChatMessageDataFactory : ICreateChatMessageData
+    public class ChatMessageModelFactory : ICreateChatMessageModel
     {
-        public ChatMessageData Get(string message)
+        public ChatMessageModel Get(string message)
         {
-            return new ChatMessageData
+            return new ChatMessageModel
                        {
-                           message = message
+                           chatMessageBody = new ChatMessageBody { message = message }
                        };
         }
     }

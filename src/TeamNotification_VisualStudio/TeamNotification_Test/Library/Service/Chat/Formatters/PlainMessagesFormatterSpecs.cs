@@ -30,9 +30,9 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             {
                 chatMessage = new ChatMessageModel
                     {
-                        UserId = 9,
-                        UserName = "foo user",
-                        Message = "foo message"
+                        user_id = "9",
+                        username = "foo user",
+                        chatMessageBody = new ChatMessageBody { message = "foo message" }
                     };
             };
 
@@ -42,7 +42,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             It should_return_a_paragraph_filled_with_the_message = () =>
             {
                 var paragraph = ((Paragraph) result);
-                paragraph.GetText().ShouldEqual(chatMessage.Message);
+                paragraph.GetText().ShouldEqual(chatMessage.chatMessageBody.message);
             };
 
             private static Block result;

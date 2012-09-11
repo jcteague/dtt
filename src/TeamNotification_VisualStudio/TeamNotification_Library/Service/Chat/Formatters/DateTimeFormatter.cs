@@ -36,7 +36,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 
         public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
-            var dateTime = FormatDate(chatMessage.DateTime);
+            var dateTime = FormatDate(DateTime.Parse(chatMessage.date));
             return new Paragraph(new Bold(new Run(dateTime))) { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
         }
 

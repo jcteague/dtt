@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using EnvDTE;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
@@ -22,7 +28,7 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
         private ISerializeJSON jsonSerializer;
-        private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
+        //private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
         private IHandleChatMessages chatMessagesService;
         
@@ -32,7 +38,7 @@ namespace TeamNotification_Library.Service.Controls
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -42,7 +48,7 @@ namespace TeamNotification_Library.Service.Controls
             this.systemClipboardHandler = systemClipboardHandler;
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
-            this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
+            //this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.configuration = configuration;
@@ -73,31 +79,38 @@ namespace TeamNotification_Library.Service.Controls
                 var selection = txt.Selection;
 				var activeProjects = dte.ActiveSolutionProjects[0];
                 var message = systemClipboardHandler.GetText(true);
-                var clipboard = new CodeClipboardData
+                var clipboard = new ChatMessageModel
                 {
-					project = activeProjects.UniqueName,
-                    solution = dte.Solution.FullName,
-                    document = activeDocument.FullName,
-                    message = message,
-                    line = selection.CurrentLine,
-                    column = selection.CurrentColumn,
-                    programmingLanguage = activeDocument.GetProgrammingLanguage()
+                    chatMessageBody = new ChatMessageBody
+                    {
+					    project = activeProjects.UniqueName,
+                        solution = dte.Solution.FullName,
+                        document = activeDocument.FullName,
+                        message = message,
+                        line = selection.CurrentLine,
+                        column = selection.CurrentColumn,
+                        programminglanguage = activeDocument.Getprogramminglanguage()
+                    }
                 };
 
                 clipboardStorage.Store(clipboard);
             }
             else
             {
-                var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
+                var clipboard = new ChatMessageModel{ chatMessageBody = new ChatMessageBody {message = systemClipboardHandler.GetText(true)}};
+                //clipboard.body = jsonSerializer.Serialize(clipboard.chatMessageBody);
                 clipboardStorage.Store(clipboard);
             }
         }
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            if(clipboardStorage.IsCode)
+            var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+            //chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
+
+            if (chatMessageModel.chatMessageBody.IsCode)
             {
-                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+                var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();
@@ -106,8 +119,19 @@ namespace TeamNotification_Library.Service.Controls
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            textBox.Document.Blocks.Clear();
+            inputMethod = textBox;
+            if (editingMessage != null)
+            {
+                editingMessageModel.chatMessageBody.message = inputMethod.Document.GetDocumentText();
+                //SetValue(editingMessage.data, "body", inputMethod.Document.GetDocumentText());
+                messageSender.SendMessage(editingMessageModel.chatMessageBody, roomId);
+            }
+            else
+            {
+                messageSender.SendMessages(inputMethod.Document.Blocks, roomId);
+            }
+            ResetControls();
+            //textBox.Document.Blocks.Clear();
         }
 
         public void ResetContainer(MessagesContainer messagesContainer)
@@ -122,13 +146,120 @@ namespace TeamNotification_Library.Service.Controls
             foreach (var message in collection.messages)
             {
                 chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
+                if (messagesContainer.MessagesTable.RowGroups.Count <= 0) continue;
+                var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
+                ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer.InputBox);
             }
         }
 
         public void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
-            var m = jsonSerializer.Deserialize<MessageData>(messageData);
-            chatMessagesService.AppendMessage(messagesContainer, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));
+            var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
+            chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
+            chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
+            if (messagesContainer.MessagesTable.RowGroups.Count <= 0) return;
+            var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
+            var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
+            ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], collectionMessage, messagesContainer.InputBox);
+        }
+
+        private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)
+        {
+            return new Collection.Messages
+            {
+                data = new List<CollectionData>
+                {
+                    new CollectionData {name = "body", value = chatMessageModel.chatMessageBody.message},
+                    new CollectionData {name = "user_id", value = chatMessageModel.user_id},
+                    new CollectionData {name = "user", value = chatMessageModel.username},
+                    new CollectionData {name = "stamp", value = chatMessageModel.chatMessageBody.stamp},
+                    new CollectionData {name = "datetime", value = chatMessageModel.date},
+                }
+            };
+        }
+
+        private RichTextBox inputMethod;
+        private Brush originalBackground;
+        private TableRowGroup currentRowGroup;
+        private Collection.Messages editingMessage;
+        private ChatMessageModel editingMessageModel;
+
+        private void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, RichTextBox inputBox)
+        {
+            inputMethod = inputBox;
+            row.Resources.Add("originalMessage", message);
+            row.MouseLeftButtonDown += EditMessage;
+        }
+
+        private void EditMessage (object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (mouseButtonEventArgs.ClickCount != 2) return;
+            if (currentRowGroup != null) ResetControls();
+
+            var row = (TableRowGroup) sender;
+            var text = row.Rows[0].Cells[1].GetText();
+            var editingColor = new SolidColorBrush(Color.FromRgb(252,249,206));
+
+            editingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
+            var date = Collection.getField(editingMessage.data, "datetime");
+            var stamp = Collection.getField(editingMessage.data, "stamp");
+            editingMessageModel = new ChatMessageModel
+            {
+                stamp = stamp,
+                date = date,
+                user_id = Collection.getField(editingMessage.data, "user_id"),
+                username = Collection.getField(editingMessage.data, "user"),
+                chatMessageBody = new ChatMessageBody { 
+                    message = Collection.getField(editingMessage.data, "message"),
+                    stamp = stamp,
+                    date = date
+                }
+            };
+            currentRowGroup = row;
+
+            originalBackground = row.Background; 
+            row.Background = editingColor;
+            inputMethod.Background = editingColor;
+
+            inputMethod.Document.Blocks.Clear();
+            inputMethod.Document.Blocks.Add(new Paragraph(new Run(text)));
+            inputMethod.Focus();
+            inputMethod.PreviewKeyDown += CancelEditMessage;
+            inputMethod.TextChanged += UpdateMessageData;
+        }
+
+        private void UpdateMessageData(object sender, EventArgs e)
+        {
+            var rtb = (RichTextBox) sender;
+            var text = rtb.Document.GetDocumentText();
+            if (text == "\r\n") ResetControls();
+        }
+        private void SetValue(IEnumerable<CollectionData> data, string name, string newValue)
+        {
+            foreach (var d in data.Where(d => d.name == name))
+            {
+                d.value = newValue;
+                break;
+            }
+        }
+
+        private void ResetControls()
+        {
+            inputMethod.Document.Blocks.Clear();
+            if (editingMessage == null) return;
+            currentRowGroup.Background = originalBackground;
+            inputMethod.Background = originalBackground;
+            inputMethod.PreviewKeyDown -= CancelEditMessage;
+            inputMethod.TextChanged -= UpdateMessageData;
+            currentRowGroup = null;
+            editingMessage = null;
+            editingMessageModel = null;
+        }
+
+        private void CancelEditMessage(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Escape) return;
+            ResetControls();
         }
     }
 }
