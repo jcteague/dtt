@@ -22,14 +22,6 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         public int OnMove(int x, int y, int w, int h)
         {
-            toolWindowEvents.OnMove(this, new ToolWindowWasMoved
-                                              {
-                                                  x = x,
-                                                  y = y,
-                                                  w = w,
-                                                  h = h
-                                              });
-
             return Microsoft.VisualStudio.VSConstants.S_OK;
         }
 

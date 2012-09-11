@@ -273,11 +273,11 @@ namespace TeamNotification_Test.Library.Service.Controls
                                                   h = 12
                                               };
                 action = fake.an<IActOnChatElements>();
-                toolWindowActionGetter.Stub(x => x.Get(toolWindowWasDockedArgs)).Return(action);
+                toolWindowActionGetter.Stub(x => x.Get()).Return(action);
             };
 
             Because of = () =>
-                sut.HandleDock(chatUIElements, toolWindowWasDockedArgs);
+                sut.HandleDock(chatUIElements);
 
             It should_execute_the_action_for_the_position_on_the_chat_ui_elements = () =>
                 action.AssertWasCalled(x => x.ExecuteOn(chatUIElements));

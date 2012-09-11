@@ -5,7 +5,6 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
-using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
@@ -106,11 +105,9 @@ namespace TeamNotification_Library.Service.Controls
             dataObjectPastingEventArgs.CancelCommand();
         }
 
-        public void HandleDock(ChatUIElements chatUIElements, ToolWindowWasDocked toolWindowWasDockedArgs)
+        public void HandleDock(ChatUIElements chatUIElements)
         {
-            toolWindowActionGetter
-                .Get(toolWindowWasDockedArgs)
-                .ExecuteOn(chatUIElements);
+            toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
         }
 
         public void SendMessage(RichTextBox textBox, string roomId)

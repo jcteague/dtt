@@ -46,7 +46,7 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             };
 
             Because of = () =>
-                result = sut.Get(x, y, w, h, false);
+                result = sut.Get();
 
             It should_return_LEFT = () =>
                 result.ShouldEqual(GlobalConstants.DockPositions.Left);

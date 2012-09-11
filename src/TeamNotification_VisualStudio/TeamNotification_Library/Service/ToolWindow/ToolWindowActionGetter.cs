@@ -1,5 +1,4 @@
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Service.Async.Models;
 
 namespace TeamNotification_Library.Service.ToolWindow
 {
@@ -12,11 +11,9 @@ namespace TeamNotification_Library.Service.ToolWindow
             this.toolWindowPositionGetter = toolWindowPositionGetter;
         }
 
-        public IActOnChatElements Get(ToolWindowWasDocked toolWindowWasDockedArgs)
+        public IActOnChatElements Get()
         {
-            var position = toolWindowPositionGetter.Get(toolWindowWasDockedArgs.x, toolWindowWasDockedArgs.y,
-                                                        toolWindowWasDockedArgs.w, toolWindowWasDockedArgs.h,
-                                                        toolWindowWasDockedArgs.isDocked);
+            var position = toolWindowPositionGetter.Get();
 
             switch (position)
             {

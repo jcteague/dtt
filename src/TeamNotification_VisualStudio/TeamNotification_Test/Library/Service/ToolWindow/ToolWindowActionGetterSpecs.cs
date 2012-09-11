@@ -51,11 +51,11 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             Establish context = () =>
             {
                 var t = toolWindowDockedArgs;
-                toolWindowPositionGetter.Stub(getter => getter.Get(t.x, t.y, t.w, t.h, t.isDocked)).Return(GlobalConstants.DockPositions.Top);
+                toolWindowPositionGetter.Stub(getter => getter.Get()).Return(GlobalConstants.DockPositions.Top);
             };
 
             Because of = () =>
-                result = sut.Get(toolWindowDockedArgs);
+                result = sut.Get();
 
             It should_return_the_action_for_that_position = () =>
                 result.ShouldBeAn<MessageInputAtRight>();
@@ -68,11 +68,11 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             Establish context = () =>
             {
                 var t = toolWindowDockedArgs;
-                toolWindowPositionGetter.Stub(getter => getter.Get(t.x, t.y, t.w, t.h, t.isDocked)).Return(GlobalConstants.DockPositions.Bottom);
+                toolWindowPositionGetter.Stub(getter => getter.Get()).Return(GlobalConstants.DockPositions.Bottom);
             };
 
             Because of = () =>
-                result = sut.Get(toolWindowDockedArgs);
+                result = sut.Get();
 
             It should_return_the_action_for_that_position = () =>
                 result.ShouldBeAn<MessageInputAtRight>();
@@ -85,11 +85,11 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             Establish context = () =>
             {
                 var t = toolWindowDockedArgs;
-                toolWindowPositionGetter.Stub(getter => getter.Get(t.x, t.y, t.w, t.h, t.isDocked)).Return(GlobalConstants.DockPositions.NotDocked);
+                toolWindowPositionGetter.Stub(getter => getter.Get()).Return(GlobalConstants.DockPositions.NotDocked);
             };
 
             Because of = () =>
-                result = sut.Get(toolWindowDockedArgs);
+                result = sut.Get();
 
             It should_return_the_action_for_that_position = () =>
                 result.ShouldBeAn<MessageInputAtRight>();
@@ -102,11 +102,11 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             Establish context = () =>
             {
                 var t = toolWindowDockedArgs;
-                toolWindowPositionGetter.Stub(getter => getter.Get(t.x, t.y, t.w, t.h, t.isDocked)).Return(GlobalConstants.DockPositions.Left);
+                toolWindowPositionGetter.Stub(getter => getter.Get()).Return(GlobalConstants.DockPositions.Left);
             };
 
             Because of = () =>
-                result = sut.Get(toolWindowDockedArgs);
+                result = sut.Get();
 
             It should_return_the_action_for_that_position = () =>
                 result.ShouldBeAn<MessageInputAtBottom>();
@@ -119,11 +119,11 @@ namespace TeamNotification_Test.Library.Service.ToolWindow
             Establish context = () =>
             {
                 var t = toolWindowDockedArgs;
-                toolWindowPositionGetter.Stub(getter => getter.Get(t.x, t.y, t.w, t.h, t.isDocked)).Return(GlobalConstants.DockPositions.Right);
+                toolWindowPositionGetter.Stub(getter => getter.Get()).Return(GlobalConstants.DockPositions.Right);
             };
 
             Because of = () =>
-                result = sut.Get(toolWindowDockedArgs);
+                result = sut.Get();
 
             It should_return_the_action_for_that_position = () =>
                 result.ShouldBeAn<MessageInputAtBottom>();

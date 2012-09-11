@@ -80,6 +80,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                 comboRooms.SelectedIndex = 0;
 
             messageTextBox.Document.Blocks.Clear();
+
+            Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
+            
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
             codePasteEvents.CodePasteWasClicked += PasteCode;
@@ -93,7 +96,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
         {
-            chatRoomControlService.HandleDock(GetChatUIElements(), toolWindowWasDocked);
+            chatRoomControlService.HandleDock(GetChatUIElements());
         }
 
         #region Win32_Clipboard
@@ -102,6 +105,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             base.OnInitialized(e);
 
+//            chatRoomControlService.HandleDock(GetChatUIElements());
+
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             if (hwndSource.IsNotNull())
             {
@@ -109,7 +114,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 viewerHandle = SetClipboardViewer(installedHandle);
                 hwndSource.AddHook(hwndSourceHook);
             }
-
 //            Unloaded += (s, arg) => ChangeClipboardChain(this.installedHandle, this.viewerHandle);
 
         }

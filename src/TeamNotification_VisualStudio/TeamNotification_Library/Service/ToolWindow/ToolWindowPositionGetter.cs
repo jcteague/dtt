@@ -18,35 +18,36 @@ namespace TeamNotification_Library.Service.ToolWindow
             this.dteStore = dteStore;
         }
 
-        public int Get(int x, int y, int w, int h, bool isDocked)
+        public int Get()
         {
-            if (!isDocked)
-                return GlobalConstants.DockPositions.NotDocked;
-
-            var xc = dteStore.MainWindow.Width * 0.5;
-            var yc = dteStore.MainWindow.Height * 0.5;
-
             foreach (Window win in dteStore.dte.Windows)
             {
                 if (win.IsPluginWindow())
                 {
-                    var left = win.Left < xc && h > yc;
-                    var top = win.Top < yc && w > xc;
-                    var right = win.Left > xc && h > yc;
-                    var bottom = win.Top > yc && w > xc;
+                    Debug.WriteLine(win.IsFloating);
+                    if (win.IsFloating)
+                        return GlobalConstants.DockPositions.NotDocked;
 
-                    if (left)
-                        return GlobalConstants.DockPositions.Left;
+                    var xc = dteStore.MainWindow.Width * 0.5;
+                    var yc = dteStore.MainWindow.Height * 0.5;
+
+                    var left = win.Left < xc && win.Height > yc;
+                    var top = win.Top < yc && win.Width > xc;
+                    var right = win.Left > xc && win.Height > yc;
+                    var bottom = win.Top > yc && win.Width > xc;
 
                     if (top)
                         return GlobalConstants.DockPositions.Top;
 
-                    if (right)
-                        return GlobalConstants.DockPositions.Right;
-
                     if (bottom)
                         return GlobalConstants.DockPositions.Bottom;
 
+                    if (left)
+                        return GlobalConstants.DockPositions.Left;
+
+                    if (right)
+                        return GlobalConstants.DockPositions.Right;
+                    
                 }
             }
             return GlobalConstants.DockPositions.NotDocked;
