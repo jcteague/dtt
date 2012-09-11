@@ -12,12 +12,17 @@ namespace TeamNotification_Library.Service.LocalSystem
         DTE dte { get; set; }
         IWrapSolution Solution { get; }
         IWrapWindow MainWindow { get; }
+        IEnumerable<IWrapWindow> Windows { get; }
     }
-
+    
     public interface IWrapWindow
     {
         int Width { get; }
         int Height { get; }
+        bool IsPluginWindow();
+        bool IsFloating { get; }
+        int Left { get; }
+        int Top { get; }
     }
 
     public interface IWrapSolution

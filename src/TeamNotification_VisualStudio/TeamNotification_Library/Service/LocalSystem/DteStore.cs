@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EnvDTE;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
@@ -12,7 +13,16 @@ namespace TeamNotification_Library.Service.LocalSystem
         public DTE dte { get; set; }
         public IWrapSolution Solution { get { return new SolutionWrapper(dte.Solution); } }
         public IWrapWindow MainWindow { get { return new WindowWrapper(dte.MainWindow);} }
-        
+        public IEnumerable<IWrapWindow> Windows
+        {
+            get
+            {
+                foreach (Window window in dte.Windows)
+                {
+                    yield return new WindowWrapper(window);
+                }
+            }
+        }
     }
 
     public class WindowWrapper : IWrapWindow
@@ -32,6 +42,26 @@ namespace TeamNotification_Library.Service.LocalSystem
         public int Height
         {
             get { return window.Height; }
+        }
+
+        public bool IsPluginWindow()
+        {
+            return window.IsPluginWindow();
+        }
+
+        public bool IsFloating
+        {
+            get { return window.IsFloating; }
+        }
+
+        public int Left
+        {
+            get { return window.Left; }
+        }
+
+        public int Top
+        {
+            get { return window.Top; }
         }
     }
 

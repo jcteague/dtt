@@ -20,11 +20,10 @@ namespace TeamNotification_Library.Service.ToolWindow
 
         public int Get()
         {
-            foreach (Window win in dteStore.dte.Windows)
+            foreach (var win in dteStore.Windows)
             {
                 if (win.IsPluginWindow())
                 {
-                    Debug.WriteLine(win.IsFloating);
                     if (win.IsFloating)
                         return GlobalConstants.DockPositions.NotDocked;
 
