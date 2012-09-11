@@ -17,17 +17,17 @@ namespace TeamNotification_Library.Service.Highlighters
             JavaScriptHighlighter = HighlighterManager.Instance.Highlighters["javaScript"];
         }
 
-        public IHighlighter GetFor(int programmingLanguageIdentifier)
+        public IHighlighter GetFor(int programminglanguageIdentifier)
         {
-            switch (programmingLanguageIdentifier)
+            switch (programminglanguageIdentifier)
             {
-                case Globals.ProgrammingLanguages.CSharp:
+                case Globals.programminglanguages.CSharp:
                     return CSharpHighlighter;
 
-                case Globals.ProgrammingLanguages.VisualBasic:
+                case Globals.programminglanguages.VisualBasic:
                     return VBHighlighter;
 
-                case Globals.ProgrammingLanguages.JavaScript:
+                case Globals.programminglanguages.JavaScript:
                     return JavaScriptHighlighter;
 
                 default:

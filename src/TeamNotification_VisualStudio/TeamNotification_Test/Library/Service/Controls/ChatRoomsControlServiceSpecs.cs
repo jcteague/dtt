@@ -45,11 +45,11 @@ namespace TeamNotification_Test.Library.Service.Controls
                 clipboardDataStorageService = depends.on<IStoreClipboardData>();
                 chatMessageSender = depends.on<ISendChatMessages>();
                 jsonSerializer = depends.on<ISerializeJSON>();
-                chatMessageDataFactory = depends.on<ICreateChatMessageData>();
+                ChatMessageModelFactory = depends.on<ICreateChatMessageModel>();
                 syntaxBlockUIFactory = depends.on<ICreateSyntaxBlockUIInstances>();
                 chatMessagesService = depends.on<IHandleChatMessages>();
                 collectionMessagesToChatMessageModelMapper = depends.on<IMapEntities<Collection.Messages, ChatMessageModel>>();
-                messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
+                //messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
             };
 
             protected static IProvideUser userProvider;
@@ -60,11 +60,11 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IStoreClipboardData clipboardDataStorageService;
             protected static ISendChatMessages chatMessageSender;
             protected static ISerializeJSON jsonSerializer;
-            protected static ICreateChatMessageData chatMessageDataFactory;
+            protected static ICreateChatMessageModel ChatMessageModelFactory;
             protected static ICreateSyntaxBlockUIInstances syntaxBlockUIFactory;
             protected static IHandleChatMessages chatMessagesService;
             protected static IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
-            protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
+            //protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
         }
 
         public abstract class when_getting_a_collection_context : Concern
@@ -140,16 +140,19 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
-
-                var clipboardData = new CodeClipboardData
-                {
-                    message = "blah message",
-                    solution = "blah solution",
-                    document = "blah document"
-                };
-                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
-                
+                var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
+                //{
+                //    chatMessageBody = fake.an<ChatMessageBody>()
+                    //{
+                    //    message = "blah message",
+                    //    solution = "blah solution",
+                    //    document = "blah document"
+                    //}
+                //};
+                var chatMessageBody = fake.an<ChatMessageBody>(); 
+                chatMessageBody.Stub(x => x.IsCode).Return(true);
+                clipboardData.chatMessageBody = chatMessageBody;
+                clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
             };
@@ -201,10 +204,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                                         };
                 scrollViewer = new ScrollViewer();
 
-                chatMessage1 = new ChatMessageModel {Message = "foo"};
+                chatMessage1 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "foo" } };
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage1)).Return(chatMessage1);
                 
-                chatMessage2 = new ChatMessageModel {Message = "bar"};
+                chatMessage2 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "bar"}};
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage2)).Return(chatMessage2);
             };
 
@@ -236,12 +239,10 @@ namespace TeamNotification_Test.Library.Service.Controls
 
                 scrollviewer = new ScrollViewer();
                 messageData = "foo message data";
-
-                var deserializedMessage = new MessageData {name = "foo name"};
-                jsonSerializer.Stub(x => x.Deserialize<MessageData>(messageData)).Return(deserializedMessage);
+                chatMessage = new ChatMessageModel {  chatMessageBody = new ChatMessageBody { message = "foo message" }};
+                jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(messageData)).Return(chatMessage);
                 
-                chatMessage = new ChatMessageModel {Message = "foo message"};
-                messageDataToChatMessageModelMapper.Stub(x => x.MapFrom(deserializedMessage)).Return(chatMessage);
+               // messageDataToChatMessageModelMapper.Stub(x => x.MapFrom(deserializedMessage)).Return(chatMessage);
             };
 
             Because of = () =>

@@ -33,7 +33,7 @@ using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
-using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
+using programminglanguages = TeamNotification_Library.Configuration.Globals.programminglanguages;
 
 
 
@@ -165,7 +165,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
+                chatRoomControlService.AddReceivedMessage( GetMessagesContainer(), scrollViewer1, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -194,13 +194,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             var message = GetMessageBodyFromLink(sender);
             var dteHandler = dteHandlerCreator.Get(dteStore);
 
-            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.Solution)
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.chatMessageBody.solution)
             {
-                var document = dteHandler.OpenFile(message.Project, message.Document);
+                var document = dteHandler.OpenFile(message.chatMessageBody.project, message.chatMessageBody.document);
                 if (document != null)
                 {
                     var originalText = document.TextDocument.CreateEditPoint().GetText(document.TextDocument.EndPoint);
-                    var pasteResponse = AskingPaste.Show(document, originalText, message.Message, message.Line);
+                    var pasteResponse = AskingPaste.Show(document, originalText, message.chatMessageBody.message, message.chatMessageBody.line);
                     if(pasteResponse.pasteOption == PasteOptions.Abort)
                     {
                         var textDocument = document.TextDocument;
@@ -252,7 +252,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
-                StatusBar = dteStore.dte.StatusBar
+                StatusBar = dteStore.dte.StatusBar,
+                InputBox = messageTextBox
             };
         }
         

@@ -2,8 +2,8 @@
 
 namespace TeamNotification_Library.Service.Factories
 {
-    public interface ICreateChatMessageData
+    public interface ICreateChatMessageModel
     {
-        ChatMessageData Get(string message);
+        ChatMessageModel Get(string message);
     }
 }

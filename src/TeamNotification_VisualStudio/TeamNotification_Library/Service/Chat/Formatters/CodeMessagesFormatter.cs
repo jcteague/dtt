@@ -19,24 +19,12 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 
         public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
-            var link = new Hyperlink(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.Project, chatMessage.Document, chatMessage.Line.ToString()))) { IsEnabled = true, CommandParameter = chatMessage };
+            var link = new Hyperlink(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString()))) { IsEnabled = true, CommandParameter = chatMessage };
             link.Click += codePasteEvents.OnCodePasteClick;
-
-            var codeClipboardData = new CodeClipboardData
-            {
-                message = chatMessage.Message,
-                project = chatMessage.Project,
-                solution = chatMessage.Solution,
-                document = chatMessage.Document,
-                line = chatMessage.Line,
-                column = chatMessage.Column,
-                programmingLanguage = chatMessage.ProgrammingLanguage
-            };
             var paragraph = new Paragraph(link);
-
-            var box = syntaxHighlightBoxFactory.Get(chatMessage.Message, chatMessage.ProgrammingLanguage);
+            var box = syntaxHighlightBoxFactory.Get(chatMessage.chatMessageBody.message, chatMessage.chatMessageBody.programminglanguage);
             paragraph.Inlines.Add(new LineBreak());
-            paragraph.Inlines.Add(new InlineUIContainer(box)  { Resources = codeClipboardData.AsResources()});
+            paragraph.Inlines.Add(new InlineUIContainer(box) { Resources = chatMessage.AsResources() });
 
             return paragraph;
         }

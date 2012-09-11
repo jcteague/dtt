@@ -12,9 +12,9 @@ namespace TeamNotification_Library.Service.Factories.UI
             this.syntaxHighlightBoxFactory = syntaxHighlightBoxFactory;
         }
 
-        public BlockUIContainer Get(CodeClipboardData clipboardData)
+        public BlockUIContainer Get(ChatMessageModel clipboardData)
         {
-            return new BlockUIContainer(syntaxHighlightBoxFactory.Get(clipboardData.message, clipboardData.programmingLanguage)) { Resources = clipboardData.AsResources() };
+            return new BlockUIContainer(syntaxHighlightBoxFactory.Get(clipboardData.chatMessageBody.message, clipboardData.chatMessageBody.programminglanguage)) { Resources = clipboardData.AsResources() };
         }
     }
 }

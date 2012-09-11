@@ -44,7 +44,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 var solution = "foo solution";
                 var document = "foo document";
                 var fooMessage = "foo message";
-                var programmingLanguage = 10;
+                var programminglanguage = 10;
 
                 var resources = new ResourceDictionary();
 				resources["project"] = project;
@@ -53,7 +53,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 resources["message"] = fooMessage;
                 resources["line"] = 1;
                 resources["column"] = 2;
-                resources["programmingLanguage"] = programmingLanguage;
+                resources["programminglanguage"] = programminglanguage;
                 var block1 = new BlockUIContainer {Resources = resources};
 
 
@@ -67,7 +67,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 objectToFormUrlEncodedContentMapper.Stub(
                     mapper =>
                         mapper.MapFrom(
-                            Arg<CodeClipboardData>.Matches(x => x.solution == solution && x.document == document && x.message == fooMessage && x.programmingLanguage == programmingLanguage && x.project == project)
+                            Arg<ChatMessageModel>.Matches(x => x.chatMessageBody.solution == solution && x.chatMessageBody.document == document && x.chatMessageBody.message == fooMessage && x.chatMessageBody.programminglanguage == programminglanguage && x.chatMessageBody.project == project)
                        )
                    ).Return(content1);
                 var message1 = new Tuple<string, HttpContent>(url, content1);
@@ -76,7 +76,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 objectToFormUrlEncodedContentMapper.Stub(
                     mapper =>
                         mapper.MapFrom(
-                            Arg<PlainClipboardData>.Matches(x => x.message == barMessage)
+                            Arg<ChatMessageModel>.Matches(x => x.chatMessageBody.message == barMessage)
                        )
                    ).Return(content2);
                 var message2 = new Tuple<string, HttpContent>(url, content2);

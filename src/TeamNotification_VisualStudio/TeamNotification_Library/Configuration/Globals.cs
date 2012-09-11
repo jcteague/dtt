@@ -13,7 +13,7 @@
             public static string UserResource = @"user";
         }
 
-        public static class ProgrammingLanguages
+        public static class programminglanguages
         {
             public const int Unknown = -1;
             public const int CSharp = 1;

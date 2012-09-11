@@ -15,23 +15,27 @@ namespace TeamNotification_Library.Service.Mappers
 
         public ChatMessageModel MapFrom(Collection.Messages source)
         {
-            var messageBody = jsonSerializer.Deserialize<MessageBody>(Collection.getField(source.data, "body"));
+            var messageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(source.data, "body"));
             var username = Collection.getField(source.data, "user");
             var userId = Collection.getField(source.data, "user_id");
-            var dateTime = Collection.getField(source.data, "datetime").ToDateTime();
+            var dateTime = Collection.getField(source.data, "datetime");
 
             return new ChatMessageModel
                        {
-                           UserId = userId.ParseToInteger(),
-                           UserName = username,
-                           Message = messageBody.message,
-                           DateTime = dateTime,
-                           Project = messageBody.project,
-                           Solution = messageBody.solution,
-                           Document = messageBody.document,
-                           Line = messageBody.line,
-                           Column = messageBody.column,
-                           ProgrammingLanguage = messageBody.programmingLanguage
+                           user_id = userId,
+                           username = username,
+                           date = dateTime,
+                           chatMessageBody = new ChatMessageBody
+                           {
+                               message = messageBody.message,
+                               project = messageBody.project,
+                               solution = messageBody.solution,
+                               document = messageBody.document,
+                               line = messageBody.line,
+                               column = messageBody.column,
+                               programminglanguage = messageBody.programminglanguage,
+                               date = dateTime
+                           }
                        };
         }
     }

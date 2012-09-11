@@ -30,25 +30,27 @@ namespace TeamNotification_Test.Library.Service.Clipboard
         {
             Establish context = () =>
             {
-                chatMessage = new ChatMessageData
+                chatMessage = new ChatMessageModel
                 {
-                    message = "blah"
+                    chatMessageBody = new ChatMessageBody{
+                        message = "blah"
+                    }
                 };
 
                 var serializedData = "foo serialized data";
                 systemClipboardHandler.Stub(x => x.GetText()).Return(serializedData);
 
-                jsonSerializer.Stub(x => x.Deserialize<ChatMessageData>(serializedData)).Return(chatMessage);
+                jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(serializedData)).Return(chatMessage);
             };
 
             Because of = () =>
-                result = sut.Get<ChatMessageData>();
+                result = sut.Get<ChatMessageModel>();
 
             It should_return_the_deserialized_data = () =>
                 result.ShouldEqual(chatMessage);
 
-            private static ChatMessageData result;
-            private static ChatMessageData chatMessage;
+            private static ChatMessageModel result;
+            private static ChatMessageModel chatMessage;
         }
 
         public class when_getting_the_data_and_there_is_no_valid_data_in_the_clipboard : Concern
@@ -58,19 +60,19 @@ namespace TeamNotification_Test.Library.Service.Clipboard
                 message = "blah";
                 systemClipboardHandler.Stub(x => x.GetText()).Return(message);
 
-                jsonSerializer.Stub(x => x.Deserialize<ChatMessageData>(message)).Throw(new Exception());
+                jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(message)).Throw(new Exception());
             };
 
             Because of = () =>
-                result = sut.Get<ChatMessageData>();
+                result = sut.Get<ChatMessageModel>();
 
             It should_return_chat_message_data_with_the_clipboard_text = () =>
             {
-                result.ShouldBeOfType<ChatMessageData>();
-                result.message.ShouldEqual(message);
+                result.ShouldBeOfType<ChatMessageModel>();
+                result.chatMessageBody.message.ShouldEqual(message);
             };
 
-            private static ChatMessageData result;
+            private static ChatMessageModel result;
             private static string message;
         }
 
@@ -83,15 +85,15 @@ namespace TeamNotification_Test.Library.Service.Clipboard
             };
 
             Because of = () =>
-                result = sut.Get<ChatMessageData>();
+                result = sut.Get<ChatMessageModel>();
 
             It should_return_chat_message_data_with_the_clipboard_text = () =>
             {
-                result.ShouldBeOfType<ChatMessageData>();
-                result.message.ShouldEqual(message);
+                result.ShouldBeOfType<ChatMessageModel>();
+                result.chatMessageBody.message.ShouldEqual(message);
             };
 
-            private static ChatMessageData result;
+            private static ChatMessageModel result;
             private static string message;
         }
     }

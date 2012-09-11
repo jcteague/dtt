@@ -5,6 +5,6 @@ namespace TeamNotification_Library.Service.Factories.UI
 {
     public interface ICreateSyntaxHighlightBox
     {
-        SyntaxHighlightBox Get(string message, int programmingLanguage);
+        SyntaxHighlightBox Get(string message, int programminglanguage);
     }
 }

@@ -20,7 +20,7 @@ namespace TeamNotification_Library.Service.Mappers
         {
             var data =
                 source.GetType()
-                .GetProperties()
+                .GetProperties().Where(x => x.GetValue(source,null).ToString()!= "" )
                 .Select(
                     x => new KeyValuePair<string, string>(x.Name, x.GetValue(source, null).ToString())
                 );
