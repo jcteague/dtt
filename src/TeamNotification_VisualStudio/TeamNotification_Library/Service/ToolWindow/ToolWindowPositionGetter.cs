@@ -30,21 +30,16 @@ namespace TeamNotification_Library.Service.ToolWindow
                     var xc = dteStore.MainWindow.Width * 0.5;
                     var yc = dteStore.MainWindow.Height * 0.5;
 
-                    var left = win.Left < xc && win.Height > yc;
-                    var top = win.Top < yc && win.Width > xc;
-                    var right = win.Left > xc && win.Height > yc;
-                    var bottom = win.Top > yc && win.Width > xc;
-
-                    if (top)
+                    if (win.Top < yc && win.Width > xc)
                         return GlobalConstants.DockPositions.Top;
 
-                    if (bottom)
+                    if (win.Top > yc && win.Width > xc)
                         return GlobalConstants.DockPositions.Bottom;
 
-                    if (left)
+                    if (win.Left < xc && win.Height > yc)
                         return GlobalConstants.DockPositions.Left;
 
-                    if (right)
+                    if (win.Left > xc && win.Height > yc)
                         return GlobalConstants.DockPositions.Right;
                     
                 }
