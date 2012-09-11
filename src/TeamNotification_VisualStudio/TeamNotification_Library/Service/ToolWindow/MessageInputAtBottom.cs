@@ -7,8 +7,10 @@ namespace TeamNotification_Library.Service.ToolWindow
     {
         public void ExecuteOn(ChatUIElements chatUIElements)
         {
-            chatUIElements.MessageInput.SetValue(Grid.RowProperty, 1);
-            chatUIElements.MessageInput.SetValue(Grid.ColumnProperty, 2);
+            chatUIElements.MessageTextBoxBorder.SetValue(Grid.RowProperty, 2);
+            chatUIElements.MessageTextBoxBorder.SetValue(Grid.ColumnProperty, 0);
+            chatUIElements.MessageContainerBorder.SetValue(Grid.ColumnSpanProperty, 3);
+            chatUIElements.MessageInput.Height = 65;
         }
     }
 }

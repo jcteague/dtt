@@ -10,5 +10,7 @@ namespace TeamNotification_Library.Models.UI
         public RichTextBox Container { get; set; }
         public Table MessagesTable { get; set; }
         public RichTextBox MessageInput { get; set; }
+        public Border MessageTextBoxBorder { get; set; }
+        public Border MessageContainerBorder { get; set; }
     }
 }

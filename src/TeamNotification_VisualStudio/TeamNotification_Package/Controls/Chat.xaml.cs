@@ -263,6 +263,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
                 MessageInput = messageTextBox,
+                MessageTextBoxBorder = messageTextBoxBorder,
+                MessageContainerBorder = messageContainerBorder,
                 StatusBar = dteStore.dte.StatusBar
             };
         }
