@@ -36,6 +36,7 @@ describe 'User', ->
             sinon.assert.calledWith(app.get,'/user/login',user.methods.login)
             sinon.assert.calledWith(app.post,'/user/login',body_parser_result,user.methods.authenticate)
             sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
+            sinon.assert.calledWith(app.get,'/user/:id/edit',user.methods.get_user_edit)
             sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
             sinon.assert.calledWith(app.get,'/users',user.methods.redir_user)
             done()
@@ -77,6 +78,21 @@ describe 'User', ->
                 done()
 
             it 'should return the built collection for the user model', (done) ->
+                sinon.assert.calledWith(res.json, collection_value)
+                done()
+
+        describe 'get_user_edit', ->
+
+            beforeEach (done) ->
+                routes_service_mock.build.withArgs('user_edit_collection').returns(collection_factory)
+                user_edit_collection =
+                    fetch_to: (callback) ->
+                        callback(collection)
+                collection_factory.for.withArgs(user_id).returns(user_edit_collection)
+                user.methods.get_user_edit(req, res)
+                done()
+
+            it 'should return the built collection for the edit user', (done) ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()
 

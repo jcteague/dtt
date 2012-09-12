@@ -11,6 +11,13 @@ methods.get_user = (req, res) ->
 
     build('user_collection').for(user_id).fetch_to callback
 
+methods.get_user_edit = (req, res) ->
+    user_id = req.param('id')
+    callback = (collection) ->
+        res.json(collection.to_json())
+
+    build('user_edit_collection').for(user_id).fetch_to callback
+
 methods.get_user_rooms = (req, res) ->
     user_id = req.param('id')
     callback = (collection) ->
@@ -61,5 +68,6 @@ module.exports =
         app.get('/user/login', methods.login)
         app.post('/user/login',express.bodyParser(), methods.authenticate)
         app.get('/user/:id', methods.get_user)
+        app.get('/user/:id/edit', methods.get_user_edit)
         app.get('/user/:id/rooms',methods.get_user_rooms)
         app.get('/users', methods.redir_user)
