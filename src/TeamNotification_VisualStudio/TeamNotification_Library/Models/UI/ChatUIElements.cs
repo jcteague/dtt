@@ -13,14 +13,14 @@ namespace TeamNotification_Library.Models.UI
         public Grid MessageTextBoxGrid { get; set; }
         public Border MessageContainerBorder { get; set; }
 
-        public RowDefinition MessageRow1 { get; set; }
-        public RowDefinition MessageRow2 { get; set; }
+        public RowDefinition MessageGridRowDefinition1 { get; set; }
+        public RowDefinition MessageGridRowDefinition2 { get; set; }
 
-        public ColumnDefinition MessageColumn1 { get; set; }
-        public ColumnDefinition MessageColumn2 { get; set; }
+        public ColumnDefinition MessageGridColumnDefinition1 { get; set; }
+        public ColumnDefinition MessageGridColumnDefinition2 { get; set; }
 
         public Button SendMessageButton { get; set; }
 
-        public RowDefinition OuterGridRow3 { get; set; }
+        public RowDefinition OuterGridRowDefinition3 { get; set; }
     }
 }

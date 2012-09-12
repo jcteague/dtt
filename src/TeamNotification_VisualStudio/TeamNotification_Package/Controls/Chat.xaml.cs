@@ -105,8 +105,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             base.OnInitialized(e);
 
-//            chatRoomControlService.HandleDock(GetChatUIElements());
-
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             if (hwndSource.IsNotNull())
             {
@@ -114,7 +112,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 viewerHandle = SetClipboardViewer(installedHandle);
                 hwndSource.AddHook(hwndSourceHook);
             }
-//            Unloaded += (s, arg) => ChangeClipboardChain(this.installedHandle, this.viewerHandle);
 
         }
 
@@ -264,16 +261,16 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             return new ChatUIElements
             {
-                OuterGridRow3 = outerGridRow3,
+                OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
                 MessageInput = messageTextBox,
                 MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
-                MessageRow1 = messageRow1,
-                MessageRow2 = messageRow2,
-                MessageColumn1 = messageColumn1,
-                MessageColumn2 = messageColumn2,
+                MessageGridRowDefinition1 = messageGridRowDefinition1,
+                MessageGridRowDefinition2 = messageGridRowDefinition2,
+                MessageGridColumnDefinition1 = messageGridColumnDefinition1,
+                MessageGridColumnDefinition2 = messageGridColumnDefinition2,
                 SendMessageButton = btnSendMessageButton,
                 StatusBar = dteStore.dte.StatusBar
             };
