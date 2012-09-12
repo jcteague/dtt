@@ -20,6 +20,8 @@ namespace TeamNotification_Library.Service.LocalSystem
         int Width { get; }
         int Height { get; }
         bool IsPluginWindow();
+        bool IsStartPageWindow();
+        bool IsDocumentWindow();
         bool IsFloating { get; }
         int Left { get; }
         int Top { get; }

@@ -243,6 +243,7 @@
     <Compile Include="Service\LocalSystem\SelectionWrapper.cs" />
     <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
     <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
+    <Compile Include="Service\LocalSystem\WindowWrapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
