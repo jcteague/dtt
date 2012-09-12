@@ -29,30 +29,15 @@ namespace TeamNotification_Library.Service.ToolWindow
             {
                 Debug.WriteLine(win.Caption + ": " + win.ObjectKind);
             }
-
-//            Debug.WriteLine(dteStore.dte.ActiveDocument.Windows);
-//            Debug.WriteLine(dteStore.dte.ActiveDocument.ActiveWindow.Height);
-
-            int pluginWidth = 0;
-            int pluginHeight = 0;
-            int documentWindowWidth = 0;
-            int documentWindowHeight = 0;
-
+         
             foreach (var win in dteStore.Windows)
             {
-                if (IsWindowToUseForDocking(win))
-                {
-                    documentWindowWidth = win.Width;
-                    documentWindowHeight = win.Height;
-                }
-
                 if (win.IsPluginWindow())
                 {
                     if (win.IsFloating)
                         return GlobalConstants.DockPositions.NotDocked;
 
-                    pluginWidth = win.Width;
-                    pluginHeight = win.Height;
+
 
 //                    var xc = dteStore.MainWindow.Width * 0.5;
 //                    var yc = dteStore.MainWindow.Height * 0.5;
@@ -118,17 +103,17 @@ namespace TeamNotification_Library.Service.ToolWindow
 //
 //                    if (tendsToTop && tendsToRight && tendsToBottom)
 //                        return GlobalConstants.DockPositions.Right;
+
+                    var mainWidth = dteStore.MainWindow.Width;
+                    var mainHeight = dteStore.MainWindow.Height;
+
+                    var pluginWidth = win.Width;
+                    var pluginHeight = win.Height;
+
+                    if ((pluginHeight / (mainHeight * 1.0)) * 100 > 60 && (pluginWidth / (mainWidth * 1.0)) * 100 < 60)
+                        return GlobalConstants.DockPositions.Left;
                 }
             }
-
-            var isTop = pluginWidth >= documentWindowWidth;
-            var isLeft = pluginHeight >= documentWindowHeight;
-
-            if (isTop)
-                return GlobalConstants.DockPositions.Top;
-
-            if (isLeft)
-                return GlobalConstants.DockPositions.Left;
 
             return GlobalConstants.DockPositions.NotDocked;
         }
