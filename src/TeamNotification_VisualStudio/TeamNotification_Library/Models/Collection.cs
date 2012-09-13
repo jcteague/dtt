@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TeamNotification_Library.Models
 {
@@ -14,11 +15,17 @@ namespace TeamNotification_Library.Models
 
         public static string getField(IEnumerable<CollectionData> data, string fieldName)
         {
-            foreach (var d in data)
-                if (d.name == fieldName)
-                    return d.value;
+            foreach (var d in data.Where(d => d.name == fieldName))
+                return d.value;
             return "";
         }
+
+        public static void setField(IEnumerable<CollectionData> data, string fieldName, string value)
+        {
+            foreach (var d in data.Where(d => d.name == fieldName))
+                d.value = value;
+        }
+
 
         public class RedisConfig
         {

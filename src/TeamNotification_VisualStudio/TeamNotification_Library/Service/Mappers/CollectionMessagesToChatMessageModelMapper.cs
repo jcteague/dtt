@@ -19,12 +19,13 @@ namespace TeamNotification_Library.Service.Mappers
             var username = Collection.getField(source.data, "user");
             var userId = Collection.getField(source.data, "user_id");
             var dateTime = Collection.getField(source.data, "datetime");
-
+            var stamp = Collection.getField(source.data, "stamp");
             return new ChatMessageModel
                        {
                            user_id = userId,
                            username = username,
                            date = dateTime,
+                           stamp = stamp,
                            chatMessageBody = new ChatMessageBody
                            {
                                message = messageBody.message,
@@ -34,7 +35,8 @@ namespace TeamNotification_Library.Service.Mappers
                                line = messageBody.line,
                                column = messageBody.column,
                                programminglanguage = messageBody.programminglanguage,
-                               date = dateTime
+                               date = dateTime,
+                               stamp = stamp
                            }
                        };
         }
