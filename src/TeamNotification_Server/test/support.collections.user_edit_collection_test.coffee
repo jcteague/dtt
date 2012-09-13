@@ -12,6 +12,10 @@ describe 'User Edit Collection', ->
         user_id = 8
         data =
             id: user_id
+            first_name: 'foo'
+            last_name: 'bar'
+            email: 'foo@bar.com'
+            password: '123456'
         sut = new UserEditCollection(data)
         done()
 
@@ -45,9 +49,10 @@ describe 'User Edit Collection', ->
 
         it 'should return a template with the first name, last name, email, password and confirm password fields', (done) ->
             template_data = result['template']['data']
-            expect(template_data[0]).to.eql {'name': 'first_name', 'label': 'First Name', 'type': 'string', 'rules': {'required': true}}
-            expect(template_data[1]).to.eql {'name': 'last_name', 'label': 'Last Name', 'type': 'string', 'rules': {'required': true}}
-            expect(template_data[2]).to.eql {'name': 'email', 'label': 'Email', 'type': 'string', 'rules': {'required': true, 'email': true}}
-            expect(template_data[3]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6}}
-            expect(template_data[4]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6, 'equalTo': 'password'}}
+            expect(template_data[0]).to.eql {'name': 'id', 'value': data.id, 'type': 'hidden', 'rules': {'required': true}}
+            expect(template_data[1]).to.eql {'name': 'first_name', 'label': 'First Name', 'value': data.first_name, 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[2]).to.eql {'name': 'last_name', 'label': 'Last Name', 'value': data.last_name, 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[3]).to.eql {'name': 'email', 'label': 'Email', 'value': data.email, 'type': 'string', 'rules': {'required': true, 'email': true}}
+            expect(template_data[4]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6}}
+            expect(template_data[5]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6, 'equalTo': 'password'}}
             done()
