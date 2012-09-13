@@ -20,13 +20,14 @@ get_for_failure = (req, res) ->
             messages: errors
 
 sanitize = (user_data) ->
-    return {
+    sanitized = 
         id: user_data.id
         first_name: trim(user_data.first_name)
         last_name: trim(user_data.last_name)
         email: user_data.email
-        password: node_hash.sha256(user_data.password)
-    }
+
+    sanitized['password'] = node_hash.sha256(user_data.password) if user_data.password isnt ''
+    sanitized
 
 trim = (str) -> str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
