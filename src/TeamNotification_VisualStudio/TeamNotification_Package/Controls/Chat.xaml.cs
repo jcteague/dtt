@@ -48,7 +48,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
         private IHandleCodePaste codePasteEvents;
-        private Dictionary<string, string> messagesList;
+        private Dictionary<string, TableRowGroup> messagesList;
 
         private string roomId { get; set; }
         private string currentChannel { get; set; }
@@ -65,7 +65,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
-            this.messagesList = new Dictionary<string, string>();
+            this.messagesList = new Dictionary<string, TableRowGroup>();
             InitializeComponent();
             
             var collection = chatRoomControlService.GetCollection();

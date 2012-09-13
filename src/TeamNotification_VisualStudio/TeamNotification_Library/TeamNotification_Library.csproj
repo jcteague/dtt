@@ -141,10 +141,12 @@
     <Compile Include="Service\Chat\ChatMessagesService.cs" />
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\IEditMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
+    <Compile Include="Service\Chat\Formatters\MessagesEditor.cs" />
     <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\UserMessageIndicatorFormatter.cs" />
     <Compile Include="Service\Chat\IHandleChatMessages.cs" />

@@ -37,7 +37,6 @@ namespace TeamNotification_Library.Service.Chat
 
         public void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
         {
-            //OVER HERE
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(() =>
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
@@ -48,13 +47,14 @@ namespace TeamNotification_Library.Service.Chat
 
                 if (!chatMessage.stamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(chatMessage.stamp))
                 {
-                    UpdateMessage(messagesContainer.MessagesTable, chatMessage);
-                    messagesContainer.MessagesList[chatMessage.stamp] = chatMessage.stamp;//chatMessage.chatMessageBody.message;
+                    var editedRow = UpdateMessage(messagesContainer.MessagesTable, chatMessage);
+                    messagesContainer.MessagesList[chatMessage.stamp] = editedRow;//chatMessage.chatMessageBody.message;
                 }else
                 {
                     var columns = new Tuple<Block, Block, Block>(user, message, date);
-                    messagesContainer.MessagesTable.RowGroups.Add(tableBuilder.GetContentFor(columns));
-                    messagesContainer.MessagesList.Add(chatMessage.stamp, chatMessage.stamp);//chatMessage.chatMessageBody.message);
+                    var newRow = tableBuilder.GetContentFor(columns);
+                    messagesContainer.MessagesTable.RowGroups.Add(newRow);
+                    messagesContainer.MessagesList.Add(chatMessage.stamp, newRow);//chatMessage.chatMessageBody.message);
                     lastUserThatInserted = chatMessage.user_id.ParseToInteger();
                 }
 
@@ -64,8 +64,9 @@ namespace TeamNotification_Library.Service.Chat
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
         }
 
-        private void UpdateMessage(Table messagesTable, ChatMessageModel messageModel)
+        private TableRowGroup UpdateMessage(Table messagesTable, ChatMessageModel messageModel)
         {
+            TableRowGroup editedRow = null;
             messagesTable.Dispatcher.Invoke(new Action(() =>
             {
                 foreach (var row in messagesTable.RowGroups)
@@ -85,8 +86,10 @@ namespace TeamNotification_Library.Service.Chat
                     Collection.setField(originalMessage.data, "body", jsonSerializer.Serialize(originalBody));
 
                     row.Resources["originalMessage"] = originalMessage;
+                    editedRow = row;
                 }
             }));
+            return editedRow;
         }
         private string stripMessage(string message)
         {

@@ -7,8 +7,8 @@ namespace TeamNotification_Library.Models.UI
 {
     public class MessagesContainer
     {
+        public Dictionary<string, TableRowGroup> MessagesList { get; set; }
         public ComboBox ComboRooms{ get; set; }
-        public Dictionary<string, string> MessagesList { get; set; }
         public RichTextBox Container { get; set; }
         public RichTextBox InputBox { get; set; }
         public StatusBar StatusBar { get; set; }
