@@ -15,6 +15,8 @@
       'jquery.validate': 'jquery.validate.min',
       'config': 'config',
       'client_view': 'client_view',
+      'user_edit_view': 'user_edit_view',
+      'login_view': 'login_view',
       'client_router': 'client_router',
       'form_view': 'form_view',
       'links_view': 'links_view',
