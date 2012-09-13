@@ -13,8 +13,17 @@ express_mock =
 routes_service_mock =
     build: sinon.stub()
 
-user = module_loader.require('../routes/user.js', {
+user_validator_mock =
+    validate: sinon.stub()
+
+user_callback_factory_mock =
+    get_for_success: sinon.stub()
+    get_for_failure: sinon.stub()
+
+user = module_loader.require('../routes/user', {
     requires:
+        '../support/validation/user_validator': user_validator_mock
+        '../support/factories/user_callback_factory': user_callback_factory_mock
         '../support/routes_service': routes_service_mock
         'express': express_mock
 })
@@ -37,18 +46,14 @@ describe 'User', ->
             sinon.assert.calledWith(app.post,'/user/login',body_parser_result,user.methods.authenticate)
             sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
             sinon.assert.calledWith(app.get,'/user/:id/edit',user.methods.get_user_edit)
+            sinon.assert.calledWith(app.post,'/user/:id/edit',user.methods.post_user_edit)
             sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
             sinon.assert.calledWith(app.get,'/users',user.methods.redir_user)
             done()
 
     describe 'methods', ->
 
-        collection = null
-        collection_value = null
-        collection_factory = null
-        res = null
-        req = null
-        user_id = null
+        collection = collection_value = collection_factory = res = req = user_id = null
 
         beforeEach (done) ->
             collection_value = 'blah collection'
@@ -94,6 +99,33 @@ describe 'User', ->
 
             it 'should return the built collection for the edit user', (done) ->
                 sinon.assert.calledWith(res.json, collection_value)
+                done()
+
+        describe 'post_user_edit', ->
+
+            validation_result = success_callback = failure_callback = null
+
+            beforeEach (done) ->
+                req.body = 
+                    first_name: 'foo'
+                    last_name: 'bar'
+                    email: 'foo@bar.com'
+                    password: '1234'
+                validation_result =
+                    handle_with: sinon.stub()
+                user_validator_mock.validate.withArgs(req.body).returns validation_result
+
+                success_callback = 'success callback'
+                user_callback_factory_mock.get_for_success.withArgs(req, res).returns(success_callback)
+
+                failure_callback = 'failure callback'
+                user_callback_factory_mock.get_for_failure.withArgs(req, res).returns(failure_callback)
+
+                user.methods.post_user_edit(req, res)
+                done()
+
+            it 'should call the validation result with the edit success and edit failure callbacks', (done) ->
+                sinon.assert.calledWith(validation_result.handle_with, success_callback, failure_callback)
                 done()
 
         describe 'get_user_rooms', ->

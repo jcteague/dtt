@@ -1,5 +1,8 @@
-build = require('../support/routes_service').build
 methods = {}
+build = require('../support/routes_service').build
+user_validator = require('../support/validation/user_validator')
+user_callback_factory = require('../support/factories/user_callback_factory')
+
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../config')()
@@ -17,6 +20,11 @@ methods.get_user_edit = (req, res) ->
         res.json(collection.to_json())
 
     build('user_edit_collection').for(user_id).fetch_to callback
+
+methods.post_user_edit = (req, res) ->
+    success_callback = user_callback_factory.get_for_success(req, res)
+    failure_callback = user_callback_factory.get_for_failure(req, res)
+    user_validator.validate(req.body).handle_with success_callback, failure_callback
 
 methods.get_user_rooms = (req, res) ->
     user_id = req.param('id')
@@ -69,5 +77,6 @@ module.exports =
         app.post('/user/login',express.bodyParser(), methods.authenticate)
         app.get('/user/:id', methods.get_user)
         app.get('/user/:id/edit', methods.get_user_edit)
+        app.post('/user/:id/edit', methods.post_user_edit)
         app.get('/user/:id/rooms',methods.get_user_rooms)
         app.get('/users', methods.redir_user)
