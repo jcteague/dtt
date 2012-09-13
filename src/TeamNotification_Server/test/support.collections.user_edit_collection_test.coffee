@@ -6,5 +6,48 @@ UserEditCollection = module_loader.require('../support/collections/user_edit_col
 
 describe 'User Edit Collection', ->
 
-    sut = null
+    sut = data = user_id = null
 
+    beforeEach (done) ->
+        user_id = 8
+        data =
+            id: user_id
+        sut = new UserEditCollection(data)
+        done()
+
+    describe 'constructor', ->
+
+        it 'should set the collection with the constructor values', (done) ->
+            expect(sut.data).to.equal data
+            done()
+
+    describe 'to_json', ->
+
+        result = null
+
+        beforeEach (done) ->
+            sut.data = data
+            result = sut.to_json()
+            done()
+
+        it 'should return a href property pointing to the current url', (done) ->
+            expect(result['href']).to.equal "/user/#{user_id}/edit"
+            done()
+
+        it 'should set the correct links for the user model', (done) ->
+            links = result['links']
+            expect(links[0]).to.eql {"rel": "User", "name": "self", "href": "/user/#{user_id}/edit"}
+            done()
+
+        it 'should return a template type of user edit', (done) ->
+            expect(result['template']['type']).to.equal 'user_edit'
+            done()
+
+        it 'should return a template with the first name, last name, email, password and confirm password fields', (done) ->
+            template_data = result['template']['data']
+            expect(template_data[0]).to.eql {'name': 'first_name', 'label': 'First Name', 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[1]).to.eql {'name': 'last_name', 'label': 'Last Name', 'type': 'string', 'rules': {'required': true}}
+            expect(template_data[2]).to.eql {'name': 'email', 'label': 'Email', 'type': 'string', 'rules': {'required': true, 'email': true}}
+            expect(template_data[3]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6}}
+            expect(template_data[4]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6, 'equalTo': 'password'}}
+            done()
