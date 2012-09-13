@@ -236,7 +236,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             AddMessages(newRoomId);
 
             if (subscribedChannels.Contains(currentChannel)) return;
-            
             messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
             subscribedChannels.Add(currentChannel);
         }

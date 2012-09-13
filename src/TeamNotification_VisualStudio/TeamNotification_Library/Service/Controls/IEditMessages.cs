@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
-namespace TeamNotification_Library.Service.Chat.Formatters
+namespace TeamNotification_Library.Service.Controls
 {
     public interface IEditMessages
     {

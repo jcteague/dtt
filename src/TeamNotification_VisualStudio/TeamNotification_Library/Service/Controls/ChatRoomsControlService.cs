@@ -139,6 +139,7 @@ namespace TeamNotification_Library.Service.Controls
         public void ResetContainer(MessagesContainer messagesContainer)
         {
             messagesContainer.MessagesTable.RowGroups.Clear();
+            messagesContainer.MessagesList.Clear();
         }
 
         public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
@@ -149,6 +150,7 @@ namespace TeamNotification_Library.Service.Controls
             {
                 chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
                 var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
+                if (idx == -1) continue;
                 messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
             }
         }
@@ -159,7 +161,6 @@ namespace TeamNotification_Library.Service.Controls
             chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
 
             chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
-            //var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
             var rowGroup = messagesContainer.MessagesList[chatMessageModel.stamp];
             messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
@@ -179,88 +180,5 @@ namespace TeamNotification_Library.Service.Controls
                 }
             };
         }
-
-        //private RichTextBox inputMethod;
-        //private Brush originalBackground;
-        //private TableRowGroup currentRowGroup;
-        //private Collection.Messages editingMessage;
-        //private ChatMessageModel editingMessageModel;
-        //private ComboBox comboRooms;
-        //private void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
-        //{
-        //    inputMethod = messagesContainer.InputBox;
-        //    comboRooms = messagesContainer.ComboRooms;
-        //    row.Dispatcher.Invoke(new Action(() =>{
-        //        if (row.Resources["originalMessage"] == null)
-        //            row.Resources.Add("originalMessage", message);
-        //        else             
-        //            row.Resources["originalMessage"] = message;
-        //        row.MouseLeftButtonDown += EditMessage;
-        //    }));
-        //}
-
-        //private void EditMessage (object sender, MouseButtonEventArgs mouseButtonEventArgs)
-        //{
-        //    if (mouseButtonEventArgs.ClickCount != 2) return;
-
-        //    var row = (TableRowGroup) sender;
-        //    var tmpEditingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
-        //    var userId = Collection.getField(editingMessage.data, "user_id");
-        //    var messageBody = Collection.getField(editingMessage.data, "body"); // row.Rows[0].Cells[1].GetText();
-        //    var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
-           
-        //    if (userId != userProvider.GetUser().id.ToString() && !chatMessageBody.IsCode) return;
-        //    if (currentRowGroup != null) ResetControls();
-        //    editingMessage = tmpEditingMessage;
-
-        //    var editingColor = new SolidColorBrush(Color.FromRgb(252, 249, 206));
-            
-        //    editingMessageModel = new ChatMessageModel
-        //    {
-        //        user_id = userId,
-        //        username = Collection.getField(editingMessage.data, "user"),
-        //        chatMessageBody = chatMessageBody
-        //    };
-        //    editingMessageModel.stamp = editingMessageModel.chatMessageBody.stamp;
-        //    editingMessageModel.date = editingMessageModel.chatMessageBody.date;
-
-        //    currentRowGroup = row;
-        //    originalBackground = row.Background; 
-        //    row.Background = editingColor;
-        //    inputMethod.Background = editingColor;
-        //    comboRooms.IsEnabled = false;
-        //    inputMethod.Document.Blocks.Clear();
-        //    inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
-        //    inputMethod.Focus();
-        //    inputMethod.PreviewKeyDown += CancelEditMessage;
-        //    inputMethod.TextChanged += UpdateMessageData;
-        //}
-
-        //private void UpdateMessageData(object sender, EventArgs e)
-        //{
-        //    var rtb = (RichTextBox) sender;
-        //    var text = rtb.Document.GetDocumentText();
-        //    if (text == "\r\n") ResetControls();
-        //}
-
-        //private void ResetControls()
-        //{
-        //    inputMethod.Document.Blocks.Clear();
-        //    if (editingMessage == null) return;
-        //    currentRowGroup.Background = originalBackground;
-        //    inputMethod.Background = originalBackground;
-        //    inputMethod.PreviewKeyDown -= CancelEditMessage;
-        //    inputMethod.TextChanged -= UpdateMessageData;
-        //    currentRowGroup = null;
-        //    editingMessage = null;
-        //    editingMessageModel = null;
-        //    comboRooms.IsEnabled = true;
-        //}
-
-        //private void CancelEditMessage(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key != Key.Escape) return;
-        //    ResetControls();
-        //}
     }
 }

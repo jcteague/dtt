@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -11,9 +8,8 @@ using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Providers;
-using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
-namespace TeamNotification_Library.Service.Chat.Formatters
+namespace TeamNotification_Library.Service.Controls
 {
     public class MessagesEditor : IEditMessages
     {
@@ -37,16 +33,17 @@ namespace TeamNotification_Library.Service.Chat.Formatters
         {
             inputMethod = messagesContainer.InputBox;
             comboRooms = messagesContainer.ComboRooms;
-
-            if (row.Resources["originalMessage"] == null)
-            {
-                row.Resources.Add("originalMessage", message);
-            }
-            else
-            {
-                row.Resources["originalMessage"] = message;
-            }
-            row.MouseLeftButtonDown += EditMessage;
+            row.Dispatcher.Invoke(new Action(() =>{
+                if (row.Resources["originalMessage"] == null)
+                {
+                    row.Resources.Add("originalMessage", message);
+                }
+                else
+                {
+                    row.Resources["originalMessage"] = message;
+                }
+                row.MouseLeftButtonDown += EditMessage;
+            }));
         }
 
         public void EditMessage(object sender, MouseButtonEventArgs mouseButtonEventArgs)
