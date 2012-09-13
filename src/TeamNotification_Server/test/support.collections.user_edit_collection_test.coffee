@@ -53,6 +53,6 @@ describe 'User Edit Collection', ->
             expect(template_data[1]).to.eql {'name': 'first_name', 'label': 'First Name', 'value': data.first_name, 'type': 'string', 'rules': {'required': true}}
             expect(template_data[2]).to.eql {'name': 'last_name', 'label': 'Last Name', 'value': data.last_name, 'type': 'string', 'rules': {'required': true}}
             expect(template_data[3]).to.eql {'name': 'email', 'label': 'Email', 'value': data.email, 'type': 'string', 'rules': {'required': true, 'email': true}}
-            expect(template_data[4]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6}}
-            expect(template_data[5]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': true, 'minlength': 6, 'equalTo': 'password'}}
+            expect(template_data[4]).to.eql {'name': 'password', 'label': 'Password', 'type': 'password', 'rules': {'required': false, 'minlength': 6}}
+            expect(template_data[5]).to.eql {'name': 'confirm_password', 'label': 'Confirm Password', 'type': 'password', 'rules': {'required': false, 'minlength': 6, 'equalTo': 'password'}}
             done()
