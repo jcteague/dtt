@@ -98,7 +98,6 @@ namespace TeamNotification_Library.Service.Controls
             else
             {
                 var clipboard = new ChatMessageModel{ chatMessageBody = new ChatMessageBody {message = systemClipboardHandler.GetText(true)}};
-                //clipboard.body = jsonSerializer.Serialize(clipboard.chatMessageBody);
                 clipboardStorage.Store(clipboard);
             }
         }
@@ -106,7 +105,6 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
-            //chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
@@ -147,7 +145,7 @@ namespace TeamNotification_Library.Service.Controls
                 chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
                 if (messagesContainer.MessagesTable.RowGroups.Count <= 0) continue;
                 var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
-                ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer.InputBox);
+                ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
             }
         }
 
@@ -161,7 +159,7 @@ namespace TeamNotification_Library.Service.Controls
             
             var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
-            ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], collectionMessage, messagesContainer.InputBox);
+            ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], collectionMessage, messagesContainer);
         }
 
         private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)
@@ -184,10 +182,11 @@ namespace TeamNotification_Library.Service.Controls
         private TableRowGroup currentRowGroup;
         private Collection.Messages editingMessage;
         private ChatMessageModel editingMessageModel;
-
-        private void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, RichTextBox inputBox)
+        private ComboBox comboRooms;
+        private void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
         {
-            inputMethod = inputBox;
+            inputMethod = messagesContainer.InputBox;
+            comboRooms = messagesContainer.ComboRooms;
             row.Dispatcher.Invoke(new Action(() =>{
                 if (row.Resources["originalMessage"] == null)
                     row.Resources.Add("originalMessage", message);
@@ -200,17 +199,22 @@ namespace TeamNotification_Library.Service.Controls
         private void EditMessage (object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             if (mouseButtonEventArgs.ClickCount != 2) return;
-            if (currentRowGroup != null) ResetControls();
 
             var row = (TableRowGroup) sender;
-            editingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
+            var tmpEditingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
+            var userId = Collection.getField(editingMessage.data, "user_id");
             var messageBody = Collection.getField(editingMessage.data, "body"); // row.Rows[0].Cells[1].GetText();
-            var editingColor = new SolidColorBrush(Color.FromRgb(252, 249, 206));
             var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
+           
+            if (userId != userProvider.GetUser().id.ToString() && !chatMessageBody.IsCode) return;
+            if (currentRowGroup != null) ResetControls();
+            editingMessage = tmpEditingMessage;
 
+            var editingColor = new SolidColorBrush(Color.FromRgb(252, 249, 206));
+            
             editingMessageModel = new ChatMessageModel
             {
-                user_id = Collection.getField(editingMessage.data, "user_id"),
+                user_id = userId,
                 username = Collection.getField(editingMessage.data, "user"),
                 chatMessageBody = chatMessageBody
             };
@@ -221,7 +225,7 @@ namespace TeamNotification_Library.Service.Controls
             originalBackground = row.Background; 
             row.Background = editingColor;
             inputMethod.Background = editingColor;
-
+            comboRooms.IsEnabled = false;
             inputMethod.Document.Blocks.Clear();
             inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
             inputMethod.Focus();
@@ -247,6 +251,7 @@ namespace TeamNotification_Library.Service.Controls
             currentRowGroup = null;
             editingMessage = null;
             editingMessageModel = null;
+            comboRooms.IsEnabled = true;
         }
 
         private void CancelEditMessage(object sender, KeyEventArgs e)

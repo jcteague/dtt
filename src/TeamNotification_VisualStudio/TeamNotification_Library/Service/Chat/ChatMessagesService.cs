@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Content;
+using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
 
 namespace TeamNotification_Library.Service.Chat
@@ -21,7 +23,7 @@ namespace TeamNotification_Library.Service.Chat
         private IFormatDateTime dateMessageFormatter;
         private IBuildTable tableBuilder;
         private ISerializeJSON jsonSerializer;
-
+        private ICreateSyntaxHighlightBox syntaxHighlighterCreator;
         public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder)
         {
             this.codeMessageFormatter = codeMessageFormatter;
@@ -29,6 +31,7 @@ namespace TeamNotification_Library.Service.Chat
             this.userMessageFormatter = userMessageFormatter;
             this.dateMessageFormatter = dateMessageFormatter;
             this.tableBuilder = tableBuilder;
+            this.syntaxHighlighterCreator = syntaxHighlighterCreator;
             this.jsonSerializer = new JSONSerializer();
         }
 
@@ -52,8 +55,8 @@ namespace TeamNotification_Library.Service.Chat
                     var columns = new Tuple<Block, Block, Block>(user, message, date);
                     messagesContainer.MessagesTable.RowGroups.Add(tableBuilder.GetContentFor(columns));
                     messagesContainer.MessagesList.Add(chatMessage.stamp, chatMessage.stamp);//chatMessage.chatMessageBody.message);
+                    lastUserThatInserted = chatMessage.user_id.ParseToInteger();
                 }
-                lastUserThatInserted = chatMessage.user_id.ParseToInteger();
 
             }));
             var m = stripMessage(chatMessage.chatMessageBody.message);
@@ -72,7 +75,13 @@ namespace TeamNotification_Library.Service.Chat
                   
                     if (stamp != messageModel.stamp) continue;
                     var originalBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(originalMessage.data, "body"));
-                    row.Rows[0].Cells[1] = new TableCell(new Paragraph(new Run(messageModel.chatMessageBody.message)));
+                    if (messageModel.chatMessageBody.IsCode)
+                    {
+                        row.Rows[0].Cells[1] = new TableCell(codeMessageFormatter.GetFormattedElement(messageModel));
+
+                    }else{
+                        row.Rows[0].Cells[1] = new TableCell(plainMessageFormatter.GetFormattedElement(messageModel));
+                    }
                     Collection.setField(originalMessage.data, "body", jsonSerializer.Serialize(originalBody));
 
                     row.Resources["originalMessage"] = originalMessage;

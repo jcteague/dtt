@@ -255,7 +255,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                 MessagesTable = messagesTable,
                 StatusBar = dteStore.dte.StatusBar,
                 InputBox = messageTextBox,
-                MessagesList = messagesList
+                MessagesList = messagesList,
+                ComboRooms = comboRooms
             };
         }
         
