@@ -149,8 +149,8 @@ namespace TeamNotification_Test.Library.Service.Controls
                     //    document = "blah document"
                     //}
                 //};
-                var chatMessageBody = fake.an<ChatMessageBody>(); 
-                chatMessageBody.Stub(x => x.IsCode).Return(true);
+                var chatMessageBody = fake.an<ChatMessageBody>();
+                chatMessageBody.solution = "testSolution";
                 clipboardData.chatMessageBody = chatMessageBody;
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();

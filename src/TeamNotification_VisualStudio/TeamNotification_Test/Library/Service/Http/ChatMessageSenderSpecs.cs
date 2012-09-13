@@ -67,7 +67,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 objectToFormUrlEncodedContentMapper.Stub(
                     mapper =>
                         mapper.MapFrom(
-                            Arg<ChatMessageModel>.Matches(x => x.chatMessageBody.solution == solution && x.chatMessageBody.document == document && x.chatMessageBody.message == fooMessage && x.chatMessageBody.programminglanguage == programminglanguage && x.chatMessageBody.project == project)
+                            Arg<ChatMessageBody>.Matches(x => x.solution == solution && x.document == document && x.message == fooMessage && x.programminglanguage == programminglanguage && x.project == project)
                        )
                    ).Return(content1);
                 var message1 = new Tuple<string, HttpContent>(url, content1);
@@ -76,7 +76,7 @@ namespace TeamNotification_Test.Library.Service.Http
                 objectToFormUrlEncodedContentMapper.Stub(
                     mapper =>
                         mapper.MapFrom(
-                            Arg<ChatMessageModel>.Matches(x => x.chatMessageBody.message == barMessage)
+                            Arg<ChatMessageBody>.Matches(x => x.message == barMessage)
                        )
                    ).Return(content2);
                 var message2 = new Tuple<string, HttpContent>(url, content2);
