@@ -122,8 +122,8 @@ namespace TeamNotification_Library.Service.Controls
             inputMethod = textBox;
             if (editingMessage != null)
             {
-                editingMessageModel.chatMessageBody.message = inputMethod.Document.GetDocumentText();
-                //SetValue(editingMessage.data, "body", inputMethod.Document.GetDocumentText());
+                var text = inputMethod.Document.GetDocumentText();
+                editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length-2);
                 messageSender.SendMessage(editingMessageModel.chatMessageBody, roomId);
             }
             else
@@ -131,7 +131,6 @@ namespace TeamNotification_Library.Service.Controls
                 messageSender.SendMessages(inputMethod.Document.Blocks, roomId);
             }
             ResetControls();
-            //textBox.Document.Blocks.Clear();
         }
 
         public void ResetContainer(MessagesContainer messagesContainer)
@@ -156,8 +155,10 @@ namespace TeamNotification_Library.Service.Controls
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
             chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
+
             chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
-            if (messagesContainer.MessagesTable.RowGroups.Count <= 0) return;
+            if (messagesContainer.MessagesTable.RowGroups.Count < 1) return;
+            
             var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
             ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], collectionMessage, messagesContainer.InputBox);
@@ -169,7 +170,7 @@ namespace TeamNotification_Library.Service.Controls
             {
                 data = new List<CollectionData>
                 {
-                    new CollectionData {name = "body", value = chatMessageModel.chatMessageBody.message},
+                    new CollectionData {name = "body", value = jsonSerializer.Serialize(chatMessageModel.chatMessageBody)},
                     new CollectionData {name = "user_id", value = chatMessageModel.user_id},
                     new CollectionData {name = "user", value = chatMessageModel.username},
                     new CollectionData {name = "stamp", value = chatMessageModel.chatMessageBody.stamp},
@@ -187,8 +188,13 @@ namespace TeamNotification_Library.Service.Controls
         private void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, RichTextBox inputBox)
         {
             inputMethod = inputBox;
-            row.Resources.Add("originalMessage", message);
-            row.MouseLeftButtonDown += EditMessage;
+            row.Dispatcher.Invoke(new Action(() =>{
+                if (row.Resources["originalMessage"] == null)
+                    row.Resources.Add("originalMessage", message);
+                else             
+                    row.Resources["originalMessage"] = message;
+                row.MouseLeftButtonDown += EditMessage;
+            }));
         }
 
         private void EditMessage (object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -197,32 +203,27 @@ namespace TeamNotification_Library.Service.Controls
             if (currentRowGroup != null) ResetControls();
 
             var row = (TableRowGroup) sender;
-            var text = row.Rows[0].Cells[1].GetText();
-            var editingColor = new SolidColorBrush(Color.FromRgb(252,249,206));
-
             editingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
-            var date = Collection.getField(editingMessage.data, "datetime");
-            var stamp = Collection.getField(editingMessage.data, "stamp");
+            var messageBody = Collection.getField(editingMessage.data, "body"); // row.Rows[0].Cells[1].GetText();
+            var editingColor = new SolidColorBrush(Color.FromRgb(252, 249, 206));
+            var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
+
             editingMessageModel = new ChatMessageModel
             {
-                stamp = stamp,
-                date = date,
                 user_id = Collection.getField(editingMessage.data, "user_id"),
                 username = Collection.getField(editingMessage.data, "user"),
-                chatMessageBody = new ChatMessageBody { 
-                    message = Collection.getField(editingMessage.data, "message"),
-                    stamp = stamp,
-                    date = date
-                }
+                chatMessageBody = chatMessageBody
             };
-            currentRowGroup = row;
+            editingMessageModel.stamp = editingMessageModel.chatMessageBody.stamp;
+            editingMessageModel.date = editingMessageModel.chatMessageBody.date;
 
+            currentRowGroup = row;
             originalBackground = row.Background; 
             row.Background = editingColor;
             inputMethod.Background = editingColor;
 
             inputMethod.Document.Blocks.Clear();
-            inputMethod.Document.Blocks.Add(new Paragraph(new Run(text)));
+            inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
             inputMethod.Focus();
             inputMethod.PreviewKeyDown += CancelEditMessage;
             inputMethod.TextChanged += UpdateMessageData;
@@ -233,14 +234,6 @@ namespace TeamNotification_Library.Service.Controls
             var rtb = (RichTextBox) sender;
             var text = rtb.Document.GetDocumentText();
             if (text == "\r\n") ResetControls();
-        }
-        private void SetValue(IEnumerable<CollectionData> data, string name, string newValue)
-        {
-            foreach (var d in data.Where(d => d.name == name))
-            {
-                d.value = newValue;
-                break;
-            }
         }
 
         private void ResetControls()
