@@ -13,7 +13,7 @@ class UserCollection
             rooms: rooms
             links: [
                 {"rel":"User", "name": "self", "href": self}
-                {"rel":"User", "name": "edit", "href": "/user/#{@data.user_id}/edit"}
+                {"rel":"UserEdit", "name": "edit", "href": "/user/#{@data.user_id}/edit"}
                 {"rel":"UserRooms", "name": "rooms", "href": "/user/#{@data.user_id}/rooms"}
                 {"rel":"Room", "name": "Create Room", "href": "/room"}
             ]

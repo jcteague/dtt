@@ -40,7 +40,7 @@ describe 'User Edit Collection', ->
 
         it 'should set the correct links for the user model', (done) ->
             links = result['links']
-            expect(links[0]).to.eql {"rel": "User", "name": "self", "href": "/user/#{user_id}/edit"}
+            expect(links[0]).to.eql {"rel": "UserEdit", "name": "self", "href": "/user/#{user_id}/edit"}
             done()
 
         it 'should return a template type of user edit', (done) ->

@@ -69,7 +69,7 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             r
 
         get_messages_for: (template_type) ->
-            if template_type is 'registration'
+            if template_type in ['registration', 'user_edit']
                 return {
                     first_name:
                         required: 'First name is invalid'

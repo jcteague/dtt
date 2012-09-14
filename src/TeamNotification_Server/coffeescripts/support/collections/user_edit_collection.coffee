@@ -8,7 +8,7 @@ class UserEditCollection
         return {
             href: self
             links: [
-                {rel: 'User', name: 'self', href: self}
+                {rel: 'UserEdit', name: 'self', href: self}
             ]
             template:
                 type: 'user_edit'
