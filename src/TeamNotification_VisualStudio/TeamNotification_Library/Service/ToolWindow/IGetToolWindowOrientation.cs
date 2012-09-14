@@ -1,6 +1,6 @@
 namespace TeamNotification_Library.Service.ToolWindow
 {
-    public interface IGetToolWindowPosition
+    public interface IGetToolWindowOrientation
     {
         int Get();
     }

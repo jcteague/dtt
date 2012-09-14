@@ -4,26 +4,21 @@ namespace TeamNotification_Library.Service.ToolWindow
 {
     public class ToolWindowActionGetter : IGetToolWindowAction
     {
-        private IGetToolWindowPosition toolWindowPositionGetter;
+        private IGetToolWindowOrientation toolWindowOrientationGetter;
 
-        public ToolWindowActionGetter(IGetToolWindowPosition toolWindowPositionGetter)
+        public ToolWindowActionGetter(IGetToolWindowOrientation toolWindowOrientationGetter)
         {
-            this.toolWindowPositionGetter = toolWindowPositionGetter;
+            this.toolWindowOrientationGetter = toolWindowOrientationGetter;
         }
 
         public IActOnChatElements Get()
         {
-            var position = toolWindowPositionGetter.Get();
+            var orientation = toolWindowOrientationGetter.Get();
 
-            switch (position)
-            {
-                case GlobalConstants.DockPositions.Left:
-                case GlobalConstants.DockPositions.Right:
-                    return new MessageInputAtBottom();
+            if (orientation == GlobalConstants.DockOrientations.InputAtBottom)
+                return new MessageInputAtBottom();
 
-                default:
-                    return new MessageInputAtRight();
-            }
+            return new MessageInputAtRight();
         }
     }
 }

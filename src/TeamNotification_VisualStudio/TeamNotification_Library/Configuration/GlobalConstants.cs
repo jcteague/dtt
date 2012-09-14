@@ -30,6 +30,12 @@
             public const int Left = 4;
         }
 
+        public static class DockOrientations
+        {
+            public const int InputAtRight = 0;
+            public const int InputAtBottom = 1;
+        }
+
         public static class Guids
         {
             public const string LoginWindowPersistanceString = "052b3fa5-4a40-4588-9614-5b99dce7120d";

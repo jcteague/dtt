@@ -9,11 +9,11 @@ using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.ToolWindow
 {
-    public class ToolWindowPositionGetter : IGetToolWindowPosition
+    public class ToolWindowOrientationGetter : IGetToolWindowOrientation
     {
         private IStoreDTE dteStore;
 
-        public ToolWindowPositionGetter(IStoreDTE dteStore)
+        public ToolWindowOrientationGetter(IStoreDTE dteStore)
         {
             this.dteStore = dteStore;
         }
@@ -25,7 +25,7 @@ namespace TeamNotification_Library.Service.ToolWindow
                 if (win.IsPluginWindow())
                 {
                     if (win.IsFloating)
-                        return GlobalConstants.DockPositions.NotDocked;
+                        return GlobalConstants.DockOrientations.InputAtRight;
 
                     var mainWidth = dteStore.MainWindow.Width;
                     var mainHeight = dteStore.MainWindow.Height;
@@ -34,11 +34,11 @@ namespace TeamNotification_Library.Service.ToolWindow
                     var pluginHeight = win.Height;
 
                     if ((pluginHeight / (mainHeight * 1.0)) * 100 > 60 && (pluginWidth / (mainWidth * 1.0)) * 100 < 60)
-                        return GlobalConstants.DockPositions.Left;
+                        return GlobalConstants.DockOrientations.InputAtBottom;
                 }
             }
 
-            return GlobalConstants.DockPositions.NotDocked;
+            return GlobalConstants.DockOrientations.InputAtRight;
         }
     }
 }
