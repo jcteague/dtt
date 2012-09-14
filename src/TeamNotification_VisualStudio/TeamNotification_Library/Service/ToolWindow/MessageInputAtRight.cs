@@ -22,6 +22,9 @@ namespace TeamNotification_Library.Service.ToolWindow
             chatUIElements.SendMessageButton.SetValue(Grid.ColumnProperty, 0);
 
             chatUIElements.SendMessageButton.Margin = new Thickness(0, 0, 0, 0);
+
+            chatUIElements.MessageTextBoxGridSplitter.SetValue(Grid.VerticalAlignmentProperty, VerticalAlignment.Center);
+            chatUIElements.MessageTextBoxGridSplitter.SetValue(Grid.HorizontalAlignmentProperty, HorizontalAlignment.Center);
         }
     }
 }

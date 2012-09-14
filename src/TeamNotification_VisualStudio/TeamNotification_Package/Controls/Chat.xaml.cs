@@ -267,6 +267,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 MessageInput = messageTextBox,
                 MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
+                MessageTextBoxGridSplitter = messageTextBoxGridSplitter,
                 MessageGridRowDefinition1 = messageGridRowDefinition1,
                 MessageGridRowDefinition2 = messageGridRowDefinition2,
                 MessageGridColumnDefinition1 = messageGridColumnDefinition1,

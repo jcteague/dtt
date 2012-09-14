@@ -11,7 +11,7 @@ namespace TeamNotification_Library.Service.ToolWindow
             chatUIElements.OuterGridRowDefinition3.Height = new GridLength(70);
             chatUIElements.MessageContainerBorder.SetValue(Grid.ColumnSpanProperty, 3);
             
-            chatUIElements.MessageTextBoxGrid.SetValue(Grid.RowProperty, 2);
+            chatUIElements.MessageTextBoxGrid.SetValue(Grid.RowProperty, 3);
             chatUIElements.MessageTextBoxGrid.SetValue(Grid.ColumnProperty, 0);
             chatUIElements.MessageTextBoxGrid.SetValue(Grid.ColumnSpanProperty, 3);
 
@@ -21,7 +21,10 @@ namespace TeamNotification_Library.Service.ToolWindow
             chatUIElements.SendMessageButton.SetValue(Grid.RowProperty, 0);
             chatUIElements.SendMessageButton.SetValue(Grid.ColumnProperty, 1);
 
-            chatUIElements.SendMessageButton.Margin = new Thickness(0, 0, 15, 18);
+            chatUIElements.SendMessageButton.Margin = new Thickness(0, 0, 0, 0);
+
+            chatUIElements.MessageTextBoxGridSplitter.SetValue(Grid.VerticalAlignmentProperty, VerticalAlignment.Stretch);
+            chatUIElements.MessageTextBoxGridSplitter.SetValue(Grid.HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
 
         }
     }
