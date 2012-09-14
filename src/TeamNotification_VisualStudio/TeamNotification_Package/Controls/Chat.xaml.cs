@@ -18,6 +18,7 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
@@ -33,7 +34,7 @@ using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
-using ProgrammingLanguages = TeamNotification_Library.Configuration.Globals.ProgrammingLanguages;
+using ProgrammingLanguages = TeamNotification_Library.Configuration.GlobalConstants.ProgrammingLanguages;
 
 
 
@@ -48,17 +49,19 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
         private IHandleCodePaste codePasteEvents;
+        private IHandleToolWindowEvents toolWindowEvents;
         
         private string roomId { get; set; }
         private string currentChannel { get; set; }
         private List<string> subscribedChannels;
         private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents)
         {
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
+            this.toolWindowEvents = toolWindowEvents;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
@@ -67,7 +70,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             InitializeComponent();
             
             var collection = chatRoomControlService.GetCollection();
-            var roomLinks = formatRooms(collection.rooms);
+            var roomLinks = FormatRooms(collection.rooms);
+            
             Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
             Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
 
@@ -76,14 +80,23 @@ namespace AvenidaSoftware.TeamNotification_Package
                 comboRooms.SelectedIndex = 0;
 
             messageTextBox.Document.Blocks.Clear();
+
+            Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
+            
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
             codePasteEvents.CodePasteWasClicked += PasteCode;
+            toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
             chatRoomControlService.HandlePaste(messageTextBox, e);
+        }
+
+        private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
+        {
+            chatRoomControlService.HandleDock(GetChatUIElements());
         }
 
         #region Win32_Clipboard
@@ -99,8 +112,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 viewerHandle = SetClipboardViewer(installedHandle);
                 hwndSource.AddHook(hwndSourceHook);
             }
-
-//            Unloaded += (s, arg) => ChangeClipboardChain(this.installedHandle, this.viewerHandle);
 
         }
 
@@ -165,7 +176,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(GetMessagesContainer(), scrollViewer1, payload);
+                chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
@@ -230,7 +241,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             currentChannel = "chat " + newRoomId;
 
-            chatRoomControlService.ResetContainer(GetMessagesContainer());
+            chatRoomControlService.ResetContainer(GetChatUIElements());
             AddMessages(newRoomId);
 
             if (!subscribedChannels.Contains(currentChannel))
@@ -243,20 +254,30 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void AddMessages(string currentRoomId)
         {
             this.roomId = currentRoomId;
-            chatRoomControlService.AddMessages(GetMessagesContainer(), scrollViewer1, currentRoomId);
+            chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);
         }
 
-        private MessagesContainer GetMessagesContainer()
+        private ChatUIElements GetChatUIElements()
         {
-            return new MessagesContainer
+            return new ChatUIElements
             {
+                OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
+                MessageInput = messageTextBox,
+                MessageTextBoxGrid = messageTextBoxGrid,
+                MessageContainerBorder = messageContainerBorder,
+                MessageTextBoxGridSplitter = messageTextBoxGridSplitter,
+                MessageGridRowDefinition1 = messageGridRowDefinition1,
+                MessageGridRowDefinition2 = messageGridRowDefinition2,
+                MessageGridColumnDefinition1 = messageGridColumnDefinition1,
+                MessageGridColumnDefinition2 = messageGridColumnDefinition2,
+                SendMessageButton = btnSendMessageButton,
                 StatusBar = dteStore.dte.StatusBar
             };
         }
         
-        private List<Collection.Link> formatRooms(IEnumerable<Collection.Room> unformattedRoom)
+        private List<Collection.Link> FormatRooms(IEnumerable<Collection.Room> unformattedRoom)
         {
             return unformattedRoom.Select(room => new Collection.Link {name = Collection.getField(room.data, "name"), rel = Collection.getField(room.data,"id")}).ToList();
         }

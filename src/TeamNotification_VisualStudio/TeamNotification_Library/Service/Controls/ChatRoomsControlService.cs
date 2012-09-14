@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using EnvDTE;
@@ -12,6 +13,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.Service.ToolWindow;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -24,6 +26,7 @@ namespace TeamNotification_Library.Service.Controls
         private ISerializeJSON jsonSerializer;
         private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
+        private IGetToolWindowAction toolWindowActionGetter;
         private IHandleChatMessages chatMessagesService;
         
         readonly IStoreGlobalState applicationGlobalState;
@@ -32,7 +35,7 @@ namespace TeamNotification_Library.Service.Controls
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -45,6 +48,7 @@ namespace TeamNotification_Library.Service.Controls
             this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
+            this.toolWindowActionGetter = toolWindowActionGetter;
             this.configuration = configuration;
         }
 
@@ -71,7 +75,7 @@ namespace TeamNotification_Library.Service.Controls
                 var txt = activeDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
-				var activeProjects = dte.ActiveSolutionProjects[0];
+                var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
                 var message = systemClipboardHandler.GetText(true);
                 var clipboard = new CodeClipboardData
                 {
@@ -95,13 +99,16 @@ namespace TeamNotification_Library.Service.Controls
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            if(clipboardStorage.IsCode)
-            {
-                var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
-                textBox.Document.Blocks.Add(block);
-                textBox.CaretPosition = textBox.Document.ContentEnd;
-                dataObjectPastingEventArgs.CancelCommand();
-            }
+            if (!clipboardStorage.IsCode) return;
+            var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
+            textBox.Document.Blocks.Add(block);
+            textBox.CaretPosition = textBox.Document.ContentEnd;
+            dataObjectPastingEventArgs.CancelCommand();
+        }
+
+        public void HandleDock(ChatUIElements chatUIElements)
+        {
+            toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
         }
 
         public void SendMessage(RichTextBox textBox, string roomId)
@@ -110,12 +117,12 @@ namespace TeamNotification_Library.Service.Controls
             textBox.Document.Blocks.Clear();
         }
 
-        public void ResetContainer(MessagesContainer messagesContainer)
+        public void ResetContainer(ChatUIElements messagesContainer)
         {
             messagesContainer.MessagesTable.RowGroups.Clear();
         }
 
-        public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
+        public void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
         {
             chatMessagesService.ResetUser();
             var collection = GetMessagesCollection(currentRoomId);
@@ -124,8 +131,8 @@ namespace TeamNotification_Library.Service.Controls
                 chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
             }
         }
-
-        public void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData)
+        
+        public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var m = jsonSerializer.Deserialize<MessageData>(messageData);
             chatMessagesService.AppendMessage(messagesContainer, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));

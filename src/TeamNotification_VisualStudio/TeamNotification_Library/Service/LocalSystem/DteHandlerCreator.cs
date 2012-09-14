@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
-    class DteHandlerCreator : ICreateDteHandler
+    public class DteHandlerCreator : ICreateDteHandler
     {
         public IHandleDte Get(IStoreDTE dteStore)
         {

@@ -54,7 +54,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                 result = sut.GetFormattedElement(chatMessage);
 
             It should_return_a_string_with_the_time = () =>
-                result.GetText().ShouldEqual(chatMessage.DateTime.ToString("mm/dd/yyyy"));
+                result.GetText().ShouldEqual(chatMessage.DateTime.ToShortDateString());
 
             private static Paragraph result;
             private static ChatMessageModel chatMessage;

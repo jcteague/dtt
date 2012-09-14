@@ -1,3 +1,4 @@
+using System.Windows;
 using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Highlighters;
@@ -18,7 +19,8 @@ namespace TeamNotification_Library.Service.Factories.UI
             return new SyntaxHighlightBox
                 {
                     Text = message,
-                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programmingLanguage)
+                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programmingLanguage),
+                    BorderThickness = new Thickness(0)
                 };
         }
     }
