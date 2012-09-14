@@ -31,6 +31,16 @@ namespace TeamNotification_Library.Service.Controls
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
         {
+            var currentStamp = Collection.getField(message.data, "stamp");
+            if (!messagesContainer.LastStamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(messagesContainer.LastStamp))
+            {
+                messagesContainer.MessagesList[messagesContainer.LastStamp].MouseLeftButtonDown -= EditMessage;
+                messagesContainer.MessagesList.Remove(messagesContainer.LastStamp);
+            }
+            var containsKey = messagesContainer.MessagesList.ContainsKey(currentStamp);
+            if (!containsKey) messagesContainer.MessagesList.Add(currentStamp,row);
+
+            messagesContainer.LastStamp = currentStamp;
             inputMethod = messagesContainer.InputBox;
             comboRooms = messagesContainer.ComboRooms;
             row.Dispatcher.Invoke(new Action(() =>{
@@ -42,7 +52,7 @@ namespace TeamNotification_Library.Service.Controls
                 {
                     row.Resources["originalMessage"] = message;
                 }
-                row.MouseLeftButtonDown += EditMessage;
+                if (!containsKey) row.MouseLeftButtonDown += EditMessage;
             }));
         }
 

@@ -7,6 +7,7 @@ namespace TeamNotification_Library.Models.UI
 {
     public class MessagesContainer
     {
+        public string LastStamp { get; set; }
         public Dictionary<string, TableRowGroup> MessagesList { get; set; }
         public ComboBox ComboRooms{ get; set; }
         public RichTextBox Container { get; set; }

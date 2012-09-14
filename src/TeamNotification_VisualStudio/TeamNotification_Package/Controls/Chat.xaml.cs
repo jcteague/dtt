@@ -79,7 +79,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             messageTextBox.Document.Blocks.Clear();
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
-
+            lastStamp = "";
             codePasteEvents.CodePasteWasClicked += PasteCode;
         }
 
@@ -255,6 +255,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 StatusBar = dteStore.dte.StatusBar,
                 InputBox = messageTextBox,
                 MessagesList = messagesList,
+                LastStamp = lastStamp,
                 ComboRooms = comboRooms
             };
         }
@@ -274,5 +275,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             dteStore.dte.StatusBar.Text = "";
         }
+        private string lastStamp;
     }
 }

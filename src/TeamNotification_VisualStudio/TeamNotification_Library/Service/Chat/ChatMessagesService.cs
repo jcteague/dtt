@@ -35,8 +35,9 @@ namespace TeamNotification_Library.Service.Chat
             this.jsonSerializer = new JSONSerializer();
         }
 
-        public void AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
+        public TableRowGroup AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
         {
+            TableRowGroup appendedRowGroup = null;
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(() =>
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
@@ -47,47 +48,46 @@ namespace TeamNotification_Library.Service.Chat
 
                 if (!chatMessage.stamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(chatMessage.stamp))
                 {
-                    var editedRow = UpdateMessage(messagesContainer.MessagesTable, chatMessage);
+                    var editedRow = UpdateMessage(messagesContainer, chatMessage);
                     messagesContainer.MessagesList[chatMessage.stamp] = editedRow;//chatMessage.chatMessageBody.message;
-                }else
+                    appendedRowGroup = editedRow;
+                }
+                else
                 {
                     var columns = new Tuple<Block, Block, Block>(user, message, date);
-                    var newRow = tableBuilder.GetContentFor(columns);
-                    messagesContainer.MessagesTable.RowGroups.Add(newRow);
-                    messagesContainer.MessagesList.Add(chatMessage.stamp, newRow);//chatMessage.chatMessageBody.message);
+                    appendedRowGroup = tableBuilder.GetContentFor(columns);
+                    messagesContainer.MessagesTable.RowGroups.Add(appendedRowGroup);
+                    //messagesContainer.MessagesList.Add(chatMessage.stamp, newRow);//chatMessage.chatMessageBody.message);
                     lastUserThatInserted = chatMessage.user_id.ParseToInteger();
                 }
-
             }));
             var m = stripMessage(chatMessage.chatMessageBody.message);
             messagesContainer.StatusBar.Text = chatMessage.username + " says: " + m;
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
+            return appendedRowGroup;
         }
 
-        private TableRowGroup UpdateMessage(Table messagesTable, ChatMessageModel messageModel)
+        private TableRowGroup UpdateMessage(MessagesContainer messagesContainer, ChatMessageModel messageModel)
         {
+            var messagesTable = messagesContainer.MessagesTable;
             TableRowGroup editedRow = null;
             messagesTable.Dispatcher.Invoke(new Action(() =>
             {
-                foreach (var row in messagesTable.RowGroups)
-                {
-                    var originalMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
-                    var stamp = Collection.getField(originalMessage.data, "stamp");
+                var row = messagesContainer.MessagesList[messageModel.stamp];
+                var originalMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
                   
-                    if (stamp != messageModel.stamp) continue;
-                    var originalBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(originalMessage.data, "body"));
-                    if (messageModel.chatMessageBody.IsCode)
-                    {
-                        row.Rows[0].Cells[1] = new TableCell(codeMessageFormatter.GetFormattedElement(messageModel));
+                var originalBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(originalMessage.data, "body"));
+                if (messageModel.chatMessageBody.IsCode)
+                {
+                    row.Rows[0].Cells[1] = new TableCell(codeMessageFormatter.GetFormattedElement(messageModel));
 
-                    }else{
-                        row.Rows[0].Cells[1] = new TableCell(plainMessageFormatter.GetFormattedElement(messageModel));
-                    }
-                    Collection.setField(originalMessage.data, "body", jsonSerializer.Serialize(originalBody));
-
-                    row.Resources["originalMessage"] = originalMessage;
-                    editedRow = row;
+                }else{
+                    row.Rows[0].Cells[1] = new TableCell(plainMessageFormatter.GetFormattedElement(messageModel));
                 }
+                Collection.setField(originalMessage.data, "body", jsonSerializer.Serialize(originalBody));
+
+                row.Resources["originalMessage"] = originalMessage;
+                editedRow = row;
             }));
             return editedRow;
         }
