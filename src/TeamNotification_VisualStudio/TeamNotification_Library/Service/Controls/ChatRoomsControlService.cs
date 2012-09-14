@@ -148,7 +148,8 @@ namespace TeamNotification_Library.Service.Controls
             var collection = GetMessagesCollection(currentRoomId);
             foreach (var message in collection.messages)
             {
-                chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
+                var chatMessage = collectionMessagesToChatMessageModelMapper.MapFrom(message);
+                chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessage);
                 var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
                 if (idx == -1) continue;
                 messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);

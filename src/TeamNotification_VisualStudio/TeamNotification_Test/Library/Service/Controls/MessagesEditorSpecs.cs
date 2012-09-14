@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Documents;
+using System.Windows.Input;
 using Machine.Specifications;
+using Rhino.Mocks;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Chat.Formatters;
@@ -48,6 +50,34 @@ namespace TeamNotification_Test.Library.Service.Controls
             private static Collection.Messages messageMock;
             private static MessagesContainer messagesContainerMock;
             private static string resourceName;
+        }
+
+        public abstract class when_the_editing_messages_event_is_called : Concern
+        {
+            protected Establish context = () =>
+            {
+            };
+
+            protected static MouseButtonEventArgs mouseButtonEventArgsMock;
+            protected static TableRowGroup tableRowGroupMock;
+
+        }
+
+        public class and_two_clicks_were_made : when_the_editing_messages_event_is_called
+        {
+            private Establish context = () =>
+            {
+                mouseButtonEventArgsMock = fake.an<MouseButtonEventArgs>();
+                tableRowGroupMock = fake.an<TableRowGroup>();
+                mouseButtonEventArgsMock.Stub(x => x.ClickCount).Return(2);
+            };
+            
+            Because of = () =>
+                sut.EditMessage(tableRowGroupMock, mouseButtonEventArgsMock);
+
+            //It should_return_right_away = () =>
+
+
         }
     }
 }
