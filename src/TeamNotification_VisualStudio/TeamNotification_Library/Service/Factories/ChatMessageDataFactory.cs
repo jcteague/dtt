@@ -8,6 +8,7 @@ namespace TeamNotification_Library.Service.Factories
         {
             return new ChatMessageModel
                        {
+                           //body = ("{message:"+message+"}")
                            chatMessageBody = new ChatMessageBody { message = message }
                        };
         }

@@ -173,11 +173,10 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            if (chatMessageModel.user_id.ParseToInteger() == userProvider.GetUser().id)
-            {
-                messagesContainer.LastStamp = lastStamp;
-                messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
-            }
+            if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
+            messagesContainer.LastStamp = lastStamp;
+            messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
+            if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
         }
 
         private string lastStamp;

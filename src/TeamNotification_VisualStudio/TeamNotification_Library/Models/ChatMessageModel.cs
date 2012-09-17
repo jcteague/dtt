@@ -8,16 +8,28 @@ namespace TeamNotification_Library.Models
     public class ChatMessageModel
     {
         private ISerializeJSON jsonSerializer;
+        private string _body;
         public ChatMessageModel()
         {
-            stamp = name = user_id = username = date = ""; 
-            //message = project = solution = document = ""; line = column = programminglanguage = -1;
+            name = user_id = username = ""; 
             jsonSerializer = new JSONSerializer();
         }
 
-        public string stamp { get; set; }
-        
-        public string body { get; set; }
+        public string stamp
+        {
+            get { return chatMessageBody.stamp; }
+            set { chatMessageBody.stamp = value; }
+        }
+
+        public string body
+        {
+            get { return _body; }
+            set {
+                _body = value;
+                if(_chatMessageBody == null)
+                    _chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(value);
+            } 
+        }
 
         public string name { get; set; }
 
@@ -29,10 +41,21 @@ namespace TeamNotification_Library.Models
             set { name = value; }
         }
 
-        public string date { get; set; }
+        public string date
+        {
+            get { return chatMessageBody.date; }
+            set { chatMessageBody.date = value; }
+        }
 
-        public ChatMessageBody chatMessageBody;
+        public ChatMessageBody chatMessageBody
+        {
+            get { return _chatMessageBody ?? (_chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(body)); }
+            set { _chatMessageBody = value;
+                body = jsonSerializer.Serialize(_chatMessageBody);
+            }
+        }
 
+        private ChatMessageBody _chatMessageBody;
         //public string message { get; set; }
         
         //public string project { get; set; }
@@ -58,21 +81,17 @@ namespace TeamNotification_Library.Models
         public ResourceDictionary AsResources()
         {
             var resources = new ResourceDictionary();
-            resources["solution"] = chatMessageBody.solution;
-            resources["project"] = chatMessageBody.project;
-            resources["document"] = chatMessageBody.document;
-            resources["line"] = chatMessageBody.line;
-            resources["column"] = chatMessageBody.column;
-            resources["message"] = chatMessageBody.message;
-            resources["programminglanguage"] = chatMessageBody.programminglanguage;
+            var tmpChatMessageBody = this.chatMessageBody;
+            resources["solution"] = tmpChatMessageBody.solution;
+            resources["project"] = tmpChatMessageBody.project;
+            resources["document"] = tmpChatMessageBody.document;
+            resources["line"] = tmpChatMessageBody.line;
+            resources["column"] = tmpChatMessageBody.column;
+            resources["message"] = tmpChatMessageBody.message;
+            resources["programminglanguage"] = tmpChatMessageBody.programminglanguage;
             resources["stamp"] = stamp;
             resources["date"] = date;
             return resources;
-        }
-
-        public void FillChatMessageBody()
-        {
-            chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(body);
         }
     }
 }

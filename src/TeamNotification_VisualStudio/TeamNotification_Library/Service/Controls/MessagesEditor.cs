@@ -20,13 +20,11 @@ namespace TeamNotification_Library.Service.Controls
         public ChatMessageModel editingMessageModel { get; set; }
 
         public ComboBox comboRooms;
-        private ISerializeJSON jsonSerializer;
-        private IProvideUser userProvider;
+        private Brush editingColor;
 
-        public MessagesEditor(ISerializeJSON jsonSerializer, IProvideUser userProvider)
+        public MessagesEditor()
         {
-            this.jsonSerializer = jsonSerializer;
-            this.userProvider = userProvider;
+            editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
         }
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
@@ -61,26 +59,31 @@ namespace TeamNotification_Library.Service.Controls
             if (mouseButtonEventArgs.ClickCount != 2) return;
 
             var row = (TableRowGroup)sender;
-            var tmpEditingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
-            var userId = Collection.getField(tmpEditingMessage.data, "user_id");
-            var messageBody = Collection.getField(tmpEditingMessage.data, "body"); // row.Rows[0].Cells[1].GetText();
-            var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
+            editingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
+            
+            if (editingMessage == null) return;
 
-            if (userId != userProvider.GetUser().id.ToString() && !chatMessageBody.IsCode) return;
-            if (currentRowGroup != null) ResetControls();
-            editingMessage = tmpEditingMessage;
-
-            var editingColor = new SolidColorBrush(Color.FromRgb(252, 249, 206));
-
+            var userId = Collection.getField(editingMessage.data, "user_id");
             editingMessageModel = new ChatMessageModel
             {
                 user_id = userId,
                 username = Collection.getField(editingMessage.data, "user"),
-                chatMessageBody = chatMessageBody
+                body = Collection.getField(editingMessage.data, "body")
             };
-            editingMessageModel.stamp = editingMessageModel.chatMessageBody.stamp;
-            editingMessageModel.date = editingMessageModel.chatMessageBody.date;
 
+            var chatMessageBody = editingMessageModel.chatMessageBody;
+
+            if (currentRowGroup != null) ResetControls();
+            if (chatMessageBody.IsCode)
+            {
+                chatMessageBody.stamp = "";
+                editingMessageModel.chatMessageBody = chatMessageBody;
+            }
+            SetControls(row);
+        }
+
+        private void SetControls(TableRowGroup row)
+        {
             currentRowGroup = row;
             originalBackground = row.Background;
             row.Background = editingColor;

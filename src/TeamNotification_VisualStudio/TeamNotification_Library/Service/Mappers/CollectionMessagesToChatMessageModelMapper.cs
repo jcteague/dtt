@@ -15,29 +15,30 @@ namespace TeamNotification_Library.Service.Mappers
 
         public ChatMessageModel MapFrom(Collection.Messages source)
         {
-            var messageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(source.data, "body"));
+            //var messageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(source.data, "body"));
             var username = Collection.getField(source.data, "user");
             var userId = Collection.getField(source.data, "user_id");
             var dateTime = Collection.getField(source.data, "datetime");
             var stamp = Collection.getField(source.data, "stamp");
             return new ChatMessageModel
                        {
+                           body = Collection.getField(source.data, "body"),
                            user_id = userId,
-                           username = username,
-                           date = dateTime,
-                           stamp = stamp,
-                           chatMessageBody = new ChatMessageBody
-                           {
-                               message = messageBody.message,
-                               project = messageBody.project,
-                               solution = messageBody.solution,
-                               document = messageBody.document,
-                               line = messageBody.line,
-                               column = messageBody.column,
-                               programminglanguage = messageBody.programminglanguage,
-                               date = dateTime,
-                               stamp = stamp
-                           }
+                           username = username
+                           //date = dateTime,
+                           //stamp = stamp,
+                           //chatMessageBody = new ChatMessageBody
+                           //{
+                           //    message = messageBody.message,
+                           //    project = messageBody.project,
+                           //    solution = messageBody.solution,
+                           //    document = messageBody.document,
+                           //    line = messageBody.line,
+                           //    column = messageBody.column,
+                           //    programminglanguage = messageBody.programminglanguage,
+                           //    date = dateTime,
+                           //    stamp = stamp
+                           //}
                        };
         }
     }
