@@ -41,6 +41,15 @@ namespace TeamNotification_Test.Library.Service
             private static LoginResponse response;
             private static User userObject;
         }
+
+        public class when_deleting_a_user : Concern
+        {
+            Because of = () =>
+                sut.DeleteUser();
+
+            It should_delete_from_the_resource_handler = () =>
+                resourceHandler.AssertWasCalled(x => x.Delete());
+        }
          
     }
 }

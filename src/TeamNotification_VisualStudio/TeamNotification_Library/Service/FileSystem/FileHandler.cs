@@ -42,5 +42,10 @@ namespace TeamNotification_Library.Service.FileSystem
                                     }
                        };
         }
+
+        public void Delete()
+        {
+            File.Delete(GlobalConstants.Paths.UserResource);
+        }
     }
 }

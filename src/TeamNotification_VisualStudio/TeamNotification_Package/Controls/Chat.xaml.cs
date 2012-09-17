@@ -48,20 +48,26 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly IServiceChatRoomsControl chatRoomControlService;
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
+        private IStoreDTE dteStore;
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
+        private IHandleUserAccountEvents userAccountEvents;
         
         private string roomId { get; set; }
         private string currentChannel { get; set; }
-        private List<string> subscribedChannels;
-        private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents)
+        private bool chatIsEnabled;
+        private List<string> subscribedChannels;
+
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents)
         {
+            chatIsEnabled = true;
+
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
             this.toolWindowEvents = toolWindowEvents;
+            this.userAccountEvents = userAccountEvents;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
@@ -87,6 +93,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             codePasteEvents.CodePasteWasClicked += PasteCode;
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+            userAccountEvents.UserHasLogout += OnUserLogout;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -97,6 +104,12 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
         {
             chatRoomControlService.HandleDock(GetChatUIElements());
+        }
+
+        private void OnUserLogout(object sender, UserHasLogout eventArgs)
+        {
+            chatIsEnabled = false;
+            Content = Container.GetInstance<LoginControl>();
         }
 
         #region Win32_Clipboard
@@ -112,6 +125,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                 viewerHandle = SetClipboardViewer(installedHandle);
                 hwndSource.AddHook(hwndSourceHook);
             }
+
+//            Unloaded += (s, arg) =>
+//                            {
+//                                ChangeClipboardChain(this.installedHandle, this.viewerHandle);
+//                            };
 
         }
 
@@ -191,6 +209,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                 this.SendMessage();
                 e.Handled = true;
             }
+        }
+
+        private void LogoutUser(object sender, RoutedEventArgs e)
+        {
+            chatRoomControlService.LogoutUser(sender);
         }
 
         #endregion
@@ -284,8 +307,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         
         private void OnRoomSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var roomData = (Collection.Link) e.AddedItems[0];
-            this.ChangeRoom(roomData.rel);
+            if (chatIsEnabled)
+            {
+                var roomData = (Collection.Link)e.AddedItems[0];
+                this.ChangeRoom(roomData.rel);    
+            }
         }
 
         private void ClearStatusBar(object sender, RoutedEventArgs e)

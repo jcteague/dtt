@@ -14,6 +14,7 @@ using Machine.Specifications;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
@@ -52,6 +53,8 @@ namespace TeamNotification_Test.Library.Service.Controls
                 collectionMessagesToChatMessageModelMapper = depends.on<IMapEntities<Collection.Messages, ChatMessageModel>>();
                 messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
                 toolWindowActionGetter = depends.on<IGetToolWindowAction>();
+                localStorageService = depends.on<IStoreDataLocally>();
+                userAccountEvents = depends.on<IHandleUserAccountEvents>();
             };
 
             protected static IProvideUser userProvider;
@@ -68,7 +71,8 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
             protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
             protected static IGetToolWindowAction toolWindowActionGetter;
-
+            protected static IStoreDataLocally localStorageService;
+            protected static IHandleUserAccountEvents userAccountEvents;
         }
 
         public abstract class when_getting_a_collection_context : Concern
@@ -265,13 +269,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             Establish context = () =>
             {
                 chatUIElements = new ChatUIElements();
-                toolWindowWasDockedArgs = new ToolWindowWasDocked
-                                              {
-                                                  x = 9,
-                                                  y = 10,
-                                                  w = 11,
-                                                  h = 12
-                                              };
                 action = fake.an<IActOnChatElements>();
                 toolWindowActionGetter.Stub(x => x.Get()).Return(action);
             };
@@ -283,8 +280,24 @@ namespace TeamNotification_Test.Library.Service.Controls
                 action.AssertWasCalled(x => x.ExecuteOn(chatUIElements));
 
             private static ChatUIElements chatUIElements;
-            private static ToolWindowWasDocked toolWindowWasDockedArgs;
             private static IActOnChatElements action;
+        }
+
+        public class when_logging_out_the_user : Concern
+        {
+            Establish context = () =>
+                sender = "blah";
+
+            Because of = () =>
+                sut.LogoutUser(sender);
+
+            It should_delete_the_local_storage_of_the_user_resource = () =>
+                localStorageService.AssertWasCalled(x => x.DeleteUser());
+
+            It should_raise_the_user_has_logout_event = () =>
+                userAccountEvents.AssertWasCalled(x => x.OnLogout(Arg<object>.Is.Equal(sender), Arg<UserHasLogout>.Is.Anything));
+
+            private static object sender;
         }
 
         // TODO: Find a way to mock DTE to test implementation

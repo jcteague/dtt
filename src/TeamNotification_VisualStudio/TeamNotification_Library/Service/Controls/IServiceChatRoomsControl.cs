@@ -18,5 +18,6 @@ namespace TeamNotification_Library.Service.Controls
         void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);
         void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId);
         void HandleDock(ChatUIElements chatUIElements);
+        void LogoutUser(object sender);
     }
 }

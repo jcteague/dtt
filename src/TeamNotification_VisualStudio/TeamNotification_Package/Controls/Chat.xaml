@@ -24,7 +24,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-<!--        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="buttonLogout" VerticalAlignment="Center" Width="60" />-->
+        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="btnLogout" VerticalAlignment="Center" Width="60" Click="LogoutUser" />
         <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Right" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>

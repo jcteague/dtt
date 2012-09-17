@@ -27,6 +27,7 @@ namespace TeamNotification_Library.Service
             }
             return _user;
         }
+
         public Collection.RedisConfig GetRedisConfig()
         {
             if (_redisConfig == null)
@@ -36,6 +37,11 @@ namespace TeamNotification_Library.Service
                     _redisConfig = result.redis;
             }
             return _redisConfig;
+        }
+
+        public void DeleteUser()
+        {
+            resourceHandler.Delete();
         }
 
         public void Store(LoginResponse response)

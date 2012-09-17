@@ -26,7 +26,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 configurationProvider = depends.on<IProvideConfiguration<LoginConfiguration>>();                        
                 collectionToUrlEncodedFormMapper = depends.on<IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent>>();
                 localStorageService = depends.on<IStoreDataLocally>();
-                loginEvents = depends.on<IHandleLoginEvents>();
+                userAccountEvents = depends.on<IHandleUserAccountEvents>();
 
                 configuration = fake.an<IStoreConfiguration>();
                 configurationProvider.Stub(x => x.Get()).Return(configuration);
@@ -40,7 +40,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IStoreConfiguration configuration;
             protected static IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> collectionToUrlEncodedFormMapper;
             protected static IStoreDataLocally localStorageService;
-            protected static IHandleLoginEvents loginEvents;
+            protected static IHandleUserAccountEvents userAccountEvents;
         }
 
         public class when_getting_the_collection : Concern
@@ -106,7 +106,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 localStorageService.AssertWasCalled(x => x.Store(response));
 
             It should_call_the_on_login_success_event = () =>
-                loginEvents.AssertWasCalled(x => x.OnLoginSuccess(Arg<IServiceLoginControl>.Is.Same(sut), Arg<UserHasLogged>.Matches(y => y.RedisConfig == redisConfig && y.User == user)));
+                userAccountEvents.AssertWasCalled(x => x.OnLoginSuccess(Arg<IServiceLoginControl>.Is.Same(sut), Arg<UserHasLogged>.Matches(y => y.RedisConfig == redisConfig && y.User == user)));
 
             private static User user;
             private static Collection.RedisConfig redisConfig;
@@ -134,7 +134,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 localStorageService.AssertWasNotCalled(x => x.Store(Arg<LoginResponse>.Is.Anything));
 
             It should_call_the_on_login_fail_event = () =>
-                loginEvents.AssertWasCalled(x => x.OnLoginFail(sut));
+                userAccountEvents.AssertWasCalled(x => x.OnLoginFail(sut));
 
             private static User user;
         }

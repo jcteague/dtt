@@ -8,5 +8,6 @@ namespace TeamNotification_Library.Service
         void Store(LoginResponse response);
         User GetUser();
         Collection.RedisConfig GetRedisConfig();
+        void DeleteUser();
     }
 }

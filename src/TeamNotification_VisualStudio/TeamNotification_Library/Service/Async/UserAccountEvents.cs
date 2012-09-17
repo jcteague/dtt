@@ -2,11 +2,12 @@ using TeamNotification_Library.Service.Async.Models;
 
 namespace TeamNotification_Library.Service.Async
 {
-    public class LoginEvents : AbstractEventHandler, IHandleLoginEvents
+    public class UserAccountEvents : AbstractEventHandler, IHandleUserAccountEvents
     {
         public event CustomEventHandler<UserHasLogged> UserHasLogged;
         public event CustomEventHandler<UserCouldNotLogIn> UserCouldNotLogIn;
-		
+        public event CustomEventHandler<UserHasLogout> UserHasLogout;
+
         public void OnLoginSuccess(object source, UserHasLogged eventArgs)
         {
             Handle(source, UserHasLogged, eventArgs);
@@ -15,6 +16,11 @@ namespace TeamNotification_Library.Service.Async
         public void OnLoginFail(object source)
         {
             Handle(source, UserCouldNotLogIn);
+        }
+
+        public void OnLogout(object source, UserHasLogout eventArgs)
+        {
+            Handle(source, UserHasLogout);
         }
     }
 }

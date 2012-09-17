@@ -34,14 +34,14 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IServiceLoginControl loginControlService;
         private IBuildContent contentBuilder;
         private IGetFieldValue fieldValueGetter;
-        private readonly IHandleLoginEvents loginEvents;
+        private readonly IHandleUserAccountEvents userAccountEvents;
         private IProvideConfiguration<RedisConfiguration> redisConfigurationProvider;
-        public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleLoginEvents loginEvents)
+        public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleUserAccountEvents userAccountEvents)
         {
             this.loginControlService = loginControlService;
             this.contentBuilder = contentBuilder;
             this.fieldValueGetter = fieldValueGetter;
-            this.loginEvents = loginEvents;
+            this.userAccountEvents = userAccountEvents;
             this.redisConfigurationProvider = redisConfigurationProvider;
             InitializeComponent();
             
@@ -53,8 +53,8 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            this.loginEvents.UserHasLogged += this.OnUserHasLogged;
-            this.loginEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
+            this.userAccountEvents.UserHasLogged += this.OnUserHasLogged;
+            this.userAccountEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
         }
 
         private void OnUserHasLogged(object sender, UserHasLogged args  )

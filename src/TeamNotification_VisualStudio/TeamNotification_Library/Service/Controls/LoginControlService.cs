@@ -20,15 +20,15 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IProvideConfiguration<LoginConfiguration> configuration;
         private readonly IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper;
         private readonly IStoreDataLocally localStorageService;
-        private readonly IHandleLoginEvents loginEvents;
+        private readonly IHandleUserAccountEvents userAccountEvents;
 
-        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IHandleLoginEvents loginEvents)
+        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents)
         {
             this.httpClient = httpClient;
             this.configuration = configuration;
             this.mapper = mapper;
             this.localStorageService = localStorageService;
-            this.loginEvents = loginEvents;
+            this.userAccountEvents = userAccountEvents;
         }
 
         public Collection GetCollection()
@@ -51,11 +51,11 @@ namespace TeamNotification_Library.Service.Controls
                         break;
                     }
                 localStorageService.Store(loginResponse);
-                loginEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
+                userAccountEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
             }
             else
             {
-                loginEvents.OnLoginFail(this);
+                userAccountEvents.OnLoginFail(this);
             }
         }
 

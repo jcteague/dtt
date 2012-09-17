@@ -6,6 +6,8 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
@@ -17,6 +19,7 @@ using TeamNotification_Library.Service.ToolWindow;
 
 namespace TeamNotification_Library.Service.Controls
 {
+    // TODO: This class is doing too much things. Must separate concerns
     public class ChatRoomsControlService : IServiceChatRoomsControl
     {
         private IProvideUser userProvider;
@@ -28,6 +31,8 @@ namespace TeamNotification_Library.Service.Controls
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
         private IGetToolWindowAction toolWindowActionGetter;
         private IHandleChatMessages chatMessagesService;
+        private readonly IStoreDataLocally localStorageService;
+        private readonly IHandleUserAccountEvents userAccountEvents;
         
         readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
@@ -35,7 +40,7 @@ namespace TeamNotification_Library.Service.Controls
         private readonly ISendChatMessages messageSender;
         private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -49,6 +54,8 @@ namespace TeamNotification_Library.Service.Controls
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
+            this.localStorageService = localStorageService;
+            this.userAccountEvents = userAccountEvents;
             this.configuration = configuration;
         }
 
@@ -109,6 +116,12 @@ namespace TeamNotification_Library.Service.Controls
         public void HandleDock(ChatUIElements chatUIElements)
         {
             toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
+        }
+
+        public void LogoutUser(object sender)
+        {
+            localStorageService.DeleteUser();
+            userAccountEvents.OnLogout(sender, new UserHasLogout());
         }
 
         public void SendMessage(RichTextBox textBox, string roomId)
