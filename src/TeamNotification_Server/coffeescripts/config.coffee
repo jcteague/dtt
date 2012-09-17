@@ -39,7 +39,7 @@ test_settings =
 
 production_settings =
     db:
-        connection_string: "postgres://postgres:welc0me@ec2-107-21-171-44.compute-1.amazonaws.com:5432/dtt_main"
+        connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
     site:
         host: 'ec2-107-21-171-44.compute-1.amazonaws.com'
         port: 80
