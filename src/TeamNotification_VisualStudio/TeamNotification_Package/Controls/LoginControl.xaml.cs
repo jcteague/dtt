@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
-using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.Mappers;
-using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Configuration;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
@@ -36,6 +21,8 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IGetFieldValue fieldValueGetter;
         private readonly IHandleUserAccountEvents userAccountEvents;
         private IProvideConfiguration<RedisConfiguration> redisConfigurationProvider;
+
+
         public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleUserAccountEvents userAccountEvents)
         {
             this.loginControlService = loginControlService;
@@ -53,15 +40,23 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            this.userAccountEvents.UserHasLogged += this.OnUserHasLogged;
-            this.userAccountEvents.UserCouldNotLogIn += (sender, e) => MessageBox.Show("User and passwords are incorrect");
+            this.userAccountEvents.UserHasLogged -= OnUserHasLogged;
+            this.userAccountEvents.UserHasLogged += OnUserHasLogged;
+
+            this.userAccountEvents.UserCouldNotLogIn -= OnUserCouldNotLogin;
+            this.userAccountEvents.UserCouldNotLogIn += OnUserCouldNotLogin;
         }
 
-        private void OnUserHasLogged(object sender, UserHasLogged args  )
+        private void OnUserHasLogged(object sender, UserHasLogged args)
         {
             redisConfigurationProvider.Get().Uri =
                 args.RedisConfig.host + ":" + args.RedisConfig.port;
             this.Content = Container.GetInstance<Chat>();
+        }
+
+        private void OnUserCouldNotLogin(object sender, UserCouldNotLogIn args)
+        {
+            MessageBox.Show("User and passwords are incorrect");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

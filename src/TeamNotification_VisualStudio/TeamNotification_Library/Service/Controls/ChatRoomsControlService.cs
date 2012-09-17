@@ -1,9 +1,6 @@
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using EnvDTE;
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Async;
@@ -12,7 +9,6 @@ using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
@@ -34,20 +30,15 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IStoreDataLocally localStorageService;
         private readonly IHandleUserAccountEvents userAccountEvents;
         
-        readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
-
         private readonly ISendChatMessages messageSender;
-        private IHandleSystemClipboard systemClipboardHandler;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
             this.clipboardStorage = clipboardStorage;
             this.messageSender = messageSender;
-            this.applicationGlobalState = applicationGlobalState;
-            this.systemClipboardHandler = systemClipboardHandler;
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
             this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
@@ -72,36 +63,6 @@ namespace TeamNotification_Library.Service.Controls
             var uri = configuration.Get().Uri +"user/"+ user.id;
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
-        }
-
-        public void UpdateClipboard(object source, DTE dte)
-        {
-            if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
-            {
-                var activeDocument = dte.ActiveDocument;
-                var txt = activeDocument.Object() as TextDocument;
-                if (txt.IsNull()) return;
-                var selection = txt.Selection;
-                var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
-                var message = systemClipboardHandler.GetText(true);
-                var clipboard = new CodeClipboardData
-                {
-					project = activeProjects.UniqueName,
-                    solution = dte.Solution.FullName,
-                    document = activeDocument.FullName,
-                    message = message,
-                    line = selection.CurrentLine,
-                    column = selection.CurrentColumn,
-                    programmingLanguage = activeDocument.GetProgrammingLanguage()
-                };
-
-                clipboardStorage.Store(clipboard);
-            }
-            else
-            {
-                var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
-                clipboardStorage.Store(clipboard);
-            }
         }
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)

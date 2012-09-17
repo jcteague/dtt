@@ -158,8 +158,10 @@
     <Compile Include="Service\Chat\IHandleChatMessages.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
+    <Compile Include="Service\Clipboard\IHandleVisualStudioClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
     <Compile Include="Service\Clipboard\SystemClipboardHandler.cs" />
+    <Compile Include="Service\Clipboard\VisualStudioClipboardHandler.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />

@@ -19,6 +19,7 @@ using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
+using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
@@ -46,20 +47,22 @@ namespace AvenidaSoftware.TeamNotification_Package
     public partial class Chat : UserControl
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
+        private readonly IHandleVisualStudioClipboard clipboardHandler;
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
         private IStoreDTE dteStore;
+        
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
-        
+
         private string roomId { get; set; }
         private string currentChannel { get; set; }
 
         private bool chatIsEnabled;
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler)
         {
             chatIsEnabled = true;
 
@@ -68,6 +71,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.codePasteEvents = codePasteEvents;
             this.toolWindowEvents = toolWindowEvents;
             this.userAccountEvents = userAccountEvents;
+            this.clipboardHandler = clipboardHandler;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
@@ -88,11 +92,31 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageTextBox.Document.Blocks.Clear();
 
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
+
+
+//            if (viewerHandle != IntPtr.Zero)
+//            {
+//                ChangeClipboardChain(this.installedHandle, this.viewerHandle);
+//            }
+
+//            Unloaded += (s, arg) =>
+//                            {
+//                                if (viewerHandle != IntPtr.Zero)
+//                                {
+//                                    ChangeClipboardChain(this.installedHandle, this.viewerHandle);
+//                                }
+//                            };
             
+            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
+            codePasteEvents.CodePasteWasClicked -= PasteCode;
             codePasteEvents.CodePasteWasClicked += PasteCode;
+            
+            toolWindowEvents.ToolWindowWasDocked -= OnToolWindowWasDocked;
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+            
+            userAccountEvents.UserHasLogout -= OnUserLogout;
             userAccountEvents.UserHasLogout += OnUserLogout;
         }
 
@@ -119,59 +143,66 @@ namespace AvenidaSoftware.TeamNotification_Package
             base.OnInitialized(e);
 
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
-            if (hwndSource.IsNotNull())
-            {
-                installedHandle = hwndSource.Handle;
-                viewerHandle = SetClipboardViewer(installedHandle);
-                hwndSource.AddHook(hwndSourceHook);
-            }
+            clipboardHandler.SetUpFor(hwndSource);
+
+//            if (hwndSource.IsNotNull())
+//            {
+//                installedHandle = hwndSource.Handle;
+//                viewerHandle = SetClipboardViewer(installedHandle);
+//                hwndSource.AddHook(hwndSourceHook);
+//            }
 
 //            Unloaded += (s, arg) =>
-//                            {
-//                                ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//                            };
-
+//            {
+//                if (viewerHandle != IntPtr.Zero)
+//                {
+//                    hwndSource.RemoveHook(hwndSourceHook);
+//                    ChangeClipboardChain(this.installedHandle, this.viewerHandle);
+//                }
+//            };
         }
 
-        IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch (msg)
-            {
-                case WM_CHANGECBCHAIN:
-                    viewerHandle = lParam;
-                    if (viewerHandle != IntPtr.Zero)
-                    {
-                        SendMessage(viewerHandle, msg, wParam, lParam);
-                    }
 
-                    break;
 
-                case WM_DRAWCLIPBOARD:
-                    var dte = (DTE)Package.GetGlobalService(typeof(DTE));
-                    chatRoomControlService.UpdateClipboard(this, dte);
+//        IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+//        {
+//            switch (msg)
+//            {
+//                case WM_CHANGECBCHAIN:
+//                    viewerHandle = lParam;
+//                    if (viewerHandle != IntPtr.Zero)
+//                    {
+//                        SendMessage(viewerHandle, msg, wParam, lParam);
+//                    }
+//
+//                    break;
+//
+//                case WM_DRAWCLIPBOARD:
+//                    var dte = (DTE)Package.GetGlobalService(typeof(DTE));
+//                    chatRoomControlService.UpdateClipboard(this, dte);
+//
+//                    if (viewerHandle != IntPtr.Zero)
+//                    {
+//                        SendMessage(viewerHandle, msg, wParam, lParam);
+//                    }
+//
+//                    break;
+//            }
+//            return IntPtr.Zero;
+//        }
 
-                    if (viewerHandle != IntPtr.Zero)
-                    {
-                        SendMessage(viewerHandle, msg, wParam, lParam);
-                    }
+//        IntPtr viewerHandle = IntPtr.Zero;
+//        IntPtr installedHandle = IntPtr.Zero;
 
-                    break;
-            }
-            return IntPtr.Zero;
-        }
-
-        IntPtr viewerHandle = IntPtr.Zero;
-        IntPtr installedHandle = IntPtr.Zero;
-
-        const int WM_DRAWCLIPBOARD = 0x308;
-        const int WM_CHANGECBCHAIN = 0x30D;
+//        const int WM_DRAWCLIPBOARD = 0x308;
+//        const int WM_CHANGECBCHAIN = 0x30D;
         
-        [DllImport("user32.dll")]
-        private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
-        [DllImport("user32.dll")]
-        private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+//        [DllImport("user32.dll")]
+//        private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
+//        [DllImport("user32.dll")]
+//        private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
+//        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+//        private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
         
         #endregion
 
