@@ -77,7 +77,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             @model.set({messages: messages}, {silent: true})
             
             if $("##{m.stamp}").length  == 1
-                @edit_message $("##{m.stamp}"), @read_message_data(m)
+                @edit_message $("#message-#{m.stamp}"), m
             else
                 @$el.append @read_message_data(m)
                 @$el.scrollTop(@$el.prop('scrollHeight'))
@@ -90,8 +90,10 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                     me.$('.prettyprint').removeClass('prettyprint')
 
         edit_message: (p, message) ->
+            parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            p[0].innerHTML = $(message)[0].innerHTML
+            console.log $(message)
+            p[0].innerHTML = parsedBody.message
             #if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
             #    @added_code = true
             #    p[0].innerHTML = "<pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
@@ -115,4 +117,4 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
                 return p
             else
-                return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span>#{parsedBody.message}</span></p>")
+                return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
