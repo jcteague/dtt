@@ -16,7 +16,7 @@ namespace TeamNotification_Library.Service.Controls
         Collection.Messages editingMessage { get; set; }
         ChatMessageModel editingMessageModel { get; set; }
 
-        void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer);
+        void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, ChatUIElements messagesContainer);
         void ResetControls();
         void EditMessage(object sender, MouseButtonEventArgs mouseButtonEventArgs);
         void OnInputMethodTextChanged(object sender, EventArgs e);

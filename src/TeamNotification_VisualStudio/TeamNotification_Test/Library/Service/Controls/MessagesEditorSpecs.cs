@@ -52,7 +52,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 var chatMessageBodyFake = new ChatMessageBody{message = "fake message"};
                 jsonSerializer.Stub(x => x.Deserialize<ChatMessageBody>(fakeBody)).Return(chatMessageBodyFake);
 
-                messagesContainerMock = fake.an<MessagesContainer>();
+                messagesContainerMock = fake.an<ChatUIElements>();
                 messagesContainerMock.MessagesList = new Dictionary<string, TableRowGroup>();
                 resourceName = "originalMessage";              
             };
@@ -64,7 +64,7 @@ namespace TeamNotification_Test.Library.Service.Controls
 
             private static TableRowGroup rowMock;
             private static Collection.Messages messageMock;
-            private static MessagesContainer messagesContainerMock;
+            private static ChatUIElements messagesContainerMock;
             private static string resourceName;
         }
 

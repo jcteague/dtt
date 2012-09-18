@@ -50,7 +50,6 @@ namespace TeamNotification_Test.Library.Service.Controls
                 syntaxBlockUIFactory = depends.on<ICreateSyntaxBlockUIInstances>();
                 chatMessagesService = depends.on<IHandleChatMessages>();
                 collectionMessagesToChatMessageModelMapper = depends.on<IMapEntities<Collection.Messages, ChatMessageModel>>();
-                messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
                 toolWindowActionGetter = depends.on<IGetToolWindowAction>();
             };
 
@@ -66,7 +65,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static ICreateSyntaxBlockUIInstances syntaxBlockUIFactory;
             protected static IHandleChatMessages chatMessagesService;
             protected static IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
-            protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
             protected static IGetToolWindowAction toolWindowActionGetter;
 
         }

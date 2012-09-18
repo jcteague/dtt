@@ -29,7 +29,7 @@ namespace TeamNotification_Library.Service.Controls
             this.jsonSerializer = jsonSerializer;
         }
 
-        public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
+        public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, ChatUIElements messagesContainer)
         {
             var currentStamp = Collection.getField(message.data, "stamp");
             var charMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(message.data,"body"));

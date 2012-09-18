@@ -260,7 +260,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private ChatUIElements GetChatUIElements()
         {
-            return new MessagesContainer
+            return new ChatUIElements()
             {
                 OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,

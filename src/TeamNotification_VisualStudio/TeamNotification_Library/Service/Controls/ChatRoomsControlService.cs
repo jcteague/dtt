@@ -19,6 +19,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.Service.ToolWindow;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -33,6 +34,8 @@ namespace TeamNotification_Library.Service.Controls
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
         private IHandleChatMessages chatMessagesService;
         private Dictionary<string, TableRow> MessagesRowsList { get; set; }
+        private IGetToolWindowAction toolWindowActionGetter;
+        private string lastStamp;
         
         readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
@@ -41,7 +44,7 @@ namespace TeamNotification_Library.Service.Controls
         private IHandleSystemClipboard systemClipboardHandler;
         private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IEditMessages messagesEditor)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IEditMessages messagesEditor, IGetToolWindowAction toolWindowActionGetter)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -95,7 +98,7 @@ namespace TeamNotification_Library.Service.Controls
                         message = message,
                         line = selection.CurrentLine,
                         column = selection.CurrentColumn,
-                        programminglanguage = activeDocument.Getprogramminglanguage()
+                        programminglanguage = activeDocument.GetProgrammingLanguage()
                     }
                 };
 
@@ -166,10 +169,14 @@ namespace TeamNotification_Library.Service.Controls
             }
         }
 
+        public void HandleDock(ChatUIElements chatUIElements)
+        {
+            toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
+        }
+
         public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
-            //chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
 
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
@@ -180,7 +187,7 @@ namespace TeamNotification_Library.Service.Controls
             if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
         }
 
-        private string lastStamp;
+
         private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)
         {
             return new Collection.Messages

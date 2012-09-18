@@ -4,7 +4,7 @@ using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Mappers
 {
-    public class MessageDataToChatMessageModelMapper : IMapEntities<MessageData, ChatMessageModel>
+    public class MessageDataToChatMessageModelMapper : IMapEntities<Collection.Messages, ChatMessageModel>
     {
         private ISerializeJSON jsonSerializer;
 

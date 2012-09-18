@@ -1,3 +1,4 @@
+using System.Windows;
 using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Highlighters;

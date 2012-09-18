@@ -68,7 +68,7 @@ public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlai
             return appendedRowGroup;
         }
 
-        private TableRowGroup UpdateMessage(MessagesContainer messagesContainer, ChatMessageModel messageModel)
+        private TableRowGroup UpdateMessage(ChatUIElements messagesContainer, ChatMessageModel messageModel)
         {
             var messagesTable = messagesContainer.MessagesTable;
             TableRowGroup editedRow = null;
