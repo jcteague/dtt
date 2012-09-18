@@ -3,12 +3,12 @@ sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
 repository_class_mock = sinon.stub()
-sut = module_loader.require('../support/strategies/user_by_username_strategy', {
+sut = module_loader.require('../support/strategies/user_by_email_strategy', {
     requires:
         '../repository': repository_class_mock
 })
 
-describe 'User By Username Strategy', ->
+describe 'User By Email Strategy', ->
 
     describe 'strategy', ->
 
@@ -20,7 +20,7 @@ describe 'User By Username Strategy', ->
             repository =
                 find: sinon.stub()
             repository_class_mock.withArgs('User').returns(repository)
-            users = [{first_name: 'foo'}, {first_name: 'blah'}, {first_name: 'Blah'}, {first_name: 'bL'}, {first_name: 'bar'}]
+            users = [{email: 'foo@hello.com'}, {email: 'blah@hello.com'}, {email: 'Blah@hello.com'}, {email: 'bL@hello.com'}, {email: 'bar@hello.com'}]
             promise =
                 then: (callback) ->
                     callback(users)
@@ -41,10 +41,9 @@ describe 'User By Username Strategy', ->
         describe 'and the argument is not defined', ->
 
             beforeEach (done) ->
-                expected_result = [users[1], users[2], users[3]]
                 result = sut()
                 done()
 
-            it 'should return the users that start with that username', (done) ->
+            it 'should return all the users', (done) ->
                 expect(result).to.eql users
                 done()
