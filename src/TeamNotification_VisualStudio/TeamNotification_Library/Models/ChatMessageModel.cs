@@ -28,8 +28,7 @@ namespace TeamNotification_Library.Models
             get { return _body; }
             set {
                 _body = value;
-                if(_chatMessageBody == null)
-                    _chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(value);
+                _chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(value);
             } 
         }
 
@@ -58,24 +57,7 @@ namespace TeamNotification_Library.Models
         }
 
         private ChatMessageBody _chatMessageBody;
-        //public string message { get; set; }
-        
-        //public string project { get; set; }
 
-        //public string solution { get; set; }
-
-        //public string document { get; set; }
-
-        //public int line { get; set; }
-
-        //public int column { get; set; }
-        
-        //public int programminglanguage { get; set; }
-        
-        //public bool IsCode
-        //{
-        //    get { return !solution.IsNullOrEmpty(); }
-        //}
         public int GetUserId()
         {
             return user_id.ParseToInteger();

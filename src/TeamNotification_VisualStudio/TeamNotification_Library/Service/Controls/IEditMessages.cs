@@ -19,7 +19,7 @@ namespace TeamNotification_Library.Service.Controls
         void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer);
         void ResetControls();
         void EditMessage(object sender, MouseButtonEventArgs mouseButtonEventArgs);
-        void UpdateMessageData(object sender, EventArgs e);
+        void OnInputMethodTextChanged(object sender, EventArgs e);
         void CancelEditMessage(object sender, KeyEventArgs e);
     }
 }

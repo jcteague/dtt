@@ -26,7 +26,7 @@ namespace TeamNotification_Library.Service.Controls
         public MessagesEditor(ISerializeJSON jsonSerializer)
         {
             editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
-            this.jsonSerializer = jsonSerializer;//new JSONSerializer();
+            this.jsonSerializer = jsonSerializer;
         }
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
@@ -99,10 +99,20 @@ namespace TeamNotification_Library.Service.Controls
             inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
             inputMethod.Focus();
             inputMethod.PreviewKeyDown += CancelEditMessage;
-            inputMethod.TextChanged += UpdateMessageData;
+            inputMethod.TextChanged += OnInputMethodTextChanged;
+            inputMethod.LostFocus += inputMethod_LostFocus;
         }
 
-        public void UpdateMessageData(object sender, EventArgs e)
+        void inputMethod_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
+            {
+                ResetControls();
+                inputMethod.Focus();
+            }
+        }
+
+        public void OnInputMethodTextChanged(object sender, EventArgs e)
         {
             var rtb = (RichTextBox)sender;
             var text = rtb.Document.GetDocumentText();
@@ -115,8 +125,11 @@ namespace TeamNotification_Library.Service.Controls
             if (editingMessage == null) return;
             currentRowGroup.Background = originalBackground;
             inputMethod.Background = originalBackground;
+
             inputMethod.PreviewKeyDown -= CancelEditMessage;
-            inputMethod.TextChanged -= UpdateMessageData;
+            inputMethod.TextChanged -= OnInputMethodTextChanged;
+            inputMethod.LostFocus -= inputMethod_LostFocus;
+
             currentRowGroup = null;
             editingMessage = null;
             editingMessageModel = null;
@@ -127,6 +140,7 @@ namespace TeamNotification_Library.Service.Controls
         {
             if (e.Key != Key.Escape) return;
             ResetControls();
+            e.Handled = true;
         }
     }
 }
