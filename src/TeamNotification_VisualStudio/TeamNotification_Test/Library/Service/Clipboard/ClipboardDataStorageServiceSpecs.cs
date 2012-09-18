@@ -80,7 +80,8 @@ namespace TeamNotification_Test.Library.Service.Clipboard
         {
             Establish context = () =>
             {
-                message = "\r\n";
+                message = "";
+                jsonSerializer.Stub(x => x.Serialize(Arg<ChatMessageBody>.Is.Anything)).Return("{message:''}");
                 systemClipboardHandler.Stub(x => x.GetText()).Return(message);
             };
 

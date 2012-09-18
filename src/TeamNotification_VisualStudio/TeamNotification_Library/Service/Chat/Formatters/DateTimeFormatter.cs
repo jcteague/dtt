@@ -48,7 +48,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             if (seconds < 3600 * 24)
                 return dateTime.ToString("hh:mm tt");
 
-            return dateTime.ToString("mm/dd/yyyy");
+            return dateTime.ToShortDateString();
         }
     }
 }

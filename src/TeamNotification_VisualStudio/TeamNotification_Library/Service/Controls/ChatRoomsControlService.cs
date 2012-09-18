@@ -131,7 +131,7 @@ namespace TeamNotification_Library.Service.Controls
             }
             else
             {
-                messageSender.SendMessages(messagesEditor.inputMethod.Document.Blocks, roomId);
+                messageSender.SendMessages(textBox.Document.Blocks, roomId);
             }
             messagesEditor.ResetControls();
         }
@@ -168,7 +168,7 @@ namespace TeamNotification_Library.Service.Controls
         public void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
-            chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
+            //chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);
 
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);

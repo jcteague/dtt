@@ -21,6 +21,13 @@ namespace TeamNotification_Test.Library.Service.Controls
     {
         public abstract class Concern : Observes<IEditMessages, MessagesEditor>
         {
+            public class MouseButtonEventArgsStub : MouseButtonEventArgs
+            {
+                public MouseButtonEventArgsStub(MouseDevice mouse, int timestamp, MouseButton button) : base(mouse, timestamp, button) { }
+                public MouseButtonEventArgsStub(MouseDevice mouse, int timestamp, MouseButton button, StylusDevice stylusDevice) : base(mouse, timestamp, button, stylusDevice) { }
+                public new int ClickCount { get; set; }
+            }
+
             private Establish context = () =>
             {
                 jsonSerializer = depends.on<ISerializeJSON>();
@@ -35,9 +42,18 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             private Establish context = () =>
             {
+                var fakeBody = "some fake value";
                 rowMock = fake.an<TableRowGroup>();
                 messageMock = fake.an<Collection.Messages>();
+                messageMock.data = new List<CollectionData>
+                                       {
+                                           new CollectionData {name = "body", value = fakeBody}
+                                       };
+                var chatMessageBodyFake = new ChatMessageBody{message = "fake message"};
+                jsonSerializer.Stub(x => x.Deserialize<ChatMessageBody>(fakeBody)).Return(chatMessageBodyFake);
+
                 messagesContainerMock = fake.an<MessagesContainer>();
+                messagesContainerMock.MessagesList = new Dictionary<string, TableRowGroup>();
                 resourceName = "originalMessage";              
             };
             Because of = () =>
@@ -58,26 +74,26 @@ namespace TeamNotification_Test.Library.Service.Controls
             {
             };
 
-            protected static MouseButtonEventArgs mouseButtonEventArgsMock;
-            protected static TableRowGroup tableRowGroupMock;
+            protected static MouseButtonEventArgsStub mouseButtonEventArgsStub;
+            protected static TableRowGroup tableRowGroup;
 
         }
 
         public class and_two_clicks_were_made : when_the_editing_messages_event_is_called
         {
-            private Establish context = () =>
-            {
-                mouseButtonEventArgsMock = fake.an<MouseButtonEventArgs>();
-                tableRowGroupMock = fake.an<TableRowGroup>();
-                mouseButtonEventArgsMock.Stub(x => x.ClickCount).Return(2);
+            private Establish context = () =>{
+                mouseButtonEventArgsStub = new MouseButtonEventArgsStub(Mouse.PrimaryDevice, 100, MouseButton.Left) {ClickCount = 2};
+                tableRowGroup =  new TableRowGroup();
+                //mouseButtonEventArgsMock.Stub(x => x.ClickCount).Return(2);
             };
-            
-            Because of = () =>
-                sut.EditMessage(tableRowGroupMock, mouseButtonEventArgsMock);
 
-            //It should_return_right_away = () =>
+            private Because of = () => {
+                sut.EditMessage(tableRowGroup, mouseButtonEventArgsStub);
+                editingMessage = sut.editingMessage;
+            };
+            It should_have_set_the_current_editing_message = () => editingMessage.ShouldNotBeNull();
 
-
+            private static Collection.Messages editingMessage;
         }
     }
 }

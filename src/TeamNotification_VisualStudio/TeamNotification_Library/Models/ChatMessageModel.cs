@@ -8,7 +8,7 @@ namespace TeamNotification_Library.Models
     public class ChatMessageModel
     {
         private ISerializeJSON jsonSerializer;
-        private string _body;
+        private string _body = "";
         public ChatMessageModel()
         {
             name = user_id = username = ""; 
@@ -18,7 +18,9 @@ namespace TeamNotification_Library.Models
         public string stamp
         {
             get { return chatMessageBody.stamp; }
-            set { chatMessageBody.stamp = value; }
+            set { if(_chatMessageBody!=null)
+                    _chatMessageBody.stamp = value;
+            }
         }
 
         public string body
@@ -43,15 +45,15 @@ namespace TeamNotification_Library.Models
 
         public string date
         {
-            get { return chatMessageBody.date; }
-            set { chatMessageBody.date = value; }
+            get { return   chatMessageBody.date; }
+            set { if (_chatMessageBody != null) _chatMessageBody.date = value; }
         }
 
-        public ChatMessageBody chatMessageBody
+        public virtual ChatMessageBody chatMessageBody
         {
-            get { return _chatMessageBody ?? (_chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(body)); }
+            get { return _chatMessageBody ?? (_chatMessageBody = (_body==null)?null:jsonSerializer.Deserialize<ChatMessageBody>(_body)); }
             set { _chatMessageBody = value;
-                body = jsonSerializer.Serialize(_chatMessageBody);
+                _body = jsonSerializer.Serialize(value);
             }
         }
 

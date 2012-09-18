@@ -55,9 +55,9 @@ namespace TeamNotification_Library.Models
         }
         private string StripDirectories(string path)
         {
-            var shr = "";
-            for (var i = path.Length - 1; i >= 0 && path[i] != '\\'; --i)
-                shr = path[i] + shr;
+            var shr = path.Remove(0, path.LastIndexOf("\\") + 1);
+            //for (var i = path.Length - 1; i >= 0 && path[i] != '\\'; --i)
+            //    shr = path[i] + shr;
             return shr;
         }
     }

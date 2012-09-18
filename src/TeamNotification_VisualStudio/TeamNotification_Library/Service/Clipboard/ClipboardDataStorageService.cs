@@ -26,7 +26,7 @@ namespace TeamNotification_Library.Service.Clipboard
         {
             var text = systemClipboardHandler.GetText();
             if (text.IsNullOrWhiteSpace())
-                return new T { chatMessageBody = new ChatMessageBody { message = text } };
+                return new T { body = serializer.Serialize(new ChatMessageBody { message = text } )};
 
             T value;
             try

@@ -21,24 +21,30 @@ namespace TeamNotification_Library.Service.Controls
 
         public ComboBox comboRooms;
         private Brush editingColor;
+        private ISerializeJSON jsonSerializer;
 
-        public MessagesEditor()
+        public MessagesEditor(ISerializeJSON jsonSerializer)
         {
             editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
+            this.jsonSerializer = jsonSerializer;//new JSONSerializer();
         }
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, MessagesContainer messagesContainer)
         {
             var currentStamp = Collection.getField(message.data, "stamp");
-            if (!messagesContainer.LastStamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(messagesContainer.LastStamp))
-            {
-                messagesContainer.MessagesList[messagesContainer.LastStamp].MouseLeftButtonDown -= EditMessage;
-                messagesContainer.MessagesList.Remove(messagesContainer.LastStamp);
-            }
-            var containsKey = messagesContainer.MessagesList.ContainsKey(currentStamp);
-            if (!containsKey) messagesContainer.MessagesList.Add(currentStamp,row);
+            var charMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(message.data,"body"));
+            var containsKey = false;
+            if (!charMessageBody.IsCode){
+                if (!messagesContainer.LastStamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(messagesContainer.LastStamp))
+                {
+                    messagesContainer.MessagesList[messagesContainer.LastStamp].MouseLeftButtonDown -= EditMessage;
+                    messagesContainer.MessagesList.Remove(messagesContainer.LastStamp);
+                }
+                containsKey = messagesContainer.MessagesList.ContainsKey(currentStamp);
+                if (!containsKey) messagesContainer.MessagesList.Add(currentStamp,row);
 
-            messagesContainer.LastStamp = currentStamp;
+                messagesContainer.LastStamp = currentStamp;
+            }
             inputMethod = messagesContainer.InputBox;
             comboRooms = messagesContainer.ComboRooms;
             row.Dispatcher.Invoke(new Action(() =>{

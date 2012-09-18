@@ -151,7 +151,9 @@ namespace TeamNotification_Test.Library.Service.Controls
                 //};
                 var chatMessageBody = fake.an<ChatMessageBody>();
                 chatMessageBody.solution = "testSolution";
-                clipboardData.chatMessageBody = chatMessageBody;
+                clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
+                //clipboardData.Stub(x => x.body).Return(fakeBody);
+                //clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
@@ -175,7 +177,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 textBox.Document.Blocks.Add(block1);
                 block2 = new BlockUIContainer(new UIElement());
                 textBox.Document.Blocks.Add(block2);
-
+                roomId = "1";
                 blocks = new List<Block> {block1, block2};
             };
 
@@ -236,13 +238,13 @@ namespace TeamNotification_Test.Library.Service.Controls
                     Container = messageList,
                     MessagesTable = new Table()
                 };
-
+                var user = new User {email = "foo@bar.com", id = 2};
                 scrollviewer = new ScrollViewer();
                 messageData = "foo message data";
-                chatMessage = new ChatMessageModel {  chatMessageBody = new ChatMessageBody { message = "foo message" }};
+                chatMessage = new ChatMessageModel { user_id = "1", chatMessageBody = new ChatMessageBody { message = "foo message", date = "sometime soon", stamp = "23582375"}};
                 jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(messageData)).Return(chatMessage);
-                
-               // messageDataToChatMessageModelMapper.Stub(x => x.MapFrom(deserializedMessage)).Return(chatMessage);
+                userProvider.Stub(x => x.GetUser()).Return(user);
+                // messageDataToChatMessageModelMapper.Stub(x => x.MapFrom(deserializedMessage)).Return(chatMessage);
             };
 
             Because of = () =>
@@ -262,7 +264,7 @@ namespace TeamNotification_Test.Library.Service.Controls
 //        {
 //            Establish context = () =>
 //            {
-//                // Cannot mock DTE
+//                // Cannot mock DTEuserProvider.GetUser()
 //                dte = fake.an<DTE>();
 //                chat = "blah chat";
 //
