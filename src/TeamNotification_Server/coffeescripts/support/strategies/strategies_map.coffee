@@ -4,7 +4,7 @@ mapping =
     'user_collection': 'chat_rooms_by_owner_id_or_member_strategy'
     'user_edit_collection': 'user_by_id_strategy'
     'user_login_collection': 'user_by_login_strategy'
-    'users_collection': 'user_by_username_strategy'
+    'users_collection': 'user_by_email_strategy'
     'user_rooms_collection': 'chat_rooms_by_owner_id_or_member_strategy'
     'room_collection': 'chat_room_by_id_with_user_id_strategy'
     'room_members_collection': 'chat_room_by_id_strategy'
