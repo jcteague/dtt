@@ -131,9 +131,10 @@
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
-    <Compile Include="Service\Async\IHandleLoginEvents.cs" />
+    <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
-    <Compile Include="Service\Async\LoginEvents.cs" />
+    <Compile Include="Service\Async\Models\UserHasLogout.cs" />
+    <Compile Include="Service\Async\UserAccountEvents.cs" />
     <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
     <Compile Include="Service\Async\Models\CodePasteWasClicked.cs" />
     <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
@@ -156,8 +157,10 @@
     <Compile Include="Service\Chat\IHandleChatMessages.cs" />
     <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
     <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
+    <Compile Include="Service\Clipboard\IHandleVisualStudioClipboard.cs" />
     <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
     <Compile Include="Service\Clipboard\SystemClipboardHandler.cs" />
+    <Compile Include="Service\Clipboard\VisualStudioClipboardHandler.cs" />
     <Compile Include="Service\Container.cs" />
     <Compile Include="Service\Content\ContentBuilder.cs" />
     <Compile Include="Service\Content\FieldValueGetter.cs" />
