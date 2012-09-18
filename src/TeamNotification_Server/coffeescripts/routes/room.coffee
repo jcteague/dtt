@@ -6,9 +6,9 @@ config = require('../config')()
 build = routes_service.build
 redis_connector = require('../support/redis/redis_gateway')
 
-redis1 = redis_connector.open()
-redis2 = redis_connector.open()
-redis3 = redis_connector.open()
+redis_subscriber = redis_connector.open()
+redis_publisher = redis_connector.open()
+redis_queryer = redis_connector.open()
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -22,8 +22,8 @@ list_of_listeners = {}
 methods.set_up_message_transmission = (io, room_id, listener_name) ->
     namespace_io = io.of(listener_name)
     room_channel = "chat #{room_id}"
-    redis1.subscribe(room_channel)
-    redis1.on "message", (channel, message) ->
+    redis_subscriber.subscribe(room_channel)
+    redis_subscriber.on "message", (channel, message) ->
         if(channel == "chat #{room_id}")
             namespace_io.send(message)
         
@@ -100,7 +100,7 @@ methods.post_room_message = (req, res, next) ->
         if typeof values.stamp != 'undefined' && values.stamp != ''
             message_stamp = values.stamp
             message_date = values.date
-            redis3.zremrangebyscore(setname, message_stamp, message_stamp)
+            redis_queryer.zremrangebyscore(setname, message_stamp, message_stamp)
         else
             message_date =  new Date()
             message_stamp =  message_date.getTime()
@@ -110,8 +110,8 @@ methods.post_room_message = (req, res, next) ->
         message_body = JSON.stringify(values)
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp} 
         m = JSON.stringify newMessage
-        redis2.publish("chat #{room_id}", m)
-        redis3.zadd(setname,message_stamp, m)
+        redis_publisher.publish("chat #{room_id}", m)
+        redis_queryer.zadd(setname,message_stamp, m)
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
         room_message.save (err,saved_message) ->
             if !err
