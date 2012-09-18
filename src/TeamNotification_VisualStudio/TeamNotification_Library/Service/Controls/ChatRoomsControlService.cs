@@ -55,6 +55,7 @@ namespace TeamNotification_Library.Service.Controls
             //this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
+            this.toolWindowActionGetter = toolWindowActionGetter;
             this.configuration = configuration;
             MessagesRowsList = new Dictionary<string, TableRow>();
         }
@@ -82,7 +83,7 @@ namespace TeamNotification_Library.Service.Controls
                 var txt = activeDocument.Object() as TextDocument;
                 if (txt.IsNull()) return;
                 var selection = txt.Selection;
-				var activeProjects = dte.ActiveSolutionProjects[0];
+                var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
                 var message = systemClipboardHandler.GetText(true);
                 var clipboard = new ChatMessageModel
                 {
@@ -136,14 +137,14 @@ namespace TeamNotification_Library.Service.Controls
             messagesEditor.ResetControls();
         }
 
-        public void ResetContainer(MessagesContainer messagesContainer)
+        public void ResetContainer(ChatUIElements messagesContainer)
         {
             messagesContainer.LastStamp = "";
             messagesContainer.MessagesTable.RowGroups.Clear();
             messagesContainer.MessagesList.Clear();
         }
 
-        public void AddMessages(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
+        public void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
         {
             chatMessagesService.ResetUser();
             var collection = GetMessagesCollection(currentRoomId);
@@ -165,7 +166,7 @@ namespace TeamNotification_Library.Service.Controls
             }
         }
 
-        public void AddReceivedMessage(MessagesContainer messagesContainer, ScrollViewer scrollviewer, string messageData)
+        public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
             //chatMessageModel.chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(chatMessageModel.body);

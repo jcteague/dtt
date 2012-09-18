@@ -5,6 +5,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using Container = TeamNotification_Library.Service.Container;
 
@@ -40,6 +42,39 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 base.Content = Container.GetInstance<LoginControl>();
             }
-        }      
+        }
+
+        public override void OnToolWindowCreated()
+        {
+            base.OnToolWindowCreated();
+            var handler = new ToolWindowEvents((TeamNotificationPackage)this.Package, Container.GetInstance<IHandleToolWindowEvents>());
+            ((IVsWindowFrame)this.Frame).SetProperty((int)__VSFPROPID.VSFPROPID_ViewHelper, handler);
+//
+//            var pdwSFP = new VSSETFRAMEPOS[1];
+//            Guid guid;
+//            int px;
+//            int py;
+//            int pcx;
+//            int pcy;
+//            ((IVsWindowFrame)this.Frame).GetFramePos(pdwSFP, out guid, out px, out py, out pcx, out pcy);
+//
+//            object res0;
+//            ((IVsWindowFrame) this.Frame).GetProperty((int) __VSFPROPID.VSFPROPID_FrameMode, out res0);
+//
+//            object res2;
+//            ((IVsWindowFrame)this.Frame).GetProperty((int)__VSFPROPID.VSFPROPID_SPFrame, out res2);
+//            
+//            object res3;
+//            ((IVsWindowFrame)this.Frame).GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out res3);
+//            
+//
+//            object res;
+//            ((IVsWindowFrame) this.Frame).GetProperty((int) __VSFPROPID.VSFPROPID_WindowState, out res);
+//
+//            object res1;
+//            ((IVsWindowFrame)this.Frame).GetProperty((int)__VSFPROPID.VSFPROPID_IsWindowTabbed, out res1);
+//
+//            int a = 0;
+        }
     }
 }

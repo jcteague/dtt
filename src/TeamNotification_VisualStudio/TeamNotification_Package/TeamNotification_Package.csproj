@@ -31,6 +31,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CopyVsixExtensionFiles>False</CopyVsixExtensionFiles>
+    <CopyVsixExtensionLocation>bin\Release\</CopyVsixExtensionLocation>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -140,7 +142,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundService\ClipboardViewer.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controls\AskingPaste.xaml.cs">
       <DependentUpon>AskingPaste.xaml</DependentUpon>
@@ -161,11 +162,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ServiceProviders\SolutionServiceProvider.cs" />
     <Compile Include="TeamNotificationPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="LoginWindow.cs" />
+    <Compile Include="ToolWindowEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cSharp.xml">
@@ -244,9 +245,7 @@
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\Factories\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

@@ -8,7 +8,7 @@ namespace TeamNotification_Library.Service.Chat
 {
     public interface IHandleChatMessages
     {
-        TableRowGroup AppendMessage(MessagesContainer messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage);
+        TableRowGroup AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage);
         void ResetUser();
     }
 }

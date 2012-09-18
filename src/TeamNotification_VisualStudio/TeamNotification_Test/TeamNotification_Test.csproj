@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
+    <Compile Include="Library\Service\Async\ToolWindowEventsSpecs.cs" />
     <Compile Include="Library\Service\Chat\ChatMessagesServiceSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\CodeMessagesFormatterSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\DateTimeFormatterSpecs.cs" />
@@ -117,6 +118,8 @@
     <Compile Include="Library\Service\LocalSystem\SelectionWrapperSpecs.cs" />
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Library\Service\Mappers\ObjectToFormUrlEncodedContentMapperSpecs.cs" />
+    <Compile Include="Library\Service\ToolWindow\ToolWindowActionGetterSpecs.cs" />
+    <Compile Include="Library\Service\ToolWindow\ToolWindowPositionGetterSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

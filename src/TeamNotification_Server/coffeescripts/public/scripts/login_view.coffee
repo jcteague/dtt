@@ -4,7 +4,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
     
         id: 'login-container'
         
-        initialize :  ->
+        initialize : ->
             @form_view = new FormView(model: @model)
             @links_view = new LinksView(model: @model)
             $.ajaxSetup
@@ -13,9 +13,9 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     password = $('input[name=password]').val()
                     authToken = "Basic " + encodeBase64(email + ":" + password)
                     jqXHR.setRequestHeader('Authorization', authToken )
-            @form_view.on 'response:received', @checkLogin
+            @form_view.on 'response:received', @check_login
         
-        checkLogin: (res) ->
+        check_login: (res) ->
             if res.success is true
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
@@ -25,7 +25,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     window.location.reload(true)
                 setTimeout getIn, 500
 
-        render: () ->
+        render: ->
             @$el.empty()
             @links_view.render().append_to @$el
             @form_view.render().append_to @$el

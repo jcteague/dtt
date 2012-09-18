@@ -37,13 +37,13 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             return opt 
             
         textFieldBuilder: (template) ->
-            return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), $('<input>',{"type":"text","name":template.name, "class":"input-xlarge"})]
+            return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), $('<input>',{"type":"text","name":template.name, "value": template.value, "class":"input-xlarge"})]
 
         textAreaBuilder: (template) ->
             return [$('<textarea>',{"name":template.name,"rows":2,maxlength:template.maxlength,"class":"input-xlarge", placeholder:template.label})]
 
         hiddenFieldBuilder: (template) ->
-            return [$('<input>',{"type":"hidden","name":template.name})]
+            return [$('<input>',{"type":"hidden","name":template.name, "value": template.value})]
 
         passwordFieldBuilder: (template) ->
             return [$('<label>', {"for":template.name}).text(template.label), $('<input>',{"id": template.name, "type":"password","name":template.name, "class":"input-xlarge"})]
@@ -69,7 +69,7 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             r
 
         get_messages_for: (template_type) ->
-            if template_type is 'registration'
+            if template_type in ['registration', 'user_edit']
                 return {
                     first_name:
                         required: 'First name is invalid'

@@ -1,28 +1,28 @@
 ﻿using System.Linq;
 using EnvDTE;
-using Globals = TeamNotification_Library.Configuration.Globals;
+using TeamNotification_Library.Configuration;
 
 namespace TeamNotification_Library.Extensions
 {
     public static class DTEExtensions
     {
-         public static int Getprogramminglanguage(this Document document)
+         public static int GetProgrammingLanguage(this Document document)
          {
              var extension = document.FullName.Split('\\').Last().Split('.').Last().ToLower();
 
              switch (extension)
              {
                  case "cs":
-                     return Globals.programminglanguages.CSharp;
+                     return GlobalConstants.ProgrammingLanguages.CSharp;
 
                  case "vb":
-                     return Globals.programminglanguages.VisualBasic;
+                     return GlobalConstants.ProgrammingLanguages.VisualBasic;
 
                  case "js":
-                     return Globals.programminglanguages.JavaScript;
+                     return GlobalConstants.ProgrammingLanguages.JavaScript;
 
                  default:
-                     return Globals.programminglanguages.Unknown;
+                     return GlobalConstants.ProgrammingLanguages.Unknown;
              }
          }
     }

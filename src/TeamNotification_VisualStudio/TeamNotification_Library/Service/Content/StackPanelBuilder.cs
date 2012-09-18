@@ -31,7 +31,7 @@ namespace TeamNotification_Library.Service.Content
             children.Add(labelFactory.Get(collectionData.label));
 
             UIElement element;
-            if (collectionData.type == Globals.Fields.Password)
+            if (collectionData.type == GlobalConstants.Fields.Password)
                 element = passwordBoxFactory.Get(collectionData.name);
             else
                 element = textBoxFactory.Get(collectionData.name);

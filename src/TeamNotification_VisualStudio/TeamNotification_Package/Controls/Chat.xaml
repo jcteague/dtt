@@ -16,15 +16,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="70" />
+            <RowDefinition Height="5" />
+            <RowDefinition Name="outerGridRowDefinition3" Height="0" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 <!--        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="buttonLogout" VerticalAlignment="Center" Width="60" />-->
-        <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Stretch" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+        <ComboBox Grid.Row="0" Grid.Column="2" Height="auto" HorizontalAlignment="Right" Name="comboRooms" Margin="15,5,5,0" VerticalAlignment="Center" Width="auto" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -33,36 +34,39 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Grid Name="grid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="auto" Margin="15,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <ScrollViewer Height="auto" HorizontalAlignment="Stretch" Name="scrollViewer1" VerticalAlignment="Stretch" Width="auto" VerticalScrollBarVisibility="Auto">
-                <Border Name="messageContainerBorder" BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
-                    <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
-                        <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
-                            <Table Name="messagesTable">
-                                <Table.Columns>
-                                    <TableColumn Width="75"/>
-                                    <TableColumn Width="Auto" />
-                                    <TableColumn Width="70" />
-                                </Table.Columns>
-                            </Table>
-                        </FlowDocument>
-                    </RichTextBox>
-                </Border>
+        <Border Name="messageContainerBorder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0">
+            <ScrollViewer Name="messageScroll" Height="auto"  Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
+                    <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
+                        <Table Name="messagesTable">
+                            <Table.Columns>
+                                <TableColumn Width="75"/>
+                                <TableColumn Width="Auto" />
+                                <TableColumn Width="70" />
+                            </Table.Columns>
+                        </Table>
+                    </FlowDocument>
+                </RichTextBox>
             </ScrollViewer>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+        </Border>
+        <GridSplitter Name="messageTextBoxGridSplitter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeBehavior="PreviousAndNext" />
+        <Grid Name="messageTextBoxGrid" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Height="auto" Margin="5,0,5,2">
+            <Grid.RowDefinitions>
+                <RowDefinition Name="messageGridRowDefinition1" Height="*" />
+                <RowDefinition Name="messageGridRowDefinition2" Height="34" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Name="messageGridColumnDefinition1" Width="*" />
+                <ColumnDefinition Name="messageGridColumnDefinition2" Width="0" />
             </Grid.ColumnDefinitions>
-            <RichTextBox Width="auto" HorizontalAlignment="Stretch" Height="65" Name="messageTextBox" VerticalAlignment="Bottom" GotFocus="ClearStatusBar" Margin="15,0,0,5" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
+            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0"/>
                     </Style>
                 </RichTextBox.Resources>
             </RichTextBox>
-            <Button Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,18" Grid.Column="1" />
+            <Button Grid.Row="1" Grid.Column="0"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
         </Grid>
     </Grid>
 </UserControl>

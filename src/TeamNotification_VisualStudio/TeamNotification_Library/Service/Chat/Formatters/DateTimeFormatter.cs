@@ -31,7 +31,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
                 return "{0} hours ago".FormatUsing(n.Floor().ToString());
             }
 
-            return dateTime.ToString("mm/dd/yyyy");
+            return dateTime.ToShortDateString();
         }
 
         public Paragraph GetFormattedElement(ChatMessageModel chatMessage)

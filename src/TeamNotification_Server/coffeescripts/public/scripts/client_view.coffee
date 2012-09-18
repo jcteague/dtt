@@ -27,7 +27,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
                 if view instanceof FormView
                     view.on 'messages:display', @display_messages, @
                     view.on 'all', @propagate_event, @
-                if view instanceof QueryView 
+                if view.constructor.name in ['QueryView', 'UserEditView']
                     view.on 'messages:display', @display_messages, @
 
         propagate_event: (event, values) ->

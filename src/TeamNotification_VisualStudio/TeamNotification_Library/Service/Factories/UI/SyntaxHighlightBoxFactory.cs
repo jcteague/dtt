@@ -13,12 +13,13 @@ namespace TeamNotification_Library.Service.Factories.UI
             this.syntaxHighlighterProvider = syntaxHighlighterProvider;
         }
 
-        public SyntaxHighlightBox Get(string message, int programminglanguage)
+        public SyntaxHighlightBox Get(string message, int programmingLanguage)
         {
             return new SyntaxHighlightBox
                 {
                     Text = message,
-                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programminglanguage)
+                    CurrentHighlighter = syntaxHighlighterProvider.GetFor(programmingLanguage),
+                    BorderThickness = new Thickness(0)
                 };
         }
     }
