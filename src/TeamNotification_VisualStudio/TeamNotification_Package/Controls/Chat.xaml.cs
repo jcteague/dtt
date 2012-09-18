@@ -93,30 +93,16 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
 
-
-//            if (viewerHandle != IntPtr.Zero)
-//            {
-//                ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//            }
-
-//            Unloaded += (s, arg) =>
-//                            {
-//                                if (viewerHandle != IntPtr.Zero)
-//                                {
-//                                    ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//                                }
-//                            };
-            
             DataObject.RemovePastingHandler(messageTextBox, OnPaste);
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
-            codePasteEvents.CodePasteWasClicked -= PasteCode;
+            codePasteEvents.ClearAll();
             codePasteEvents.CodePasteWasClicked += PasteCode;
             
-            toolWindowEvents.ToolWindowWasDocked -= OnToolWindowWasDocked;
+            toolWindowEvents.ClearAll();
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
-            
-            userAccountEvents.UserHasLogout -= OnUserLogout;
+
+            userAccountEvents.ClearAll();
             userAccountEvents.UserHasLogout += OnUserLogout;
         }
 
@@ -141,68 +127,9 @@ namespace AvenidaSoftware.TeamNotification_Package
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
             clipboardHandler.SetUpFor(hwndSource);
-
-//            if (hwndSource.IsNotNull())
-//            {
-//                installedHandle = hwndSource.Handle;
-//                viewerHandle = SetClipboardViewer(installedHandle);
-//                hwndSource.AddHook(hwndSourceHook);
-//            }
-
-//            Unloaded += (s, arg) =>
-//            {
-//                if (viewerHandle != IntPtr.Zero)
-//                {
-//                    hwndSource.RemoveHook(hwndSourceHook);
-//                    ChangeClipboardChain(this.installedHandle, this.viewerHandle);
-//                }
-//            };
         }
-
-
-
-//        IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-//        {
-//            switch (msg)
-//            {
-//                case WM_CHANGECBCHAIN:
-//                    viewerHandle = lParam;
-//                    if (viewerHandle != IntPtr.Zero)
-//                    {
-//                        SendMessage(viewerHandle, msg, wParam, lParam);
-//                    }
-//
-//                    break;
-//
-//                case WM_DRAWCLIPBOARD:
-//                    var dte = (DTE)Package.GetGlobalService(typeof(DTE));
-//                    chatRoomControlService.UpdateClipboard(this, dte);
-//
-//                    if (viewerHandle != IntPtr.Zero)
-//                    {
-//                        SendMessage(viewerHandle, msg, wParam, lParam);
-//                    }
-//
-//                    break;
-//            }
-//            return IntPtr.Zero;
-//        }
-
-//        IntPtr viewerHandle = IntPtr.Zero;
-//        IntPtr installedHandle = IntPtr.Zero;
-
-//        const int WM_DRAWCLIPBOARD = 0x308;
-//        const int WM_CHANGECBCHAIN = 0x30D;
-        
-//        [DllImport("user32.dll")]
-//        private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
-//        [DllImport("user32.dll")]
-//        private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
-//        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-//        private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
         
         #endregion
 

@@ -16,5 +16,11 @@ namespace TeamNotification_Library.Service.Async
         {
             Handle(source, ToolWindowWasDocked, eventArgs);
         }
+
+        public void ClearAll()
+        {
+            ToolWindowWasMoved = null;
+            ToolWindowWasDocked = null;
+        }
     }
 }
