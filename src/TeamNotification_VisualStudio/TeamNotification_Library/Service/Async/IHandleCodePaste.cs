@@ -7,6 +7,5 @@ namespace TeamNotification_Library.Service.Async
     {
         event CustomEventHandler<EventArgs> CodePasteWasClicked;
         void OnCodePasteClick(object source, EventArgs eventArgs);
-        void ClearAll();
     }
 }

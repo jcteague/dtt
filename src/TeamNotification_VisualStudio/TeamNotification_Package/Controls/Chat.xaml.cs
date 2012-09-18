@@ -96,13 +96,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             DataObject.RemovePastingHandler(messageTextBox, OnPaste);
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
-            codePasteEvents.ClearAll();
             codePasteEvents.CodePasteWasClicked += PasteCode;
-            
-            toolWindowEvents.ClearAll();
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
-
-            userAccountEvents.ClearAll();
             userAccountEvents.UserHasLogout += OnUserLogout;
         }
 

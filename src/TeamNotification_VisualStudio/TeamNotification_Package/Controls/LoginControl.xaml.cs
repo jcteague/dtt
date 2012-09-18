@@ -40,7 +40,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                 templateContainer.Children.Add(panel);
             }
 
-            userAccountEvents.ClearAll();
             this.userAccountEvents.UserHasLogged += OnUserHasLogged;
             this.userAccountEvents.UserCouldNotLogIn += OnUserCouldNotLogin;
         }
