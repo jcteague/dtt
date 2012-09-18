@@ -65,11 +65,15 @@ namespace TeamNotification_Library.Service.Controls
             if (mouseButtonEventArgs.ClickCount != 2) return;
 
             var row = (TableRowGroup)sender;
+            if (currentRowGroup != null) ResetControls();
+
             editingMessage = row.Resources["originalMessage"].Cast<Collection.Messages>();
             
             if (editingMessage == null) return;
 
             var userId = Collection.getField(editingMessage.data, "user_id");
+
+
             editingMessageModel = new ChatMessageModel
             {
                 user_id = userId,
@@ -79,7 +83,6 @@ namespace TeamNotification_Library.Service.Controls
 
             var chatMessageBody = editingMessageModel.chatMessageBody;
 
-            if (currentRowGroup != null) ResetControls();
             if (chatMessageBody.IsCode)
             {
                 chatMessageBody.stamp = "";

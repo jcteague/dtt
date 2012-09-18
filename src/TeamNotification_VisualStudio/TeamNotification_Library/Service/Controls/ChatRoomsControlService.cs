@@ -158,14 +158,14 @@ namespace TeamNotification_Library.Service.Controls
                 var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
                 if (idx == -1) continue;
                 
-                if (Collection.getField(message.data, "user_id").ParseToInteger() != userProvider.GetUser().id) continue; 
+                //if (Collection.getField(message.data, "user_id").ParseToInteger() != userProvider.GetUser().id) continue; 
                 
-                var messageBody = Collection.getField(message.data, "body"); // row.Rows[0].Cells[1].GetText();
+                var messageBody = Collection.getField(message.data, "body");
                 var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
                 
-                if (!chatMessageBody.IsCode) lastStamp = Collection.getField(message.data, "stamp");
-                
-                messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
+                if (chatMessageBody.IsCode)
+                    //lastStamp = Collection.getField(message.data, "stamp");
+                    messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
             }
         }
 
@@ -181,10 +181,11 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
-            messagesContainer.LastStamp = lastStamp;
-            messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
-            if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
+            //if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
+            if(chatMessageModel.chatMessageBody.IsCode)
+            //messagesContainer.LastStamp = lastStamp;
+                messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
+            //if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
         }
 
 
