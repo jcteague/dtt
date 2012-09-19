@@ -38,7 +38,7 @@ describe 'Users Collection', ->
 
         it 'should return the users collection users in the resulting json', (done) ->
             data = result['users']
-            expect(data[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].email}]}
-            expect(data[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].email}]}
+            expect(data[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "email", "value": users[0].email}]}
+            expect(data[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "email", "value": users[1].email}]}
             done()
 

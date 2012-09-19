@@ -1,28 +1,33 @@
 Q = require('q')
 Repository = require('./repository')
 CollectionActionResolver = require('./collection_action_resolver')
+EmailSender = require('./email/email_sender')
 
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
 
-add_user_to_chat_room = (user_id, room_id) ->
+add_user_to_chat_room = (email, room_id) ->
     # TODO: How can we make this instances live outside and created within require?
     user_repository = new Repository('User')
     chat_room_repository = new Repository('ChatRoom')
-
-    user_id = parseInt(user_id, 10)
+    chat_room_invitation_repository = new Repository('ChatRoomInvitation')
     defer = Q.defer()
-    user_repository.get_by_id(user_id).then (user) ->
+    user_repository.find({email:email}).then (user) ->
         if user?
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
-                if (member for member in chat_room.users when member.id is user_id).length is 0 and chat_room.owner_id isnt user_id
+                if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
                         defer.resolve({success: true, messages: ["user added"]})
                     )
                 else
                     defer.resolve({success: false, messages: ["user is already in the room"]})
         else
-            defer.resolve({success: false, messages: ["user does not exist"]})
+            
+            #TODO:This is an implementation of what has to be done dude, do it right
+            #EmailSender.send { from:"eespinal@intellisys.com.do", to:"etoribio@intellisys.com.do", subject:"Test message", html:"<b>This is bold</b>"}
+            
+            
+            defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
 
     defer.promise
 

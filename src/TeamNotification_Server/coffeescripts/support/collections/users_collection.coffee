@@ -9,7 +9,7 @@ class UsersCollection
                 "href": "/user/#{user.id}"
                 "data": [
                     {"name": "id", "value": user.id}
-                    {"name": "name", "value": user.email}
+                    {"name": "email", "value": user.email}
                 ]
             }
 
