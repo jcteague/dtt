@@ -98,8 +98,14 @@ namespace AvenidaSoftware.TeamNotification_Package
             DataObject.RemovePastingHandler(messageTextBox, OnPaste);
             DataObject.AddPastingHandler(messageTextBox, OnPaste);
             lastStamp = "";
+
+            codePasteEvents.Clear();
             codePasteEvents.CodePasteWasClicked += PasteCode;
+
+            toolWindowEvents.Clear();
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+
+            userAccountEvents.Clear();
             userAccountEvents.UserHasLogout += OnUserLogout;
         }
 

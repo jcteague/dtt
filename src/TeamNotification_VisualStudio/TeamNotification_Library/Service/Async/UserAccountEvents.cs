@@ -22,5 +22,12 @@ namespace TeamNotification_Library.Service.Async
         {
             Handle(source, UserHasLogout);
         }
+
+        public void Clear()
+        {
+            UserHasLogged = null;
+            UserCouldNotLogIn = null;
+            UserHasLogout = null;
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace TeamNotification_Library.Service.Async
         void OnLoginSuccess(object source, UserHasLogged eventArgs);
         void OnLoginFail(object source);
         void OnLogout(object source, UserHasLogout eventArgs);
+        void Clear();
     }
 }
