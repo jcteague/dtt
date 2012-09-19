@@ -11,5 +11,10 @@ namespace TeamNotification_Library.Service.Async
         {
             Handle(source, CodePasteWasClicked, eventArgs);
         }
+
+        public void Clear()
+        {
+            CodePasteWasClicked = null;
+        }
     }
 }

@@ -9,6 +9,6 @@ namespace TeamNotification_Library.Service.Async
 
         void OnMove(object source, ToolWindowWasMoved eventArgs);
         void OnDockableChange(object source, ToolWindowWasDocked eventArgs);
-        void ClearAll();
+        void Clear();
     }
 }

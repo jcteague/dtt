@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="Site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://dtt.local:3000/</Value>
+      <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com/</Value>
     </Setting>
     <Setting Name="Redis" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">dtt.local:6379</Value>
+      <Value Profile="(Default)">ec2-107-21-171-44.compute-1.amazonaws.com:6379</Value>
     </Setting>
     <Setting Name="siteb" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://ec2-107-21-171-44.compute-1.amazonaws.com/</Value>
