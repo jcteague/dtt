@@ -1,7 +1,8 @@
 Q = require('q')
 Repository = require('./repository')
 CollectionActionResolver = require('./collection_action_resolver')
-EmailSender = require('./email/email_sender')
+email_sender = require('./email/email_sender')
+email_template = require('./email/templates/email_template')
 
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
@@ -12,8 +13,9 @@ add_user_to_chat_room = (email, room_id) ->
     chat_room_repository = new Repository('ChatRoom')
     chat_room_invitation_repository = new Repository('ChatRoomInvitation')
     defer = Q.defer()
-    user_repository.find({email:email}).then (user) ->
-        if user?
+    user_repository.find(email:email).then (users) ->
+        if users?
+            user = users[0]
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
@@ -22,12 +24,10 @@ add_user_to_chat_room = (email, room_id) ->
                 else
                     defer.resolve({success: false, messages: ["user is already in the room"]})
         else
-            
-            #TODO:This is an implementation of what has to be done dude, do it right
-            #EmailSender.send { from:"eespinal@intellisys.com.do", to:"etoribio@intellisys.com.do", subject:"Test message", html:"<b>This is bold</b>"}
-            
-            
-            defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
+            chat_room_repository.get_by_id(room_id).then (chat_room) ->
+                template = email_template.for.invitation.using email, chat_room
+                email_sender.send template
+                defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
 
     defer.promise
 
