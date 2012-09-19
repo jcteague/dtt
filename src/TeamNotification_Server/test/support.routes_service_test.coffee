@@ -157,7 +157,7 @@ describe 'Routes Service', ->
                 users_repository.find.withArgs(email: inexistent_email).returns(user_promise)
 
                 invitation_email_template = 'blah invitation email'
-                email_template_mock.for.invitation.using.withArgs(inexistent_email, chat_room).returns(invitation_email_template)
+                email_template_mock.for.invitation.using.withArgs(email: inexistent_email, chat_room: chat_room).returns(invitation_email_template)
 
                 result = sut.add_user_to_chat_room(inexistent_email, room_id)
                 done()

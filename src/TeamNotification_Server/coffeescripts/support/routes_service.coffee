@@ -25,7 +25,9 @@ add_user_to_chat_room = (email, room_id) ->
                     defer.resolve({success: false, messages: ["user is already in the room"]})
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
-                template = email_template.for.invitation.using email, chat_room
+                template = email_template.for.invitation.using
+                    email: email
+                    chat_room: chat_room
                 email_sender.send template
                 defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
 
