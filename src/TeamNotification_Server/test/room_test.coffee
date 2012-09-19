@@ -398,6 +398,7 @@ describe 'Room', ->
         describe 'post_room_user', ->
 
             user_id = null
+            user_email = 'foo@zap.com'
             room_id = null
             req = null
             res = null
@@ -406,9 +407,11 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 user_id = 1
+                email = 
                 req =
                     body:
                         id: user_id
+                        email: user_email
                     param: sinon.stub()
                 res =
                     send: sinon.spy()
@@ -425,7 +428,7 @@ describe 'Room', ->
                 done()
 
             it 'should call the add user to chat room', (done) ->
-                sinon.assert.calledWith(routes_service_mock.add_user_to_chat_room, user_id, room_id)
+                sinon.assert.calledWith(routes_service_mock.add_user_to_chat_room, user_email, room_id)
                 done()
 
             it 'should return the user exists response', (done) ->

@@ -26,7 +26,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
                 id = _.find data, (obj) ->
                     obj.name is 'id'
                 name = _.find data, (obj) ->
-                    obj.name is 'name'
+                    obj.name is 'email'
 
                 """<span class="name">#{name.value}</span><span class="hidden">#{id.value}</span>"""
 

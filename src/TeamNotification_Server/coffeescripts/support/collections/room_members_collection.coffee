@@ -19,7 +19,7 @@ class RoomMembersCollection
           "prompt" : "Enter search string"
           "type" : "autocomplete"
           "submit": self
-          "data" :[{"name" : "name", "value" : ""}]
+          "data" :[{"name" : "email", "value" : ""}]
         }]
         return {
             href: self

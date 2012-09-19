@@ -107,5 +107,5 @@ describe 'Add Account To Chat Room', ->
                         then(done, done)
 
                 it 'should display the user does not exist message', (done) ->
-                    expect(browser.html('#server-response-container p')).to.equal "<p>user does not exist</p>"
+                    expect(browser.html('#server-response-container p')).to.equal "<p>An email invitation has been sent to blah</p>"
                     done()
