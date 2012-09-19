@@ -28,7 +28,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             Establish context = () =>
             {
                 dateTime = DateTime.Now;
-                chatMessage = new ChatMessageModel {DateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 11, 01, 0)};
+                chatMessage = new ChatMessageModel { chatMessageBody = new ChatMessageBody { date = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 11, 01, 0).ToString() } };
             };
 
             Because of = () =>
@@ -47,14 +47,14 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             Establish context = () =>
             {
                 dateTime = DateTime.Now;
-                chatMessage = new ChatMessageModel { DateTime = new DateTime(dateTime.Year - 10, dateTime.Month, dateTime.Day, 11, 01, 0) };
+                chatMessage = new ChatMessageModel { chatMessageBody = new ChatMessageBody { date = new DateTime(dateTime.Year - 10, dateTime.Month, dateTime.Day, 11, 01, 0).ToString() } };
             };
 
             Because of = () =>
                 result = sut.GetFormattedElement(chatMessage);
 
             It should_return_a_string_with_the_time = () =>
-                result.GetText().ShouldEqual(chatMessage.DateTime.ToShortDateString());
+                result.GetText().ShouldEqual(DateTime.Parse(chatMessage.date).ToShortDateString());
 
             private static Paragraph result;
             private static ChatMessageModel chatMessage;

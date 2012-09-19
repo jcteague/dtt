@@ -7,8 +7,6 @@ namespace TeamNotification_Library.Service.Clipboard
 {
     public class ClipboardDataStorageService : IStoreClipboardData
     {
-        public bool IsCode { get; private set; }
-        
         private readonly ISerializeJSON serializer;
         private IHandleSystemClipboard systemClipboardHandler;
 
@@ -17,19 +15,18 @@ namespace TeamNotification_Library.Service.Clipboard
             this.serializer = serializer;
             this.systemClipboardHandler = systemClipboardHandler;
         }
-        
-        public void Store<T>(T clipboardArgs) where T : ChatMessageData
+
+        public void Store<T>(T clipboardArgs) where T : ChatMessageModel
         {
-            IsCode = typeof (T) == typeof(CodeClipboardData);
             var data = serializer.Serialize(clipboardArgs);
             systemClipboardHandler.SetText(data);
         }
 
-        public T Get<T>() where T : ChatMessageData, new()
+        public T Get<T>() where T : ChatMessageModel, new()
         {
             var text = systemClipboardHandler.GetText();
             if (text.IsNullOrWhiteSpace())
-                return new T { message = text };
+                return new T { body = serializer.Serialize(new ChatMessageBody { message = text } )};
 
             T value;
             try
@@ -38,7 +35,7 @@ namespace TeamNotification_Library.Service.Clipboard
             }
             catch (Exception)
             {
-                value = new T {message = text};
+                value = new T { chatMessageBody = new ChatMessageBody { message = text } };
             }
             return value;
         }

@@ -60,25 +60,27 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             name = get_field 'user', message.data
             body = get_field 'body', message.data
             date = get_field 'datetime', message.data
-            r = $(@read_message_data({user_id: user_id, name:name, date:date, body:body}))
+            stamp = get_field 'stamp', message.data
+            message_paragraph = @read_message_data({user_id: user_id, name:name, date:date, body:body, stamp:stamp})
+            r = $(message_paragraph)
             r.removeClass('new_message')
+            r.children().removeClass('new_message')
             r
             
         append_to: (parent) ->
             @$el.appendTo parent
 
         add_message: (message) =>
-            fade_in_message = () ->
-                if @added_code is true
-                    @added_code = false
-                    prettyPrint()
-                    @$('.prettyprint').removeClass('prettyprint')
             m = JSON.parse message
             messages = @model.get('messages')
-            messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date}] }
+            messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
             @model.set({messages: messages}, {silent: true})
-            @$el.append @read_message_data(m)
-            @$el.scrollTop(@$el.prop('scrollHeight'))
+            
+            if $("##{m.stamp}").length  == 1
+                @edit_message $("#message-#{m.stamp}"), m
+            else
+                @$el.append @read_message_data(m)
+                @$el.scrollTop(@$el.prop('scrollHeight'))
             me = @
             $('.new_message').animate {backgroundColor: '#F07746'}, 300, () ->
                 $('.new_message').removeClass('new_message')
@@ -87,6 +89,17 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                     prettyPrint()
                     me.$('.prettyprint').removeClass('prettyprint')
 
+        edit_message: (p, message) ->
+            parsedBody = JSON.parse(message.body)
+            p.attr "class", "new_message"
+            console.log $(message)
+            p[0].innerHTML = parsedBody.message
+            #if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
+            #    @added_code = true
+            #    p[0].innerHTML = "<pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
+            #else
+            #    p[0].innerHTML = "#{parsedBody.message}"
+                
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
@@ -99,6 +112,9 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                return ("<p>#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre></p>")
+                p = document.createElement("p")
+                $(p).attr 'id',"#{message.stamp}"
+                p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
+                return p
             else
-                return ("<p class='new_message'>#{$name_and_date.html()} #{parsedBody.message}</p>")
+                return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")

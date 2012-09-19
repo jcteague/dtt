@@ -1,22 +1,28 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using EnvDTE;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
+using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
 
 namespace TeamNotification_Library.Service.Controls
 {
+    // TODO: This class is doing too much things. Must separate concerns
     public class ChatRoomsControlService : IServiceChatRoomsControl
     {
         private IProvideUser userProvider;
@@ -24,31 +30,30 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
         private ISerializeJSON jsonSerializer;
-        private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
         private IGetToolWindowAction toolWindowActionGetter;
         private IHandleChatMessages chatMessagesService;
+        private readonly IStoreDataLocally localStorageService;
+        private readonly IHandleUserAccountEvents userAccountEvents;
         
-        readonly IStoreGlobalState applicationGlobalState;
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
-
         private readonly ISendChatMessages messageSender;
-        private IHandleSystemClipboard systemClipboardHandler;
+        private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, IStoreGlobalState applicationGlobalState, IHandleSystemClipboard systemClipboardHandler, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
             this.clipboardStorage = clipboardStorage;
             this.messageSender = messageSender;
-            this.applicationGlobalState = applicationGlobalState;
-            this.systemClipboardHandler = systemClipboardHandler;
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
-            this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
+            this.messagesEditor = messagesEditor;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
+            this.localStorageService = localStorageService;
+            this.userAccountEvents = userAccountEvents;
             this.configuration = configuration;
         }
 
@@ -67,43 +72,17 @@ namespace TeamNotification_Library.Service.Controls
             return c;
         }
 
-        public void UpdateClipboard(object source, DTE dte)
-        {
-            if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
-            {
-                var activeDocument = dte.ActiveDocument;
-                var txt = activeDocument.Object() as TextDocument;
-                if (txt.IsNull()) return;
-                var selection = txt.Selection;
-                var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
-                var message = systemClipboardHandler.GetText(true);
-                var clipboard = new CodeClipboardData
-                {
-					project = activeProjects.UniqueName,
-                    solution = dte.Solution.FullName,
-                    document = activeDocument.FullName,
-                    message = message,
-                    line = selection.CurrentLine,
-                    column = selection.CurrentColumn,
-                    programmingLanguage = activeDocument.GetProgrammingLanguage()
-                };
-
-                clipboardStorage.Store(clipboard);
-            }
-            else
-            {
-                var clipboard = new PlainClipboardData {message = systemClipboardHandler.GetText(true)};
-                clipboardStorage.Store(clipboard);
-            }
-        }
-
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            if (!clipboardStorage.IsCode) return;
-            var block = syntaxBlockUIContainerFactory.Get(clipboardStorage.Get<CodeClipboardData>());
-            textBox.Document.Blocks.Add(block);
-            textBox.CaretPosition = textBox.Document.ContentEnd;
-            dataObjectPastingEventArgs.CancelCommand();
+            var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+
+            if (chatMessageModel.chatMessageBody.IsCode)
+            {
+                var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
+                textBox.Document.Blocks.Add(block);
+                textBox.CaretPosition = textBox.Document.ContentEnd;
+                dataObjectPastingEventArgs.CancelCommand();
+            }
         }
 
         public void HandleDock(ChatUIElements chatUIElements)
@@ -111,15 +90,34 @@ namespace TeamNotification_Library.Service.Controls
             toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
         }
 
+        public void LogoutUser(object sender)
+        {
+            localStorageService.DeleteUser();
+            userAccountEvents.OnLogout(sender, new UserHasLogout());
+        }
+
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            textBox.Document.Blocks.Clear();
+            messagesEditor.inputMethod = textBox;
+            if (messagesEditor.editingMessage != null)
+            {
+                var text = messagesEditor.inputMethod.Document.GetDocumentText();
+                messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
+                messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
+            }
+            else
+            {
+                messageSender.SendMessages(textBox.Document.Blocks, roomId);
+            }
+            messagesEditor.ResetControls();
+
         }
 
         public void ResetContainer(ChatUIElements messagesContainer)
         {
+            messagesContainer.LastStamp = "";
             messagesContainer.MessagesTable.RowGroups.Clear();
+            messagesContainer.MessagesList.Clear();
         }
 
         public void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId)
@@ -128,14 +126,47 @@ namespace TeamNotification_Library.Service.Controls
             var collection = GetMessagesCollection(currentRoomId);
             foreach (var message in collection.messages)
             {
-                chatMessagesService.AppendMessage(messagesContainer, scrollviewer, collectionMessagesToChatMessageModelMapper.MapFrom(message));
+                var chatMessage = collectionMessagesToChatMessageModelMapper.MapFrom(message);
+                chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessage);
+                var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
+                if (idx == -1) continue;
+                
+                var messageBody = Collection.getField(message.data, "body");
+                var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
+                
+                if (chatMessageBody.IsCode)
+                    messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
             }
         }
-        
+
         public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
-            var m = jsonSerializer.Deserialize<MessageData>(messageData);
-            chatMessagesService.AppendMessage(messagesContainer, scrollviewer, messageDataToChatMessageModelMapper.MapFrom(m));
+            var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
+
+            var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
+            var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
+
+            //if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
+            if(chatMessageModel.chatMessageBody.IsCode)
+            //messagesContainer.LastStamp = lastStamp;
+                messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
+            //if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
+        }
+
+
+        private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)
+        {
+            return new Collection.Messages
+            {
+                data = new List<CollectionData>
+                {
+                    new CollectionData {name = "body", value = jsonSerializer.Serialize(chatMessageModel.chatMessageBody)},
+                    new CollectionData {name = "user_id", value = chatMessageModel.user_id},
+                    new CollectionData {name = "user", value = chatMessageModel.username},
+                    new CollectionData {name = "stamp", value = chatMessageModel.chatMessageBody.stamp},
+                    new CollectionData {name = "datetime", value = chatMessageModel.date},
+                }
+            };
         }
     }
 }

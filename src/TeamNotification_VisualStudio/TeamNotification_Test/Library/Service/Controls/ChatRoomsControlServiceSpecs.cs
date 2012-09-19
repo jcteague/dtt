@@ -14,6 +14,7 @@ using Machine.Specifications;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
@@ -46,12 +47,13 @@ namespace TeamNotification_Test.Library.Service.Controls
                 clipboardDataStorageService = depends.on<IStoreClipboardData>();
                 chatMessageSender = depends.on<ISendChatMessages>();
                 jsonSerializer = depends.on<ISerializeJSON>();
-                chatMessageDataFactory = depends.on<ICreateChatMessageData>();
+                ChatMessageModelFactory = depends.on<ICreateChatMessageModel>();
                 syntaxBlockUIFactory = depends.on<ICreateSyntaxBlockUIInstances>();
                 chatMessagesService = depends.on<IHandleChatMessages>();
                 collectionMessagesToChatMessageModelMapper = depends.on<IMapEntities<Collection.Messages, ChatMessageModel>>();
-                messageDataToChatMessageModelMapper = depends.on<IMapEntities<MessageData, ChatMessageModel>>();
                 toolWindowActionGetter = depends.on<IGetToolWindowAction>();
+                localStorageService = depends.on<IStoreDataLocally>();
+                userAccountEvents = depends.on<IHandleUserAccountEvents>();
             };
 
             protected static IProvideUser userProvider;
@@ -62,13 +64,13 @@ namespace TeamNotification_Test.Library.Service.Controls
             protected static IStoreClipboardData clipboardDataStorageService;
             protected static ISendChatMessages chatMessageSender;
             protected static ISerializeJSON jsonSerializer;
-            protected static ICreateChatMessageData chatMessageDataFactory;
+            protected static ICreateChatMessageModel ChatMessageModelFactory;
             protected static ICreateSyntaxBlockUIInstances syntaxBlockUIFactory;
             protected static IHandleChatMessages chatMessagesService;
             protected static IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
-            protected static IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
             protected static IGetToolWindowAction toolWindowActionGetter;
-
+            protected static IStoreDataLocally localStorageService;
+            protected static IHandleUserAccountEvents userAccountEvents;
         }
 
         public abstract class when_getting_a_collection_context : Concern
@@ -144,16 +146,11 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                clipboardDataStorageService.Stub(x => x.IsCode).Return(true);
-
-                var clipboardData = new CodeClipboardData
-                {
-                    message = "blah message",
-                    solution = "blah solution",
-                    document = "blah document"
-                };
-                clipboardDataStorageService.Stub(x => x.Get<CodeClipboardData>()).Return(clipboardData);
-                
+                var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
+                var chatMessageBody = fake.an<ChatMessageBody>();
+                chatMessageBody.solution = "testSolution";
+                clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
+                clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
             };
@@ -176,7 +173,7 @@ namespace TeamNotification_Test.Library.Service.Controls
                 textBox.Document.Blocks.Add(block1);
                 block2 = new BlockUIContainer(new UIElement());
                 textBox.Document.Blocks.Add(block2);
-
+                roomId = "1";
                 blocks = new List<Block> {block1, block2};
             };
 
@@ -205,10 +202,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                                         };
                 scrollViewer = new ScrollViewer();
 
-                chatMessage1 = new ChatMessageModel {Message = "foo"};
+                chatMessage1 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "foo" } };
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage1)).Return(chatMessage1);
                 
-                chatMessage2 = new ChatMessageModel {Message = "bar"};
+                chatMessage2 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "bar"}};
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage2)).Return(chatMessage2);
             };
 
@@ -237,15 +234,12 @@ namespace TeamNotification_Test.Library.Service.Controls
                     Container = messageList,
                     MessagesTable = new Table()
                 };
-
+                var user = new User {email = "foo@bar.com", id = 2};
                 scrollviewer = new ScrollViewer();
                 messageData = "foo message data";
-
-                var deserializedMessage = new MessageData {name = "foo name"};
-                jsonSerializer.Stub(x => x.Deserialize<MessageData>(messageData)).Return(deserializedMessage);
-                
-                chatMessage = new ChatMessageModel {Message = "foo message"};
-                messageDataToChatMessageModelMapper.Stub(x => x.MapFrom(deserializedMessage)).Return(chatMessage);
+                chatMessage = new ChatMessageModel { user_id = "1", chatMessageBody = new ChatMessageBody { message = "foo message", date = "sometime soon", stamp = "23582375"}};
+                jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(messageData)).Return(chatMessage);
+                userProvider.Stub(x => x.GetUser()).Return(user);
             };
 
             Because of = () =>
@@ -265,13 +259,6 @@ namespace TeamNotification_Test.Library.Service.Controls
             Establish context = () =>
             {
                 chatUIElements = new ChatUIElements();
-                toolWindowWasDockedArgs = new ToolWindowWasDocked
-                                              {
-                                                  x = 9,
-                                                  y = 10,
-                                                  w = 11,
-                                                  h = 12
-                                              };
                 action = fake.an<IActOnChatElements>();
                 toolWindowActionGetter.Stub(x => x.Get()).Return(action);
             };
@@ -283,8 +270,24 @@ namespace TeamNotification_Test.Library.Service.Controls
                 action.AssertWasCalled(x => x.ExecuteOn(chatUIElements));
 
             private static ChatUIElements chatUIElements;
-            private static ToolWindowWasDocked toolWindowWasDockedArgs;
             private static IActOnChatElements action;
+        }
+
+        public class when_logging_out_the_user : Concern
+        {
+            Establish context = () =>
+                sender = "blah";
+
+            Because of = () =>
+                sut.LogoutUser(sender);
+
+            It should_delete_the_local_storage_of_the_user_resource = () =>
+                localStorageService.AssertWasCalled(x => x.DeleteUser());
+
+            It should_raise_the_user_has_logout_event = () =>
+                userAccountEvents.AssertWasCalled(x => x.OnLogout(Arg<object>.Is.Equal(sender), Arg<UserHasLogout>.Is.Anything));
+
+            private static object sender;
         }
 
         // TODO: Find a way to mock DTE to test implementation

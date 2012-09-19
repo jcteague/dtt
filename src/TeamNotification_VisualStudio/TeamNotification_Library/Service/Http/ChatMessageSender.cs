@@ -28,6 +28,14 @@ namespace TeamNotification_Library.Service.Http
             this.objectToFormMapper = objectToFormMapper;
         }
 
+        public void SendMessage(ChatMessageBody editedMessage, string roomId)
+        {
+            var messages = new List<Tuple<string, HttpContent>> {GetMessage(editedMessage, roomId)};
+
+            AppendPlainMessage(messages, "", roomId);
+            client.Post(messages);
+        }
+
         public void SendMessages(IEnumerable<Block> blocks, string roomId)
         {
             var plainMessage = "";
@@ -39,17 +47,18 @@ namespace TeamNotification_Library.Service.Http
                     AppendPlainMessage(messages, plainMessage, roomId);
 
                     var resources = block.Resources;
-                    var data = new CodeClipboardData
+                    var chatMessageBody = new ChatMessageBody
                     {
-                    	project = resources["project"].Cast<string>(),
+                        project = resources["project"].Cast<string>(),
                         message = resources["message"].Cast<string>(),
                         solution = resources["solution"].Cast<string>(),
                         document = resources["document"].Cast<string>(),
                         line = resources["line"].Cast<int>(),
                         column = resources["column"].Cast<int>(),
-                        programmingLanguage = resources["programmingLanguage"].Cast<int>()
+                        programminglanguage = resources["programminglanguage"].Cast<int>(),
+                        date = resources["date"].Cast<string>()
                     };
-                    messages.Add(GetMessage(data, roomId));
+                    messages.Add(GetMessage(chatMessageBody, roomId));
                     plainMessage = "";
                 }
                 else
@@ -60,20 +69,17 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
-
             client.Post(messages);
         }
 
         private void AppendPlainMessage(List<Tuple<string, HttpContent>> messages, string plainMessage, string roomId)
         {
-            if (!plainMessage.IsNullOrWhiteSpace())
-            {
-                var plainData = new PlainClipboardData { message = plainMessage };
-                messages.Add(GetMessage(plainData, roomId));
-            }
+            if (plainMessage.IsNullOrWhiteSpace()) return;
+            var plainData = new ChatMessageBody{message = plainMessage };
+            messages.Add(GetMessage(plainData, roomId));
         }
 
-        private Tuple<string, HttpContent> GetMessage<T>(T data, string roomId) where T : ChatMessageData
+        private Tuple<string, HttpContent> GetMessage(ChatMessageBody data, string roomId)
         {
             var url = "{0}room/{1}/messages".FormatUsing(serverConfiguration.Get().Uri, roomId);
             return new Tuple<string, HttpContent>(url, objectToFormMapper.MapFrom(data));

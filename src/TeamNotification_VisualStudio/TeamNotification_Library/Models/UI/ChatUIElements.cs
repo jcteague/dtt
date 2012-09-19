@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using EnvDTE;
 
@@ -19,5 +20,9 @@ namespace TeamNotification_Library.Models.UI
         public Button SendMessageButton { get; set; }
         public RowDefinition OuterGridRowDefinition3 { get; set; }
         public GridSplitter MessageTextBoxGridSplitter { get; set; }
+        public string LastStamp { get; set; }
+        public Dictionary<string, TableRowGroup> MessagesList { get; set; }
+        public ComboBox ComboRooms { get; set; }
+        public RichTextBox InputBox { get; set; }
     }
 }

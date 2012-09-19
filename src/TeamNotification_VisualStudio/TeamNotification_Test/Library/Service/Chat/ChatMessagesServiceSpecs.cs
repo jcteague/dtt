@@ -70,7 +70,7 @@ namespace TeamNotification_Test.Library.Service.Chat
 //                                      Column = 1,
 //                                      Line = 2,
 //                                      DateTime = DateTime.Now,
-//                                      ProgrammingLanguage = 1
+//                                      programminglanguage = 1
 //                                  };
 //
 //                block1 = new Paragraph(new Run("foo paragraph"));

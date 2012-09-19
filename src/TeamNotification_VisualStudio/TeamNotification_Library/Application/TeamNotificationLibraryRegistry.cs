@@ -3,6 +3,7 @@ using StructureMap.Configuration.DSL;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Clipboard;
+using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
@@ -28,6 +29,7 @@ namespace TeamNotification_Library.Application
             For<ICreateSyntaxBlockUIInstances>().Singleton();
             For<IProvideSyntaxHighlighter>().Singleton();
 			For<IStoreDTE>().Singleton();
+            For<IHandleVisualStudioClipboard>().Singleton();
         }
     }
 }

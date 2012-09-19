@@ -10,7 +10,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
         public Block GetFormattedElement(ChatMessageModel chatMessage)
         {
             var userMessageParagraph = new Paragraph { KeepTogether = true, LineHeight = 1.0, Margin = new Thickness(0, 0, 0, 0) };
-            userMessageParagraph.Inlines.Add(new Run(chatMessage.Message));
+            userMessageParagraph.Inlines.Add(new Run(chatMessage.chatMessageBody.message));
 
             return userMessageParagraph;
         }

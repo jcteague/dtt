@@ -17,7 +17,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @$el.empty()
             view.render().append_to(@$el) for view in @views
             @server_response_view.render().append_to @$el
-            prettyPrint()
+            if $('.prettyprint')?
+                prettyPrint()
+                $('.prettyprint').removeClass('prettyprint')
             @
 
         subscribe_to_events: ->

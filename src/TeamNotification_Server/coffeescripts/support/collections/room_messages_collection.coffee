@@ -14,6 +14,7 @@ class RoomMessagesCollection
                     { 'name':'user', 'value': message.name}
                     { 'name':'body', 'value': message.body} 
                     { 'name':'datetime', 'value':message.date }
+                    { 'name':'stamp', 'value':message.stamp }
                 ]
             }
         get_data_for_user = (user) ->

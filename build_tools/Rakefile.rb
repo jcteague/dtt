@@ -14,6 +14,10 @@ task :build_release => [
   'rest_service:build_production'
 ]
 
+task :build_vs_package => [
+  'visual_studio:build'
+]
+
 task :create_migration, :migration_name do |t, args|
   migration_name = args[:migration_name]
   filename = "#{generate_timestamp}_#{migration_name}.rb"

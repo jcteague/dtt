@@ -92,7 +92,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Extensions\StringExtensionsSpecs.cs" />
-    <Compile Include="Library\Service\Async\ToolWindowEventsSpecs.cs" />
     <Compile Include="Library\Service\Chat\ChatMessagesServiceSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\CodeMessagesFormatterSpecs.cs" />
     <Compile Include="Library\Service\Chat\Formatters\DateTimeFormatterSpecs.cs" />
@@ -104,6 +103,7 @@
     <Compile Include="Library\Service\Content\ContentBuilderSpecs.cs" />
     <Compile Include="Library\Service\Content\StackPanelBuilderSpecs.cs" />
     <Compile Include="Library\Service\Controls\LoginControlServiceSpecs.cs" />
+    <Compile Include="Library\Service\Controls\MessagesEditorSpecs.cs" />
     <Compile Include="Library\Service\Http\ChatMessageSenderSpecs.cs" />
     <Compile Include="Library\Service\Http\HttpClientHandlerGetterSpecs.cs" />
     <Compile Include="Library\Service\Http\MessageListenerSpecs.cs" />
@@ -139,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Library\Service\Async\" />
     <Folder Include="Library\Service\Factories\UI\" />
     <Folder Include="Library\Service\Renderer\" />
     <Folder Include="Package\Controls\" />

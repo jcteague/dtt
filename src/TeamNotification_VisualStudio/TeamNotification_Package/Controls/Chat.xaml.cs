@@ -19,6 +19,7 @@ using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
+using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
@@ -46,27 +47,38 @@ namespace AvenidaSoftware.TeamNotification_Package
     public partial class Chat : UserControl
     {
         readonly IServiceChatRoomsControl chatRoomControlService;
+        private readonly IHandleVisualStudioClipboard clipboardHandler;
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
+        private IStoreDTE dteStore;
+        
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
-        
+        private IHandleUserAccountEvents userAccountEvents;
+		private Dictionary<string, TableRowGroup> messagesList;
+
         private string roomId { get; set; }
         private string currentChannel { get; set; }
-        private List<string> subscribedChannels;
-        private IStoreDTE dteStore;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents)
+        private bool chatIsEnabled;
+        private List<string> subscribedChannels;
+
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler)
         {
+            chatIsEnabled = true;
+
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
             this.toolWindowEvents = toolWindowEvents;
+            this.userAccountEvents = userAccountEvents;
+            this.clipboardHandler = clipboardHandler;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
+            this.messagesList = new Dictionary<string, TableRowGroup>();
             InitializeComponent();
             
             var collection = chatRoomControlService.GetCollection();
@@ -82,11 +94,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageTextBox.Document.Blocks.Clear();
 
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
-            
-            DataObject.AddPastingHandler(messageTextBox, OnPaste);
 
+            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
+            DataObject.AddPastingHandler(messageTextBox, OnPaste);
+            lastStamp = "";
             codePasteEvents.CodePasteWasClicked += PasteCode;
             toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+            userAccountEvents.UserHasLogout += OnUserLogout;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -99,61 +113,20 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.HandleDock(GetChatUIElements());
         }
 
+        private void OnUserLogout(object sender, UserHasLogout eventArgs)
+        {
+            chatIsEnabled = false;
+            Content = Container.GetInstance<LoginControl>();
+        }
+
         #region Win32_Clipboard
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-
             var hwndSource = PresentationSource.CurrentSources.Cast<HwndSource>().First();
-            if (hwndSource.IsNotNull())
-            {
-                installedHandle = hwndSource.Handle;
-                viewerHandle = SetClipboardViewer(installedHandle);
-                hwndSource.AddHook(hwndSourceHook);
-            }
-
+            clipboardHandler.SetUpFor(hwndSource);
         }
-
-        IntPtr hwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch (msg)
-            {
-                case WM_CHANGECBCHAIN:
-                    viewerHandle = lParam;
-                    if (viewerHandle != IntPtr.Zero)
-                    {
-                        SendMessage(viewerHandle, msg, wParam, lParam);
-                    }
-
-                    break;
-
-                case WM_DRAWCLIPBOARD:
-                    var dte = (DTE)Package.GetGlobalService(typeof(DTE));
-                    chatRoomControlService.UpdateClipboard(this, dte);
-
-                    if (viewerHandle != IntPtr.Zero)
-                    {
-                        SendMessage(viewerHandle, msg, wParam, lParam);
-                    }
-
-                    break;
-            }
-            return IntPtr.Zero;
-        }
-
-        IntPtr viewerHandle = IntPtr.Zero;
-        IntPtr installedHandle = IntPtr.Zero;
-
-        const int WM_DRAWCLIPBOARD = 0x308;
-        const int WM_CHANGECBCHAIN = 0x30D;
-        
-        [DllImport("user32.dll")]
-        private extern static IntPtr SetClipboardViewer(IntPtr hWnd);
-        [DllImport("user32.dll")]
-        private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
         
         #endregion
 
@@ -193,6 +166,11 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
         }
 
+        private void LogoutUser(object sender, RoutedEventArgs e)
+        {
+            chatRoomControlService.LogoutUser(sender);
+        }
+
         #endregion
 
         private void SendMessage()
@@ -205,13 +183,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             var message = GetMessageBodyFromLink(sender);
             var dteHandler = dteHandlerCreator.Get(dteStore);
 
-            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.Solution)
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.chatMessageBody.solution)
             {
-                var document = dteHandler.OpenFile(message.Project, message.Document);
+                var document = dteHandler.OpenFile(message.chatMessageBody.project, message.chatMessageBody.document);
                 if (document != null)
                 {
                     var originalText = document.TextDocument.CreateEditPoint().GetText(document.TextDocument.EndPoint);
-                    var pasteResponse = AskingPaste.Show(document, originalText, message.Message, message.Line);
+                    var pasteResponse = AskingPaste.Show(document, originalText, message.chatMessageBody.message, message.chatMessageBody.line);
                     if(pasteResponse.pasteOption == PasteOptions.Abort)
                     {
                         var textDocument = document.TextDocument;
@@ -244,11 +222,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.ResetContainer(GetChatUIElements());
             AddMessages(newRoomId);
 
-            if (!subscribedChannels.Contains(currentChannel))
-            {
-                messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
-                subscribedChannels.Add(currentChannel);
-            }
+            if (subscribedChannels.Contains(currentChannel)) return;
+            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
+            subscribedChannels.Add(currentChannel);
         }
 
         private void AddMessages(string currentRoomId)
@@ -259,7 +235,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private ChatUIElements GetChatUIElements()
         {
-            return new ChatUIElements
+            return new ChatUIElements()
             {
                 OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
@@ -273,7 +249,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                 MessageGridColumnDefinition1 = messageGridColumnDefinition1,
                 MessageGridColumnDefinition2 = messageGridColumnDefinition2,
                 SendMessageButton = btnSendMessageButton,
-                StatusBar = dteStore.dte.StatusBar
+                StatusBar = dteStore.dte.StatusBar,
+                InputBox = messageTextBox,
+                MessagesList = messagesList,
+                LastStamp = lastStamp,
+                ComboRooms = comboRooms
             };
         }
         
@@ -284,13 +264,17 @@ namespace AvenidaSoftware.TeamNotification_Package
         
         private void OnRoomSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var roomData = (Collection.Link) e.AddedItems[0];
-            this.ChangeRoom(roomData.rel);
+            if (chatIsEnabled)
+            {
+                var roomData = (Collection.Link)e.AddedItems[0];
+                this.ChangeRoom(roomData.rel);    
+            }
         }
 
         private void ClearStatusBar(object sender, RoutedEventArgs e)
         {
             dteStore.dte.StatusBar.Text = "";
         }
+        private string lastStamp;
     }
 }
