@@ -21,6 +21,9 @@ development_settings =
         host:'dtt.local'
         port: 6379
         password: 'welc0me'
+    email:
+        user: 'AKIAJH4LGM6D7JTFT4MQ'
+        password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
 
 test_settings =
     db:
@@ -36,6 +39,9 @@ test_settings =
         host:'dtt.local'
         port: 6380
         password: 'welc0me'
+    email:
+        user: 'AKIAJH4LGM6D7JTFT4MQ'
+        password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
 
 production_settings =
     db:
@@ -51,6 +57,9 @@ production_settings =
         host: 'ec2-107-21-171-44.compute-1.amazonaws.com'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
+    email:
+        user: 'AKIAJH4LGM6D7JTFT4MQ'
+        password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
 
 module.exports = ->
     switch process.env.NODE_ENV

@@ -5,7 +5,7 @@ module_loader = require('sandboxed-module')
 nodemailer_mock =
     createTransport: sinon.stub()
 
-gmail_smtp_options_mock = 'gmail smtp options'
+email_configuration = 'smtp options'
 
 valid_transports_matcher = (value) ->
     value in ['SMTP', 'SES']
@@ -13,7 +13,7 @@ valid_transports_matcher = (value) ->
 sut = module_loader.require('../support/email/email_transport_factory', {
     requires:
         'nodemailer': nodemailer_mock
-        './gmail_smtp_options': gmail_smtp_options_mock
+        './email_configuration': email_configuration
 })
 
 describe 'Email Transport Factory', ->
@@ -24,7 +24,7 @@ describe 'Email Transport Factory', ->
 
         beforeEach (done) ->
             transport = 'blah transport'
-            nodemailer_mock.createTransport.withArgs(sinon.match(valid_transports_matcher), gmail_smtp_options_mock).returns(transport)
+            nodemailer_mock.createTransport.withArgs(sinon.match(valid_transports_matcher), email_configuration).returns(transport)
             result = sut.get()
             done()
 

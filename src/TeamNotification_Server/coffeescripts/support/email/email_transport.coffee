@@ -3,6 +3,7 @@ transport = transport_factory = require('./email_transport_factory').get()
 
 send_email = (email_message) ->
     deferred = Q.defer()
+    console.log email_message
     transport.sendMail email_message, (error, response) ->
         if error
             console.log 'email had error', error

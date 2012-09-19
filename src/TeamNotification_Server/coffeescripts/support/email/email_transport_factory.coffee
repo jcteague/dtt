@@ -1,5 +1,5 @@
 nodemailer = require('nodemailer')
-smtp_options = require('./gmail_smtp_options')
+smtp_options = require('./email_configuration')
 
 get = ->
     nodemailer.createTransport 'SMTP', smtp_options
