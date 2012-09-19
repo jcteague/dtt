@@ -15,6 +15,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
             entity = template.rel
             input = $('<input>',{"type":"text","name":template.data[0].name,"class":"search-query"})
             hidden_input = $('<input>',{"type":"hidden","name": "id"})
+            hidden_selection = $('<input>',{"type":"hidden","name": "current_selection"})
             submit = $('<input>', {"type":"submit", "class": "btn btn-primary"})
 
             label = $('<label>', {"for":template.data[0].name})
@@ -34,8 +35,11 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
                 (build_item item for item in objs[entity])
 
             on_select = (selected) ->
+                console.log 'selected'
                 element = $(selected.value)
-                input.val(element.filter('.name').text())
+                selection = element.filter('.name').text()
+                input.val(selection)
+                hidden_selection.val(selection)
                 hidden_input.val(element.filter('.hidden').text())
 
             # To prevent duplicate results
@@ -44,14 +48,19 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
                 remoteDataType: 'json'
                 processData: processor
                 onItemSelect: on_select
-                mustMatch: true
+                mustMatch: false
                 selectFirst: true
                 autoFill: true
                 minChars: 1
                 onNoMatch: ->
                     hidden_input.val ''
                 onFinish: ->
-                    $('input[name=id]').val($('.acSelect .hidden').text())
+                    console.log 'finished' 
+                    if hidden_selection.val() is input.val()
+                        $('input[name=id]').val($('.acSelect .hidden').text())
+                    else
+                        $('input[name=id]').val('')
+
 
             })
             query_class = "well form-horizontal"
