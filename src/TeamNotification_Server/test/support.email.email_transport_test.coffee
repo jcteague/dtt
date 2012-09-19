@@ -5,19 +5,16 @@ module_loader = require('sandboxed-module')
 q_mock =
     defer: sinon.stub()
 
-nodemailer_mock =
-    createTransport: sinon.stub()
-
-gmail_smtp_options_mock = 'gmail smtp options'
+email_transport_factory_mock =
+    get: sinon.stub()
 transport = sendMail: (options, callback) ->
 
-nodemailer_mock.createTransport.withArgs('SMTP', gmail_smtp_options_mock).returns(transport)
+email_transport_factory_mock.get.returns(transport)
 
 sut = module_loader.require('../support/email/email_transport', {
     requires:
-        'nodemailer': nodemailer_mock
         'q': q_mock
-        './gmail_smtp_options': gmail_smtp_options_mock
+        './email_transport_factory': email_transport_factory_mock
 })
 
 describe 'Email Transport', ->
@@ -65,7 +62,6 @@ describe 'Email Transport', ->
                 error = 'blah error'
                 transport.sendMail = (options, callback) ->
                     callback(error)
-                nodemailer_mock.createTransport.withArgs('SMTP', gmail_smtp_options_mock).returns(transport)
                 result = sut.send_email email_message
                 done()
 

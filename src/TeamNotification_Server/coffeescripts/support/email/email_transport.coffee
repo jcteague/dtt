@@ -1,8 +1,5 @@
 Q = require('q')
-nodemailer = require('nodemailer')
-smtp_options = require('./gmail_smtp_options')
-
-transport = nodemailer.createTransport 'SMTP', smtp_options
+transport = transport_factory = require('./email_transport_factory').get()
 
 send_email = (email_message) ->
     deferred = Q.defer()

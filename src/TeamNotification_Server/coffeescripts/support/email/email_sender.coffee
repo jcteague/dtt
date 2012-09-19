@@ -12,6 +12,14 @@ email_transport = require('./email_transport')
 
 send = (email_message) ->
     email_transport.send_email email_message
+    ###
+    email_transport.send_email {
+        from: 'Eddy Espinal <eespinal@intellisys.com.do'
+        to: 'eddy.w.espinal@gmail.com, eespinal@intellisys.com.do'
+        subject: 'Test Email From Nodemailer'
+        text: 'This is a test email from the nodemailer package of node'
+    }
+    ###
 
 module.exports =
     send: send
