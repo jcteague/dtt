@@ -71,22 +71,25 @@ namespace TeamNotification_Library.Service.Clipboard
                 var selection = txt.Selection;
                 var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
                 var message = systemClipboardHandler.GetText(true);
-                var clipboard = new CodeClipboardData
-                                    {
-                                        project = activeProjects.UniqueName,
-                                        solution = dte.Solution.FullName,
-                                        document = activeDocument.FullName,
-                                        message = message,
-                                        line = selection.CurrentLine,
-                                        column = selection.CurrentColumn,
-                                        programmingLanguage = activeDocument.GetProgrammingLanguage()
-                                    };
+                var clipboard = new ChatMessageModel
+                {
+                    chatMessageBody = new ChatMessageBody
+                    {
+                        project = activeProjects.UniqueName,
+                        solution = dte.Solution.FullName,
+                        document = activeDocument.FullName,
+                        message = message,
+                        line = selection.CurrentLine,
+                        column = selection.CurrentColumn,
+                        programminglanguage = activeDocument.GetProgrammingLanguage()
+                    }
+                };
 
                 clipboardStorage.Store(clipboard);
             }
             else
             {
-                var clipboard = new PlainClipboardData { message = systemClipboardHandler.GetText(true) };
+                var clipboard = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = systemClipboardHandler.GetText(true) } };
                 clipboardStorage.Store(clipboard);
             }
         }

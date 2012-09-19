@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using TeamNotification_Library.Configuration;
+using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Async;
@@ -29,7 +30,6 @@ namespace TeamNotification_Library.Service.Controls
         private IProvideConfiguration<ServerConfiguration> configuration;
         private IStoreClipboardData clipboardStorage;
         private ISerializeJSON jsonSerializer;
-        private IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper;
         private IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper;
         private IGetToolWindowAction toolWindowActionGetter;
         private IHandleChatMessages chatMessagesService;
@@ -40,7 +40,7 @@ namespace TeamNotification_Library.Service.Controls
         private readonly ISendChatMessages messageSender;
         private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IMapEntities<MessageData, ChatMessageModel> messageDataToChatMessageModelMapper, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -49,14 +49,12 @@ namespace TeamNotification_Library.Service.Controls
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
             this.messagesEditor = messagesEditor;
-            //this.messageDataToChatMessageModelMapper = messageDataToChatMessageModelMapper;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
             this.localStorageService = localStorageService;
             this.userAccountEvents = userAccountEvents;
             this.configuration = configuration;
-            MessagesRowsList = new Dictionary<string, TableRow>();
         }
 
         public Collection GetMessagesCollection(string roomId)
@@ -133,20 +131,12 @@ namespace TeamNotification_Library.Service.Controls
                 var idx = messagesContainer.MessagesTable.RowGroups.Count - 1;
                 if (idx == -1) continue;
                 
-                //if (Collection.getField(message.data, "user_id").ParseToInteger() != userProvider.GetUser().id) continue; 
-                
                 var messageBody = Collection.getField(message.data, "body");
                 var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
                 
                 if (chatMessageBody.IsCode)
-                    //lastStamp = Collection.getField(message.data, "stamp");
                     messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
             }
-        }
-
-        public void HandleDock(ChatUIElements chatUIElements)
-        {
-            toolWindowActionGetter.Get().ExecuteOn(chatUIElements);
         }
 
         public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
