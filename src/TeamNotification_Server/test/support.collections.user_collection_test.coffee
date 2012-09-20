@@ -41,6 +41,7 @@ describe 'User Collection', ->
             expect(links[1]).to.eql {"rel": "UserEdit", "name": "edit", "href": "/user/#{user_id}/edit"}
             expect(links[2]).to.eql {"rel": "UserRooms", "name": "rooms", "href": "/user/#{user_id}/rooms"}
             expect(links[3]).to.eql {"rel": "Room", "name": "Create Room", "href": "/room"}
+            expect(links[4]).to.eql {"rel":"Invitations", "name": "Sent Invitations", "href": "/user/#{user_id}/invitations" }
             done()
 
         it 'should return a href property pointing to the current url', (done) ->
