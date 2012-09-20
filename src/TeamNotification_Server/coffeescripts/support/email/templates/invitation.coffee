@@ -1,7 +1,7 @@
 config = require('../../../config')()
 
 get_template = (email, chat_room) ->
-    join_room_link = "#{config.site.url}/room/#{chat_room.id}/accept-invitation?email=#{email}"
+    join_room_link = "#{config.site.url}/client#/room/#{chat_room.id}/accept-invitation?email=#{email}"
     return """
         <div>
             <p>Hi,</p>
