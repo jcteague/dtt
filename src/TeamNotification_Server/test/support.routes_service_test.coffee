@@ -40,9 +40,11 @@ describe 'Routes Service', ->
 
     describe 'add_user_to_chat_room', ->
 
-        chat_room = user = user_id = user_email = room_id = users_repository = deferred = callback = expected_result = result = null
+        chat_room = logged_in_user = user = user_id = user_email = room_id = users_repository = chat_room_invitation_repository = deferred = callback = expected_result = result = null
 
         beforeEach (done) ->
+            logged_in_user =
+                id: 19
             user_id = 8
             user_email = 'foo@bar.com'
             room_id = 2
@@ -52,9 +54,12 @@ describe 'Routes Service', ->
             users_repository =
                 find: sinon.stub()
                 get_by_id: sinon.stub()
+            chat_room_invitation_repository =
+                save: sinon.stub()
 
             repository_class_mock.withArgs('ChatRoom').returns(chat_room_repository)
             repository_class_mock.withArgs('User').returns(users_repository)
+            repository_class_mock.withArgs('ChatRoomInvitation').returns(chat_room_invitation_repository)
 
             chat_room =
                 addUsers: (any, callback) ->
@@ -90,7 +95,7 @@ describe 'Routes Service', ->
 
                 beforeEach (done) ->
                     chat_room['users'] = [{id: 100}]
-                    result = sut.add_user_to_chat_room(user_email, room_id)
+                    result = sut.add_user_to_chat_room(logged_in_user, user_email, room_id)
                     done()
 
                 it 'should create the user on the database', (done) ->
@@ -110,7 +115,7 @@ describe 'Routes Service', ->
                 beforeEach (done) ->
                     chat_room['users'] = [{id: 100}]
                     chat_room['owner_id'] = user_id
-                    result = sut.add_user_to_chat_room(user_email, room_id)
+                    result = sut.add_user_to_chat_room(logged_in_user, user_email, room_id)
                     done()
 
                 it 'should not create the user on the database', (done) ->
@@ -129,7 +134,7 @@ describe 'Routes Service', ->
 
                 beforeEach (done) ->
                     chat_room['users'] = [{id: user_id}]
-                    result = sut.add_user_to_chat_room(user_email, room_id)
+                    result = sut.add_user_to_chat_room(logged_in_user, user_email, room_id)
                     done()
 
                 it 'should not create the user on the database', (done) ->
@@ -159,7 +164,7 @@ describe 'Routes Service', ->
                 invitation_email_template = 'blah invitation email'
                 email_template_mock.for.invitation.using.withArgs(email: inexistent_email, chat_room: chat_room).returns(invitation_email_template)
 
-                result = sut.add_user_to_chat_room(inexistent_email, room_id)
+                result = sut.add_user_to_chat_room(logged_in_user, inexistent_email, room_id)
                 done()
 
             it 'should not create the user on the database', (done) ->
@@ -171,7 +176,11 @@ describe 'Routes Service', ->
                 done()
 
             it 'should send an invitation email to the email address passed', (done) ->
-                sinon.assert.called(email_sender_mock.send, invitation_email_template)
+                sinon.assert.calledWith(email_sender_mock.send, invitation_email_template)
+                done()
+
+            it 'should save an invitation in the chat room invitation repository', (done) ->
+                sinon.assert.calledWith(chat_room_invitation_repository.save, {email: inexistent_email, chat_room_id: room_id, sent_by: logged_in_user.id})
                 done()
 
             it 'should resolve the promise with the user does not exist message', (done) ->

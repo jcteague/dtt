@@ -11,11 +11,11 @@ development_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
-        host: 'localhost'
+        host: 'dtt.local'
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://localhost:3000'
+        url: 'http://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'dtt.local'

@@ -8,7 +8,7 @@ define 'config', [], ->
 
     development_settings =
         site:
-            host: 'localhost'
+            host: 'dtt.local'
             port: 3000
             url: 'http://dtt.local:3000'
 

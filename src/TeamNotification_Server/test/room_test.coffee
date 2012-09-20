@@ -409,6 +409,8 @@ describe 'Room', ->
                 user_id = 1
                 email = 
                 req =
+                    user:
+                        id: 18
                     body:
                         id: user_id
                         email: user_email
@@ -428,7 +430,7 @@ describe 'Room', ->
                 done()
 
             it 'should call the add user to chat room', (done) ->
-                sinon.assert.calledWith(routes_service_mock.add_user_to_chat_room, user_email, room_id)
+                sinon.assert.calledWith(routes_service_mock.add_user_to_chat_room, req.user, user_email, room_id)
                 done()
 
             it 'should return the user exists response', (done) ->
