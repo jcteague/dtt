@@ -74,6 +74,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
             sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages)
             sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
+            sinon.assert.calledWith(app.get, '/room/:id/accept-invitation', sut.methods.get_accept_invitation)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.post,'/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
             sinon.assert.calledWith(app.post,'/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)

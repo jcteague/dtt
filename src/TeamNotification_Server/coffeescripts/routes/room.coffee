@@ -64,6 +64,9 @@ methods.manage_room_members = (req, res) ->
 
     build('room_members_collection').for(room_id).fetch_to callback
 
+methods.get_accept_invitation = (req, res) ->
+
+
 methods.get_room = (req, res) ->
     r =
         'href': '/room'
@@ -129,6 +132,7 @@ module.exports =
         app.get('/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
         app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
         app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
+        app.get('/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/room',express.bodyParser(), methods.post_room)
         app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
