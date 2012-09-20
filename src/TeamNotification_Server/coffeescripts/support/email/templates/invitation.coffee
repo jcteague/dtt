@@ -20,8 +20,7 @@ get_template = (chat_room) ->
 using = (email_invitation_values) ->
     return {
         from: 'Invitations <invitations@yacketyapp.com>'
-        #to: email_invitation_values.email
-        to: 'invitations@yacketyapp.com'
+        to: email_invitation_values.email
         subject: 'You have been invited to join a room in Yackety App'
         html: get_template(email_invitation_values.chat_room)
     }
