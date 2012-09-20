@@ -180,7 +180,7 @@ describe 'Routes Service', ->
                 done()
 
             it 'should save an invitation in the chat room invitation repository', (done) ->
-                sinon.assert.calledWith(chat_room_invitation_repository.save, {email: inexistent_email, chat_room_id: room_id, sent_by: logged_in_user.id})
+                sinon.assert.calledWith(chat_room_invitation_repository.save, {email: inexistent_email, chat_room_id: room_id, user_id: logged_in_user.id})
                 done()
 
             it 'should resolve the promise with the user does not exist message', (done) ->

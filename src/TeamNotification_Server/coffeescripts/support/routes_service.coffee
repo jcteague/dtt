@@ -26,7 +26,7 @@ add_user_to_chat_room = (current_user, email, room_id) ->
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 
-                chat_room_invitation_repository.save({email:email, chat_room_id:room_id, sent_by: current_user.id})
+                chat_room_invitation_repository.save({email:email, chat_room_id:room_id, user_id: current_user.id})
                 
                 template = email_template.for.invitation.using
                     email: email
