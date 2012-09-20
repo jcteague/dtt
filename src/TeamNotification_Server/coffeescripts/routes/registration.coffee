@@ -4,6 +4,9 @@ Repository = require('../support/repository')
 Validator = require('../support/validator')
 build = require('../support/routes_service').build
 
+registration_validator = require('../support/validation/registration_validator')
+registration_callback_factory = require('../support/factories/registration_callback_factory')
+
 methods = {}
 methods.get_registration = (req, res) ->
     callback = (collection) ->
@@ -11,6 +14,12 @@ methods.get_registration = (req, res) ->
 
     build('registration_collection').fetch_to callback
 
+methods.post_registration = (req, res) ->
+    success_callback = registration_callback_factory.get_for_success(req, res)
+    failure_callback = registration_callback_factory.get_for_failure(req, res)
+    registration_validator.validate(req.body).handle_with success_callback, failure_callback
+
+###
 methods.post_registration = (req, res) ->
     validation_result = methods.is_valid_user(req.body)
     if validation_result.valid
@@ -20,6 +29,7 @@ methods.post_registration = (req, res) ->
             success: false
             messages: validation_result.errors
         }
+###
 
 methods.get_email_registered_handler = (req, res) ->
     return (is_registered) ->
