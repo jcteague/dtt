@@ -1,5 +1,5 @@
-class UserSentInvitationsCollection
-    constructor: (@userinvitations) ->
+class UserInvitationsCollection
+    constructor: (@user_invitations) ->
     
     to_json: () ->
  #       if @userinvitations
@@ -7,4 +7,4 @@ class UserSentInvitationsCollection
         
         return {}
     
-module.exports = UserSentInvitationsCollection
+module.exports = UserInvitationsCollection

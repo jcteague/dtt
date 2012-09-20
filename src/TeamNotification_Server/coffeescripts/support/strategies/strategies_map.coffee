@@ -9,5 +9,6 @@ mapping =
     'room_collection': 'chat_room_by_id_with_user_id_strategy'
     'room_members_collection': 'chat_room_by_id_strategy'
     'room_messages_collection': 'chat_room_messages_by_chat_room_id_strategy'
+    'user_invitations_collection': 'invitations_by_user_id_strategy'
 
 module.exports = mapping

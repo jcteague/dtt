@@ -80,3 +80,4 @@ module.exports =
         app.post('/user/:id/edit', methods.post_user_edit)
         app.get('/user/:id/rooms',methods.get_user_rooms)
         app.get('/users', methods.redir_user)
+        app.get('/user/:id/invitations', methods.get_user_invitations)
