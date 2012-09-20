@@ -65,7 +65,7 @@ methods.manage_room_members = (req, res) ->
     build('room_members_collection').for(room_id).fetch_to callback
 
 methods.get_accept_invitation = (req, res) ->
-
+    res.redirect '/registration'
 
 methods.get_room = (req, res) ->
     r =

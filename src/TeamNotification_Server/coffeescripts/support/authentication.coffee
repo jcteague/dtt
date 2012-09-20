@@ -32,6 +32,10 @@ class Authentication
             passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)
 
     is_whitelisted: (path) ->
-        whitelisted_paths.indexOf(path) isnt -1
+        for allowed_path in whitelisted_paths
+            if typeof allowed_path is 'object'
+                return true if path.match(allowed_path)?
+            return true if path is allowed_path
+        false
 
 exports = module.exports = Authentication

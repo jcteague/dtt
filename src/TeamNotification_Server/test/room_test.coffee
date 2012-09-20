@@ -254,6 +254,16 @@ describe 'Room', ->
                     sinon.assert.calledWith(res.json, collection_value)
                     done()
 
+            describe 'get_accept_invitation', ->
+
+                beforeEach (done) ->
+                    sut.methods.get_accept_invitation(req, res)
+                    done()
+
+                it 'should redirect the user to the registration page', (done) ->
+                    sinon.assert.calledWith(res.redirect, '/registration')
+                    done()
+
             describe 'get_room_messages', ->
 
                 json_data = data = listener_name = socket_mock = null
