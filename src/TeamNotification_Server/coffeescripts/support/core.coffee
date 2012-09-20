@@ -22,7 +22,6 @@ orm.then (db) ->
     _entity.ChatRoomInvitation = db.define 'chat_room_invitation'
         id : {type: 'int'}
         chat_room_id : {type: 'int'}
-        sent_by : {type: 'int'}
         email : {type:'string', length:140}
         accepted : {type:'bit', default:'0'}
         date : {type:'date', default:'now()'}
@@ -33,7 +32,9 @@ orm.then (db) ->
 
     _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
     _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
-    #_entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'room',{autoFetch:true})
+    
+    _entity.ChatRoomInvitation.hasOne('user',_entity.User,'user',{autoFetch:true})
+    _entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
     #_entity.ChatRoomMessage.sync()
 
 module.exports =
