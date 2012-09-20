@@ -5,12 +5,10 @@ get_template = (chat_room) ->
     return """
         <div>
             <p>Hi,</p>
-            <br />
             <p>You have been invited to join a room in Yackety App</p>
             <p>
                 We are waiting for you on <b>#{chat_room.name}</b>. If you want to join, just click on the link below:
             </p>
-            <br />
             <a href="#{join_room_link}">#{join_room_link}</a>
             <br />
             <p>The Yackety App Team</p>
