@@ -55,7 +55,7 @@ methods.get_room_by_id = (req, res) ->
 
 methods.post_room_user = (req, res, next) ->
     console.log req.body
-    routes_service.add_user_to_chat_room(req.body.email, req.param('id')).then (response) ->
+    routes_service.add_user_to_chat_room(req.user, req.body.email, req.param('id')).then (response) ->
         res.send(response)
 
 methods.manage_room_members = (req, res) ->

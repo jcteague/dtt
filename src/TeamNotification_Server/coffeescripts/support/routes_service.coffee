@@ -7,7 +7,7 @@ email_template = require('./email/templates/email_template')
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
 
-add_user_to_chat_room = (email, room_id) ->
+add_user_to_chat_room = (current_user, email, room_id) ->
     # TODO: How can we make this instances live outside and created within require?
     user_repository = new Repository('User')
     chat_room_repository = new Repository('ChatRoom')
@@ -25,6 +25,9 @@ add_user_to_chat_room = (email, room_id) ->
                     defer.resolve({success: false, messages: ["user is already in the room"]})
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
+                
+                chat_room_invitation_repository.save({email:email, chat_room_id:room_id, sent_by: current_user.id})
+                
                 template = email_template.for.invitation.using
                     email: email
                     chat_room: chat_room
