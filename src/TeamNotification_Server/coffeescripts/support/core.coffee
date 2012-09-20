@@ -22,6 +22,7 @@ orm.then (db) ->
     _entity.ChatRoomInvitation = db.define 'chat_room_invitation'
         id : {type: 'int'}
         chat_room_id : {type: 'int'}
+        sent_by : {type: 'int'}
         email : {type:'string', length:140}
         accepted : {type:'bit', default:'0'}
         date : {type:'date', default:'now()'}
