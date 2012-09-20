@@ -65,7 +65,11 @@ methods.manage_room_members = (req, res) ->
     build('room_members_collection').for(room_id).fetch_to callback
 
 methods.get_accept_invitation = (req, res) ->
-    res.redirect '/registration'
+    email = req.param('email')
+    callback = (collection) ->
+        res.json(collection.fill(email: email).to_json())
+
+    build('registration_collection').fetch_to callback
 
 methods.get_room = (req, res) ->
     r =
@@ -99,7 +103,6 @@ methods.post_room_message = (req, res, next) ->
         message_date = ''
         message_stamp = ''
         setname = "room:#{room_id}:messages"
-        console.log values
         if typeof values.stamp != 'undefined' && values.stamp != ''
             message_stamp = values.stamp
             message_date = values.date

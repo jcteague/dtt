@@ -201,9 +201,11 @@ describe 'Room', ->
             json_data = null
 
             beforeEach (done) ->
+                collection_value = 'blah collection value'
                 collection =
                     to_json: ->
                         collection_value
+                    fill: sinon.stub()
                 collection_factory =
                     for: sinon.stub()
                 req =
@@ -256,12 +258,27 @@ describe 'Room', ->
 
             describe 'get_accept_invitation', ->
 
+                filled_collection_value = null
+
                 beforeEach (done) ->
+                    registration_collection =
+                        fetch_to: (callback) ->
+                            callback(collection)
+                    routes_service_mock.build.withArgs('registration_collection').returns(registration_collection)
+
+                    email = 'foo@bar.com'
+                    req.param.withArgs('email').returns(email)
+
+                    filled_collection_value = 'blah filled collection value'
+                    filled_collection =
+                        to_json: -> filled_collection_value
+                    collection.fill.withArgs(email: email).returns(filled_collection)
+
                     sut.methods.get_accept_invitation(req, res)
                     done()
 
-                it 'should redirect the user to the registration page', (done) ->
-                    sinon.assert.calledWith(res.redirect, '/registration')
+                it 'should return the built collection for the registration', (done) ->
+                    sinon.assert.calledWith(res.json, filled_collection_value)
                     done()
 
             describe 'get_room_messages', ->
