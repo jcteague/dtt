@@ -74,5 +74,7 @@ describe 'Registration Service', ->
             sinon.assert.calledWith(chat_room_user_repository_mock.save, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id})
             done()
 
-        xit 'should return a promise', (done) ->
-            done()
+        it 'should return a promise with the created user', (done) ->
+            Q.when result, (user) ->
+                expect(user).to.eql created_user
+                done()

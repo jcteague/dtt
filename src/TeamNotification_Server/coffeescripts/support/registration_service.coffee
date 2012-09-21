@@ -16,7 +16,6 @@ create_user = (user_data) ->
         user_repository.save(user_data)
     ).then((user) ->
         created_user = user
-        console.log user
         chat_room_invitation_repository.find(email: user.email).then (invitations) ->
             (mark_as_accepted(user, invitation) for invitation in invitations)
     ).then((user_room_pair_array) ->
