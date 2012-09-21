@@ -47,34 +47,64 @@ describe 'Registration Service', ->
             user_save_spy = sinon.spy()
             user_promise = make_promise_for created_user, user_save_spy, user_data
             user_repository_mock.save.returns(user_promise)
-
-            invitation1 = {chat_room_id: 2, accepted: 0, save: sinon.spy()}
-            invitation2 = {chat_room_id: 8, accepted: 0, save: sinon.spy()}
-            invitations = [invitation1, invitation2]
-            invitations_promise = make_promise_for invitations
-            chat_room_invitation_repository_mock.find.withArgs(email: created_user.email).returns(invitations_promise)
-
-            result = sut.create_user user_data
             done()
 
-        it 'should save the user in the repository', (done) ->
-            sinon.assert.calledWith(user_save_spy, user_data)
+        afterEach (done) ->
+            chat_room_user_repository_mock.save.reset()
             done()
 
-        # TODO: The context seems to be changing which invitation is accepted
-        xit 'should update the pending invitations status in the database', (done) ->
-            expect(invitation1.accepted).to.eql 1
-            expect(invitation2.accepted).to.eql 1
-            sinon.assert.called(invitation1.save)
-            sinon.assert.called(invitation2.save)
-            done()
+        describe 'and the user has invitations', ->
 
-        it 'should add the user to the chat rooms that s/he had been invited', (done) ->
-            sinon.assert.calledWith(chat_room_user_repository_mock.save, {user_id: created_user.id, chat_room_id: invitation1.chat_room_id})
-            sinon.assert.calledWith(chat_room_user_repository_mock.save, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id})
-            done()
+            invitation_updater = invitations = null
 
-        it 'should return a promise with the created user', (done) ->
-            Q.when result, (user) ->
-                expect(user).to.eql created_user
+            beforeEach (done) ->
+                invitation1 = {chat_room_id: 2, accepted: 0, save: sinon.spy()}
+                invitation2 = {chat_room_id: 8, accepted: 0, save: sinon.spy()}
+                invitations = [invitation1, invitation2]
+                invitations_promise = make_promise_for invitations
+                chat_room_invitation_repository_mock.find.withArgs(email: created_user.email).returns(invitations_promise)
+
+                invitation_updater = sinon.mock()
+                invitation_updater.withArgs(invitations).returns([{user_id: created_user.id, chat_room_id: invitation1.chat_room_id}, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id}])
+                result = sut.create_user user_data, invitation_updater
                 done()
+
+            it 'should save the user in the repository', (done) ->
+                sinon.assert.calledWith(user_save_spy, user_data)
+                done()
+
+            it 'should update the pending invitations using the updater', (done) ->
+                invitation_updater.exactly(1).withArgs(invitations)
+                done()
+
+            it 'should add the user to the chat rooms that s/he had been invited', (done) ->
+                sinon.assert.calledWith(chat_room_user_repository_mock.save, {user_id: created_user.id, chat_room_id: invitation1.chat_room_id})
+                sinon.assert.calledWith(chat_room_user_repository_mock.save, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id})
+                done()
+
+            it 'should return a promise with the created user', (done) ->
+                Q.when result, (user) ->
+                    expect(user).to.eql created_user
+                    done()
+
+        describe 'and the user does not have any invitations', ->
+
+            beforeEach (done) ->
+                invitations_promise = make_promise_for null
+                chat_room_invitation_repository_mock.find.withArgs(email: created_user.email).returns(invitations_promise)
+
+                result = sut.create_user user_data
+                done()
+
+            it 'should save the user in the repository', (done) ->
+                sinon.assert.calledWith(user_save_spy, user_data)
+                done()
+
+            it 'should not attempt to add the user to the chat rooms', (done) ->
+                sinon.assert.notCalled(chat_room_user_repository_mock.save)
+                done()
+
+            it 'should return a promise with the created user', (done) ->
+                Q.when result, (user) ->
+                    expect(user).to.eql created_user
+                    done()
