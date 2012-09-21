@@ -5,23 +5,18 @@ module_loader = require('sandboxed-module')
 routes_service_mock =
     build: sinon.stub()
 
-repository_class_mock = sinon.stub()
-user_repository =
-    save: sinon.stub()
-repository_class_mock.withArgs('User').returns(user_repository)
+registration_validator_mock =
+    validate: sinon.stub()
 
-node_hash_mock =
-    sha256: sinon.stub()
-
-q_mock =
-    when: sinon.stub()
+registration_callback_factory_mock =
+    get_for_success: sinon.stub()
+    get_for_failure: sinon.stub()
 
 sut = module_loader.require('../routes/registration', {
     requires:
         '../support/routes_service': routes_service_mock
-        '../support/repository': repository_class_mock
-        'node_hash': node_hash_mock
-        'q': q_mock
+        '../support/validation/registration_validator': registration_validator_mock
+        '../support/factories/registration_callback_factory': registration_callback_factory_mock
 })
 
 describe 'Registration', ->
@@ -69,6 +64,31 @@ describe 'Registration', ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()
 
+        describe 'post_registration', ->
+
+            success_callback = failure_callback = validation_result = null
+
+            beforeEach (done) ->
+                req = body: 'blah req body'
+                res = 'blah res'
+
+                success_callback = 'success callback'
+                registration_callback_factory_mock.get_for_success.withArgs(req, res).returns(success_callback)
+                failure_callback = 'failure callback'
+                registration_callback_factory_mock.get_for_failure.withArgs(req, res).returns(failure_callback)
+
+                validation_result =
+                    handle_with: sinon.spy()
+                registration_validator_mock.validate.withArgs(req.body).returns(validation_result)
+                    
+                sut.methods.post_registration(req, res)
+                done()
+
+            it 'should validate the registration and handle it with the success and failure callbacks', (done) ->
+                sinon.assert.calledWith(validation_result.handle_with, success_callback, failure_callback)
+                done()
+
+        ###
         describe 'post_registration', ->
 
             res = is_valid_user_stub = null
@@ -234,6 +254,7 @@ describe 'Registration', ->
                     expect(result.valid).to.equal true
                     done()
 
+        ###
         ###
         describe 'is_email_already_registered', ->
 
