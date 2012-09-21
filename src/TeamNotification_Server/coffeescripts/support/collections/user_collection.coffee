@@ -6,7 +6,7 @@ class UserCollection
 
     to_json: ->
         self = "/user/#{@data.user_id}"
-        invitations = "/user/#{@data.user_id}/invitations"
+        invitations = 
         rooms = (@get_room(room) for room in @data.rooms)
         return {
             href: self
@@ -17,7 +17,7 @@ class UserCollection
                 {"rel":"UserEdit", "name": "edit", "href": "/user/#{@data.user_id}/edit"}
                 {"rel":"UserRooms", "name": "rooms", "href": "/user/#{@data.user_id}/rooms"}
                 {"rel":"Room", "name": "Create Room", "href": "/room"}
-                {"rel":"Invitations", "name": "Sent Invitations", "href": invitations }
+                {"rel":"Invitations", "name": "Pending Invitations", "href": "/user/invitations" }
             ]
         }
 
