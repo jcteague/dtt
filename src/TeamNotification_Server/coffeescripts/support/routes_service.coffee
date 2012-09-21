@@ -25,13 +25,7 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                     defer.resolve({success: false, messages: ["user is already in the room"]})
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
-                
-                chat_room_invitation_repository.find({chat_room_id:room_id, email:email}).then (message) ->
-                    if message?
-                        message.date = new Date()
-                        message.save()
-                    else
-                        chat_room_invitation_repository.save({email:email, chat_room_id:room_id, user_id: current_user.id})
+                chat_room_invitation_repository.save({email:email, chat_room_id:room_id, user_id: current_user.id})
                 
                 template = email_template.for.invitation.using
                     email: email

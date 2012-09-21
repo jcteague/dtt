@@ -22,9 +22,7 @@ methods.get_user_edit = (req, res) ->
     build('user_edit_collection').for(user_id).fetch_to callback
 
 methods.get_user_invitations = (req, res) ->
-    #if(req.user.id != req.param('id')) 
-    #    res.redirect("#{config.site.url}/user/#{req.user.id}/invitations")
-
+    
     callback = (collection) ->
         res.json(collection.to_json())
 

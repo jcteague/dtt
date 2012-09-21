@@ -11,6 +11,7 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
             user_edit: {pattern:/user\/\d+\/edit/g, view: UserEditView}
             chat_room: { pattern:/room\/\d+\/messages/g, view: ChatRoomView }
             user_invitations: { pattern:/user\/\d+\/invitations/g, view: UserInvitationsView }
+            room_invitations: { pattern:/room\/\d+\/invitations/g, view: UserInvitationsView }
         get_for: (collection_model) ->
             collection_data = collection_model.attributes
             for page, props of @pages

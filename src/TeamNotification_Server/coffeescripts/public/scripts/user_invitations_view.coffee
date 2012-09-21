@@ -10,29 +10,37 @@ define 'user_invitations_view', ['general_view'], (GeneralView) ->
 
         initialize: -> 
         
-        resendInvite: (invitation) ->
-            alert(invitation)
-
         render: ->
                 
             me = @
             @$el.empty()
             
             @$el.attr('class','row-fluid')
-            table = $('<table class="table table-hover table-condensed">')
+            table = $('<table id="invitations-table" class="table table-hover table-condensed">')
             table.append "<tr><th>Email</th><th>Room</th><th>Invitation date</th><th></th></tr>"
             if @model.has("invitations")
                 $(@model.attributes.invitations).each (idx, invitation) ->
                     accepted = me.get_field('accepted', invitation.data)
                     if accepted == 0
                         email = me.get_field('email', invitation.data)
-                        date = me.get_field('date', invitation.data)
+                        date = new Date(me.get_field('date', invitation.data)).toUTCString()
                         room = me.get_field('chat_room_name', invitation.data)
                         room_id = me.get_field('chat_room_id', invitation.data)
-                        objectData = {email:email, room:room_id}                        
-                        button = $("<button value='#{JSON.stringify(objectData)}' class='btn'>Resend Invitation</button>")
+                        objectData = {email:email, room:room_id}       
+                        objectDataSerialized = JSON.stringify(objectData)                 
+                        button = $("<button value='#{objectDataSerialized}' class='btn'>Resend Invitation</button>")
                         button.click () ->
-                            me.resendInvite button.attr('value')
+                            b = $(@)
+                            args = JSON.parse(b.attr('value'))
+                            b.attr("disabled", "disabled")
+                            $.ajaxSetup
+                                beforeSend: (jqXHR) ->
+                                    authToken = $.cookie("authtoken")
+                                    jqXHR.setRequestHeader('Authorization', authToken )
+                                    
+                            $.post "room/#{args.room}/users", args, (data) ->
+                                b.removeAttr("disabled")
+                                $("#server-response-container").append data.messages[0]
                         
                         row = $('<tr>')
                         col = $('<td>')

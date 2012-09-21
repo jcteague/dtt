@@ -5,12 +5,7 @@ module_loader = require('sandboxed-module')
 RoomInvitationsCollection = module_loader.require('../support/collections/room_invitations_collection', {})
 
 describe 'User Invitations Members Collection', ->
-    sut = null
-    curr_date = null
-    curr_user = null
-    accepted_invitation = null
-    to_accept_invitation = null
-    room_invitations = null
+    sut = curr_date = curr_user = accepted_invitation = to_accept_invitation = room_invitations = curr_chat_room = null
     beforeEach (done) ->
         curr_date = "2012-09-20 12:12:10.494376"
         curr_user = 
@@ -28,7 +23,7 @@ describe 'User Invitations Members Collection', ->
             email:"someone@example.com"
             date: curr_date
             user_id:curr_user.id 
-            chat_room_id: 1 
+            chat_room_id: curr_chat_room.id 
             accepted:1  
             user: curr_user 
             chat_room: curr_chat_room
@@ -38,7 +33,7 @@ describe 'User Invitations Members Collection', ->
             email:"someoneelse@example.com"
             date: curr_date
             user_id:curr_user.id
-            chat_room_id: 1
+            chat_room_id: curr_chat_room.id
             accepted:0
             user: curr_user
             chat_room: curr_chat_room
@@ -59,7 +54,7 @@ describe 'User Invitations Members Collection', ->
             done()
         it 'should have a well formatted href resource', (done) ->
             expect(json_data).to.have.key 'href'
-            expect(json_data.href).to.eql "/user/#{room_invitations.user_id}/invitations"
+            expect(json_data.href).to.eql "/room/#{room_invitations.room_id}/invitations"
             done()
             
         it 'should have a links resource', (done) ->
@@ -67,7 +62,7 @@ describe 'User Invitations Members Collection', ->
             done()
         
         it 'should have a self resource that links to itself', (done) ->
-            expect(json_data.links[0]).to.eql  {"name": "self", "rel": "Invitations", "href": "/room/#{curr_user.id}/invitations"}
+            expect(json_data.links[0]).to.eql  {"name": "self", "rel": "Invitations", "href": "/room/#{curr_chat_room.id}/invitations"}
             done()
         
         it 'should have an invitations resource', (done) ->

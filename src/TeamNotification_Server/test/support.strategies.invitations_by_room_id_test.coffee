@@ -23,8 +23,7 @@ describe 'InvitationsByRoomId Strategy', ->
         beforeEach (done) ->
             room_id = 100
             repository =
-                find: () ->
-                    return callback
+                find: sinon.stub()
             
             repository_class_mock.withArgs('ChatRoomInvitation').returns(repository)
             callback =
@@ -33,7 +32,7 @@ describe 'InvitationsByRoomId Strategy', ->
                     
 
             invitations = 'some invitations'           
-            #repository.find.withArgs({user_id:user_id}).returns(callback)
+            repository.find.withArgs({chat_room_id:room_id, accepted:0}).returns(callback)
             
             expected_result = { "room_id":room_id, "result": invitations}
 

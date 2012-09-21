@@ -28,12 +28,12 @@ describe 'Invitations By User Id Strategy', ->
             
             beforeEach (done) ->
                 user_id = 100
-                invitations = 'some invitations'
+                invitations = [{email:'some invitations', chat_room_id:1}]
                 promise =
                     then: (callback) ->
                         callback(invitations)
                 
-                repository.find.withArgs({user_id:user_id}).returns(promise)
+                repository.find.withArgs({user_id:user_id, accepted:0}).returns(promise)
                 expected_result = "user_id":user_id, "result": invitations
 
                 result = sut(user_id)

@@ -16,7 +16,7 @@ class RoomInvitationsCollection
             }
         self = {"name":"self", "rel": "Invitations", "href": "/room/#{@invitations.room_id}/invitations"}
         return {
-            href: "/user/#{@invitations.user_id}/invitations"
+            href: "/room/#{@invitations.room_id}/invitations"
             links:[ self ]
             invitations: get_data_for(invitation) for invitation in @invitations.result
             }
