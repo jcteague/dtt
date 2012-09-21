@@ -9,7 +9,6 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
             update_dates = () -> 
-            
                 get_field = (field_name, data) ->
                     for field in data
                         if field.name is field_name

@@ -1,4 +1,4 @@
-class UserInvitationsCollection
+class RoomInvitationsCollection
     
     constructor: (@invitations) ->
     
@@ -14,11 +14,11 @@ class UserInvitationsCollection
                     { "name":"date", 'value': invitation.date}
                 ]
             }
-        self = {"name":"self", "rel": "Invitations", "href": "/user/#{@invitations.user_id}/invitations"}
+        self = {"name":"self", "rel": "Invitations", "href": "/room/#{@invitations.room_id}/invitations"}
         return {
             href: "/user/#{@invitations.user_id}/invitations"
             links:[ self ]
             invitations: get_data_for(invitation) for invitation in @invitations.result
             }
     
-module.exports = UserInvitationsCollection
+module.exports = RoomInvitationsCollection

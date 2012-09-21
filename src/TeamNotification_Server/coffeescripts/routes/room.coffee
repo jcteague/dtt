@@ -19,6 +19,14 @@ methods.user_authorized_in_room = (req, res, next) ->
 
 list_of_listeners = {}
 
+
+methods.get_room_invitations = (req, res) ->
+
+    callback = (collection) ->
+        res.json(collection.to_json())
+
+    build('room_invitations_collection').for(req.param("id") ).fetch_to callback
+
 methods.set_up_message_transmission = (io, room_id, listener_name) ->
     namespace_io = io.of(listener_name)
     room_channel = "chat #{room_id}"
@@ -127,6 +135,7 @@ module.exports =
     build_routes: (app, io) ->
         app.get('/room',methods.get_room)
         app.get('/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
+        app.get('/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
         app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
         app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)

@@ -21,6 +21,15 @@ methods.get_user_edit = (req, res) ->
 
     build('user_edit_collection').for(user_id).fetch_to callback
 
+methods.get_user_invitations = (req, res) ->
+    #if(req.user.id != req.param('id')) 
+    #    res.redirect("#{config.site.url}/user/#{req.user.id}/invitations")
+
+    callback = (collection) ->
+        res.json(collection.to_json())
+
+    build('user_invitations_collection').for(req.user.id).fetch_to callback
+
 methods.post_user_edit = (req, res) ->
     success_callback = user_callback_factory.get_for_success(req, res)
     failure_callback = user_callback_factory.get_for_failure(req, res)
@@ -72,6 +81,7 @@ methods.authenticate = (req, res, next) ->
 module.exports = 
     methods: methods
     build_routes: (app) ->
+        app.get('/user/invitations', methods.get_user_invitations)
         app.get('/users/query', methods.get_users)
         app.get('/user/login', methods.login)
         app.post('/user/login',express.bodyParser(), methods.authenticate)
@@ -80,4 +90,3 @@ module.exports =
         app.post('/user/:id/edit', methods.post_user_edit)
         app.get('/user/:id/rooms',methods.get_user_rooms)
         app.get('/users', methods.redir_user)
-        app.get('/user/:id/invitations', methods.get_user_invitations)

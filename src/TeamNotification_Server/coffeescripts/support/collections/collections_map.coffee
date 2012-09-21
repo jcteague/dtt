@@ -9,5 +9,7 @@ mapping =
     room_members_collection: 'room_members_collection'
     room_messages_collection: 'room_messages_collection'
     user_login_collection: 'user_login_collection'
+    user_invitations_collection: 'user_invitations_collection'
+    room_invitations_collection: 'room_invitations_collection'
 
 module.exports = mapping

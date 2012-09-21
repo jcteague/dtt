@@ -56,6 +56,7 @@ describe 'Routes Service', ->
                 get_by_id: sinon.stub()
             chat_room_invitation_repository =
                 save: sinon.stub()
+                find: sinon.stub()
 
             repository_class_mock.withArgs('ChatRoom').returns(chat_room_repository)
             repository_class_mock.withArgs('User').returns(users_repository)
@@ -159,6 +160,12 @@ describe 'Routes Service', ->
                 user_promise =
                     then: (callback) ->
                         callback(users)
+                        
+                chat_room_invitation_promise =
+                    then: (callback) ->
+                        callback(null)
+                chat_room_invitation_repository.find.returns(chat_room_invitation_promise)
+                
                 users_repository.find.withArgs(email: inexistent_email).returns(user_promise)
 
                 invitation_email_template = 'blah invitation email'
@@ -273,7 +280,6 @@ describe 'Routes Service', ->
                 chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
                 result = sut.is_user_in_room user_id, room_id
                 done()
-
             it 'should resolve the promise with false', ->
                 sinon.assert.calledWith(deferred.resolve, false)
 
