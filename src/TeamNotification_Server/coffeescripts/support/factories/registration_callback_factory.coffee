@@ -4,9 +4,9 @@ registration_service = require('../registration_service')
 get_for_success = (req, res) ->
     return () ->
         user_data = 
-            first_name: trim(req.body.first_name)
-            last_name: trim(req.body.last_name)
-            email: req.body.email
+            first_name: req.body.first_name.trim()
+            last_name: req.body.last_name.trim()
+            email: req.body.email.trim()
             password: node_hash.sha256(req.body.password)
 
         registration_service.create_user(user_data).then (user) ->
@@ -23,8 +23,6 @@ get_for_failure = (req, res) ->
         res.json
             success: false
             messages: errors
-
-trim = (str) -> str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
 module.exports =
     get_for_success: get_for_success
