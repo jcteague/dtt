@@ -39,7 +39,13 @@ deferred_create = (table_structure) ->
     return (callback) ->
         pg_gateway.open (client) ->
             column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
-            client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
+            has_id_column = (column for column, type of table_structure.columns when column is 'id').length > 0
+            if has_id_column
+                create_statement = "CREATE TABLE #{table_structure.name}(#{column_types}, PRIMARY KEY(id))"
+            else
+                create_statement = "CREATE TABLE #{table_structure.name}(#{column_types})"
+
+            client.query create_statement, (err, result) ->
                 if err
                     console.log err
 
