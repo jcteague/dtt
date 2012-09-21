@@ -21,6 +21,7 @@
       'form_view': 'form_view',
       'links_view': 'links_view',
       'query_view': 'query_view',
+      'user_invitations_view': 'user_invitations_view',
       'server_response_view': 'server_response_view',
       'views_factory': 'views_factory',
       'messages_view': 'messages_view',
