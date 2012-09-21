@@ -15,9 +15,10 @@ class UserInvitationsCollection
                 ]
             }
         self = {"name":"self", "rel": "Invitations", "href": "/user/#{@invitations.user_id}/invitations"}
+        user = {"name":"user", "rel": "User", "href": "/user/#{@invitations.user_id}"}
         return {
             href: "/user/#{@invitations.user_id}/invitations"
-            links:[ self ]
+            links:[ self, user ]
             invitations: get_data_for(invitation) for invitation in @invitations.result
             }
     

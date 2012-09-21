@@ -1,4 +1,4 @@
-define 'user_invitations_view', ['general_view'], (GeneralView) ->
+define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, LinksView) ->
     class UserInvitationsView extends GeneralView
     
         id: 'invitations-container'
@@ -9,12 +9,13 @@ define 'user_invitations_view', ['general_view'], (GeneralView) ->
                     return field.value
 
         initialize: -> 
+            @links_view = new LinksView(model: @model)
         
         render: ->
                 
             me = @
             @$el.empty()
-            
+            @links_view.render().append_to @$el
             @$el.attr('class','row-fluid')
             table = $('<table id="invitations-table" class="table table-hover table-condensed">')
             table.append "<tr><th>Email</th><th>Room</th><th>Invitation date</th><th></th></tr>"
