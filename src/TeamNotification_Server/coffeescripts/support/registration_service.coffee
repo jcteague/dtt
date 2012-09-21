@@ -6,13 +6,6 @@ user_repository = new Repository('User')
 chat_room_invitation_repository = new Repository('ChatRoomInvitation')
 chat_room_user_repository = new Repository('ChatRoomUser')
 
-###
-mark_as_accepted = (user, invitation) ->
-    invitation.accepted = 1
-    invitation.save (err, updated) -> null
-    {user_id: user.id, chat_room_id: invitation.chat_room_id}
-###
-
 create_user = (user_data) ->
     created_user = null
     Q.fcall(() ->
