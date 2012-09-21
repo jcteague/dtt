@@ -32,7 +32,7 @@ describe 'Invitations Status Updater', ->
 
     it 'should return an array of unique user_id and chat_room_id of each invitation', (done) ->
         expect(result.length).to.equal 3
-        expect(result[0]).to.eql invitation1
-        expect(result[1]).to.eql invitation2
-        expect(result[2]).to.eql invitation3
+        expect(result[0]).to.eql {chat_room_id: invitation1.chat_room_id, user_id: user.id}
+        expect(result[1]).to.eql {chat_room_id: invitation2.chat_room_id, user_id: user.id}
+        expect(result[2]).to.eql {chat_room_id: invitation3.chat_room_id, user_id: user.id}
         done()

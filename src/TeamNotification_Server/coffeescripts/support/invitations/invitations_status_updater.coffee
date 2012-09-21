@@ -1,10 +1,13 @@
-mark_as_accepted = (user, invitation) ->
+_ = require('underscore')
+
+mark_as_accepted = (invitation) ->
     invitation.accepted = 1
     invitation.save (err, updated) -> null
-    {user_id: user.id, chat_room_id: invitation.chat_room_id}
+    invitation
 
 update = (user, invitations) ->
-    (mark_as_accepted(user, invitation) for invitation in invitations)
+    room_ids = _.uniq((mark_as_accepted(invitation).chat_room_id for invitation in invitations))
+    ({chat_room_id: id, user_id: user.id} for id in room_ids)
 
 module.exports = 
     update: update
