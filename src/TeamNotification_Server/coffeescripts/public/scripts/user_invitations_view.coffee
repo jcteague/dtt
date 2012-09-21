@@ -18,7 +18,7 @@ define 'user_invitations_view', ['general_view'], (GeneralView) ->
             @$el.attr('class','row-fluid')
             table = $('<table id="invitations-table" class="table table-hover table-condensed">')
             table.append "<tr><th>Email</th><th>Room</th><th>Invitation date</th><th></th></tr>"
-            if @model.has("invitations")
+            if @model.has("invitations") &&  @model.attributes.invitations.length > 0
                 $(@model.attributes.invitations).each (idx, invitation) ->
                     accepted = me.get_field('accepted', invitation.data)
                     if accepted == 0
