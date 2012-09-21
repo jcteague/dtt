@@ -18,9 +18,13 @@ chat_room_user_repository_mock =
     save: sinon.stub()
 repository_class_mock.withArgs('ChatRoomUser').returns(chat_room_user_repository_mock)
 
+invitation_status_updater_mock =
+    update: sinon.stub()
+
 sut = module_loader.require('../support/registration_service', {
     requires:
         './repository': repository_class_mock
+        './invitations/invitations_status_updater': invitation_status_updater_mock
 })
 
 describe 'Registration Service', ->
@@ -58,15 +62,14 @@ describe 'Registration Service', ->
             invitation_updater = invitations = null
 
             beforeEach (done) ->
-                invitation1 = {chat_room_id: 2, accepted: 0, save: sinon.spy()}
-                invitation2 = {chat_room_id: 8, accepted: 0, save: sinon.spy()}
+                invitation1 = {chat_room_id: 2, accepted: 0}
+                invitation2 = {chat_room_id: 8, accepted: 0}
                 invitations = [invitation1, invitation2]
                 invitations_promise = make_promise_for invitations
                 chat_room_invitation_repository_mock.find.withArgs(email: created_user.email).returns(invitations_promise)
 
-                invitation_updater = sinon.mock()
-                invitation_updater.withArgs(invitations).returns([{user_id: created_user.id, chat_room_id: invitation1.chat_room_id}, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id}])
-                result = sut.create_user user_data, invitation_updater
+                invitation_status_updater_mock.update.withArgs(created_user, invitations).returns([{user_id: created_user.id, chat_room_id: invitation1.chat_room_id}, {user_id: created_user.id, chat_room_id: invitation2.chat_room_id}])
+                result = sut.create_user user_data
                 done()
 
             it 'should save the user in the repository', (done) ->
@@ -74,7 +77,7 @@ describe 'Registration Service', ->
                 done()
 
             it 'should update the pending invitations using the updater', (done) ->
-                invitation_updater.exactly(1).withArgs(invitations)
+                sinon.assert.calledWith(invitation_status_updater_mock.update, created_user, invitations)
                 done()
 
             it 'should add the user to the chat rooms that s/he had been invited', (done) ->
