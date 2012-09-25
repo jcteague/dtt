@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'server_response_view', 'views_factory', 'collection_model'], (Backbone, ClientRouter, FormView, LinksView, QueryView, ServerResponseView, ViewsFactory, CollectionModel) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'server_response_view', 'views_factory', 'collection_model'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, ServerResponseView, ViewsFactory, CollectionModel) ->
 
     class ClientView extends Backbone.View
 
@@ -27,8 +27,12 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
                 if view instanceof FormView
                     view.on 'messages:display', @display_messages, @
                     view.on 'all', @propagate_event, @
-                if view.constructor.name in ['QueryView', 'UserEditView']
+                if @can_display_messages view
                     view.on 'messages:display', @display_messages, @
+
+        can_display_messages: (view) ->
+            view instanceof QueryView or view instanceof UserEditView
+
 
         propagate_event: (event, values) ->
             @trigger event, values
