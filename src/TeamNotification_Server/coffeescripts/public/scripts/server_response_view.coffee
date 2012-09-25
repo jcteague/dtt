@@ -5,6 +5,7 @@ define 'server_response_view', ['backbone'], (Backbone) ->
         id: 'server-response-container'
 
         render: ->
+            console.log @model
             @$el.empty()
             if @model?
                 @$el.append "<p>#{message}</p>" for message in @model

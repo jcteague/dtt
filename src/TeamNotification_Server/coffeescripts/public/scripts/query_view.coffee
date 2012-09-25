@@ -34,6 +34,7 @@ define 'query_view', ['general_view', 'query_renderer'], (GeneralView, QueryRend
 
                 $.post @$('form').attr('action'), data, (res) => 
                     @$('input').not(':submit').val('')
+                    console.log 'response from sever is', res.messages
                     @trigger 'messages:display', res.messages
 
             setTimeout func, 200
