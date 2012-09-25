@@ -5,7 +5,8 @@ sinon = require('sinon')
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
 
-email_not_in_room = 'ed@es.com'
+# To not be polluting anyone's email
+email_not_in_room = 'eespinal@intellisys.com.do'
 users =
     name: 'users'
     entities: [

@@ -1,7 +1,7 @@
 users = 
     name: 'users'
     columns:
-        id: 'integer'
+        id: 'serial'
         first_name: 'varchar(100)'
         last_name: 'varchar(100)'
         email: 'varchar(100)'
@@ -10,7 +10,7 @@ users =
 chat_rooms =
     name: 'chat_room'
     columns:
-        id: 'integer'
+        id: 'serial'
         name: 'varchar(100)'
         owner_id: 'integer'
 
@@ -23,7 +23,7 @@ chat_room_users =
 chat_room_messages =
     name: 'chat_room_messages'
     columns:
-        id: 'integer'
+        id: 'serial'
         body: 'varchar(100)'
         date: 'varchar(200)'
         user_id: 'integer'

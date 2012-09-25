@@ -72,6 +72,13 @@ methods.manage_room_members = (req, res) ->
 
     build('room_members_collection').for(room_id).fetch_to callback
 
+methods.get_accept_invitation = (req, res) ->
+    email = req.param('email')
+    callback = (collection) ->
+        res.json(collection.fill(email: email).to_json())
+
+    build('registration_collection').fetch_to callback
+
 methods.get_room = (req, res) ->
     r =
         'href': '/room'
@@ -104,7 +111,6 @@ methods.post_room_message = (req, res, next) ->
         message_date = ''
         message_stamp = ''
         setname = "room:#{room_id}:messages"
-        console.log values
         if typeof values.stamp != 'undefined' && values.stamp != ''
             message_stamp = values.stamp
             message_date = values.date
@@ -138,6 +144,7 @@ module.exports =
         app.get('/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
         app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
         app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
+        app.get('/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/room',express.bodyParser(), methods.post_room)
         app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)

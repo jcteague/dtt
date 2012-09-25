@@ -3,6 +3,7 @@
 sudo apt-get -y install postgresql &&
 sudo apt-get -y install nodejs npm &&
 sudo apt-get -y install ruby rubygems &&
+sudo apt-get -y install sendmail &&
 sudo ./install_dependencies &&
 sudo gem install pg -v '0.13.2' &&
 sudo gem install bundle &&

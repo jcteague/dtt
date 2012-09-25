@@ -1,7 +1,7 @@
 config = require('../../../config')()
 
-get_template = (chat_room) ->
-    join_room_link = "#{config.site.url}/room/#{chat_room.id}/accept-invitation"
+get_template = (email, chat_room) ->
+    join_room_link = "#{config.site.url}/client#/room/#{chat_room.id}/accept-invitation?email=#{email}"
     return """
         <div>
             <p>Hi,</p>
@@ -20,7 +20,7 @@ using = (email_invitation_values) ->
         from: 'Invitations <invitations@yacketyapp.com>'
         to: email_invitation_values.email
         subject: 'You have been invited to join a room in Yackety App'
-        html: get_template(email_invitation_values.chat_room)
+        html: get_template(email_invitation_values.email, email_invitation_values.chat_room)
     }
 
 module.exports =

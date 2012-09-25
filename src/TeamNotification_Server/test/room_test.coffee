@@ -74,6 +74,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
             sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages)
             sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
+            sinon.assert.calledWith(app.get, '/room/:id/accept-invitation', sut.methods.get_accept_invitation)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.post,'/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
             sinon.assert.calledWith(app.post,'/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)
@@ -200,9 +201,11 @@ describe 'Room', ->
             json_data = null
 
             beforeEach (done) ->
+                collection_value = 'blah collection value'
                 collection =
                     to_json: ->
                         collection_value
+                    fill: sinon.stub()
                 collection_factory =
                     for: sinon.stub()
                 req =
@@ -251,6 +254,31 @@ describe 'Room', ->
 
                 it 'should return the built collection for the room members model', (done) ->
                     sinon.assert.calledWith(res.json, collection_value)
+                    done()
+
+            describe 'get_accept_invitation', ->
+
+                filled_collection_value = null
+
+                beforeEach (done) ->
+                    registration_collection =
+                        fetch_to: (callback) ->
+                            callback(collection)
+                    routes_service_mock.build.withArgs('registration_collection').returns(registration_collection)
+
+                    email = 'foo@bar.com'
+                    req.param.withArgs('email').returns(email)
+
+                    filled_collection_value = 'blah filled collection value'
+                    filled_collection =
+                        to_json: -> filled_collection_value
+                    collection.fill.withArgs(email: email).returns(filled_collection)
+
+                    sut.methods.get_accept_invitation(req, res)
+                    done()
+
+                it 'should return the built collection for the registration', (done) ->
+                    sinon.assert.calledWith(res.json, filled_collection_value)
                     done()
 
             describe 'get_room_messages', ->
