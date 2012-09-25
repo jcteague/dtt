@@ -45,6 +45,7 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         string Name { get; }
         IWrapDocument Document { get; }
+        IWrapProject SubProject { get; }
         Window Open(string viewKind);
     }
 

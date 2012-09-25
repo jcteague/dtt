@@ -26,6 +26,8 @@ namespace TeamNotification_Library.Service.LocalSystem
         public IWrapDocument OpenFile(string projectName, string fileName)
         {
             if (!IsValidSolution) return null;
+
+//            var p = dteStore.dte.Solution;//.Projects.Cast<ProjectItem>().Select(x => x.Name); //FindProjectItem(projectName);
             
             var p = CurrentSolution.FindProject(projectName);
             if (p == null) return null;

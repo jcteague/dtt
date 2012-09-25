@@ -9,10 +9,10 @@ namespace TeamNotification_Library.Service.LocalSystem
     public class SolutionWrapper : IWrapSolution
     {
         private EnvDTE.Solution Solution { get; set; }
-        //public FileInfo File { get { return new FileInfo(Solution.FileName); } }
         public IWrapProject[] Projects { get; private set; }
         public string FileName { get { return Solution.FileName.Remove(0, Solution.FileName.LastIndexOf('\\') + 1); } }
         public bool IsOpen { get { return Solution.IsOpen; } }
+        
         public IWrapProject FindProject(string projectName)
         {
             var project = this.Projects.Where(x => x.UniqueName == projectName);
@@ -25,8 +25,16 @@ namespace TeamNotification_Library.Service.LocalSystem
             Solution = solution;
             var projects = new ProjectWrapper[solution.Projects.Count];
             var i = 0;
+//            var subProjects = new List<Project>();
             foreach (Project p in solution.Projects)
+            {
+//                foreach (ProjectItem projectItem in p.ProjectItems)
+//                {
+//                    subProjects.Add(projectItem.SubProject);
+//                }
+
                 projects[i++] = new ProjectWrapper(p);
+            }
             Projects = projects;
         }
     }
