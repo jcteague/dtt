@@ -115,6 +115,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Library\Service\LocalSystem\SelectionWrapperSpecs.cs" />
+    <Compile Include="Library\Service\LocalSystem\VisualStudioItemsFinderSpecs.cs" />
     <Compile Include="Library\Service\Mappers\CollectionDataListToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Library\Service\Mappers\ObjectToFormUrlEncodedContentMapperSpecs.cs" />
     <Compile Include="Library\Service\ToolWindow\ToolWindowActionGetterSpecs.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubDocument.cs" />
     <Compile Include="Stubs\StubProjectItem.cs" />
+    <Compile Include="Stubs\StubProjectItems.cs" />
     <Compile Include="Stubs\StubWindow.cs" />
   </ItemGroup>
   <ItemGroup>

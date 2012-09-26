@@ -16,15 +16,12 @@ namespace TeamNotification_Library.Service.LocalSystem
 
         public Maybe<ProjectItem> FindDocument(string projectName, string fileName)
         {
-            var project = FindProject(projectName);
-            var document = project.Select(x => DocumentFilter(x.ProjectItems, fileName));
-            return document;
+            return FindProject(projectName).Select(x => DocumentFilter(x.ProjectItems, fileName));
         }
 
-        public Maybe<Project> FindProject(string projectName)
+        private Maybe<Project> FindProject(string projectName)
         {
-            var projects = visualStudioProjectsList.GetAllProjects();
-            return projects.First(x => RemoveUnnecessaryPath(x) == projectName).ToMaybe();
+            return visualStudioProjectsList.GetAllProjects().First(x => RemoveUnnecessaryPath(x) == projectName).ToMaybe();
         }
 
         private string RemoveUnnecessaryPath(Project project)
