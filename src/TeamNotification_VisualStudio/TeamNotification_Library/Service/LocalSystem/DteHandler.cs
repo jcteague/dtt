@@ -27,19 +27,18 @@ namespace TeamNotification_Library.Service.LocalSystem
         {
             if (!IsValidSolution) return null;
 
-//            var p = dteStore.dte.Solution;//.Projects.Cast<ProjectItem>().Select(x => x.Name); //FindProjectItem(projectName);
-            
-            var p = CurrentSolution.FindProject(projectName);
-            if (p == null) return null;
-
-            var d = p.FindDocument(fileName);
-            if (d == null) return null;
-
-            try{  
-                var w = d.Open(vsViewKindCode);
-                w.Visible = true;
-                w.Activate();
-                return d.Document;
+            try
+            {
+                return new DocumentWrapper(Container
+                    .GetInstance<IFindVisualStudioItems>()
+                    .FindDocument(projectName, fileName)
+                    .SelectMany(x =>
+                                {
+                                    var w = x.Open(vsViewKindCode);
+                                    w.Visible = true;
+                                    w.Activate();
+                                    return x.Document;
+                                }));
             }
             catch
             {

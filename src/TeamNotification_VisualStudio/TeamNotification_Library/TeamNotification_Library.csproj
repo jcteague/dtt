@@ -43,6 +43,9 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -104,17 +107,20 @@
     <Compile Include="Extensions\DTEExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\FlowDocumentExtensions.cs" />
+    <Compile Include="Extensions\FunctionalExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Functional\Just.cs" />
+    <Compile Include="Functional\Maybe.cs" />
+    <Compile Include="Functional\Nothing.cs" />
     <Compile Include="Models\ChatMessageBody.cs" />
     <Compile Include="Models\ChatMessageModel.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
-    <Compile Include="Models\Maybe.cs" />
     <Compile Include="Models\ServerResponse.cs" />
     <Compile Include="Models\UI\ChatUIElements.cs" />
     <Compile Include="Models\User.cs" />
@@ -237,14 +243,18 @@
     <Compile Include="Service\LocalSystem\DteHandler.cs" />
     <Compile Include="Service\LocalSystem\DteHandlerCreator.cs" />
     <Compile Include="Service\LocalSystem\DteStore.cs" />
+    <Compile Include="Service\LocalSystem\IFindVisualStudioItems.cs" />
     <Compile Include="Service\LocalSystem\IHandleDTE.cs" />
     <Compile Include="Service\LocalSystem\ICreateDteHandler.cs" />
+    <Compile Include="Service\LocalSystem\IListVisualStudioProjects.cs" />
     <Compile Include="Service\LocalSystem\IStoreDTE.cs" />
     <Compile Include="Service\LocalSystem\IStoreGlobalState.cs" />
     <Compile Include="Service\LocalSystem\PastingResponse.cs" />
     <Compile Include="Service\LocalSystem\SelectionWrapper.cs" />
     <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
     <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
+    <Compile Include="Service\LocalSystem\VisualStudioItemsFinder.cs" />
+    <Compile Include="Service\LocalSystem\VisualStudioProjectsList.cs" />
     <Compile Include="Service\LocalSystem\WindowWrapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
