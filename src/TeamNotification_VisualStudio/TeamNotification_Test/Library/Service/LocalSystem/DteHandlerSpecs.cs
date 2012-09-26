@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using EnvDTE;
 using Machine.Specifications;
+using TeamNotification_Library.Functional;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Test.Stubs;
 using developwithpassion.specifications.rhinomocks;
 using Rhino.Mocks;
+using DocumentWrapper = TeamNotification_Library.Service.LocalSystem.DocumentWrapper;
 
 namespace TeamNotification_Test.Library.Service.LocalSystem
 {
@@ -21,21 +24,24 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
                 ValidDocumentName = "ThisIsIndeedAValidDocument";
 
                 ProjectItem = fake.an<IWrapProjectItem>();
-                Solution = fake.an<IWrapSolution>();
+                solution = fake.an<IWrapSolution>();
                 Projects = new IWrapProject[2] { fake.an<IWrapProject>(), fake.an<IWrapProject>() };
                 Projects[0].Stub(x => x.FindDocument(ValidDocumentName)).Return(ProjectItem);
 
-                DteStore = depends.on<IStoreDTE>();
-                DteStore.Stub(x => x.Solution).Return(Solution);
+                dteStore = depends.on<IStoreDTE>();
+                dteStore.Stub(x => x.Solution).Return(solution);
 
-                Solution.Stub(x => x.Projects).Return(Projects);
-                Solution.Stub(x => x.FindProject(ValidProjectName)).Return(Projects[0]);
+                visualStudioItemsFinder = depends.on<IFindVisualStudioItems>();
+
+                solution.Stub(x => x.Projects).Return(Projects);
+                solution.Stub(x => x.FindProject(ValidProjectName)).Return(Projects[0]);
             };
 
-            protected static IWrapSolution Solution;
+            protected static IWrapSolution solution;
             protected static IWrapProjectItem ProjectItem;
             protected static IWrapProject[] Projects;
-            protected static IStoreDTE DteStore;
+            protected static IStoreDTE dteStore;
+            protected static IFindVisualStudioItems visualStudioItemsFinder;
             protected static string ValidProjectName;
             protected static string ValidDocumentName;
         }
@@ -49,6 +55,7 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
 
             protected static string SolutionName;
         }
+
         public class and_the_file_is_invalid : when_opening_a_solution_file
         {
             Because of = () =>
@@ -59,28 +66,27 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
 
             private static IWrapDocument _doc;
         }
+
         public class and_the_file_is_valid : when_opening_a_solution_file
         {
             Establish context = () =>
             {
-                windowMock = fake.an<Window>();
-                DocumentMock = fake.an<IWrapDocument>();
-                ProjectItem.Stub(x => x.Open(vsViewKindCode)).Return(windowMock);
-                ProjectItem.Stub(x => x.Document).Return(DocumentMock);
-                filename = "an awesome filename ;D";
-                Solution.Stub(x => x.FileName).Return(filename);
+                var projectItem = new StubProjectItem();
+                document = new Just<ProjectItem>(projectItem);
+                visualStudioItemsFinder.Stub(x => x.FindDocument(ValidProjectName, ValidDocumentName)).Return(document);
             };
+
             Because of = () =>
-                Doc = sut.OpenFile(ValidProjectName, ValidDocumentName);
+                Result = sut.OpenFile(ValidProjectName, ValidDocumentName);
 
-            It should_return_a_valid_document_instance = () =>
-                Doc.ShouldEqual(DocumentMock);
+            private It should_return_a_valid_document_instance = () =>
+            {
+                Result.ShouldNotBeNull();
+                Result.ShouldBeOfType<DocumentWrapper>();
+            };
 
-            private static string filename;
-            private static Window windowMock;
-            private static string vsViewKindCode = "{7651A701-06E5-11D1-8EBD-00A0C90F26EA}";
-            private static IWrapDocument Doc;
-            private static IWrapDocument DocumentMock;
+            private static IWrapDocument Result;
+            private static Maybe<ProjectItem> document;
         }
 
         public class when_asking_for_the_editpoint : Concern

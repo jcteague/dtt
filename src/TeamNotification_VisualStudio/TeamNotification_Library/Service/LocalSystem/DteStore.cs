@@ -29,20 +29,20 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         private EnvDTE.Project Project { get; set; }
         public ProjectItemWrapper[] ProjectItems { get; set; }
-//        public string UniqueName { get { return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1); } }
-        public string UniqueName
-        {
-            get
-            {
-                foreach (ProjectItem projectItem in Project.ProjectItems)
-                {
-                    if (projectItem.SubProject.IsNotNull())
-                        return projectItem.SubProject.UniqueName.Remove(0, projectItem.SubProject.UniqueName.LastIndexOf('\\') + 1);
-                }
-
-                return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1);
-            }
-        }
+        public string UniqueName { get { return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1); } }
+//        public string UniqueName
+//        {
+//            get
+//            {
+//                foreach (ProjectItem projectItem in Project.ProjectItems)
+//                {
+//                    if (projectItem.SubProject.IsNotNull())
+//                        return projectItem.SubProject.UniqueName.Remove(0, projectItem.SubProject.UniqueName.LastIndexOf('\\') + 1);
+//                }
+//
+//                return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1);
+//            }
+//        }
         
         public IWrapProjectItem FindDocument(string fileName)
         {

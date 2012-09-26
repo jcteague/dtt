@@ -4,12 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EnvDTE;
+using TeamNotification_Library.Functional;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
     public class DteHandler : IHandleDte
     {
         private readonly IStoreDTE dteStore;
+        private readonly IFindVisualStudioItems visualStudioItemsFinder;
+
+
         private const string vsViewKindCode = "{7651A701-06E5-11D1-8EBD-00A0C90F26EA}";
 
         public bool IsValidSolution { get { return (CurrentSolution.FileName != ""); } }
@@ -17,9 +21,10 @@ namespace TeamNotification_Library.Service.LocalSystem
         public IWrapProject[] Projects { get { return dteStore.Solution.Projects; }  }
         public IWrapSolution CurrentSolution { get { return dteStore.Solution; } }
         
-        public DteHandler(IStoreDTE dteStore)
+        public DteHandler(IStoreDTE dteStore, IFindVisualStudioItems visualStudioItemsFinder)
         {
             this.dteStore = dteStore;
+            this.visualStudioItemsFinder = visualStudioItemsFinder;
             this.HasTextOnLine = false;
         }
 
@@ -29,8 +34,7 @@ namespace TeamNotification_Library.Service.LocalSystem
 
             try
             {
-                return new DocumentWrapper(Container
-                    .GetInstance<IFindVisualStudioItems>()
+                return new DocumentWrapper(visualStudioItemsFinder
                     .FindDocument(projectName, fileName)
                     .SelectMany(x =>
                                 {

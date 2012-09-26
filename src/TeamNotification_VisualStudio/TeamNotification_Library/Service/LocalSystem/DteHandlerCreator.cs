@@ -9,7 +9,7 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         public IHandleDte Get(IStoreDTE dteStore)
         {
-            return new DteHandler(dteStore);
+            return new DteHandler(dteStore, Container.GetInstance<IFindVisualStudioItems>());
         }
     }
 }

@@ -5,9 +5,9 @@ namespace TeamNotification_Library.Extensions
 {
     public static class FunctionalExtensions
     {
-         public static Maybe<T> ToMaybe<T>(this T source) where T : class 
-         {
-             return new Just<T>(source);
-         }
+        public static Maybe<T> ToMaybe<T>(this T source) where T : class 
+        {
+            return new Just<T>(source);
+        }
     }
 }
