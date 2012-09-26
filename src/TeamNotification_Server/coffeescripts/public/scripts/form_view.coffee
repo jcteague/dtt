@@ -33,6 +33,9 @@ define 'form_view', ['general_view', 'form_template_renderer','base64'], (Genera
                 data[$current.attr('name')] = $current.val()
                 
             $.post @$('form').attr('action'), data, (res) => 
-                @trigger 'messages:display', res.messages if res.messages?
                 @trigger 'response:received', res
+                if res.messages?
+                    if res.link?
+                        res.messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
+                    @trigger 'messages:display', res.messages 
             $('form').get(0).reset()

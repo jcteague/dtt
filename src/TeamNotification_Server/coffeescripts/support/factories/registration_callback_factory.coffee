@@ -16,6 +16,7 @@ get_for_success = (req, res) ->
                 data: 
                     id: user.id
                     email: user.email
+                link: "/user/#{user.id}/"
             }
 
 get_for_failure = (req, res) ->

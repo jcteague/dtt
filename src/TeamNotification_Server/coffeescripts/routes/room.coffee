@@ -5,7 +5,7 @@ routes_service = require('../support/routes_service')
 config = require('../config')()
 build = routes_service.build
 redis_connector = require('../support/redis/redis_gateway')
-
+get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
 redis_queryer = redis_connector.open()
@@ -50,7 +50,8 @@ methods.post_room = (req, res, next) ->
     chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: req.user.id})
     chat_room.save (err,saved_chat_room) ->
         if !err
-            res.send('room '+ saved_chat_room.id + ' created')
+            res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/" ))
+            #res.send( success:true, messages: ['room '+ saved_chat_room.id + ' created'], link:"/room/#{saved_chat_room.id}/" )
         else 
             next(new Error(err.code,err.message))
 

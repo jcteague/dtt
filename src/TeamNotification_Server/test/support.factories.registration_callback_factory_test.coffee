@@ -62,6 +62,7 @@ describe 'Registration Callback Factory', ->
 
         it 'should send a success json response', (done) ->
             json =
+                link: "/user/#{user.id}/"
                 success: true
                 messages: ['User created successfully']
                 data: 

@@ -17,6 +17,7 @@ routes_service_mock =
     build: sinon.stub()
     add_user_to_chat_room: sinon.stub()
     is_user_in_room: sinon.stub()
+    get_server_response: sinon.stub()
 
 redis_mock =
     open: sinon.stub()
@@ -389,7 +390,9 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 owner_id = 3
-                res =  send: sinon.spy()
+                res =  
+                    send: sinon.spy()
+                    json: sinon.spy()
                 req =
                     param: sinon.stub()
                     user:
@@ -402,12 +405,19 @@ describe 'Room', ->
                 json_data = null
                 chat_room = null
                 chat_room_id = null
-
+                expected_parameters = null
+                
                 beforeEach (done) ->
                     chat_room = 
                         save: (callback) ->
                             callback(false, {id: chat_room_id})
-
+                    expected_parameters = 
+                        success:true
+                        messages:["room #{chat_room_id} created"]
+                        link:"/room/#{chat_room_id}/"
+                    
+                    routes_service_mock.get_server_response.withArgs(true,["room #{chat_room_id} created"],"/room/#{chat_room_id}/").returns(expected_parameters)
+ 
                     req.body = {name: 'blah'}
                     request_values = {name: req.body.name, owner_id: owner_id}
                     sinon.spy(chat_room, 'save')
@@ -416,7 +426,8 @@ describe 'Room', ->
                     done()
 
                 it 'should notify the user the room was created', (done) ->
-                    sinon.assert.calledWith(res.send,"room #{chat_room_id} created")
+                    sinon.assert.calledWith(res.json, expected_parameters)
+                    #sinon.assert.calledWith(res.send,"room #{chat_room_id} created")
                     done()
 
                 it 'should create the user on the database', (done) ->

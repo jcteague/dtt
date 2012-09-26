@@ -82,13 +82,16 @@ describe 'Routes Service', ->
             done()
 
         describe 'and the user exists', ->
-
+            expected_value = null
             beforeEach (done) ->
                 user = id: user_id
                 users = [user, {id: 10}]
                 user_promise =
                     then: (callback) ->
                         callback(users)
+                #sut.get_server_response = sinon.stub()
+                #sut.get_server_response.withArgs(true,["user added"],"/room/#{room_id}/invitations/").returns(expected_value)
+                expected_value = {success:true, messages:["user added"], link:"/room/#{room_id}/users/"}
                 users_repository.find.withArgs(email: user_email).returns(user_promise)
                 done()
 
@@ -108,7 +111,9 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: true, messages: ["user added"]})
+                    
+                    #inon.assert.calledWith(sut.get_server_, true, ["user added"], "/room/#{room_id}/users/")
+                    sinon.assert.calledWith(deferred.resolve, expected_value)
                     done()
 
             describe 'and the user is not the owner of the room', ->
@@ -128,7 +133,7 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the not sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"]})
+                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"], link: "/user/#{user.id}/"})
                     done()
 
             describe 'and the user is already in the room', ->
@@ -147,12 +152,12 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the not sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"]})
+                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"], link: "/user/#{user.id}/"})
                     done()
 
         describe 'and the user does not exist', ->
 
-            inexistent_email = invitation_email_template = null
+            inexistent_email = invitation_email_template = expected_response = null
 
             beforeEach (done) ->
                 inexistent_email = 'inexistent@email.com'
@@ -170,7 +175,7 @@ describe 'Routes Service', ->
 
                 invitation_email_template = 'blah invitation email'
                 email_template_mock.for.invitation.using.withArgs(email: inexistent_email, chat_room: chat_room).returns(invitation_email_template)
-
+                expected_response = {success: false, messages: ["An email invitation has been sent to #{inexistent_email}"], link: "/room/#{room_id}/invitations/"}
                 result = sut.add_user_to_chat_room(logged_in_user, inexistent_email, room_id)
                 done()
 
@@ -191,7 +196,7 @@ describe 'Routes Service', ->
                 done()
 
             it 'should resolve the promise with the user does not exist message', (done) ->
-                sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["An email invitation has been sent to #{inexistent_email}"]})
+                sinon.assert.calledWith(deferred.resolve, expected_response)
                 done()
 
     describe 'is_user_in_room', ->

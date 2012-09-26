@@ -56,7 +56,7 @@ describe 'User Account Registration', ->
                     then(done, done)
 
             it 'should receive a success message', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p>"
+                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>You can view the new resource   <a href=\"#/user/1/\">here</a>\n</p>"
                 done()
 
         describe 'When a user visits the client#/registration page and submits an email that is already registered', ->

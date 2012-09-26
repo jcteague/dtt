@@ -19,10 +19,14 @@ add_user_to_chat_room = (current_user, email, room_id) ->
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
-                        defer.resolve({success: true, messages: ["user added"]})
+                        #defer.resolve({success: true, messages: ["user added"]})
+                        response = get_server_response(true, ["user added"], "/room/#{room_id}/users/")
+                        defer.resolve(response)
                     )
                 else
-                    defer.resolve({success: false, messages: ["user is already in the room"]})
+                    #defer.resolve({success: false, messages: ["user is already in the room"]})
+                    response = get_server_response(false, ["user is already in the room"], "/user/#{user.id}/")
+                    defer.resolve(response)
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 chat_room_invitation_repository.save({email:email, chat_room_id:room_id, user_id: current_user.id})
@@ -31,7 +35,9 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                     email: email
                     chat_room: chat_room
                 email_sender.send template
-                defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
+                #defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
+                response = get_server_response(false, ["An email invitation has been sent to #{email}"], "/room/#{room_id}/invitations/")
+                defer.resolve(response)
 
     defer.promise
 
@@ -47,7 +53,12 @@ is_user_in_room = (user_id, room_id) ->
 
     defer.promise
 
+get_server_response = (success, messages, link) ->
+    return {success:success, messages:messages, link:link}
+
+
 module.exports =
     build: build
+    get_server_response: get_server_response
     add_user_to_chat_room: add_user_to_chat_room
     is_user_in_room: is_user_in_room
