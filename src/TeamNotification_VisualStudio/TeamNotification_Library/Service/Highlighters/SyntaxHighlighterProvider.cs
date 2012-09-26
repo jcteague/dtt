@@ -9,12 +9,14 @@ namespace TeamNotification_Library.Service.Highlighters
         private IHighlighter CSharpHighlighter;
         private IHighlighter VBHighlighter;
         private IHighlighter JavaScriptHighlighter;
+        private IHighlighter DefaultHighlighter;
 
         public SyntaxHighlighterProvider()
         {
             CSharpHighlighter = HighlighterManager.Instance.Highlighters["cSharp"];
             VBHighlighter = HighlighterManager.Instance.Highlighters["vBNET"];
             JavaScriptHighlighter = HighlighterManager.Instance.Highlighters["javaScript"];
+            DefaultHighlighter = HighlighterManager.Instance.Highlighters["default"];
         }
 
         public IHighlighter GetFor(int programmingLanguageIdentifier)
@@ -31,7 +33,8 @@ namespace TeamNotification_Library.Service.Highlighters
                     return JavaScriptHighlighter;
 
                 default:
-                    throw new ArgumentException("There is no implementation for the provided programming language");
+//                    throw new ArgumentException("There is no implementation for the provided programming language");
+                    return DefaultHighlighter;
             }
         }
     }
