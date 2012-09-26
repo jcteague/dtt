@@ -26,7 +26,6 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
                 ProjectItem = fake.an<IWrapProjectItem>();
                 solution = fake.an<IWrapSolution>();
                 Projects = new IWrapProject[2] { fake.an<IWrapProject>(), fake.an<IWrapProject>() };
-                Projects[0].Stub(x => x.FindDocument(ValidDocumentName)).Return(ProjectItem);
 
                 dteStore = depends.on<IStoreDTE>();
                 dteStore.Stub(x => x.Solution).Return(solution);

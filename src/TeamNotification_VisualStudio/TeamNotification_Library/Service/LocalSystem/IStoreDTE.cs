@@ -38,7 +38,7 @@ namespace TeamNotification_Library.Service.LocalSystem
     {
         ProjectItemWrapper[] ProjectItems { get; }
         string UniqueName { get; }
-        IWrapProjectItem FindDocument(string fileName);
+        Project Value { get; }
     }
 
     public interface IWrapProjectItem

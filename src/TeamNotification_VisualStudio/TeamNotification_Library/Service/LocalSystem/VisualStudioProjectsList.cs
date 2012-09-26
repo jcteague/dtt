@@ -16,10 +16,11 @@ namespace TeamNotification_Library.Service.LocalSystem
 
         public IEnumerable<Project> GetAllProjects()
         {
-            var projects = dteStore.dte.Solution.Projects;
+            IWrapProject[] projects = dteStore.Solution.Projects;
             var flattenedProjects = new List<Project>();
-            foreach (Project project in projects)
+            foreach (IWrapProject wrappedProject in projects)
             {
+                var project = wrappedProject.Value;
                 if (project.IsNull())
                     continue;
                 if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using EnvDTE;
 using TeamNotification_Library.Extensions;
@@ -30,25 +29,10 @@ namespace TeamNotification_Library.Service.LocalSystem
         private EnvDTE.Project Project { get; set; }
         public ProjectItemWrapper[] ProjectItems { get; set; }
         public string UniqueName { get { return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1); } }
-//        public string UniqueName
-//        {
-//            get
-//            {
-//                foreach (ProjectItem projectItem in Project.ProjectItems)
-//                {
-//                    if (projectItem.SubProject.IsNotNull())
-//                        return projectItem.SubProject.UniqueName.Remove(0, projectItem.SubProject.UniqueName.LastIndexOf('\\') + 1);
-//                }
-//
-//                return Project.UniqueName.Remove(0, Project.UniqueName.LastIndexOf('\\') + 1);
-//            }
-//        }
         
-        public IWrapProjectItem FindDocument(string fileName)
-        {
-            var doc = this.ProjectItems.Where(x => x.Name == fileName);
-            var count = doc.Count();
-            return count > 0 ? doc.ElementAt(0) : null;
+        public Project Value 
+        { 
+            get { return Project; }
         }
 
         public ProjectWrapper(EnvDTE.Project project)
