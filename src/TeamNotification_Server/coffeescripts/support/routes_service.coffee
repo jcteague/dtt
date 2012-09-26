@@ -19,12 +19,10 @@ add_user_to_chat_room = (current_user, email, room_id) ->
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
                 if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
-                        #defer.resolve({success: true, messages: ["user added"]})
                         response = get_server_response(true, ["user added"], "/room/#{room_id}/users/")
                         defer.resolve(response)
                     )
                 else
-                    #defer.resolve({success: false, messages: ["user is already in the room"]})
                     response = get_server_response(false, ["user is already in the room"], "/user/#{user.id}/")
                     defer.resolve(response)
         else
@@ -35,7 +33,6 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                     email: email
                     chat_room: chat_room
                 email_sender.send template
-                #defer.resolve({success: false, messages: ["An email invitation has been sent to #{email}"]})
                 response = get_server_response(false, ["An email invitation has been sent to #{email}"], "/room/#{room_id}/invitations/")
                 defer.resolve(response)
 

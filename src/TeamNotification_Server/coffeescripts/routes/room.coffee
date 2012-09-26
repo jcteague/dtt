@@ -51,7 +51,6 @@ methods.post_room = (req, res, next) ->
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/" ))
-            #res.send( success:true, messages: ['room '+ saved_chat_room.id + ' created'], link:"/room/#{saved_chat_room.id}/" )
         else 
             next(new Error(err.code,err.message))
 
