@@ -22,7 +22,6 @@ namespace TeamNotification_Library.Functional
 
         public Maybe<R> Select<R>(Func<T, R> func) where R : class 
         {
-//            return IsEmpty ? (Maybe<R>) new Nothing<R>() : new Just<R>(func(Value));
             return IsEmpty ? new Nothing<R>() : func(Value).ToMaybe();
         }
 

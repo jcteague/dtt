@@ -32,7 +32,6 @@ namespace TeamNotification_Library.Service.LocalSystem
         IWrapProject[] Projects { get; }
         string FileName { get; }
         bool IsOpen { get; }
-        IWrapProject FindProject(string projectName);
     }
     public interface IWrapProject
     {

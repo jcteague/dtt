@@ -63,7 +63,7 @@ namespace TeamNotification_Library.Service.Clipboard
         void UpdateClipboard()
         {
             var dte = dteStore.dte;
-            if (applicationGlobalState.Active && dte.ActiveWindow.Document.IsNotNull())
+            if (IsVisualStudioActive() && dte.ActiveWindow.Document.IsNotNull())
             {
                 var activeDocument = dte.ActiveDocument;
                 var txt = activeDocument.Object() as TextDocument;
@@ -94,6 +94,13 @@ namespace TeamNotification_Library.Service.Clipboard
             }
         }
 
+        bool IsVisualStudioActive()
+        {
+            var activeWindow = GetActiveWindow();
+            var mainWindowHandle = (IntPtr) dteStore.dte.MainWindow.HWnd;
+            return activeWindow == mainWindowHandle;
+        }
+
         IntPtr viewerHandle = IntPtr.Zero;
         IntPtr installedHandle = IntPtr.Zero;
 
@@ -106,5 +113,7 @@ namespace TeamNotification_Library.Service.Clipboard
         private extern static int ChangeClipboardChain(IntPtr hWnd, IntPtr hWndNext);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private extern static int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        private extern static IntPtr GetActiveWindow();
     }
 }

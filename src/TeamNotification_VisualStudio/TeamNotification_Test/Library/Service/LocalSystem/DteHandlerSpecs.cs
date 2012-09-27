@@ -33,7 +33,6 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
                 visualStudioItemsFinder = depends.on<IFindVisualStudioItems>();
 
                 solution.Stub(x => x.Projects).Return(Projects);
-                solution.Stub(x => x.FindProject(ValidProjectName)).Return(Projects[0]);
             };
 
             protected static IWrapSolution solution;

@@ -84,9 +84,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = FormatRooms(collection.rooms);
             
-            Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
-            Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
-
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
