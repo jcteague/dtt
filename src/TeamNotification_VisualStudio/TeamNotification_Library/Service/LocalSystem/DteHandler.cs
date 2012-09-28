@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EnvDTE;
+using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Functional;
+using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
@@ -30,6 +32,7 @@ namespace TeamNotification_Library.Service.LocalSystem
 
         public IWrapDocument OpenFile(string projectName, string fileName)
         {
+            Container.GetInstance<ILog>().Write("Going to Open File: {1} in {0}".FormatUsing(projectName, fileName));
             if (!IsValidSolution) return null;
 
             try
@@ -38,6 +41,7 @@ namespace TeamNotification_Library.Service.LocalSystem
                     .FindDocument(projectName, fileName)
                     .SelectMany(x =>
                                 {
+                                    Container.GetInstance<ILog>().Write("Found this document: {0} in {1}".FormatUsing(fileName, projectName));
                                     var w = x.Open(vsViewKindCode);
                                     w.Visible = true;
                                     w.Activate();

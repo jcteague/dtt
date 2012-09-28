@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service.Logging;
+using System.Linq;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
@@ -33,6 +35,7 @@ namespace TeamNotification_Library.Service.LocalSystem
                 }
             }
 
+            Container.GetInstance<ILog>().Write("Projects: {0}".FormatUsing(flattenedProjects.Select(x => x.UniqueName).Join(" - ")));
             return flattenedProjects;
         }
 

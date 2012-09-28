@@ -261,6 +261,8 @@
     <Compile Include="Service\LocalSystem\VisualStudioItemsFinder.cs" />
     <Compile Include="Service\LocalSystem\VisualStudioProjectsList.cs" />
     <Compile Include="Service\LocalSystem\WindowWrapper.cs" />
+    <Compile Include="Service\Logging\ILog.cs" />
+    <Compile Include="Service\Logging\Logger.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
@@ -280,7 +282,9 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

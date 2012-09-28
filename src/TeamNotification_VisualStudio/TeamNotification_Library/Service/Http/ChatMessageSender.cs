@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Extensions;
 using System.Linq;
@@ -69,6 +70,7 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
+            Container.GetInstance<ILog>().Write("Posting: {0}".FormatUsing(plainMessage));
             client.Post(messages);
         }
 

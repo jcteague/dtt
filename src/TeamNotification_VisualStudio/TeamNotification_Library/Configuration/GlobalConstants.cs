@@ -11,6 +11,7 @@
         public static class Paths
         {
             public const string UserResource = @"user";
+            public const string LogFile = @"dtt.log";
         }
 
         public static class ProgrammingLanguages

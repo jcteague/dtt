@@ -16,6 +16,7 @@ using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
@@ -145,6 +146,9 @@ namespace TeamNotification_Library.Service.Controls
 
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
+
+            Container.GetInstance<ILog>().Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
+
 
             //if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
             if(chatMessageModel.chatMessageBody.IsCode)

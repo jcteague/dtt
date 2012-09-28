@@ -25,6 +25,7 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
 using Brushes = System.Drawing.Brushes;
 using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
@@ -150,6 +151,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
+            Container.GetInstance<ILog>().Write("Chat Message Arrived");
             if (channel == currentChannel)
             {
                 chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
