@@ -6,7 +6,6 @@ db_config =
     db_test: 'dtt_test'
 
 whitelisted_paths = ['/',/^\/github\/*/, '/client', '/registration','/user/login', /^\/room\/.+\/accept-invitation$/]
-
 development_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
@@ -24,7 +23,11 @@ development_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
-
+    github:#FOR TEST PURPOSES, TODO: ask John for the real deal
+        client_id: '238dc978aaf2621d38b5'
+        secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
+        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
 test_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_test}"
@@ -42,7 +45,11 @@ test_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
-
+    github:#FOR TEST PURPOSES, TODO: ask John for the real deal
+        client_id: '238dc978aaf2621d38b5'
+        secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
+        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
 production_settings =
     db:
         connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
@@ -60,7 +67,11 @@ production_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
-
+    github:#FOR TEST PURPOSES, TODO: ask John for the real deal
+        client_id: '238dc978aaf2621d38b5'
+        secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
+        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
 module.exports = ->
     switch process.env.NODE_ENV
         when 'test' then test_settings
