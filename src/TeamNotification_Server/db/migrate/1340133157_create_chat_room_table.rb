@@ -3,7 +3,6 @@ class CreateChatRoomTable < ActiveRecord::Migration
 	create_table :chat_room do |t|
       	t.column :name, :string, :null => false
         t.column :owner_id, :integer
-        t.column :room_key, :string, :null => false
     end
   end
 

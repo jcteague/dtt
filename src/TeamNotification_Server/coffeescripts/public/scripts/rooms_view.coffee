@@ -10,7 +10,7 @@ define 'rooms_view', ['general_view'], (GeneralView) ->
         render: ->
             @$el.empty()
             @$el.attr('class','hero-unit')
-            console.log @model
+            #console.log @model
             if @model.has('rooms') and @model.get('rooms').length > 0
                 @rooms = @model.get('rooms')
                 @$el.append('<h2>User Rooms</h2>')
