@@ -11,7 +11,11 @@ methods.receive_github_event = (req,res,next) ->
     chat_room.find({room_key:room_key}).then (chat_rooms) ->
         console.log chat_rooms
 
+methods.github_authentication_callback = (req, res, next) ->
+    console.log req.params, req.body, req.query
+
 module.exports =
     methods: methods
     build_routes: (app) ->
         app.post('/github/:room_key', express.bodyParser(), methods.receive_github_event)
+        app.get('/github/auth/callback', express.bodyParser(), methods.github_authentication_callback)
