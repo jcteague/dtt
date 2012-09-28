@@ -6,6 +6,7 @@ _entity = {}
 orm.then (db) ->
     _entity.ChatRoom = db.define 'chat_room',
         name : {type: 'string'}
+        room_key : {type: 'string'}
     _entity.User = db.define 'users',
         first_name : {type: 'string'},
         last_name : {type: 'string'},
@@ -36,6 +37,7 @@ orm.then (db) ->
     _entity.ChatRoomInvitation.hasOne('user',_entity.User,'user',{autoFetch:true})
     _entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
     #_entity.ChatRoomMessage.sync()
+    #_entity.ChatRoom.sync()
     #_entity.ChatRoomInvitation.sync()
 
 module.exports =
