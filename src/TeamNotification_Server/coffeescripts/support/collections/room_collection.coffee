@@ -1,8 +1,8 @@
 class RoomCollection
 
     constructor: (@room) ->
-
     to_json: ->
+        
         users = ({"name": user.first_name, "rel": "User", "href": "/user/#{user.id}"} for user in @room.room.users)
         self = {"name":"self", "rel": "Room", "href": "/room/#{@room.room.id}"}
         
@@ -18,6 +18,10 @@ class RoomCollection
                 {"href": "/room/#{@room.room.id}/users", "data": users}
             ]
             links: [self].concat(other_links)
+            rooms : [@room_data(@room.room)]
         }
+    room_data: (room) -> 
+        links:[{ name:room.name, rel:"self", href: "/room/#{room.id}/"}]
+        data:[{ name:'id', value:room.id},{ name:'name', value:room.name},{ name:'owner_id', value:room.owner_id}, { name:'room_key', value:if @room.user_id == room.owner_id then room.room_key else ""}]
 
 module.exports = RoomCollection

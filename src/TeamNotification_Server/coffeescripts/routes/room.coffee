@@ -1,6 +1,7 @@
 methods = {}
 support = require('../support/core').core
 express = require('express')
+sha256 = require('node_hash').sha256
 routes_service = require('../support/routes_service')
 config = require('../config')()
 build = routes_service.build
@@ -46,8 +47,8 @@ methods.is_listener_registered = (listener_name) ->
             
 methods.post_room = (req, res, next) ->
     values = req.body
-
-    chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: req.user.id})
+    room_key = sha256("room:#{values.name}")
+    chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: req.user.id, room_key:room_key })
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/" ))
@@ -55,6 +56,7 @@ methods.post_room = (req, res, next) ->
             next(new Error(err.code,err.message))
 
 methods.get_room_by_id = (req, res) ->
+    console.log 'hey get the ROOM BY ID'
     room_id = req.param('id')
     callback = (collection) ->
         res.json(collection.to_json())

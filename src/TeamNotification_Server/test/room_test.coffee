@@ -29,6 +29,10 @@ client_mock =
     on: sinon.stub()
     zadd: sinon.stub()
 
+node_hash_mock = 
+    sha256: sinon.stub()
+    
+
 config = require('../config')()
 redis_mock.open.returns(client_mock)
 
@@ -40,6 +44,7 @@ sut = module_loader.require('../routes/room.js', {
         '../support/routes_service': routes_service_mock
         '../support/repository': repository_class_mock
         '../support/middlewares': middleware_mock
+        'node_hash' : node_hash_mock
 })
 
 
@@ -419,7 +424,9 @@ describe 'Room', ->
                     routes_service_mock.get_server_response.withArgs(true,["room #{chat_room_id} created"],"/room/#{chat_room_id}/").returns(expected_parameters)
  
                     req.body = {name: 'blah'}
-                    request_values = {name: req.body.name, owner_id: owner_id}
+                    room_key = 'some key'
+                    node_hash_mock.sha256.withArgs("room:#{req.body.name}").returns(room_key)
+                    request_values = {name: req.body.name, owner_id: owner_id, room_key:room_key}
                     sinon.spy(chat_room, 'save')
                     support_mock.core.entity_factory.create.withArgs('ChatRoom', request_values).returns(chat_room)
                     sut.methods.post_room(req,res)

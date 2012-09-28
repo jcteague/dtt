@@ -10,6 +10,7 @@ class UserCollection
         rooms = (@get_room(room) for room in @data.rooms)
         return {
             href: self
+            user_id: @data.user_id
             redis: config.redis
             rooms: rooms
             links: [
@@ -26,6 +27,8 @@ class UserCollection
             data: [
                 {"name": "id", "value": room.id}
                 {"name": "name", "value": room.name}
+                {"name": "owner_id", "value": room.owner_id}
+                {"name": "room_key", "value": if (room.owner_id == @data.user_id) then room.room_key else ""  }
             ],
             links: [
                 {"rel": "Room", "name": room.name, "href": "/room/#{room.id}"}
