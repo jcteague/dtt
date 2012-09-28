@@ -9,9 +9,13 @@ namespace TeamNotification_Library.Service.Clipboard
 
         public string GetText(bool useInternal = false)
         {
-            if ((useInternal || value.IsNullOrEmpty()) && System.Windows.Clipboard.ContainsText())
+            if (useInternal || value.IsNullOrEmpty())
             {
-                return System.Windows.Clipboard.GetText();
+                if(System.Windows.Clipboard.ContainsText())
+                {
+                    return System.Windows.Clipboard.GetText();
+                }
+                return "";
             }
             return value;
         }
