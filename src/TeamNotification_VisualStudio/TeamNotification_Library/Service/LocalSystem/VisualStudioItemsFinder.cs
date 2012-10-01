@@ -2,7 +2,6 @@ using System.Linq;
 using EnvDTE;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Functional;
-using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.LocalSystem
 {
@@ -17,12 +16,11 @@ namespace TeamNotification_Library.Service.LocalSystem
 
         public Maybe<ProjectItem> FindDocument(string projectName, string fileName)
         {
-            return FindProject(projectName).Select(x => DocumentFilter(x.ProjectItems, fileName));
+            return FindProject(projectName).Select(x => FindDocumentIn(x.ProjectItems, fileName));
         }
 
         private Maybe<Project> FindProject(string projectName)
         {
-            Container.GetInstance<ILog>().Write("Looking for this project in the solution: {0}".FormatUsing(projectName));
             return visualStudioProjectsList.GetAllProjects().First(x => RemoveUnnecessaryPath(x) == projectName).ToMaybe();
         }
 
@@ -31,13 +29,25 @@ namespace TeamNotification_Library.Service.LocalSystem
             return project.UniqueName.Remove(0, project.UniqueName.LastIndexOf('\\') + 1);
         }
 
-        private ProjectItem DocumentFilter(ProjectItems projectItems, string fileName)
+        private ProjectItem FindDocumentIn(ProjectItems projectItems, string fileName)
         {
-            Container.GetInstance<ILog>().Write("Looking for the file in the {1}: {0}".FormatUsing(fileName, projectItems.ContainingProject.Name));
-            foreach (ProjectItem item in projectItems)
+            foreach (ProjectItem projectItem in projectItems)
             {
-                if (item.Name == fileName)
-                    return item;
+                if (projectItem.IsNull())
+                    continue;
+
+                var name = projectItem.Name;
+                if (name == fileName)
+                {
+                    return projectItem;
+                }
+                
+                if (projectItem.ProjectItems.Count > 0)
+                {
+                    var document = FindDocumentIn(projectItem.ProjectItems, fileName);
+                    if (document.IsNotNull())
+                        return document;
+                }
             }
 
             return null;

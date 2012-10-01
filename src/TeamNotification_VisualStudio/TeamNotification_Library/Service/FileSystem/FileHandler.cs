@@ -17,15 +17,16 @@ namespace TeamNotification_Library.Service.FileSystem
 
         public void Write(LoginResponse response)
         {
-            File.WriteAllLines(GlobalConstants.Paths.UserResource, response.SerializeForFile().Select(x => base64Encoder.Encode(x)));
+            File.WriteAllLines(GetResourcePath(GlobalConstants.Paths.UserResource), response.SerializeForFile().Select(x => base64Encoder.Encode(x)));
         }
 
         public LoginResponse Read()
         {
-            if (!File.Exists(GlobalConstants.Paths.UserResource))
+            var userResource = GetResourcePath(GlobalConstants.Paths.UserResource);
+            if (!File.Exists(userResource))
                 return null;
 
-            var lines = File.ReadAllLines(GlobalConstants.Paths.UserResource).Select(x => base64Encoder.Decode(x)).ToArray();
+            var lines = File.ReadAllLines(userResource).Select(x => base64Encoder.Decode(x)).ToArray();
             return new LoginResponse
                        {
                            user = new User
@@ -45,7 +46,12 @@ namespace TeamNotification_Library.Service.FileSystem
 
         public void Delete()
         {
-            File.Delete(GlobalConstants.Paths.UserResource);
+            File.Delete(GetResourcePath(GlobalConstants.Paths.UserResource));
+        }
+
+        private string GetResourcePath(string resource)
+        {
+            return Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), resource);
         }
     }
 }

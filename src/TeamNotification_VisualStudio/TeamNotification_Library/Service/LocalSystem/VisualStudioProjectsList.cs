@@ -27,7 +27,7 @@ namespace TeamNotification_Library.Service.LocalSystem
                     continue;
                 if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
                 {
-                    flattenedProjects.AddRange(GetSubProjectsFrom(project));
+                    flattenedProjects.AddRange(GetSubProjectsFrom(project.ProjectItems));
                 }
                 else
                 {
@@ -35,14 +35,13 @@ namespace TeamNotification_Library.Service.LocalSystem
                 }
             }
 
-            Container.GetInstance<ILog>().Write("Projects: {0}".FormatUsing(flattenedProjects.Select(x => x.UniqueName).Join(" - ")));
             return flattenedProjects;
         }
 
-        private IEnumerable<Project> GetSubProjectsFrom(Project project)
+        private IEnumerable<Project> GetSubProjectsFrom(ProjectItems projectItems)
         {
             var flattenedSubProjects = new List<Project>();
-            foreach (ProjectItem projectItem in project.ProjectItems)
+            foreach (ProjectItem projectItem in projectItems)
             {
                 var subProject = projectItem.SubProject;
                 if (subProject.IsNull())
@@ -50,7 +49,7 @@ namespace TeamNotification_Library.Service.LocalSystem
                 
                 if (subProject.Kind == ProjectKinds.vsProjectKindSolutionFolder)
                 {
-                    flattenedSubProjects.AddRange(GetSubProjectsFrom(subProject));
+                    flattenedSubProjects.AddRange(GetSubProjectsFrom(subProject.ProjectItems));
                 }
                 else
                 {

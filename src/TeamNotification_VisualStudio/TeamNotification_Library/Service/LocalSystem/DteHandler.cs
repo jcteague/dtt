@@ -32,7 +32,6 @@ namespace TeamNotification_Library.Service.LocalSystem
 
         public IWrapDocument OpenFile(string projectName, string fileName)
         {
-            Container.GetInstance<ILog>().Write("Going to Open File: {1} in {0}".FormatUsing(projectName, fileName));
             if (!IsValidSolution) return null;
 
             try
@@ -41,7 +40,6 @@ namespace TeamNotification_Library.Service.LocalSystem
                     .FindDocument(projectName, fileName)
                     .SelectMany(x =>
                                 {
-                                    Container.GetInstance<ILog>().Write("Found this document: {0} in {1}".FormatUsing(fileName, projectName));
                                     var w = x.Open(vsViewKindCode);
                                     w.Visible = true;
                                     w.Activate();

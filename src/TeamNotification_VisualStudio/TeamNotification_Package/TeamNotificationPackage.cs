@@ -145,7 +145,6 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
             alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
-            Alert("new");
         }
         #endregion
 
