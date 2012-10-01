@@ -3,7 +3,7 @@ support = require('../support/core').core
 Repository = require('../support/repository')
 config = require('../config')()
 querystring = require('querystring')
-http = require('http');
+http = require('https');
 
 methods = {}
 
@@ -16,6 +16,7 @@ methods.receive_github_event = (req,res,next) ->
 
 methods.github_authentication_callback = (req, res) ->
     code = req.query.code
+    console.log 'step 1: getting the code'
     post_fields = 
         'client_id' : config.github.client_id
         'client_secret': config.github.secret
@@ -23,23 +24,35 @@ methods.github_authentication_callback = (req, res) ->
         'state': config.github.state
     post_data = querystring.stringify( post_fields)
     
+    console.log 'step 2: setting the post_data'
+    
     post_options = 
-        host: 'https://github.com/login/oauth/access_token'
+        host: 'github.com'
+        port: 443
         method: 'POST'
+        path: '/login/oauth/access_token'
         headers:
             'Accept': 'application/json'
             'Content-Type': 'application/x-www-form-urlencoded'
             'Content-Length': post_data.length
             
-    post_req = http.request post_options, (post_res) ->
+    console.log 'step 3: setting the post_option'
+    
+    post_req = http.request post_options, (post_res) ->        
         post_res.setEncoding('utf8')
         post_res.on 'data', (chunk) ->
-            console.log 'Response: ' + chunk
-    post_req.write(post_data);
-    post_req.end();
+            res.send(success:true, data: chunk)
+        post_res.on 'error', (e) -> 
+            console.log("Got error: " + e.message)
             
+    console.log 'step 4:setting the response callback'
+    post_req.end(post_data)
+    console.log 'Finish'
+
+
 methods.github_redirect = (req, res) ->
-    res.redirect("https://github.com/login/oauth/authorize?client_id=#{config.github.client_id}&scope=user,repo&redirect_uri=#{config.github.redirect_url}&state=#{config.github.state}")
+    console.log 'Redirecting'
+    res.redirect("https://github.com/login/oauth/authorize?client_id=#{config.github.client_id}&scope=user,repo&state=#{config.github.state}")
 
 module.exports =
     methods: methods
