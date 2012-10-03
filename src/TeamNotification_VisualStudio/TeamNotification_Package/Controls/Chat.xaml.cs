@@ -161,9 +161,9 @@ namespace AvenidaSoftware.TeamNotification_Package
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
-//            Container.GetInstance<ILog>().Write("Chat Message Arrived");
             if (channel == currentChannel)
             {
+                Container.GetInstance<ILog>().Write("Chat Message Received");
                 chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }

@@ -21,12 +21,14 @@ namespace TeamNotification_Library.Service.Http
         readonly ISendHttpRequests client;
         readonly IProvideConfiguration<ServerConfiguration> serverConfiguration;
         readonly IMapPropertiesToFormUrlEncodedContent objectToFormMapper;
+        private ILog logger;
 
-        public ChatMessageSender(ISendHttpRequests client, IProvideConfiguration<ServerConfiguration> serverConfiguration, IMapPropertiesToFormUrlEncodedContent objectToFormMapper)
+        public ChatMessageSender(ISendHttpRequests client, IProvideConfiguration<ServerConfiguration> serverConfiguration, IMapPropertiesToFormUrlEncodedContent objectToFormMapper, ILog logger)
         {
             this.client = client;
             this.serverConfiguration = serverConfiguration;
             this.objectToFormMapper = objectToFormMapper;
+            this.logger = logger;
         }
 
         public void SendMessage(ChatMessageBody editedMessage, string roomId)
@@ -70,7 +72,7 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
-//            Container.GetInstance<ILog>().Write("Posting: {0}".FormatUsing(plainMessage));
+            logger.Write("Posting: {0}".FormatUsing(plainMessage));
             client.Post(messages);
         }
 
