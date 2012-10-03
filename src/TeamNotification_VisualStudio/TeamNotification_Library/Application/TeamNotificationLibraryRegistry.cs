@@ -1,10 +1,12 @@
 ﻿using AurelienRibon.Ui.SyntaxHighlightBox;
+using ICSharpCode.AvalonEdit.Highlighting;
 using StructureMap.Configuration.DSL;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
@@ -27,7 +29,7 @@ namespace TeamNotification_Library.Application
             For<IStoreClipboardData>().Singleton();
             For<IHandleSystemClipboard>().Singleton();
             For<ICreateSyntaxBlockUIInstances>().Singleton();
-            For<IProvideSyntaxHighlighter>().Singleton();
+            For<IProvideSyntaxHighlighter<IHighlightingDefinition>>().Singleton();
 			For<IStoreDTE>().Singleton();
             For<IHandleVisualStudioClipboard>().Singleton();
         }

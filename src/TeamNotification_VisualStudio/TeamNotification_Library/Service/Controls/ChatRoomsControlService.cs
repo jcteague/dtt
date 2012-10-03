@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
@@ -15,6 +16,7 @@ using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
@@ -85,6 +87,7 @@ namespace TeamNotification_Library.Service.Controls
             if (chatMessageModel.chatMessageBody.IsCode)
             {
                 var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
+//                var block = new TextEditor() {Text = chatMessageModel.chatMessageBody.message, Resources = chatMessageModel.AsResources()};
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();

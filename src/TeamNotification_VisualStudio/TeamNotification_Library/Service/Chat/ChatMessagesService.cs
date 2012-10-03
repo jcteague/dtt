@@ -24,17 +24,15 @@ namespace TeamNotification_Library.Service.Chat
         private IFormatDateTime dateMessageFormatter;
         private IBuildTable tableBuilder;
         private ISerializeJSON jsonSerializer;
-        private ICreateSyntaxHighlightBox syntaxHighlighterCreator;
-        
-public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer)
+
+        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer)
         {
             this.codeMessageFormatter = codeMessageFormatter;
             this.plainMessageFormatter = plainMessageFormatter;
             this.userMessageFormatter = userMessageFormatter;
             this.dateMessageFormatter = dateMessageFormatter;
             this.tableBuilder = tableBuilder;
-            this.syntaxHighlighterCreator = syntaxHighlighterCreator;
-			this.jsonSerializer = jsonSerializer;
+    this.jsonSerializer = jsonSerializer;
         }
 
         public TableRowGroup AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)

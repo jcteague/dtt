@@ -1,15 +1,16 @@
 using System.Windows;
 using AurelienRibon.Ui.SyntaxHighlightBox;
-using TeamNotification_Library.Models;
+using ICSharpCode.AvalonEdit.Highlighting;
 using TeamNotification_Library.Service.Highlighters;
+using IHighlighter = AurelienRibon.Ui.SyntaxHighlightBox.IHighlighter;
 
-namespace TeamNotification_Library.Service.Factories.UI
+namespace TeamNotification_Library.Service.Factories.UI.Highlighters
 {
-    public class SyntaxHighlightBoxFactory : ICreateSyntaxHighlightBox
+    public class AurelienRibonSyntaxHighlightBoxFactory : ICreateSyntaxHighlightBox<SyntaxHighlightBox>
     {
-        private readonly IProvideSyntaxHighlighter syntaxHighlighterProvider;
+        private readonly IProvideSyntaxHighlighter<IHighlighter> syntaxHighlighterProvider;
 
-        public SyntaxHighlightBoxFactory(IProvideSyntaxHighlighter syntaxHighlighterProvider)
+        public AurelienRibonSyntaxHighlightBoxFactory(IProvideSyntaxHighlighter<IHighlighter> syntaxHighlighterProvider)
         {
             this.syntaxHighlighterProvider = syntaxHighlighterProvider;
         }

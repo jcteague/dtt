@@ -1,13 +1,12 @@
 ﻿ using System;
- using System.Collections.Generic;
- using System.Windows.Controls;
  using System.Windows.Documents;
  using AurelienRibon.Ui.SyntaxHighlightBox;
+ using ICSharpCode.AvalonEdit;
  using Machine.Specifications;
  using TeamNotification_Library.Models;
  using TeamNotification_Library.Service.Async;
  using TeamNotification_Library.Service.Chat.Formatters;
- using TeamNotification_Library.Service.Factories.UI;
+ using TeamNotification_Library.Service.Factories.UI.Highlighters;
  using developwithpassion.specifications.rhinomocks;
  using developwithpassion.specifications.extensions;
  using System.Linq;
@@ -24,11 +23,11 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             Establish context = () =>
             {
                 codePasteEvents = depends.on<IHandleCodePaste>();
-                syntaxHighlightBoxFactory = depends.on<ICreateSyntaxHighlightBox>();
+                syntaxHighlightBoxFactory = depends.on<ICreateSyntaxHighlightBox<ICSharpCode.AvalonEdit.TextEditor>>();
             };
             
             protected static IHandleCodePaste codePasteEvents;
-            protected static ICreateSyntaxHighlightBox syntaxHighlightBoxFactory;
+            protected static ICreateSyntaxHighlightBox<ICSharpCode.AvalonEdit.TextEditor> syntaxHighlightBoxFactory;
         }
 
         public class when_gettting_the_formatted_element : Concern
@@ -50,7 +49,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                                       }
                                   };
 
-                syntaxBlock = new SyntaxHighlightBox { Text = chatMessage.chatMessageBody.message };
+                syntaxBlock = new TextEditor { Text = chatMessage.chatMessageBody.message };
                 syntaxHighlightBoxFactory.Stub(x => x.Get(chatMessage.chatMessageBody.message, chatMessage.chatMessageBody.programminglanguage)).Return(syntaxBlock);
             };
 
@@ -82,7 +81,7 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
 
             private static Paragraph result;
             private static ChatMessageModel chatMessage;
-            private static SyntaxHighlightBox syntaxBlock;
+            private static TextEditor syntaxBlock;
         }
     }
 }

@@ -46,6 +46,10 @@
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
@@ -205,21 +209,23 @@
     <Compile Include="Service\Factories\SocketIOClientFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
     <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\AvalonSyntaxHighlightBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\ICreateSyntaxBlockUIInstances.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\ICreateSyntaxHighlightBox.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\SyntaxBlockUIContainerFactory.cs" />
     <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
     <Compile Include="Service\Factories\UI\ICreateLabels.cs" />
-    <Compile Include="Service\Factories\UI\ICreateSyntaxBlockUIInstances.cs" />
-    <Compile Include="Service\Factories\UI\ICreateSyntaxHighlightBox.cs" />
     <Compile Include="Service\Factories\UI\ICreateUIElements.cs" />
     <Compile Include="Service\Factories\UI\LabelFactory.cs" />
     <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
-    <Compile Include="Service\Factories\UI\SyntaxBlockUIContainerFactory.cs" />
-    <Compile Include="Service\Factories\UI\SyntaxHighlightBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\AurelienRibonSyntaxHighlightBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
     <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
     <Compile Include="Service\FileSystem\Base64Encoder.cs" />
     <Compile Include="Service\FileSystem\FileHandler.cs" />
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
     <Compile Include="Service\Highlighters\SyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />

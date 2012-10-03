@@ -22,6 +22,7 @@ using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;

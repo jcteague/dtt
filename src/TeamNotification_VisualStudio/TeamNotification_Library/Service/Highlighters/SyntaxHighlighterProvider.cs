@@ -4,7 +4,7 @@ using TeamNotification_Library.Configuration;
 
 namespace TeamNotification_Library.Service.Highlighters
 {
-    public class SyntaxHighlighterProvider : IProvideSyntaxHighlighter
+    public class SyntaxHighlighterProvider : IProvideSyntaxHighlighter<IHighlighter>
     {
         private IHighlighter CSharpHighlighter;
         private IHighlighter VBHighlighter;
@@ -33,7 +33,6 @@ namespace TeamNotification_Library.Service.Highlighters
                     return JavaScriptHighlighter;
 
                 default:
-//                    throw new ArgumentException("There is no implementation for the provided programming language");
                     return DefaultHighlighter;
             }
         }
