@@ -141,9 +141,12 @@
     <Compile Include="Service\Async\IHandleAlertMessages.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
+    <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
     <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
+    <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
+    <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
     <Compile Include="Service\Async\UserAccountEvents.cs" />
     <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
     <Compile Include="Service\Async\Models\CodePasteWasClicked.cs" />
@@ -299,6 +302,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Service\Timing\" />
     <Folder Include="Service\Wrappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

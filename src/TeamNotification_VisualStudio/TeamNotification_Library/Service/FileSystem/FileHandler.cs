@@ -51,7 +51,7 @@ namespace TeamNotification_Library.Service.FileSystem
 
         private string GetResourcePath(string resource)
         {
-            return Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), resource);
+            return Path.Combine(Path.GetTempPath(), resource);
         }
     }
 }

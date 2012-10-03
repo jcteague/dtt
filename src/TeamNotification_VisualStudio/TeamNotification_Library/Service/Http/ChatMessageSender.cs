@@ -70,7 +70,7 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
-            Container.GetInstance<ILog>().Write("Posting: {0}".FormatUsing(plainMessage));
+//            Container.GetInstance<ILog>().Write("Posting: {0}".FormatUsing(plainMessage));
             client.Post(messages);
         }
 

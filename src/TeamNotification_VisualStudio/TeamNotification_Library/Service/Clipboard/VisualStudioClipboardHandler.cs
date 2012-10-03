@@ -5,6 +5,7 @@ using EnvDTE;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Clipboard
 {
@@ -63,6 +64,7 @@ namespace TeamNotification_Library.Service.Clipboard
         void UpdateClipboard()
         {
             var dte = dteStore.dte;
+            ChatMessageModel clipboard;
             if (IsVisualStudioActive() && dte.ActiveWindow.Document.IsNotNull())
             {
                 var activeDocument = dte.ActiveDocument;
@@ -71,7 +73,7 @@ namespace TeamNotification_Library.Service.Clipboard
                 var selection = txt.Selection;
                 var activeProjects = dte.ActiveDocument.ProjectItem.ContainingProject;
                 var message = systemClipboardHandler.GetText(true);
-                var clipboard = new ChatMessageModel
+                clipboard = new ChatMessageModel
                 {
                     chatMessageBody = new ChatMessageBody
                     {
@@ -85,13 +87,13 @@ namespace TeamNotification_Library.Service.Clipboard
                     }
                 };
 
-                clipboardStorage.Store(clipboard);
             }
             else
             {
-                var clipboard = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = systemClipboardHandler.GetText(true) } };
-                clipboardStorage.Store(clipboard);
+                clipboard = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = systemClipboardHandler.GetText(true) } };
             }
+//            Container.GetInstance<ILog>().Write("Copying {0} into Clipboard".FormatUsing(clipboard.chatMessageBody.message));
+            clipboardStorage.Store(clipboard);
         }
 
         bool IsVisualStudioActive()

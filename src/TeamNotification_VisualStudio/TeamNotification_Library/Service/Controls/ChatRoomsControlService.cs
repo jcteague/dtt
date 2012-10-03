@@ -76,6 +76,7 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+//            Container.GetInstance<ILog>().Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
@@ -147,7 +148,7 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            Container.GetInstance<ILog>().Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
+//            Container.GetInstance<ILog>().Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
 
             //if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;

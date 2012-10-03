@@ -67,7 +67,16 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
 
                 ProjectItems project2Items = fake.an<ProjectItems>();
                 project2.Stub(x => x.ProjectItems).Return(project2Items);
-                
+
+                ProjectItems project2Item1ProjectItems = fake.an<ProjectItems>();
+                project2Item1.Stub(x => x.ProjectItems).Return(project2Item1ProjectItems);
+
+                ProjectItems project2Item2ProjectItems = fake.an<ProjectItems>();
+                project2Item2.Stub(x => x.ProjectItems).Return(project2Item2ProjectItems);
+
+                project2Item1ProjectItems.Stub(x => x.Count).Return(0);
+                project2Item2ProjectItems.Stub(x => x.Count).Return(0);
+
                 IEnumerator project2ItemsEnumerator = new List<ProjectItem>{project2Item1, project2Item2}.GetEnumerator();
                 project2Items.Stub(x => x.GetEnumerator()).Return(project2ItemsEnumerator);
                 
@@ -100,6 +109,15 @@ namespace TeamNotification_Test.Library.Service.LocalSystem
                 ProjectItems project2Items = fake.an<ProjectItems>();
                 project2.Stub(x => x.ProjectItems).Return(project2Items);
 
+                ProjectItems project2Item1ProjectItems = fake.an<ProjectItems>();
+                project2Item1.Stub(x => x.ProjectItems).Return(project2Item1ProjectItems);
+
+                ProjectItems project2Item2ProjectItems = fake.an<ProjectItems>();
+                project2Item2.Stub(x => x.ProjectItems).Return(project2Item2ProjectItems);
+
+                project2Item1ProjectItems.Stub(x => x.Count).Return(0);
+                project2Item2ProjectItems.Stub(x => x.Count).Return(0);
+                
                 IEnumerator project2ItemsEnumerator = new List<ProjectItem> { project2Item1, project2Item2 }.GetEnumerator();
                 project2Items.Stub(x => x.GetEnumerator()).Return(project2ItemsEnumerator);
             };
