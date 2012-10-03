@@ -11,24 +11,46 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             form_templates.forEach (template) =>
                 fieldGenerator = @get_builder_for(template.type)
                 fieldElements = fieldGenerator(template)
-                fieldElements.forEach((f) -> form.append(f))#$('<p/>').append(f)))
+                fieldElements.forEach((f) -> form.append(f))
 
             @set_up_validation(form, collection.template)
             form.attr('class', form_class)
-            form.append($('<input>', {"type":"submit","class":"btn btn-primary"}))#$('<p/>').append($('<input>', {"type":"submit","class":"btn btn-primary"})))
+            form.append($('<input>', {"type":"submit","class":"btn btn-primary"}))
             form
 
         get_builder_for: (field_type) ->
+            return @dropDownListBuilder if field_type is 'dropdownlist'
+            return @checkBoxGroupBuilder if field_type is 'checkboxgroup'
             return @textAreaBuilder if field_type is 'string-big'
             return @textFieldBuilder if field_type is 'string'
             return @hiddenFieldBuilder if field_type is 'hidden'
             return @passwordFieldBuilder if field_type is 'password'
             return @passwordWithConfirmFieldBuilder if field_type is 'password-confirmed'
-        
+
+        checkBoxGroupBuilder: (template) ->
+            checkBoxGroup = $('<div>', {"id":template.name})
+            
+            for option in template.value
+                checkBox = $('<input>',{"name":template.name, "class":"input", type:"checkbox"})
+                checkBoxGroup.append(checkBox)
+                checkBoxGroup.append option.label
+                checkBoxGroup.append "<br/>"
+            return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), checkBoxGroup]
+
         dropDownListBuilder:(template) ->
+        
+            
             dropDownList = $('<select>',{"name":template.name, "class":"input-xlarge"})
-            #for (props in data) 
-            #    dropDownList.append("<option value='#{props.value}'>#{props.text}</option>")
+            options = template.value
+            
+            if(template.multiple? && template.multiple == true )
+                dropDownList.attr('multiple', 'multiple')
+            
+            for opt in options
+                selected=''
+                if(opt.selected? && opt.selected != '')
+                    selected="selected='selected'"
+                dropDownList.append("<option value='#{opt.value}' #{selected} >#{opt.label}</option>")
             return [$('<label>', {"for":template.name,"class":"control-label"}).text(template.label), dropDownList]
 
         dropDownListOptionBuilder: (props) ->

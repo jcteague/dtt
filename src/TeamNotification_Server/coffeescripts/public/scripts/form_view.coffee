@@ -31,6 +31,9 @@ define 'form_view', ['general_view', 'form_template_renderer','base64'], (Genera
             $('textarea').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
+            $('select').each () ->
+                $current = $(this)
+                data[$current.attr('name')] = $current.val()
                 
             $.post @$('form').attr('action'), data, (res) => 
                 @trigger 'response:received', res

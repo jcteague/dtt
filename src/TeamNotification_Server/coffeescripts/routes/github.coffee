@@ -6,21 +6,30 @@ querystring = require('querystring')
 http = require('https');
 routes_service = require('../support/routes_service')
 build = routes_service.build
+github_helper = require('../support/github_events_helper')
 methods = {}
 
 methods.receive_github_event = (req,res,next) ->
     values = req.body
-    room_key = req.param("room_key")
-    chat_room = new Repository('ChatRoom')
-    chat_room.find({room_key:room_key}).then (chat_rooms) ->
-        console.log chat_rooms
+    console.log values
+#    room_key = req.param("room_key")
+    #chat_room = new Repository('ChatRoom')
+    #chat_room.find({room_key:room_key}).then (chat_rooms) ->
+    #    console.log chat_rooms
 
-
+methods.associate_github_repositories = (req, res, next) ->
+    repositories = req.body.repositories
+    if repositories?
+        owner = req.body.owner
+        room_key = req.body.room_key
+        for repository in repositories
+            github_helper.set_github_repository_events(repository, owner, room_key)
+        
 methods.github_repositories = (req,res) ->
     callback = (collection) ->
         res.json(collection.to_json())
-    console.log 'Over here :D'
-    build('github_repositories_collection').for({access_token:req.param("access_token")} ).fetch_to callback
+
+    build('github_repositories_collection').for({access_token:req.param("access_token"), user_id:req.user.id} ).fetch_to callback
 
 methods.github_authentication_callback = (req, res) ->
     code = req.query.code
@@ -43,8 +52,7 @@ methods.github_authentication_callback = (req, res) ->
         post_res.setEncoding('utf8')
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
-            res.redirect("/github/repositories/#{data.access_token}")
-            #res.send(success:true, data: chunk)
+            res.redirect("/client#github/repositories/#{data.access_token}")
         post_res.on 'error', (e) -> 
             console.log("Got error: " + e.message)
     post_req.end(post_data)
@@ -57,6 +65,7 @@ module.exports =
     methods: methods
     build_routes: (app) ->
         app.get('/github/repositories/:access_token', methods.github_repositories)
-        app.post('/github/:room_key', express.bodyParser(), methods.receive_github_event)
         app.get('/github/oauth', methods.github_redirect)
         app.get('/github/auth/callback', methods.github_authentication_callback)
+        app.post('/github/repositories/:access_token', methods.associate_github_repositories)
+        app.post('/github/:room_key', express.bodyParser(), methods.receive_github_event)

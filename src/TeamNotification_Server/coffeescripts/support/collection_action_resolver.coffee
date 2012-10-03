@@ -8,7 +8,7 @@ class CollectionActionResolver
         @strategy = new StrategyGetter().get_for(@type)
         @collection_class = new CollectionFactory().get_for(@type)
         @promise_factory = new PromiseFactory()
-
+      
     for: (parameters) ->
         @promise_factory.get_for(@collection_class, @strategy(parameters))
 
