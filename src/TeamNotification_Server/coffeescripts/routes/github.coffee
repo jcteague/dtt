@@ -22,8 +22,9 @@ methods.associate_github_repositories = (req, res, next) ->
     if repositories?
         owner = req.body.owner
         room_key = req.body.room_key
-        for repository in repositories
-            github_helper.set_github_repository_events(repository, owner, room_key)
+        res.json(github_helper.set_github_repository_events(repositories, owner, room_key, req.param("access_token")))
+    else
+        res.json({success:false,messages:['There was an error'] })
         
 methods.github_repositories = (req,res) ->
     callback = (collection) ->

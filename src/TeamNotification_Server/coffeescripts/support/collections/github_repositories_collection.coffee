@@ -5,7 +5,7 @@ class GithubRepositoriesCollection
         format_room = (room) ->
             return { label:room.name, value:room.room_key}
         format_repository = (repository) ->
-            return  {label: repository.name, name:repository.name, value:repository.url }        
+            return  {label: repository.name, name:repository.name, value:repository.name }        
         
         formated_rooms = (format_room(room) for room in @github_repositories.rooms)
         formated_repositories = (format_repository(repository) for repository in @github_repositories.repositories)
