@@ -13,7 +13,7 @@ namespace TeamNotification_Library.Service.Highlighters
                     return HighlightingManager.Instance.GetDefinition("C#");
 
                 case GlobalConstants.ProgrammingLanguages.VisualBasic:
-                    return HighlightingManager.Instance.GetDefinition("VisualBasic");
+                    return HighlightingManager.Instance.GetDefinition("VBNET");
 
                 case GlobalConstants.ProgrammingLanguages.JavaScript:
                     return HighlightingManager.Instance.GetDefinition("JavaScript");

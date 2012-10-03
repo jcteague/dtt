@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using AurelienRibon.Ui.SyntaxHighlightBox;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -21,7 +22,10 @@ namespace TeamNotification_Library.Service.Factories.UI.Highlighters
             {
                 Text = message,
                 SyntaxHighlighting = syntaxHighlighterProvider.GetFor(programmingLanguage),
-                BorderThickness = new Thickness(0)
+                BorderThickness = new Thickness(0),
+                IsReadOnly = true,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Hidden
             };
         }
     }

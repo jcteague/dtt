@@ -87,7 +87,6 @@ namespace TeamNotification_Library.Service.Controls
             if (chatMessageModel.chatMessageBody.IsCode)
             {
                 var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
-//                var block = new TextEditor() {Text = chatMessageModel.chatMessageBody.message, Resources = chatMessageModel.AsResources()};
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
                 dataObjectPastingEventArgs.CancelCommand();
