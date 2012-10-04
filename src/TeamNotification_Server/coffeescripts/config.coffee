@@ -5,7 +5,7 @@ db_config =
     db_main: 'dtt_main'
     db_test: 'dtt_test'
 
-whitelisted_paths = ['/', '/client', '/registration','/user/login', /^\/room\/.+\/accept-invitation$/]
+whitelisted_paths = ['/', '/client', '/registration','/user/login', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
 development_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"

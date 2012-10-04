@@ -1,10 +1,8 @@
 config = require("../config")()
 https = require("https")
 Q = require('q')
-#POST /repos/:owner/:repo/hooks
 
 events = [ 'push', 'issues', 'issue_comment', 'commit_comment', 'pull_request', 'fork']
-
 
 set_github_repository_events = (repositories, owner, room_key, access_token) ->
     defered = Q.defer()
@@ -13,7 +11,7 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
         events: events
         config: 
             content_type: "json"
-            url:"#{config.site.url}/github/#{room_key}"
+            url:"#{config.site.url}/github/events/#{room_key}"
     #post_data = querystring.stringify( post_fields)
     post_data = JSON.stringify(post_fields)
     console.log post_data

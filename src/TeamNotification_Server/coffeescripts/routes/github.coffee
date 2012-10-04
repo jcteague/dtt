@@ -69,4 +69,4 @@ module.exports =
         app.get('/github/oauth', methods.github_redirect)
         app.get('/github/auth/callback', methods.github_authentication_callback)
         app.post('/github/repositories/:access_token', methods.associate_github_repositories)
-        app.post('/github/:room_key', express.bodyParser(), methods.receive_github_event)
+        app.post('/github/events/:room_key', express.bodyParser(), methods.receive_github_event)
