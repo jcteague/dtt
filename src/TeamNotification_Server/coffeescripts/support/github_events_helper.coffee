@@ -33,15 +33,11 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
         post_req = https.request options, (post_res) ->        
             post_res.setEncoding('utf8')
             post_res.on 'data', (chunk) ->
-                #data = JSON.parse(chunk)
                 console.log chunk
-                #res.send({success:true, messages:[data.url]})
                 defered.resolve({succcess:true})
             post_res.on 'error', (e) -> 
                 console.log("Got error: " + e.message)
-                #res.send({success:false, messages:["There was an error setting up fthe webhook"]})
         post_req.end(post_data) #post_data)
-    #return {succes:true}
     defered.promise
 
 
