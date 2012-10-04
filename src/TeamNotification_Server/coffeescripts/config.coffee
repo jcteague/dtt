@@ -1,3 +1,5 @@
+path = require('path')
+
 db_config =
     user: 'postgres'
     password: '1234'
@@ -24,6 +26,8 @@ development_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
+    log:
+        path: path.join(process.cwd(), 'development_logs', 'dev.log')
 
 test_settings =
     db:
@@ -42,6 +46,8 @@ test_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
+    log:
+        path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
 
 production_settings =
     db:
@@ -60,6 +66,8 @@ production_settings =
     email:
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
+    log:
+        path: path.join('/var', 'log', 'dtt.log')
 
 module.exports = ->
     switch process.env.NODE_ENV
