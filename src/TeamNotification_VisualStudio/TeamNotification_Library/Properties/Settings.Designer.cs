@@ -43,7 +43,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://ec2-107-21-171-44.compute-1.amazonaws.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://54.243.207.101/")]
         public string siteb {
             get {
                 return ((string)(this["siteb"]));
@@ -52,7 +52,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ec2-107-21-171-44.compute-1.amazonaws.com:6379")]
+        [global::System.Configuration.DefaultSettingValueAttribute("54.243.207.101:6379")]
         public string redisb {
             get {
                 return ((string)(this["redisb"]));

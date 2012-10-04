@@ -1,17 +1,30 @@
 using System.Windows;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Clipboard
 {
     public class SystemClipboardHandler : IHandleSystemClipboard
     {
+        private ILog logger;
+
         private string value;
+
+        public SystemClipboardHandler(ILog logger)
+        {
+            this.logger = logger;
+        }
 
         public string GetText(bool useInternal = false)
         {
+            logger.Write("Clipboard has {0} on value".FormatUsing(value));
             if (useInternal || value.IsNullOrEmpty())
             {
-                return System.Windows.Clipboard.GetText();
+                if(System.Windows.Clipboard.ContainsText())
+                {
+                    return System.Windows.Clipboard.GetText();
+                }
+                return "";
             }
             return value;
         }

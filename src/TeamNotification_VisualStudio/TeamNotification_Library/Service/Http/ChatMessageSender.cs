@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Extensions;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace TeamNotification_Library.Service.Http
         readonly ISendHttpRequests client;
         readonly IProvideConfiguration<ServerConfiguration> serverConfiguration;
         readonly IMapPropertiesToFormUrlEncodedContent objectToFormMapper;
+        private ILog logger;
 
-        public ChatMessageSender(ISendHttpRequests client, IProvideConfiguration<ServerConfiguration> serverConfiguration, IMapPropertiesToFormUrlEncodedContent objectToFormMapper)
+        public ChatMessageSender(ISendHttpRequests client, IProvideConfiguration<ServerConfiguration> serverConfiguration, IMapPropertiesToFormUrlEncodedContent objectToFormMapper, ILog logger)
         {
             this.client = client;
             this.serverConfiguration = serverConfiguration;
             this.objectToFormMapper = objectToFormMapper;
+            this.logger = logger;
         }
 
         public void SendMessage(ChatMessageBody editedMessage, string roomId)
@@ -69,6 +72,7 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
+            logger.Write("Posting: {0}".FormatUsing(plainMessage));
             client.Post(messages);
         }
 

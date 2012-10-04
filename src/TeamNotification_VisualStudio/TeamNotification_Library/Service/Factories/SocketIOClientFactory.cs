@@ -7,7 +7,7 @@ namespace TeamNotification_Library.Service.Factories
     {
         public IWrapSocketIOClient GetInstance()
         {
-            var socket = new SocketIOClientWrapper(Properties.Settings.Default.Site);
+            var socket = new SocketIOClientWrapper(Properties.Settings.Default.Site) {RetryConnectionAttempts = 5};
             socket.Connect();
 
             return socket;

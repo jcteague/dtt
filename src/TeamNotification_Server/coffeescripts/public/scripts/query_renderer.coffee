@@ -44,7 +44,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
                 processData: processor
                 onItemSelect: on_select
                 mustMatch: false
-                selectFirst: true
+                selectFirst: false
                 autoFill: true
                 minChars: 1
             })

@@ -25,6 +25,7 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
 using Brushes = System.Drawing.Brushes;
 using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
@@ -55,6 +56,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
+        private IHandleSocketIOEvents socketIOEvents;
 		private Dictionary<string, TableRowGroup> messagesList;
 
         private string roomId { get; set; }
@@ -63,7 +65,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private bool chatIsEnabled;
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents)
         {
             chatIsEnabled = true;
 
@@ -73,6 +75,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.toolWindowEvents = toolWindowEvents;
             this.userAccountEvents = userAccountEvents;
             this.clipboardHandler = clipboardHandler;
+            this.socketIOEvents = socketIOEvents;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
@@ -84,9 +87,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = FormatRooms(collection.rooms);
             
-            Application.Current.Activated += (source, e) => applicationGlobalState.Active = true;
-            Application.Current.Deactivated += (source, e) => applicationGlobalState.Active = false;
-
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
@@ -107,6 +107,14 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             userAccountEvents.Clear();
             userAccountEvents.UserHasLogout += OnUserLogout;
+
+            socketIOEvents.Clear();
+            socketIOEvents.SocketWasDisconnected += (s, e) =>
+                                                        {
+                                                            var room = "chat " + e.RoomId;
+                                                            subscribedChannels.Remove(room);
+                                                            Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
+                                                        };
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -155,6 +163,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
+                Container.GetInstance<ILog>().Write("Chat Message Received");
                 chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }
@@ -229,6 +238,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             AddMessages(newRoomId);
 
             if (subscribedChannels.Contains(currentChannel)) return;
+            
+            btnReconnect.Visibility = Visibility.Hidden;
             messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
             subscribedChannels.Add(currentChannel);
         }
@@ -277,10 +288,20 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
         }
 
+        private void Reconnect(object sender, RoutedEventArgs e)
+        {
+            if (chatIsEnabled)
+            {
+                var value = (Collection.Link) comboRooms.SelectedValue;
+                this.ChangeRoom(value.rel);    
+            }
+        }
+
         private void ClearStatusBar(object sender, RoutedEventArgs e)
         {
             dteStore.dte.StatusBar.Text = "";
         }
+        
         private string lastStamp;
     }
 }

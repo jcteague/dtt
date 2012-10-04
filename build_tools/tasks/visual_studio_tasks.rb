@@ -1,5 +1,6 @@
 require File.join('./','build_tools','config.rb')
 require 'albacore'
+require 'FileUtils'
 
 namespace :visual_studio do
 
@@ -14,7 +15,7 @@ namespace :visual_studio do
   end
 
   task :copy_in_destination do
-    sh "cp #{File.join(VisualStudioReleaseFolder, 'TeamNotification_Package.vsix')} ."
+    FileUtils.copy File.join(VisualStudioReleaseFolder, 'TeamNotification_Package.vsix'), '.'
   end
 
 end

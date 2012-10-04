@@ -1,4 +1,5 @@
 ﻿using System;
+using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Extensions
 {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
+using System.Windows;
 using EnvDTE;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
@@ -10,6 +11,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using StructureMap;
+using TeamNotification_Library.Service.Async;
+using TeamNotification_Library.Service.LocalSystem;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -34,6 +37,7 @@ namespace AvenidaSoftware.TeamNotification_Package
     // This attribute registers a tool window exposed by this package.
     //[ProvideToolWindow(typeof(MyToolWindow))]
     [ProvideToolWindow(typeof(LoginWindow))]
+    [ProvideAutoLoad(UIContextGuids.NoSolution)]
     [Guid(GuidList.guidTeamNotificationPkgString)]
     public sealed class TeamNotificationPackage : Package
     {
@@ -47,6 +51,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         public TeamNotificationPackage()
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+            
         }
 
         /// <summary>
@@ -126,7 +131,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             {
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidTeamNotificationCmdSet, (int)PkgCmdIDList.teamNotificationToolCommand);
-                //MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
                 MenuCommand menuItem = new MenuCommand(ShowLoginWindow, menuCommandID);
 
                 mcs.AddCommand( menuItem );
@@ -138,6 +142,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
 
             Bootstrapper.Initialize();
+
+            var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
+            alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
         }
         #endregion
 
@@ -148,16 +155,21 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
+            Alert(string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.ToString()));
+        }
+
+        private void Alert(string message)
+        {
             // Show a Message Box to prove we were here
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
             Guid clsid = Guid.Empty;
             int result;
-            
+
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
                        0,
                        ref clsid,
                        "TeamNotification",
-                       string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.ToString()),
+                       message,
                        string.Empty,
                        0,
                        OLEMSGBUTTON.OLEMSGBUTTON_OK,
@@ -166,6 +178,5 @@ namespace AvenidaSoftware.TeamNotification_Package
                        0,        // false
                        out result));
         }
-
     }
 }

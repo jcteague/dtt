@@ -43,14 +43,20 @@
       'lang-vhdl': 'prettify/lang-vhdl'
     },
     shim: {
-      'prettify': {
-        deps: ['lang-go', 'lang-hs', 'lang-lisp', 'lang-ml', 'lang-proto', 'lang-scala', 'lang-vhdl']
+      'prettify-languages': {
+        deps: ['prettify']
       },
       'backbone': {
         deps: ['underscore', 'jquery'],
         exports: 'Backbone'
       },
       'jquery.autocomplete': {
+        deps: ['jquery']
+      },
+      'cookie': {
+        deps: ['jquery']
+      },
+      'base64': {
         deps: ['jquery']
       },
       'jquery.validate': {

@@ -2,9 +2,9 @@ define 'config', [], ->
 
     production_settings =
         site:
-            host: 'ec2-107-21-171-44.compute-1.amazonaws.com'
+            host: '54.243.207.101'
             port: 80
-            url: 'http://ec2-107-21-171-44.compute-1.amazonaws.com'
+            url: 'http://54.243.207.101'
 
     development_settings =
         site:

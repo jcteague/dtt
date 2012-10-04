@@ -11,6 +11,7 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Chat
 {
@@ -23,17 +24,15 @@ namespace TeamNotification_Library.Service.Chat
         private IFormatDateTime dateMessageFormatter;
         private IBuildTable tableBuilder;
         private ISerializeJSON jsonSerializer;
-        private ICreateSyntaxHighlightBox syntaxHighlighterCreator;
-        
-public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer)
+
+        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer)
         {
             this.codeMessageFormatter = codeMessageFormatter;
             this.plainMessageFormatter = plainMessageFormatter;
             this.userMessageFormatter = userMessageFormatter;
             this.dateMessageFormatter = dateMessageFormatter;
             this.tableBuilder = tableBuilder;
-            this.syntaxHighlighterCreator = syntaxHighlighterCreator;
-			this.jsonSerializer = jsonSerializer;
+    this.jsonSerializer = jsonSerializer;
         }
 
         public TableRowGroup AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
@@ -50,7 +49,7 @@ public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlai
                 if (!chatMessage.stamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(chatMessage.stamp))
                 {
                     var editedRow = UpdateMessage(messagesContainer, chatMessage);
-                    messagesContainer.MessagesList[chatMessage.stamp] = editedRow;//chatMessage.chatMessageBody.message;
+                    messagesContainer.MessagesList[chatMessage.stamp] = editedRow;
                     appendedRowGroup = editedRow;
                 }
                 else
@@ -58,7 +57,6 @@ public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlai
                     var columns = new Tuple<Block, Block, Block>(user, message, date);
                     appendedRowGroup = tableBuilder.GetContentFor(columns);
                     messagesContainer.MessagesTable.RowGroups.Add(appendedRowGroup);
-                    //messagesContainer.MessagesList.Add(chatMessage.stamp, newRow);//chatMessage.chatMessageBody.message);
                     lastUserThatInserted = chatMessage.user_id.ParseToInteger();
                 }
             }));

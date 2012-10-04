@@ -1,18 +1,20 @@
 using System.Windows;
 using System.Windows.Documents;
+using ICSharpCode.AvalonEdit;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 
 namespace TeamNotification_Library.Service.Chat.Formatters
 {
     public class CodeMessagesFormatter : IFormatCodeMessages
     {
         private IHandleCodePaste codePasteEvents;
-        private ICreateSyntaxHighlightBox syntaxHighlightBoxFactory;
+        private ICreateSyntaxHighlightBox<TextEditor> syntaxHighlightBoxFactory;
 
-        public CodeMessagesFormatter(IHandleCodePaste codePasteEvents, ICreateSyntaxHighlightBox syntaxHighlightBoxFactory)
+        public CodeMessagesFormatter(IHandleCodePaste codePasteEvents, ICreateSyntaxHighlightBox<TextEditor> syntaxHighlightBoxFactory)
         {
             this.codePasteEvents = codePasteEvents;
             this.syntaxHighlightBoxFactory = syntaxHighlightBoxFactory;

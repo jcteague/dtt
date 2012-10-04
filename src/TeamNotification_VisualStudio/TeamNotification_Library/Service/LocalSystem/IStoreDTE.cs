@@ -32,19 +32,19 @@ namespace TeamNotification_Library.Service.LocalSystem
         IWrapProject[] Projects { get; }
         string FileName { get; }
         bool IsOpen { get; }
-        IWrapProject FindProject(string projectName);
     }
     public interface IWrapProject
     {
         ProjectItemWrapper[] ProjectItems { get; }
         string UniqueName { get; }
-        IWrapProjectItem FindDocument(string fileName);
+        Project Value { get; }
     }
 
     public interface IWrapProjectItem
     {
         string Name { get; }
         IWrapDocument Document { get; }
+        IWrapProject SubProject { get; }
         Window Open(string viewKind);
     }
 

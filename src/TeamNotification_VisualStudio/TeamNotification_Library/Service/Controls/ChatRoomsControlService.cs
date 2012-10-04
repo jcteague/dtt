@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
@@ -15,7 +16,9 @@ using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
 using TeamNotification_Library.Service.Factories.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
@@ -35,12 +38,15 @@ namespace TeamNotification_Library.Service.Controls
         private IHandleChatMessages chatMessagesService;
         private readonly IStoreDataLocally localStorageService;
         private readonly IHandleUserAccountEvents userAccountEvents;
+
+        private ILog logger;
+
         
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         private readonly ISendChatMessages messageSender;
         private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor, ILog logger)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -49,6 +55,7 @@ namespace TeamNotification_Library.Service.Controls
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
             this.messagesEditor = messagesEditor;
+            this.logger = logger;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
@@ -75,6 +82,7 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+            logger.Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
@@ -146,11 +154,10 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            //if (chatMessageModel.user_id.ParseToInteger() != userProvider.GetUser().id) return;
+            logger.Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
+
             if(chatMessageModel.chatMessageBody.IsCode)
-            //messagesContainer.LastStamp = lastStamp;
                 messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
-            //if (!chatMessageModel.chatMessageBody.IsCode) lastStamp = messagesContainer.LastStamp;
         }
 
 

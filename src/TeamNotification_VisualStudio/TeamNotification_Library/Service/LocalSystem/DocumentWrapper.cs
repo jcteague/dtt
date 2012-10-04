@@ -9,7 +9,11 @@ namespace TeamNotification_Library.Service.LocalSystem
     public class DocumentWrapper : IWrapDocument
     {
         private Document Document { get; set; }
-        public DocumentWrapper(Document document) { Document = document; Selection = new SelectionWrapper(TextDocument); }
+        public DocumentWrapper(Document document)
+        {
+            Document = document; 
+            Selection = new SelectionWrapper(TextDocument);
+        }
         public bool ReadOnly { get { return Document.ReadOnly; } set { Document.ReadOnly = value; } }
         public IWrapSelection Selection { get; private set; }
         public IWrapTextDocument TextDocument { get { return new TextDocumentWrapper((TextDocument)Document.Object("TextDocument")); } }

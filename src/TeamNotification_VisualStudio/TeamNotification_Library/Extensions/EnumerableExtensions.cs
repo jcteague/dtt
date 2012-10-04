@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TeamNotification_Library.Extensions
 {
@@ -12,5 +13,11 @@ namespace TeamNotification_Library.Extensions
                  action(entity);
              }
          }
+
+        public static string Join<T>(this IEnumerable<T> collection, string separator)
+        {
+            var stringsCollection = collection.Select(x => x.ToString());
+            return string.Join(separator, stringsCollection);
+        }
     }
 }

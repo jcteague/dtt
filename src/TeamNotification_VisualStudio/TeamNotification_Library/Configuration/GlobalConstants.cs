@@ -10,7 +10,8 @@
 
         public static class Paths
         {
-            public const string UserResource = @"user";
+            public const string UserResource = @"yackety.user";
+            public const string LogFile = @"yackety.log";
         }
 
         public static class ProgrammingLanguages

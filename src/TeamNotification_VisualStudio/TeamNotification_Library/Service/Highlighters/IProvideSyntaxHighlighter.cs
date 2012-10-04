@@ -2,8 +2,8 @@
 
 namespace TeamNotification_Library.Service.Highlighters
 {
-    public interface IProvideSyntaxHighlighter
+    public interface IProvideSyntaxHighlighter<T>
     {
-        IHighlighter GetFor(int programminglanguageIdentifier);
+        T GetFor(int programminglanguageIdentifier);
     }
 }
