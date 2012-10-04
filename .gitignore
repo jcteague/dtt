@@ -12,6 +12,9 @@ src/**/routes/*.js
 src/**/support/*.js
 src/**/support/**/*.js
 src/**/test/**/*.js
+src/**/helper/*.js
+
+src/TeamNotification_Server/support/
 
 *.suo
 *.TMP
@@ -40,3 +43,4 @@ application.txt
 *.swo
 
 config.js
+mocha_setup.js

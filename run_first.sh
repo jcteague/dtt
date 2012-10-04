@@ -15,8 +15,16 @@ bundle install &&
 echo '------------------------------------------------------------';
 echo 'Finished installing dependencies';
 echo '------------------------------------------------------------';
+
+echo '------------------------------------------------------------';
+echo 'Creating log directories';
+echo '------------------------------------------------------------';
+mkdir development_logs
+
+echo '------------------------------------------------------------';
 echo 'Creating the environment databases';
+echo '------------------------------------------------------------';
 sudo su postgres -c "createdb dtt_main" &&
 sudo su postgres -c "createdb dtt_test";
 echo '------------------------------------------------------------';
-echo 'Remember to set up your postgres user with the correct password'
+echo 'NOTE: Remember to set up your postgres user with the correct password'
