@@ -68,9 +68,9 @@ production_settings =
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
-        client_id: '238dc978aaf2621d38b5'
-        secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
-        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        client_id: 'cfb1bc4d1ed5dc9199bf'
+        secret: '404f517c7c588165277fe3d1550360a77d1d388e'
+        redirect_url: 'http://54.243.207.101/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
 module.exports = ->
     switch process.env.NODE_ENV
