@@ -34,6 +34,7 @@ methods.github_repositories = (req,res) ->
 
 methods.github_authentication_callback = (req, res) ->
     code = req.query.code
+    console.log code
     post_fields = 
         'client_id' : config.github.client_id
         'client_secret': config.github.secret
@@ -53,6 +54,7 @@ methods.github_authentication_callback = (req, res) ->
         post_res.setEncoding('utf8')
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
+            console.log data
             res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
         post_res.on 'error', (e) -> 
             console.log("Got error: " + e.message)
