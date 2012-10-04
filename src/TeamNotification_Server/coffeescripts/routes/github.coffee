@@ -29,15 +29,12 @@ methods.github_repositories = (req,res) ->
     build('github_repositories_collection').for({access_token:req.param("access_token"), user_id:req.user.id} ).fetch_to callback
 
 methods.github_authentication_callback = (req, res) ->
-    console.log 'Over here'
     code = req.query.code
-    console.log code
     post_fields = 
         'client_id' : config.github.client_id
         'client_secret': config.github.secret
         'code': code
         'state': config.github.state
-    console.log post_fields
     post_data = querystring.stringify( post_fields)
     post_options = 
         host: 'github.com'
@@ -48,14 +45,14 @@ methods.github_authentication_callback = (req, res) ->
             'Accept': 'application/json'
             'Content-Type': 'application/x-www-form-urlencoded'
             'Content-Length': post_data.length
-    console.log post_data
-    
     post_req = http.request post_options, (post_res) ->        
         post_res.setEncoding('utf8')
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
-            console.log data
-            res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
+            if(tyepof(data.access_token) != undefined)
+                res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
+            else
+                res.send({success:false, messages:['There was a problem contacting github']})
         post_res.on 'error', (error) -> 
             console.log("Got error: " + error.message)
             res.send({success:false, messages:[error.message]})
