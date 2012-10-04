@@ -53,7 +53,7 @@ methods.github_authentication_callback = (req, res) ->
         post_res.setEncoding('utf8')
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
-            res.redirect("/client#github/repositories/#{data.access_token}")
+            res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
         post_res.on 'error', (e) -> 
             console.log("Got error: " + e.message)
     post_req.end(post_data)
