@@ -12,10 +12,6 @@ methods = {}
 methods.receive_github_event = (req,res,next) ->
     values = req.body
     console.log values
-#    room_key = req.param("room_key")
-    #chat_room = new Repository('ChatRoom')
-    #chat_room.find({room_key:room_key}).then (chat_rooms) ->
-    #    console.log chat_rooms
 
 methods.associate_github_repositories = (req, res, next) ->
     repositories = req.body.repositories
@@ -38,7 +34,7 @@ methods.github_authentication_callback = (req, res) ->
     post_fields = 
         'client_id' : config.github.client_id
         'client_secret': config.github.secret
-        'code': req.query.code
+        'code': code
         'state': config.github.state
     console.log post_fields
     post_data = querystring.stringify( post_fields)
@@ -51,7 +47,6 @@ methods.github_authentication_callback = (req, res) ->
             'Accept': 'application/json'
             'Content-Type': 'application/x-www-form-urlencoded'
             'Content-Length': post_data.length
-    
     console.log post_data
     
     post_req = http.request post_options, (post_res) ->        
