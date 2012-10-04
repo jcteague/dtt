@@ -40,6 +40,7 @@ methods.github_authentication_callback = (req, res) ->
         'client_secret': config.github.secret
         'code': req.query.code
         'state': config.github.state
+    console.log post_fields
     post_data = querystring.stringify( post_fields)
     post_options = 
         host: 'github.com'
