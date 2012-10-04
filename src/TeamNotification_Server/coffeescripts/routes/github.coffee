@@ -29,6 +29,7 @@ methods.github_repositories = (req,res) ->
     build('github_repositories_collection').for({access_token:req.param("access_token"), user_id:req.user.id} ).fetch_to callback
 
 methods.github_authentication_callback = (req, res) ->
+    console.log 'Over here'
     code = req.query.code
     console.log code
     post_fields = 
