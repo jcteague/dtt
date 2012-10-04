@@ -226,7 +226,7 @@
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
-    <Compile Include="Service\Highlighters\SyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Highlighters\AurelianRibonSyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
     <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />

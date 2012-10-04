@@ -4,14 +4,14 @@ using TeamNotification_Library.Configuration;
 
 namespace TeamNotification_Library.Service.Highlighters
 {
-    public class SyntaxHighlighterProvider : IProvideSyntaxHighlighter<IHighlighter>
+    public class AurelianRibonSyntaxHighlighterProvider : IProvideSyntaxHighlighter<IHighlighter>
     {
         private IHighlighter CSharpHighlighter;
         private IHighlighter VBHighlighter;
         private IHighlighter JavaScriptHighlighter;
         private IHighlighter DefaultHighlighter;
 
-        public SyntaxHighlighterProvider()
+        public AurelianRibonSyntaxHighlighterProvider()
         {
             CSharpHighlighter = HighlighterManager.Instance.Highlighters["cSharp"];
             VBHighlighter = HighlighterManager.Instance.Highlighters["vBNET"];
