@@ -18,7 +18,8 @@
     "passport-github": "0.1.x",
     "validator": "0.4.x",
     "node_hash": "0.2.x",
-    "nodemailer": "0.3.x"
+    "nodemailer": "0.3.x",
+    "querystring": "0.1.x"
   },
   "devDependencies": {
     "coffee-script": "1.3.x",
