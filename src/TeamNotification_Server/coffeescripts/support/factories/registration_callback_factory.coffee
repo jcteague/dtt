@@ -3,7 +3,7 @@ registration_service = require('../registration_service')
 
 get_for_success = (req, res) ->
     return () ->
-        user_data = 
+        user_data =
             first_name: req.body.first_name.trim()
             last_name: req.body.last_name.trim()
             email: req.body.email.trim()
@@ -13,7 +13,7 @@ get_for_success = (req, res) ->
             res.json {
                 success: true
                 messages: ['User created successfully']
-                data: 
+                data:
                     id: user.id
                     email: user.email
             }
