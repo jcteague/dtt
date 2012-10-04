@@ -1,19 +1,22 @@
 config = require("../config")()
 https = require("https")
-querystring = require("querystring")
+Q = require('q')
 #POST /repos/:owner/:repo/hooks
 
 events = [ 'push', 'issues', 'issue_comment', 'commit_comment', 'pull_request', 'fork']
 
 
 set_github_repository_events = (repositories, owner, room_key, access_token) ->
+    defered = Q.defer()
     post_fields = 
         name : "web"
-        config:
-            url:"#{config.site.url}/github/#{room_key}"
         events: events
-    post_data = querystring.stringify( post_fields)
-
+        config: 
+            content_type: "json"
+            url:"#{config.site.url}/github/#{room_key}"
+    #post_data = querystring.stringify( post_fields)
+    post_data = JSON.stringify(post_fields)
+    console.log post_data
     for repository in repositories
         options =
             host: "api.github.com"
@@ -22,22 +25,24 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
             method: 'POST'
             headers:
                 'Accept': 'application/json'
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': "application/x-www-form-urlencoded"
                 'Content-Length': post_data.length
                 
         console.log options.path
-
+        
         post_req = https.request options, (post_res) ->        
             post_res.setEncoding('utf8')
             post_res.on 'data', (chunk) ->
                 #data = JSON.parse(chunk)
                 console.log chunk
                 #res.send({success:true, messages:[data.url]})
+                defered.resolve({succcess:true})
             post_res.on 'error', (e) -> 
                 console.log("Got error: " + e.message)
                 #res.send({success:false, messages:["There was an error setting up fthe webhook"]})
-        post_req.end(post_data)
-    return {succes:true}
+        post_req.end(post_data) #post_data)
+    #return {succes:true}
+    defered.promise
 
 
 module.exports =
