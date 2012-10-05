@@ -35,6 +35,9 @@
     <CopyVsixExtensionLocation>bin\Release\</CopyVsixExtensionLocation>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="le_nlog">
+      <HintPath>..\packages\le_nlog.2.1\lib\4.0\le_nlog.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
@@ -46,10 +49,14 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -143,6 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Configuration\IInitializeConfiguration.cs" />
+    <Compile Include="Configuration\LogentriesConfiguration.cs" />
     <Compile Include="Controls\AskingPaste.xaml.cs">
       <DependentUpon>AskingPaste.xaml</DependentUpon>
     </Compile>
