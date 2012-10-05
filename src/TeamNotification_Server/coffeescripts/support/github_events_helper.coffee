@@ -36,13 +36,13 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
 #{ user:'', event_type:'', repository_name:'', content:''}
 get_event_message_object = (event_obj) ->
     if( event_obj.pusher? )
-        return {user:event_obj.pusher.name, event_type:'push', repository_name:event_obj.repository.name, content:'', message:'', notification:1}
+        return {user:event_obj.pusher.name, event_type:'push', repository_name:event_obj.repository.name, content:'', message:'', notification:1, source:'Github notification'}
         
     if( event_obj.comment? )
-        return {user:event_obj.comment.user.login, event_type:'comment', repository_name:event_obj.repository.name, content:event_obj.comment.body, message:'', notification:1}
+        return {user:event_obj.comment.user.login, event_type:'comment', repository_name:event_obj.repository.name, content:event_obj.comment.body, message:'', notification:1, source:'Github notification'}
     
     if( event_obj.forkee? )
-        return {user:event_obj.sender.login, event_type:'fork', repository_name:event_obj.repository.name, content:'', message:'', notification:1}
+        return {user:event_obj.sender.login, event_type:'fork', repository_name:event_obj.repository.name, content:'', message:'', notification:1, source:'Github notification'}
 
     return null
 

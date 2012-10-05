@@ -27,7 +27,7 @@ methods.receive_github_event = (req,res,next) ->
             notification = github_helper.get_event_message_object values
             
             if notification?
-                notification.message = "<b>Github notification:</b> #{notification.user} just #{notification.event_type} on repository: #{notification.repository_name}"
+                notification.message = "Github notification!! User, #{notification.user}, just did a #{notification.event_type} on repository: #{notification.repository_name}"
                 console.log 'Notification structure'
                 console.log notification
                 message_date =  new Date()
