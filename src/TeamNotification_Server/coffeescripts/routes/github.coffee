@@ -27,6 +27,7 @@ methods.receive_github_event = (req,res,next) ->
             newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             
             console.log newMessage
+            m = JSON.stringify newMessage
             redis_publisher.publish("chat #{room.room_id}", JSON.stringify(notification))
             redis_queryer.zadd(setname,message_stamp, m)
             room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
