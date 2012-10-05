@@ -93,11 +93,6 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             p.attr "class", "new_message"
             console.log $(message)
             p[0].innerHTML = parsedBody.message
-            #if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
-            #    @added_code = true
-            #    p[0].innerHTML = "<pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
-            #else
-            #    p[0].innerHTML = "#{parsedBody.message}"
                 
         read_message_data: (message) ->
             name = message.name
@@ -115,5 +110,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 $(p).attr 'id',"#{message.stamp}"
                 p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
                 return p
-            else
-                return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+            if parsedBody.notification?
+                return ("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+                
+            return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
