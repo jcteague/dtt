@@ -21,8 +21,9 @@ methods.receive_github_event = (req,res,next) ->
             console.log room
             setname = "room:#{room.room_id}:messages"
             notification = github_helper.get_event_message_object values
+            console.log notification
             notification.message = "#{notifictation.user} just #{notification.event_type} on repository: #{notification.repository_name}"
-            notification.notification = 1;
+
             message_date =  new Date()
             message_stamp =  message_date.getTime()
             newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
