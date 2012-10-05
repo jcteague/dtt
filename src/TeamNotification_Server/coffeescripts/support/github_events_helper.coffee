@@ -12,7 +12,6 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
         config: 
             content_type: "json"
             url:"#{config.site.url}/github/events/#{room_key}"
-    #post_data = querystring.stringify( post_fields)
     post_data = JSON.stringify(post_fields)
     console.log post_data
     for repository in repositories
@@ -35,9 +34,21 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
                 defered.resolve({succcess:true})
             post_res.on 'error', (e) -> 
                 console.log("Got error: " + e.message)
-        post_req.end(post_data) #post_data)
+        post_req.end(post_data)
     defered.promise
 
+#{ user:'', event_type:'', repository_name:'', content:''}
+get_event_message_object = (event_obj) ->
+    if( typeof(event_obj.pusher) != 'undefined' )
+        return {user:event_obj.pusher.name, event_type:'push', repository_name:event_obj.repository.name, content:''}
+        
+    if( typeof(event_obj.comment) != 'undefined' )
+        return {user:event_obj.user.login, event_type:'comment', repository_name:event_obj.repository.name, content:event_obj.comment.body}
+    
+    if( typeof(event_obj.forkee) != 'undefined' )
+        return {user:event_obj.sender.login, event_type:'fork', repository_name:event_obj.repository.name, content:''}
+
+    return { user:'', event_type:'', repository_name:''}
 
 module.exports =
     set_github_repository_events : set_github_repository_events

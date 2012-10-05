@@ -11,7 +11,10 @@ methods = {}
 
 methods.receive_github_event = (req,res,next) ->
     values = req.body
+    console.log 'A new event arrived'
     console.log values
+    notification = github_helper.get_event_message_object values
+    console.log notification
 
 methods.associate_github_repositories = (req, res, next) ->
     repositories = req.body.repositories
