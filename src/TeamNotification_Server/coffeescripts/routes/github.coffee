@@ -29,7 +29,7 @@ methods.receive_github_event = (req,res,next) ->
             message_date =  new Date()
             message_stamp =  message_date.getTime()
             
-            newMessage = {"body": JSON.parse(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
+            newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             m = JSON.stringify newMessage
             
             console.log m
