@@ -16,13 +16,16 @@ methods = {}
 
 methods.receive_github_event = (req,res,next) ->
     values = req.body
-    console.log values
-    console.log req.param('room_key')
-    new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (room) ->
-        if(room?)
+    new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
+        if(rooms?)
+            room = rooms[0]
+            console.log 'Notification structure'
+            console.log room
             setname = "room:#{room.id}:messages"
             notification = github_helper.get_event_message_object values
             notification.message = "#{notification.user} just #{notification.event_type} on repository: #{notification.repository_name}"
+            console.log 'Notification structure'
+            console.log notification
             message_date =  new Date()
             message_stamp =  message_date.getTime()
             
@@ -42,6 +45,9 @@ methods.receive_github_event = (req,res,next) ->
                     console.log 'Message added to posgre (:'
                 else 
                     next(new Error(err.code,err.message))
+        else
+            res.send({success:false,messages:["The requested room doesnt exists"]})
+            
 
 methods.associate_github_repositories = (req, res, next) ->
     repositories = req.body.repositories
