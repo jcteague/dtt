@@ -22,20 +22,24 @@ methods.receive_github_event = (req,res,next) ->
         if(room?)
             setname = "room:#{room.id}:messages"
             notification = github_helper.get_event_message_object values
-            notification.message = "#{notifictation.user} just #{notification.event_type} on repository: #{notification.repository_name}"
+            notification.message = "#{notification.user} just #{notification.event_type} on repository: #{notification.repository_name}"
             message_date =  new Date()
             message_stamp =  message_date.getTime()
             
             newMessage = {"body": JSON.parse(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             m = JSON.stringify newMessage
             
-            redis_publisher.publish("chat #{room.id}", m)
-            redis_queryer.zadd(setname,message_stamp, m)
+            console.log m
             
+            redis_publisher.publish("chat #{room.id}", m)
+            console.log 'Published the message'
+            redis_queryer.zadd(setname,message_stamp, m)
+            console.log 'Message added to redis'
             room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
             room_message.save (err,saved_message) ->
                 if !err
                     res.send({success:true, newMessage:saved_message})
+                    console.log 'Message added to posgre (:'
                 else 
                     next(new Error(err.code,err.message))
 
