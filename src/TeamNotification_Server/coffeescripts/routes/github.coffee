@@ -3,12 +3,14 @@ http = require('https');
 querystring = require('querystring')
 support = require('../support/core').core
 Repository = require('../support/repository')
+support = require('../support/core').core
 config = require('../config')()
 routes_service = require('../support/routes_service')
 github_helper = require('../support/github_events_helper')
 redis_connector = require('../support/redis/redis_gateway')
 build = routes_service.build
 redis_publisher = redis_connector.open()
+redis_queryer = redis_connector.open()
 
 methods = {}
 
@@ -24,10 +26,10 @@ methods.receive_github_event = (req,res,next) ->
             notification.message = "#{notifictation.user} just #{notification.event_type} on repository: #{notification.repository_name}"
             message_date =  new Date()
             message_stamp =  message_date.getTime()
-            newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             
-            console.log newMessage
+            newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             m = JSON.stringify newMessage
+            
             redis_publisher.publish("chat #{room.room_id}", JSON.stringify(notification))
             redis_queryer.zadd(setname,message_stamp, m)
             room_message = support.entity_factory.create('ChatRoomMessage', newMessage)

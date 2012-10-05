@@ -13,7 +13,6 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
             content_type: "json"
             url:"#{config.site.url}/github/events/#{room_key}"
     post_data = JSON.stringify(post_fields)
-    console.log post_data
     for repository in repositories
         options =
             host: "api.github.com"
@@ -24,9 +23,6 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
                 'Accept': 'application/json'
                 'Content-Type': "application/x-www-form-urlencoded"
                 'Content-Length': post_data.length
-                
-        console.log options.path
-        
         post_req = https.request options, (post_res) ->        
             post_res.setEncoding('utf8')
             post_res.on 'data', (chunk) ->
@@ -39,7 +35,6 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
 
 #{ user:'', event_type:'', repository_name:'', content:''}
 get_event_message_object = (event_obj) ->
-    console.log event_obj
     if( event_obj.pusher? )
         return {user:event_obj.pusher.name, event_type:'push', repository_name:event_obj.repository.name, content:'', message:'', notification:1}
         
