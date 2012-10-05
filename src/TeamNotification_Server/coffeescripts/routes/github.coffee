@@ -20,17 +20,16 @@ methods.receive_github_event = (req,res,next) ->
     console.log req.param('room_key')
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (room) ->
         if(room?)
-            console.log room
-            setname = "room:#{room.room_id}:messages"
+            setname = "room:#{room.id}:messages"
             notification = github_helper.get_event_message_object values
             notification.message = "#{notifictation.user} just #{notification.event_type} on repository: #{notification.repository_name}"
             message_date =  new Date()
             message_stamp =  message_date.getTime()
             
-            newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
+            newMessage = {"body": JSON.parse(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
             m = JSON.stringify newMessage
             
-            redis_publisher.publish("chat #{room.room_id}", m)
+            redis_publisher.publish("chat #{room.id}", m)
             redis_queryer.zadd(setname,message_stamp, m)
             
             room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
