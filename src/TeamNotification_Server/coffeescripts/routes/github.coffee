@@ -1,29 +1,51 @@
 express = require('express')
+http = require('https');
+querystring = require('querystring')
 support = require('../support/core').core
 Repository = require('../support/repository')
 config = require('../config')()
-querystring = require('querystring')
-http = require('https');
 routes_service = require('../support/routes_service')
-build = routes_service.build
 github_helper = require('../support/github_events_helper')
+redis_connector = require('../support/redis/redis_gateway')
+build = routes_service.build
+redis_publisher = redis_connector.open()
+
 methods = {}
 
 methods.receive_github_event = (req,res,next) ->
     values = req.body
-    console.log 'A new event arrived'
     console.log values
-    notification = github_helper.get_event_message_object values
-    console.log notification
+    console.log req.param('room_key')
+    new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (room) ->
+        if(room?)
+            console.log room
+            setname = "room:#{room.room_id}:messages"
+            notification = github_helper.get_event_message_object values
+            notification.message = "#{notifictation.user} just #{notification.event_type} on repository: #{notification.repository_name}"
+            notification.notification = 1;
+            message_date =  new Date()
+            message_stamp =  message_date.getTime()
+            newMessage = {"body": JSON.parse(notification), "room_id":room.room_id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
+            console.log newMessage
+            return
+            redis_publisher.publish("chat #{room.room_id}", JSON.stringify(notification))
+            redis_queryer.zadd(setname,message_stamp, m)
+            room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
+            room_message.save (err,saved_message) ->
+                if !err
+                    res.send({success:true, newMessage:saved_message})
+                else 
+                    next(new Error(err.code,err.message))
 
 methods.associate_github_repositories = (req, res, next) ->
     repositories = req.body.repositories
     if repositories?
         owner = req.body.owner
         room_key = req.body.room_key
-        res.json(github_helper.set_github_repository_events(repositories, owner, room_key, req.param("access_token")))
+        response = github_helper.set_github_repository_events(repositories, owner, room_key, req.param("access_token"))
+        res.json get_server_response(true, ["The webhooks where successfully created"]) # "/room/#{saved_chat_room.id}/" )
     else
-        res.json({success:false,messages:['There was an error'] })
+        res.json get_server_response(false, ["There was an error setting up the webhook"] )
         
 methods.github_repositories = (req,res) ->
     callback = (collection) ->
@@ -71,5 +93,5 @@ module.exports =
         app.get('/github/repositories/:access_token', methods.github_repositories)
         app.get('/github/oauth', methods.github_redirect)
         app.get('/github/auth/callback', methods.github_authentication_callback)
-        app.post('/github/repositories/:access_token', methods.associate_github_repositories)
+        app.post('/github/repositories/:access_token', express.bodyParser(), methods.associate_github_repositories)
         app.post('/github/events/:room_key', express.bodyParser(), methods.receive_github_event)

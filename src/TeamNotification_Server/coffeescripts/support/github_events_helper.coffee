@@ -39,6 +39,7 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
 
 #{ user:'', event_type:'', repository_name:'', content:''}
 get_event_message_object = (event_obj) ->
+    console.log event_obj
     if( typeof(event_obj.pusher) != 'undefined' )
         return {user:event_obj.pusher.name, event_type:'push', repository_name:event_obj.repository.name, content:''}
         
@@ -52,6 +53,7 @@ get_event_message_object = (event_obj) ->
 
 module.exports =
     set_github_repository_events : set_github_repository_events
+    get_event_message_object : get_event_message_object
  
 ###
 "supported_events": [
