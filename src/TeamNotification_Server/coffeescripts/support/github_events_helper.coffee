@@ -44,7 +44,7 @@ get_event_message_object = (event_obj) ->
     if( event_obj.forkee? )
         return {user:event_obj.sender.login, event_type:'fork', repository_name:event_obj.repository.name, content:'', message:'', notification:1}
 
-    return { user:'', event_type:'', repository_name:'', message:'', notification:0}
+    return null
 
 module.exports =
     set_github_repository_events : set_github_repository_events

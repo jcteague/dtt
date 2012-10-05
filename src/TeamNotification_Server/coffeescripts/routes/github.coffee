@@ -18,33 +18,36 @@ methods.receive_github_event = (req,res,next) ->
     values = req.body
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
         if(rooms?)
+            console.log 'Package json'
+            console.log values
             room = rooms[0]
-            console.log 'Notification structure'
+            console.log 'Room structure'
             console.log room
             setname = "room:#{room.id}:messages"
             notification = github_helper.get_event_message_object values
-            notification.message = "#{notification.user} just #{notification.event_type} on repository: #{notification.repository_name}"
-            console.log 'Notification structure'
-            console.log notification
-            message_date =  new Date()
-            message_stamp =  message_date.getTime()
             
-            newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
-            m = JSON.stringify newMessage
-            
-            console.log m
-            
-            redis_publisher.publish("chat #{room.id}", m)
-            console.log 'Published the message'
-            redis_queryer.zadd(setname,message_stamp, m)
-            console.log 'Message added to redis'
-            room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
-            room_message.save (err,saved_message) ->
-                if !err
-                    res.send({success:true, newMessage:saved_message})
-                    console.log 'Message added to posgre (:'
-                else 
-                    next(new Error(err.code,err.message))
+            if notification?
+                notification.message = "<b>Github notification:</b> #{notification.user} just #{notification.event_type} on repository: #{notification.repository_name}"
+                console.log 'Notification structure'
+                console.log notification
+                message_date =  new Date()
+                message_stamp =  message_date.getTime()
+                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp} 
+                m = JSON.stringify newMessage
+                
+                console.log m
+                
+                redis_publisher.publish("chat #{room.id}", m)
+                console.log 'Published the message'
+                redis_queryer.zadd(setname,message_stamp, m)
+                console.log 'Message added to redis'
+                room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
+                room_message.save (err,saved_message) ->
+                    if !err
+                        res.send({success:true, newMessage:saved_message})
+                        console.log 'Message added to posgre (:'
+                    else 
+                        next(new Error(err.code,err.message))
         else
             res.send({success:false,messages:["The requested room doesnt exists"]})
             
