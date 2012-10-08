@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using AurelienRibon.Ui.SyntaxHighlightBox;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Content;
-using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Chat
 {
@@ -32,7 +27,7 @@ namespace TeamNotification_Library.Service.Chat
             this.userMessageFormatter = userMessageFormatter;
             this.dateMessageFormatter = dateMessageFormatter;
             this.tableBuilder = tableBuilder;
-    this.jsonSerializer = jsonSerializer;
+            this.jsonSerializer = jsonSerializer;
         }
 
         public TableRowGroup AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
