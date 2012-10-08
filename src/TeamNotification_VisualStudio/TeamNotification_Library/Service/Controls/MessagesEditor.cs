@@ -7,6 +7,7 @@ using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Http;
+using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Controls
@@ -18,15 +19,17 @@ namespace TeamNotification_Library.Service.Controls
         public TableRowGroup currentRowGroup { get; set; }
         public Collection.Messages editingMessage { get; set; }
         public ChatMessageModel editingMessageModel { get; set; }
+        public IStoreGlobalState applicationGlobalState;
 
         public ComboBox comboRooms;
         private Brush editingColor;
         private ISerializeJSON jsonSerializer;
 
-        public MessagesEditor(ISerializeJSON jsonSerializer)
+        public MessagesEditor(ISerializeJSON jsonSerializer, IStoreGlobalState applicationGlobalState)
         {
             editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
             this.jsonSerializer = jsonSerializer;
+            this.applicationGlobalState = applicationGlobalState;
         }
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, ChatUIElements messagesContainer)
@@ -89,6 +92,7 @@ namespace TeamNotification_Library.Service.Controls
                 editingMessageModel.chatMessageBody = chatMessageBody;
             }
             SetControls(row);
+            applicationGlobalState.IsEditingCode = true;
         }
 
         private void SetControls(TableRowGroup row)
@@ -137,6 +141,7 @@ namespace TeamNotification_Library.Service.Controls
             editingMessage = null;
             editingMessageModel = null;
             comboRooms.IsEnabled = true;
+            applicationGlobalState.IsEditingCode = false;
         }
 
         public void CancelEditMessage(object sender, System.Windows.Input.KeyEventArgs e)
