@@ -6,16 +6,16 @@ Q = require('q')
 
 express_mock =
     bodyParser: sinon.stub()
-    
+
 http_mock =
     request: sinon.stub()
 
 querystring_mock =
     stringify: sinon.stub()
 
-support_mock = 
+support_mock =
     core:
-        entity_factory: 
+        entity_factory:
             create: sinon.stub()
 
 repository_class_mock = sinon.stub()
@@ -61,7 +61,7 @@ sut = module_loader.require('../routes/github.js', {
 push_object =
     pusher:
         name: 'none',
-    repository: 
+    repository:
         name: 'oauth2orize',
         url: 'https://github.com/eatskolnikov/oauth2orize',
         language: 'JavaScript',
@@ -77,44 +77,46 @@ describe 'Github', ->
         beforeEach (done) ->
             repository_class_mock.withArgs('ChatRoom').returns chat_room_mock
             done()
-        describe 'and the event is a push'
+
+        describe 'and the event is a push', ->
+
             beforeEach (done) ->
                 req =
                     param: sinon.stub()
                     body: push_object
-                
-                done()
-                
 
-                    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            
+                done()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
