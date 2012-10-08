@@ -23,16 +23,14 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper;
         private readonly IStoreDataLocally localStorageService;
         private readonly IHandleUserAccountEvents userAccountEvents;
-        private ILog logger;
 
-        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, ILog logger)
+        public LoginControlService(ISendHttpRequests httpClient, IProvideConfiguration<LoginConfiguration> configuration, IMapEntities<IEnumerable<CollectionData>, FormUrlEncodedContent> mapper, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents)
         {
             this.httpClient = httpClient;
             this.configuration = configuration;
             this.mapper = mapper;
             this.localStorageService = localStorageService;
             this.userAccountEvents = userAccountEvents;
-            this.logger = logger;
         }
 
         public Collection GetCollection()
@@ -56,12 +54,10 @@ namespace TeamNotification_Library.Service.Controls
                     }
                 localStorageService.Store(loginResponse);
                 userAccountEvents.OnLoginSuccess(this, new UserHasLogged(loginResponse.user, loginResponse.redis));
-                logger.Info(this, "User has logged: {0}".FormatUsing(loginResponse.user.email));
             }
             else
             {
                 userAccountEvents.OnLoginFail(this);
-                logger.Info(this, "User could not log in");
             }
         }
 
