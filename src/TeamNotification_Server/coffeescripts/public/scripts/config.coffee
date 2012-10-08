@@ -2,9 +2,9 @@ define 'config', [], ->
 
     production_settings =
         site:
-            host: '54.243.207.101'
+            host: 'yacketyapp.com'
             port: 80
-            url: 'http://54.243.207.101'
+            url: 'http://yacketyapp.com'
 
     development_settings =
         site:

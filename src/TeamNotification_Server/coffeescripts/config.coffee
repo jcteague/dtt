@@ -62,14 +62,14 @@ production_settings =
     db:
         connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
     site:
-        host: '54.243.207.101'
+        host: 'yacketyapp.com'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://54.243.207.101'
+        url: 'http://yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     redis:
-        host: '54.243.207.101'
+        host: 'yacketyapp.com'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
     email:
@@ -78,7 +78,7 @@ production_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: 'cfb1bc4d1ed5dc9199bf'
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
-        redirect_url: 'http://54.243.207.101/github/auth/callback'
+        redirect_url: 'http://yacketyapp.com/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join('/var', 'log', 'yackety.log')
