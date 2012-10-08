@@ -12,6 +12,8 @@ require('./helper')(app)
 io = require('socket.io').listen(app)
 
 logger = require('./support/logging/logger')
+winston = require('winston')
+express_winston = require('express-winston')
 
 ###
   Mock Database
@@ -51,6 +53,14 @@ app.configure(->
     app.use(auth.initializeAuth())
 
     app.use(app.router)
+
+    app.use(express_winston.errorLogger({
+        transports: [
+            new winston.transports.File({
+                filename: config.log.path
+            })
+        ]
+    }))
 )
 
 # Apply authentication for all routes
@@ -59,9 +69,6 @@ app.all '*', auth.authenticate
 
 # This must live here after authentication has been initialized
 require('./routes')(app, io)
-
-process.on 'uncaughtException', (err) ->
-    logger.error "Uncaught exception", {exception: err}
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
