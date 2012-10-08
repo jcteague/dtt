@@ -155,10 +155,11 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            logger.Info("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if(chatMessageModel.chatMessageBody.IsCode)
                 messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
+
+            logger.Info(this, "Got Message: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
         }
 
 

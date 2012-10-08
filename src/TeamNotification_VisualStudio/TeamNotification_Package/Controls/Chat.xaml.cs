@@ -163,7 +163,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                Container.GetInstance<ILog>().Info("Chat Message Received");
                 chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }
