@@ -67,7 +67,7 @@ production_settings =
         user: 'AKIAJH4LGM6D7JTFT4MQ'
         password: 'AlFd3CC8EzPTn+GE301M9oQthfZU5aPPBmKemJtz4e4X'
     log:
-        path: path.join('/var', 'log', 'dtt.log')
+        path: path.join('/var', 'log', 'yackety.log')
 
 module.exports = ->
     switch process.env.NODE_ENV
