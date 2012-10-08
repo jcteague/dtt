@@ -2,7 +2,6 @@ https = require('https')
 Q = require('q')
 
 request = (data, request_parameters) ->
-    console.log 'the data to post', data
     deferred = Q.defer()
     request = https.request request_parameters, (response) ->
         response.setEncoding('utf8')
