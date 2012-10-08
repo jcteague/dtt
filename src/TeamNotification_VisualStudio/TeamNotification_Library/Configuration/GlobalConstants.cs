@@ -44,7 +44,7 @@
 
         public static class Logentries
         {
-            public const string Token = "3d9d1d17-371b-4082-86d8-efa722772719";
+            public const string Token = "6824292a-62fa-4a82-98b3-457cf38d555a";
         }
     }
 }
