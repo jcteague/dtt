@@ -10,9 +10,14 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using StructureMap;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
+using TeamNotification_Library.Service.Logging.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -145,6 +150,47 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
             alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
+
+//            ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
+
+            // Step 1. Create configuration object 
+            LoggingConfiguration config = new LoggingConfiguration();
+            
+            // Step 2. Create targets and add them to the configuration 
+            ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget();
+            config.AddTarget("console", consoleTarget);
+            
+            FileTarget fileTarget = new FileTarget();
+            config.AddTarget("file", fileTarget);
+            
+            // Step 3. Set target properties 
+            consoleTarget.Layout = "${date:format=HH\\:MM\\:ss} ${logger} ${message}";
+//            fileTarget.FileName = "${basedir}/file.txt";
+//            fileTarget.FileName = "${specialfolder:folder=LocalApplicationData}/dtt-yackety.log";
+            fileTarget.FileName = "${basedir}/dtt-yackety.txt";
+//            fileTarget.Layout = "${date:format=ddd MMM dd} ${time:format=HH:mm:ss} ${date:format=zzz yyyy} ${logger} : ${LEVEL}, ${message}";
+            fileTarget.Layout = "${message}";
+            
+            // Step 4. Define rules
+            LoggingRule rule1 = new LoggingRule("*", LogLevel.Info, consoleTarget);
+            config.LoggingRules.Add(rule1);
+            
+            LoggingRule rule2 = new LoggingRule("*", LogLevel.Info, fileTarget);
+            config.LoggingRules.Add(rule2);
+            
+            // Step 5. Activate the configuration
+            LogManager.Configuration = config;
+            LogManager.ThrowExceptions = true;
+//            var logger = LogManager.GetCurrentClassLogger();
+            var logger = LogManager.GetLogger("Example");
+            logger.Info("Here");
+            logger.Debug("Sample Message");
+            logger.Trace("trace log message");
+            logger.Debug("debug log message");
+            logger.Info("info log message");
+            logger.Warn("warn log message");
+            logger.Error("error log message");
+            logger.Fatal("fatal log message");
         }
         #endregion
 

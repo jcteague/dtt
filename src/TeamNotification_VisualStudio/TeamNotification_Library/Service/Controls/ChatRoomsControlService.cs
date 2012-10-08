@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
+using NLog;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
@@ -22,6 +23,7 @@ using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
+using Logger = TeamNotification_Library.Service.Logging.Logger;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -40,7 +42,6 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IHandleUserAccountEvents userAccountEvents;
 
         private ILog logger;
-
         
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         private readonly ISendChatMessages messageSender;
@@ -81,8 +82,17 @@ namespace TeamNotification_Library.Service.Controls
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
+            var logger = LogManager.GetLogger("Example");
+            logger.Info("Here");
+            logger.Debug("Sample Message");
+            logger.Trace("trace log message");
+            logger.Debug("debug log message");
+            logger.Info("info log message");
+            logger.Warn("warn log message");
+            logger.Error("error log message");
+            logger.Fatal("fatal log message");
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
-            logger.Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
+//            logger.Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
