@@ -1,3 +1,5 @@
+path = require('path')
+
 db_config =
     user: 'postgres'
     password: '1234'
@@ -28,6 +30,9 @@ development_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'http://dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    log:
+        path: path.join(process.cwd(), 'development_logs', 'dev.log')
+
 test_settings =
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_test}"
@@ -50,6 +55,9 @@ test_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'http://dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    log:
+        path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
+
 production_settings =
     db:
         connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
@@ -72,6 +80,9 @@ production_settings =
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
         redirect_url: 'http://54.243.207.101/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    log:
+        path: path.join('/var', 'log', 'yackety.log')
+
 module.exports = ->
     switch process.env.NODE_ENV
         when 'test' then test_settings

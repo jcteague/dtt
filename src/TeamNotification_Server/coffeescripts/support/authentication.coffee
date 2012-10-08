@@ -4,6 +4,7 @@ sha256 = require('node_hash').sha256
 BasicStrategy = require('passport-http').BasicStrategy
 Repository = require './repository'
 whitelisted_paths = require('../config')().site.whitelisted_paths
+logger = require('./logging/logger')
 
 class Authentication
 
@@ -18,9 +19,12 @@ class Authentication
 
     findByUserName: (username,password,done) ->
         @repository.find(email: username, password: sha256(password)).then (users) ->
+            logger.info "User attempting to log in: #{username}"
             if !users? or !users[0]?
+                logger.info "User could not log in: #{username}"
                 return done(null, false)
             user = users[0]
+            logger.info "User logged in successfully: #{user.id} - #{user.email}"
             done(null, id: user.id, email: user.email, name: user.first_name)
 
 	authenticate: (request, response, next) ->

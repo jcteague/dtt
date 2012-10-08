@@ -1,6 +1,7 @@
 q = require('q')
 pg = require('pg')
 orm = require('orm')
+logger = require('./logging/logger')
 
 db_config = require('../config')().db
 
@@ -10,7 +11,7 @@ get_db_connection = ->
     defer = q.defer()
     orm.connect 'postgres', client, (success, db) ->
         unless success
-            console.log "Could not connect to #{db_config.connection_string}"
+            logger.error "Could not connect to #{db_config.connection_string}"
             return
 
         defer.resolve(db)

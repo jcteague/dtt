@@ -1,5 +1,6 @@
 Q = require('q')
 _ = require('underscore')
+logger = require('../logging/logger')
 
 transport = transport_factory = require('./email_transport_factory').get()
 
@@ -7,14 +8,15 @@ send_email = (email_message) ->
     deferred = Q.defer()
     emails = sanitize_emails email_message
     if emails.to is ''
+        logger.warn "Emails not sent. To address does not contain any valid recipient"
         deferred.reject 'Malformed email addresses'
     else
         transport.sendMail emails, (error, response) ->
             if error
-                #console.log 'email had error', error
+                logger.error "Email could not be sent", {error: error}
                 deferred.reject error
             else
-                #console.log 'email was a success', response
+                logger.info "Email sent", {response: response}
                 deferred.resolve response
 
     deferred.promise

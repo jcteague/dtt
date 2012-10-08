@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
+using NLog;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
@@ -22,6 +23,7 @@ using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
+using Logger = TeamNotification_Library.Service.Logging.Logger;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -40,7 +42,6 @@ namespace TeamNotification_Library.Service.Controls
         private readonly IHandleUserAccountEvents userAccountEvents;
 
         private ILog logger;
-
         
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         private readonly ISendChatMessages messageSender;
@@ -82,7 +83,7 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
-            logger.Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
+            logger.Info(this, "Pasting from Clipboard: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
@@ -154,10 +155,11 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            logger.Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if(chatMessageModel.chatMessageBody.IsCode)
                 messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
+
+            logger.Info(this, "Got Message: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
         }
 
 
