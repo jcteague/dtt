@@ -2,7 +2,6 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Logging.Providers
 {
