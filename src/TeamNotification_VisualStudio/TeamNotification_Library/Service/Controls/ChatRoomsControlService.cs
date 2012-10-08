@@ -83,7 +83,7 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
-            logger.Info(this, "Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
+            logger.Info(this, "Pasting from Clipboard: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
