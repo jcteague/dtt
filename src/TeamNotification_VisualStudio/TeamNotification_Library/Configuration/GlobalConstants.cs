@@ -41,5 +41,10 @@
         {
             public const string LoginWindowPersistanceString = "052b3fa5-4a40-4588-9614-5b99dce7120d";
         }
+
+        public static class Logentries
+        {
+            public const string Token = "3d9d1d17-371b-4082-86d8-efa722772719";
+        }
     }
 }

@@ -63,6 +63,7 @@
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Json">
@@ -273,6 +274,7 @@
     <Compile Include="Service\Logging\ILog.cs" />
     <Compile Include="Service\Logging\Logger.cs" />
     <Compile Include="Service\Logging\Providers\IConfigureLogging.cs" />
+    <Compile Include="Service\Logging\Providers\LeTarget.cs" />
     <Compile Include="Service\Logging\Providers\NLogConfiguration.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
