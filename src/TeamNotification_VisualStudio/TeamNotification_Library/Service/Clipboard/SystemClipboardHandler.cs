@@ -17,7 +17,7 @@ namespace TeamNotification_Library.Service.Clipboard
 
         public string GetText(bool useInternal = false)
         {
-            logger.Write("Clipboard has {0} on value".FormatUsing(value));
+            logger.Info("Clipboard has {0} on value".FormatUsing(value));
             if (useInternal || value.IsNullOrEmpty())
             {
                 if(System.Windows.Clipboard.ContainsText())

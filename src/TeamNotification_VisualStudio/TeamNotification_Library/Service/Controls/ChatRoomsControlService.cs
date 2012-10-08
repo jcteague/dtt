@@ -82,15 +82,17 @@ namespace TeamNotification_Library.Service.Controls
 
         public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
-            var logger = LogManager.GetLogger("Example");
-            logger.Info("Here");
-            logger.Debug("Sample Message");
-            logger.Trace("trace log message");
-            logger.Debug("debug log message");
-            logger.Info("info log message");
-            logger.Warn("warn log message");
-            logger.Error("error log message");
-            logger.Fatal("fatal log message");
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Fatal("THIS IS FROM THE CHAT");
+//            var logger = LogManager.GetLogger("Example");
+//            logger.Info("Here");
+//            logger.Debug("Sample Message");
+//            logger.Trace("trace log message");
+//            logger.Debug("debug log message");
+//            logger.Info("info log message");
+//            logger.Warn("warn log message");
+//            logger.Error("error log message");
+//            logger.Fatal("fatal log message");
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
 //            logger.Write("Pasting {0} from Clipboard".FormatUsing(chatMessageModel.chatMessageBody.message));
 
@@ -164,7 +166,7 @@ namespace TeamNotification_Library.Service.Controls
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-            logger.Write("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
+            logger.Info("Should print: {0}".FormatUsing(chatMessageModel.chatMessageBody.message));
 
             if(chatMessageModel.chatMessageBody.IsCode)
                 messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);

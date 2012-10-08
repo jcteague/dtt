@@ -72,7 +72,7 @@ namespace TeamNotification_Library.Service.Http
             }
 
             AppendPlainMessage(messages, plainMessage, roomId);
-            logger.Write("Posting: {0}".FormatUsing(plainMessage));
+            logger.Info("Posting: {0}".FormatUsing(plainMessage));
             client.Post(messages);
         }
 
