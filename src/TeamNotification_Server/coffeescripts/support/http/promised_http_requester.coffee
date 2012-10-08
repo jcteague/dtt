@@ -1,5 +1,6 @@
 https = require('https')
 Q = require('q')
+logger = require('../logging/logger')
 
 request = (data, request_parameters) ->
     deferred = Q.defer()
@@ -8,7 +9,7 @@ request = (data, request_parameters) ->
         response.on 'data', (chunk) ->
             deferred.resolve(success:true, data: chunk)
         response.on 'error', (e) ->
-            console.log("Got error: " + e.message)
+            logger.error("Got error: " + e.message)
             deferred.reject(success: false, messages: "Got error: #{e.message}")
 
     request.end(data)
