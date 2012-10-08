@@ -2,42 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using AurelienRibon.Ui.SyntaxHighlightBox;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Clipboard;
-using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
-using TeamNotification_Library.Service.Logging;
-using Brushes = System.Drawing.Brushes;
-using Application = System.Windows.Application;
-using Button = System.Windows.Controls.Button;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using Label = System.Windows.Controls.Label;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxOptions = System.Windows.MessageBoxOptions;
-using Pen = System.Windows.Media.Pen;
 using UserControl = System.Windows.Controls.UserControl;
-using ProgrammingLanguages = TeamNotification_Library.Configuration.GlobalConstants.ProgrammingLanguages;
-
 
 
 namespace AvenidaSoftware.TeamNotification_Package
@@ -52,12 +36,15 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
         private IStoreDTE dteStore;
+
+        /* We should not depend on this global state */
+        private IStoreGlobalState applicationGlobalState;
         
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
         private IHandleSocketIOEvents socketIOEvents;
-		private Dictionary<string, TableRowGroup> messagesList;
+        private Dictionary<string, TableRowGroup> messagesList;
 
         private string roomId { get; set; }
         private string currentChannel { get; set; }
@@ -76,6 +63,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.userAccountEvents = userAccountEvents;
             this.clipboardHandler = clipboardHandler;
             this.socketIOEvents = socketIOEvents;
+            this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
 
@@ -163,7 +151,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                Container.GetInstance<ILog>().Write("Chat Message Received");
                 chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
             }
         }
@@ -174,7 +161,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+            if (!applicationGlobalState.IsEditingCode && e.Key == Key.Enter && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             {
                 this.SendMessage();
                 e.Handled = true;
@@ -190,6 +177,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void SendMessage()
         {
+            applicationGlobalState.IsEditingCode = false;
             chatRoomControlService.SendMessage(messageTextBox, roomId);
         }
 

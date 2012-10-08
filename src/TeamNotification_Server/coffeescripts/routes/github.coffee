@@ -53,7 +53,7 @@ methods.associate_github_repositories = (req, res, next) ->
         res.json routes_service.get_server_response(true, ["The webhooks were successfully created"]) # "/room/#{saved_chat_room.id}/" )
     else
         res.json routes_service.get_server_response(false, ["There was an error setting up the webhook"] )
-        
+
 methods.github_repositories = (req,res) ->
     callback = (collection) ->
         res.json(collection.to_json())

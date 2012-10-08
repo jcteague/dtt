@@ -8,9 +8,9 @@ validate = (user_data) ->
     return {
         handle_with: (success_callback, failure_callback) ->
             Q.when is_valid_user(user_data), (validation_result) ->
-                if validation_result.valid 
-                    success_callback() 
-                else 
+                if validation_result.valid
+                    success_callback()
+                else
                     failure_callback(validation_result.errors)
     }
 

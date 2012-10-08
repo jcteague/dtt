@@ -53,6 +53,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="SocketIOClient">
@@ -62,6 +65,7 @@
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Json">
@@ -271,6 +275,9 @@
     <Compile Include="Service\LocalSystem\WindowWrapper.cs" />
     <Compile Include="Service\Logging\ILog.cs" />
     <Compile Include="Service\Logging\Logger.cs" />
+    <Compile Include="Service\Logging\Providers\IConfigureLogging.cs" />
+    <Compile Include="Service\Logging\Providers\LeTarget.cs" />
+    <Compile Include="Service\Logging\Providers\NLogConfiguration.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />

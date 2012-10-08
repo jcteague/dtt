@@ -10,9 +10,14 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using StructureMap;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
+using TeamNotification_Library.Service.Logging.Providers;
 
 namespace AvenidaSoftware.TeamNotification_Package
 {
@@ -145,6 +150,8 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
             alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
+
+            ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
         }
         #endregion
 

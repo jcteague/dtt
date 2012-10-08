@@ -11,18 +11,22 @@ app = module.exports = express.createServer()
 require('./helper')(app)
 io = require('socket.io').listen(app)
 
+logger = require('./support/logging/logger')
+
 ###
   Mock Database
 ###
 
 apiKeys = ['foo', 'bar', 'baz']
 
-error = (status, msg) -> 
+error = (status, msg) ->
     err = new Error(msg)
     err.status = status
     return err
 
 app.configure(->
+    logger.info 'Configuring Application'
+
     app.set('views', __dirname + '/views')
     app.set('view engine', 'jade')
     app.use(express.cookieParser())
@@ -36,16 +40,16 @@ app.configure(->
         #disable
 
         key = req.param('api-key')
-        return next(error(400, 'api key required')) if (!key) 
-        return next(error(401, 'invalid api key')) if (!~apiKeys.indexOf(key)) 
+        return next(error(400, 'api key required')) if (!key)
+        return next(error(401, 'invalid api key')) if (!~apiKeys.indexOf(key))
         req.key = key
         next()
     )
 
     app.use(express.static(__dirname + '/public'))
-    
+
     app.use(auth.initializeAuth())
-    
+
     app.use(app.router)
 )
 
@@ -70,5 +74,5 @@ app.configure('production', ->
 )
 
 app.listen(config.site.port, ->
-    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
+    logger.info "Application Started. Listening on port #{app.address().port}", {mode: app.settings.env}
 )

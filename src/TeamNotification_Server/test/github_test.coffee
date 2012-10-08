@@ -30,7 +30,7 @@ routes_service_mock =
 
 github_helper_mock =
     set_github_repository_events: sinon.stub()
-    get_event_message_object: sinon.spy()
+    get_event_message_object: sinon.stub()
 
 redis_mock =
     open: sinon.stub()
@@ -62,13 +62,13 @@ push_object =
     pusher:
         name: 'none',
     repository: 
-        name: 'some_repository',
-        url: 'https://github.com/test_url/some_repository',
+        name: 'oauth2orize',
+        url: 'https://github.com/eatskolnikov/oauth2orize',
         language: 'JavaScript',
         id: 5677704
         owner:
-            name: 'bronyxd'
-            email: 'test@example.com'
+            name: 'eatskolnikov'
+            email: 'eats007@gmail.com'
 
 describe 'Github', ->
 
@@ -146,32 +146,17 @@ describe 'Github', ->
     describe 'Receiving a github event', ->
         req = res = null
         beforeEach (done) ->
-            req =
-                param: sinon.stub()
-                body: null
-            res =
-                send: sinon.spy()
-                
-            random_key_value = 'Random Key'
-            req.param.withArgs('room_key').returns random_key_value
-            
-            repo_callback=
-                'then': sinon.stub()
-            fake_room:
-                id: 44
-                name: 'The fake room'
-                owner_id: 5
-                room_key: random_key_value
-                
-            repository_class_mock.withArgs('ChatRoom').returns repo_callback
-            req.body = push_object
-            
-            sut.methods.receive_github_event(req, res)
+            repository_class_mock.withArgs('ChatRoom').returns chat_room_mock
             done()
-                     
-        it 'should emit the message', (done) ->
-            expect(client_mock.publish.called).to.equal(true)
-            done()
+        describe 'and the event is a push'
+            beforeEach (done) ->
+                req =
+                    param: sinon.stub()
+                    body: push_object
+                
+                done()
+                
+
                     
         
         
@@ -181,7 +166,7 @@ describe 'Github', ->
         
         
         
-        ###
+        
         
         
         
