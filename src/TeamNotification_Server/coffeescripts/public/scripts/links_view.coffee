@@ -19,6 +19,6 @@ define 'links_view', ['general_view'], (GeneralView) ->
         append_link: (link) ->
             @$el.append """
                 <p>
-                    <a href="##{link.href}">#{link.name}</a>
+                    <a href="#{if link.external then link.href else "##{link.href}"}">#{link.name}</a>
                 </p>
             """
