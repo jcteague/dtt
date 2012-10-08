@@ -18,14 +18,21 @@ namespace TeamNotification_Library.Service.Logging.Providers
             // Step 2. Create targets and add them to the configuration 
             var fileTarget = new FileTarget();
             config.AddTarget("file", fileTarget);
+
+            var logentriesTarget = new Le.LeTarget();
+            config.AddTarget("logentries", logentriesTarget);
             
             // Step 3. Set target properties 
             fileTarget.FileName = "${specialfolder:folder=LocalApplicationData}/" + GlobalConstants.Paths.LogFile;
             fileTarget.Layout = layout;
+            logentriesTarget.Layout = layout;
             
             // Step 4. Define rules
-            LoggingRule rule1 = new LoggingRule("*", LogLevel.Info, fileTarget);
+            var rule1 = new LoggingRule("*", LogLevel.Info, fileTarget);
             config.LoggingRules.Add(rule1);
+
+            var rule2 = new LoggingRule("*", LogLevel.Info, logentriesTarget);
+            config.LoggingRules.Add(rule2);
             
             // Step 5. Activate the configuration
             LogManager.Configuration = config;
