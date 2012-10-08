@@ -1,4 +1,6 @@
-﻿namespace TeamNotification_Library.Service.Logging
+﻿using System;
+
+namespace TeamNotification_Library.Service.Logging
 {
     public interface ILog
     {
@@ -8,5 +10,7 @@
         void Warn(object source, string message);
         void Error(string message);
         void Error(object source, string message);
+        void FatalException(string message, Exception exception);
+        void FatalException(object source, string message, Exception exception);
     }
 }

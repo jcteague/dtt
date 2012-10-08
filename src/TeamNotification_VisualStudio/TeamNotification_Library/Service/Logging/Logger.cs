@@ -38,6 +38,16 @@ namespace TeamNotification_Library.Service.Logging
             Log(source, x => x.Error(message));
         }
 
+        public void FatalException(string message, Exception exception)
+        {
+            FatalException(this, message, exception);
+        }
+
+        public void FatalException(object source, string message, Exception exception)
+        {
+            Log(source, x => x.FatalException(message, exception));
+        }
+
         private void Log(object source, Action<NLog.Logger> logAction)
         {
             logAction(LogManager.GetLogger(source.GetType().ToString()));
