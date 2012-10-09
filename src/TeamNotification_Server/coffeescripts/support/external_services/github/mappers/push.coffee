@@ -7,7 +7,7 @@ map = (event_obj) ->
         user:event_obj.pusher.name,
         event_type:'push',
         repository_name:event_obj.repository.name,
-        repository_url: event_obj.repository.html_url
+        repository_url: event_obj.repository.url
         content:'',
         message: "Github notification! User, #{event_obj.pusher.name}, just did a push on repository: #{event_obj.repository.name} {0} - {1}",
         notification:1,

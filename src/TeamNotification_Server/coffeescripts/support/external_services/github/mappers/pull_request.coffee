@@ -2,7 +2,6 @@ can_map = (event_obj) ->
   event_obj.pull_request?
 
 map = (event_obj) ->
-    console.log event_obj
     message_date = new Date()
     return {
         user:event_obj.pull_request.user.login,

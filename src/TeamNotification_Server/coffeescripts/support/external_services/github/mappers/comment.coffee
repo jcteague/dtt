@@ -7,7 +7,7 @@ map = (event_obj) ->
         user:event_obj.comment.user.login,
         event_type:'comment',
         repository_name:event_obj.repository.name,
-        repository_url:event_obj.repository.html_url,
+        repository_url:event_obj.repository.url,
         content:event_obj.comment.body,
         message: "Github notification! User, #{event_obj.comment.user.login}, just did a comment on repository: #{event_obj.repository.name} {0} - {1}",
         notification:1,
