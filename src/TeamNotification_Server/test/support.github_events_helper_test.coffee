@@ -7,9 +7,13 @@ config = require('../config')()
 promised_http_requester_mock =
     request: sinon.stub()
 
+event_object_mapper_mock =
+    map: sinon.stub()
+
 sut = module_loader.require('../support/github_events_helper', {
     requires:
         './http/promised_http_requester': promised_http_requester_mock
+        './external_services/github/messages_mapper': event_object_mapper_mock
 })
 
 events = [ 'push', 'issues', 'issue_comment', 'commit_comment', 'pull_request', 'fork']
@@ -46,4 +50,23 @@ describe 'Github Events Helper', ->
             result.then (promises) ->
                 expect(promises).to.eql ['promise', 'promise', 'promise']
                 done()
+
+
+    describe 'get_event_message_object', ->
+
+        result = expected_result = null
+
+        beforeEach (done) ->
+            event_obj = 'blah object'
+            mapped_obj = 'blah mapped object'
+            event_object_mapper_mock.map.withArgs(event_obj).returns mapped_obj
+            expected_result = mapped_obj
+            result = sut.get_event_message_object event_obj
+            done()
+
+        it 'should return the mapped event object', (done) ->
+            expect(result).to.eql expected_result
+            done()
+
+
 
