@@ -2,9 +2,9 @@ expect = require('expect.js')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
 
-support_mock = 
+support_mock =
     core:
-        entity_factory: 
+        entity_factory:
             create: sinon.stub()
 
 repository_class_mock = sinon.stub()
@@ -29,9 +29,9 @@ client_mock =
     on: sinon.stub()
     zadd: sinon.stub()
 
-node_hash_mock = 
+node_hash_mock =
     sha256: sinon.stub()
-    
+
 
 config = require('../config')()
 redis_mock.open.returns(client_mock)
@@ -79,6 +79,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/room', sut.methods.get_room)
             sinon.assert.calledWith(app.get,'/room/:id', sut.methods.user_authorized_in_room, sut.methods.get_room_by_id)
             sinon.assert.calledWith(app.get,'/room/:id/messages', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages)
+            sinon.assert.calledWith(app.get,'/room/:id/messages/since/:timestamp', sut.methods.user_authorized_in_room, socket_middleware_result, sut.methods.get_room_messages_since_timestamp)
             sinon.assert.calledWith(app.get,'/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
             sinon.assert.calledWith(app.get, '/room/:id/accept-invitation', sut.methods.get_accept_invitation)
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
@@ -87,7 +88,7 @@ describe 'Room', ->
             done()
 
     describe 'methods', ->
-           
+
         describe 'user_authorized_in_room', ->
 
             next = req = res = room_id = user_id = null
@@ -142,7 +143,7 @@ describe 'Room', ->
                 room_id = 1
                 listener_name = 'blah listener'
 
-                namespace_io = 
+                namespace_io =
                     send: sinon.stub()
                 io.of.withArgs(listener_name).returns(namespace_io)
 
@@ -195,7 +196,7 @@ describe 'Room', ->
                 it 'should not set up the message transmission for that listener', (done) ->
                     sinon.assert.notCalled(sut.methods.set_up_message_transmission)
                     done()
-                
+
         describe 'for a room with id', ->
 
             collection_factory = null
@@ -218,7 +219,7 @@ describe 'Room', ->
                     param: sinon.stub()
                 room_id = 1
                 req.param.withArgs('id').returns(room_id)
-                res = 
+                res =
                     json: sinon.spy()
                     redirect: sinon.spy()
 
@@ -290,25 +291,25 @@ describe 'Room', ->
             describe 'get_room_messages', ->
 
                 json_data = data = listener_name = socket_mock = null
-                
+
                 beforeEach (done) ->
                     req.user =
                         id: 9
 
                     routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
                     socket_mock = {on: (event, callback) -> callback() }
-                    listener_name = "/room/#{room_id}/messages"                    
+                    listener_name = "/room/#{room_id}/messages"
                     room_messages_collection =
                         fetch_to: (callback) ->
                             callback(collection)
-                    
+
                     req.param.withArgs('id').returns(room_id)
-                    
+
                     req.socket_io = {of: sinon.stub() }
                     req.socket_io.of.withArgs(listener_name).returns(socket_mock)
 
                     sinon.stub(sut.methods, 'set_socket_events')
-                    
+
                     collection_factory.for.withArgs(room_id: room_id, user: req.user).returns(room_messages_collection)
                     sut.methods.get_room_messages(req, res)
                     done()
@@ -325,6 +326,42 @@ describe 'Room', ->
                     sinon.assert.calledWith(sut.methods.set_socket_events, req.socket_io, room_id)
                     done()
 
+            describe 'get_room_messages_since_timestamp', ->
+
+                json_data = data = listener_name = socket_mock = null
+
+                beforeEach (done) ->
+                    req.user =
+                        id: 9
+                    timestamp = 'blah timestamp'
+                    req.param.withArgs('timestamp').returns(timestamp)
+
+                    routes_service_mock.build.withArgs('room_messages_collection').returns(collection_factory)
+                    socket_mock = {on: (event, callback) -> callback() }
+                    listener_name = "/room/#{room_id}/messages"
+                    room_messages_collection =
+                        fetch_to: (callback) ->
+                            callback(collection)
+
+                    req.param.withArgs('id').returns(room_id)
+
+                    req.socket_io = {of: sinon.stub() }
+                    req.socket_io.of.withArgs(listener_name).returns(socket_mock)
+
+                    sinon.stub(sut.methods, 'set_socket_events')
+
+                    collection_factory.for.withArgs(room_id: room_id, user: req.user, timestamp: timestamp).returns(room_messages_collection)
+                    sut.methods.get_room_messages_since_timestamp(req, res)
+                    done()
+
+                afterEach (done) ->
+                    sut.methods.set_socket_events.restore()
+                    done()
+
+                it 'should return the built collection for the room model', (done) ->
+                    sinon.assert.calledWith(res.json, collection_value)
+                    done()
+
         describe 'post_room_message', ->
 
             res = null
@@ -333,7 +370,7 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 res =  send: sinon.spy()
-                req =  
+                req =
                     param: sinon.stub()
                     user:
                         id: 2
@@ -351,10 +388,10 @@ describe 'Room', ->
 
                 beforeEach (done) ->
                     saved_message = 'blah message'
-                    room_message = 
+                    room_message =
                         save: (callback) ->
                             callback(false, saved_message)
-                    
+
                     req.body = {message: 'Dolorem Ipsum'}
                     message = JSON.stringify(req.body)
                     request_values =
@@ -387,15 +424,15 @@ describe 'Room', ->
                 it 'should create the message on the database', (done) ->
                     sinon.assert.called(room_message.save)
                     done()
-            
-            
+
+
         describe 'post_room', ->
 
             req = res = owner_id = null
 
             beforeEach (done) ->
                 owner_id = 3
-                res =  
+                res =
                     send: sinon.spy()
                     json: sinon.spy()
                 req =
@@ -411,18 +448,18 @@ describe 'Room', ->
                 chat_room = null
                 chat_room_id = null
                 expected_parameters = null
-                
+
                 beforeEach (done) ->
-                    chat_room = 
+                    chat_room =
                         save: (callback) ->
                             callback(false, {id: chat_room_id})
-                    expected_parameters = 
+                    expected_parameters =
                         success:true
                         messages:["room #{chat_room_id} created"]
                         link:"/room/#{chat_room_id}/"
-                    
+
                     routes_service_mock.get_server_response.withArgs(true,["room #{chat_room_id} created"],"/room/#{chat_room_id}/").returns(expected_parameters)
- 
+
                     req.body = {name: 'blah'}
                     room_key = 'some key'
                     node_hash_mock.sha256.withArgs("room:#{req.body.name}").returns(room_key)
@@ -453,7 +490,7 @@ describe 'Room', ->
 
             beforeEach (done) ->
                 user_id = 1
-                email = 
+                email =
                 req =
                     user:
                         id: 18
@@ -491,10 +528,10 @@ describe 'Room', ->
             data = null
             links = null
             beforeEach (done) ->
-                res = 
+                res =
                     json: (json) ->
                         json_data = json
-                req =  
+                req =
                     param: sinon.stub()
                 room_id = 1
                 req.param.withArgs('id').returns(room_id)
@@ -528,4 +565,4 @@ describe 'Room', ->
             it 'should contain the fields with name, type and label properties in the template data', (done) ->
                 for field in data
                     expect(field).to.have.keys(['name', 'label', 'type'])
-                done()   
+                done()
