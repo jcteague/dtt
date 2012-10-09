@@ -57,7 +57,8 @@ namespace TeamNotification_Library.Service.Http
                         line = resources["line"].Cast<int>(),
                         column = resources["column"].Cast<int>(),
                         programminglanguage = resources["programminglanguage"].Cast<int>(),
-                        date = resources["date"].Cast<string>()
+                        date = resources["date"].Cast<string>(),
+                        notification = resources["notification"].Cast<string>()
                     };
                     messages.Add(GetMessage(chatMessageBody, roomId));
                     plainMessage = "";

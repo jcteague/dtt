@@ -166,6 +166,8 @@
     <Compile Include="Service\Chat\ChatMessagesService.cs" />
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatNotificationMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\NotificationMessageFormatter.cs" />
     <Compile Include="Service\Controls\IEditMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />

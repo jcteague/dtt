@@ -11,7 +11,7 @@ namespace TeamNotification_Library.Models
     {
         public ChatMessageBody()
         {
-            project = solution = document = stamp = date ="";
+            project = solution = document = stamp = date = notification = repository_url = url = "";
             line = column = programminglanguage = -1;
         }
 
@@ -24,6 +24,12 @@ namespace TeamNotification_Library.Models
         public string stamp { get; set; }
 
         public string message { get; set; }
+
+        public string notification { get; set; }
+        
+        public string repository_url { get; set; }
+        
+        public string url { get; set; }
 
         public string project 
         { 
