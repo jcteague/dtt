@@ -12,11 +12,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
 
         get_messages_since: (last_timestamp) ->
             path = "#{@model.get('href')}/since/#{last_timestamp}"
-            console.log path
             $.getJSON path, (data) =>
-                console.log @model.get('messages').length
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
-                console.log @model.get('messages').length
 
         serialize_message: (message) ->
             user_id = @get_field 'user_id', message.data
@@ -89,9 +86,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
 
         add_message: (message) =>
             m = JSON.parse message
-            #messages = @model.get('messages')
-            #messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
-            #@model.set({messages: messages}, {silent: true})
 
             if $("##{m.stamp}").length  == 1
                 @edit_message $("#message-#{m.stamp}"), m
@@ -113,7 +107,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         edit_message: (p, message) ->
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            console.log $(message)
             p[0].innerHTML = parsedBody.message
 
         read_message_data: (message) ->
