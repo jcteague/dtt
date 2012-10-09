@@ -1,5 +1,5 @@
 can_map = (event_obj) ->
-  event_obj.pusher?
+  event_obj.pull_request?
 
 map = (event_obj) ->
     message_date = new Date()
