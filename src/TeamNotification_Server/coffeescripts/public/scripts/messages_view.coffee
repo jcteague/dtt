@@ -48,6 +48,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
+            console.log message_date, curr_date
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
