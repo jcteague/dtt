@@ -1,30 +1,45 @@
-define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Prettify) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (GeneralView, underscore, Prettify) ->
+
     class MessagesView extends GeneralView
 
         id: 'messages-container'
-        initialize: -> 
         added_code: false
+
+        initialize: ->
+            $(window).focus (e) =>
+                last_timestamp =  @get_field('stamp', _.last(@model.get('messages')).data)
+                @get_messages_since last_timestamp
+
+        get_messages_since: (last_timestamp) ->
+            path = "#{@model.get('href')}/since/#{last_timestamp}"
+            $.getJSON path, (data) =>
+                @add_message(@serialize_message(message)) for message in data.messages.slice(1)
+
+        serialize_message: (message) ->
+            user_id = @get_field 'user_id', message.data
+            name = @get_field 'user', message.data
+            body = @get_field 'body', message.data
+            date = @get_field 'datetime', message.data
+            stamp = @get_field 'stamp', message.data
+            JSON.stringify {body: body, user_id: user_id, name: name, date: date, stamp: stamp}
+
         render: ->
             me = @
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
-            update_dates = () -> 
-                get_field = (field_name, data) ->
-                    for field in data
-                        if field.name is field_name
-                            return field.value
+            update_dates = () =>
                 newDate = new Date()
-                $('.chat_message_date').each (idx, element) ->
-                    message_date = get_field 'datetime', me.model.attributes.messages[idx].data
+                $('.chat_message_date').each (idx, element) =>
+                    message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
                     element.innerHTML = (parse_date new Date(message_date), newDate)
-                
+
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
                     me.$el.append me.render_message message, newDate
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
-                
+
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
                 socket = new window.io.connect(@model.get('href'))
@@ -49,35 +64,36 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             year = message_date.getFullYear()
             return "#{month}/#{day}/#{year}"
 
-        render_message: (message,curr_date) ->
-            get_field = (field_name, data) ->
-                for field in data
-                    if field.name is field_name
-                        return field.value
-
-            user_id = get_field 'user_id', message.data
-            name = get_field 'user', message.data
-            body = get_field 'body', message.data
-            date = get_field 'datetime', message.data
-            stamp = get_field 'stamp', message.data
+        render_message: (message) ->
+            user_id = @get_field 'user_id', message.data
+            name = @get_field 'user', message.data
+            body = @get_field 'body', message.data
+            date = @get_field 'datetime', message.data
+            stamp = @get_field 'stamp', message.data
             message_paragraph = @read_message_data({user_id: user_id, name:name, date:date, body:body, stamp:stamp})
             r = $(message_paragraph)
             r.removeClass('new_message')
             r.children().removeClass('new_message')
             r
-            
+
+        get_field: (field_name, data) ->
+            for field in data
+                if field.name is field_name
+                    return field.value
+
         append_to: (parent) ->
             @$el.appendTo parent
 
         add_message: (message) =>
             m = JSON.parse message
-            messages = @model.get('messages')
-            messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
-            @model.set({messages: messages}, {silent: true})
-            
+
             if $("##{m.stamp}").length  == 1
                 @edit_message $("#message-#{m.stamp}"), m
             else
+                messages = @model.get('messages')
+                messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
+                @model.set({messages: messages}, {silent: true})
+
                 @$el.append @read_message_data(m)
                 @$el.scrollTop(@$el.prop('scrollHeight'))
             me = @
@@ -91,9 +107,8 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
         edit_message: (p, message) ->
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            console.log $(message)
             p[0].innerHTML = parsedBody.message
-                
+
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
@@ -101,7 +116,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
             if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
-                $name_and_date.children().hide() 
+                $name_and_date.children().hide()
 
             @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
@@ -114,5 +129,5 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_url}</a>").replace(/\{1\}/, "<a href=\"#{parsedBody.url}\">#{parsedBody.url}</a>")
                 return add_links("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
-                
+
             return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")

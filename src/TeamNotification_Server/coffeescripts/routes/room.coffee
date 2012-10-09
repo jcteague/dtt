@@ -14,8 +14,8 @@ redis_queryer = redis_connector.open()
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
     routes_service.is_user_in_room(req.user.id, room_id).then (is_user_in) ->
-        if is_user_in 
-            return next() 
+        if is_user_in
+            return next()
         res.redirect '/'
 
 list_of_listeners = {}
@@ -35,7 +35,7 @@ methods.set_up_message_transmission = (io, room_id, listener_name) ->
     redis_subscriber.on "message", (channel, message) ->
         if(channel == "chat #{room_id}")
             namespace_io.send(message)
-        
+
 methods.set_socket_events = (io, room_id) ->
     listener_name = "/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
@@ -44,7 +44,7 @@ methods.set_socket_events = (io, room_id) ->
 
 methods.is_listener_registered = (listener_name) ->
     list_of_listeners[listener_name]?
-            
+
 methods.post_room = (req, res, next) ->
     values = req.body
     room_key = sha256("room:#{values.name}")
@@ -52,7 +52,7 @@ methods.post_room = (req, res, next) ->
     chat_room.save (err,saved_chat_room) ->
         if !err
             res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/" ))
-        else 
+        else
             next(new Error(err.code,err.message))
 
 methods.get_room_by_id = (req, res) ->
@@ -97,12 +97,20 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
-    
+
     methods.set_socket_events(req.socket_io, room_id)
     callback = (collection) ->
         res.json collection.to_json()
 
     build('room_messages_collection').for({room_id:room_id, user:req.user}).fetch_to callback
+
+methods.get_room_messages_since_timestamp = (req, res) ->
+    room_id = req.param('id')
+    callback = (collection) ->
+        res.json collection.to_json()
+
+    build('room_messages_collection').for({room_id:room_id, user:req.user, timestamp: req.param('timestamp')}).fetch_to callback
+
 
 methods.post_room_message = (req, res, next) ->
     values = req.body
@@ -121,9 +129,9 @@ methods.post_room_message = (req, res, next) ->
             message_stamp =  message_date.getTime()
             values.stamp = message_stamp
             values.date = message_date
-            
+
         message_body = JSON.stringify(values)
-        newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp} 
+        newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp}
         m = JSON.stringify newMessage
         redis_publisher.publish("chat #{room_id}", m)
         redis_queryer.zadd(setname,message_stamp, m)
@@ -131,12 +139,12 @@ methods.post_room_message = (req, res, next) ->
         room_message.save (err,saved_message) ->
             if !err
                 res.send({success:true, newMessage:saved_message})
-            else 
+            else
                 next(new Error(err.code,err.message))
 
 socket_middleware = require('../support/middlewares').socket_io
-   
-    
+
+
 module.exports =
     methods: methods,
     build_routes: (app, io) ->
@@ -144,6 +152,7 @@ module.exports =
         app.get('/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
         app.get('/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
         app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
+        app.get('/room/:id/messages/since/:timestamp', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages_since_timestamp)
         app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
         app.get('/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)

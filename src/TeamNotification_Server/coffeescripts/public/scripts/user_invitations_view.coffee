@@ -1,18 +1,18 @@
 define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, LinksView) ->
     class UserInvitationsView extends GeneralView
-    
+
         id: 'invitations-container'
-        
+
         get_field: (field_name, data) ->
             for field in data
                 if field.name is field_name
                     return field.value
 
-        initialize: -> 
+        initialize: ->
             @links_view = new LinksView(model: @model)
-        
+
         render: ->
-                
+
             me = @
             @$el.empty()
             @links_view.render().append_to @$el
@@ -27,8 +27,8 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
                         date = new Date(me.get_field('date', invitation.data)).toUTCString()
                         room = me.get_field('chat_room_name', invitation.data)
                         room_id = me.get_field('chat_room_id', invitation.data)
-                        objectData = {email:email, room:room_id}       
-                        objectDataSerialized = JSON.stringify(objectData)                 
+                        objectData = {email:email, room:room_id}
+                        objectDataSerialized = JSON.stringify(objectData)
                         button = $("<button value='#{objectDataSerialized}' class='btn'>Resend Invitation</button>")
                         button.click () ->
                             b = $(@)
@@ -38,11 +38,11 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
                                 beforeSend: (jqXHR) ->
                                     authToken = $.cookie("authtoken")
                                     jqXHR.setRequestHeader('Authorization', authToken )
-                                    
+
                             $.post "room/#{args.room}/users", args, (data) ->
                                 b.removeAttr("disabled")
                                 $("#server-response-container").append data.messages[0]
-                        
+
                         row = $('<tr>')
                         col = $('<td>')
                         row.append "<td>#{email}</td>"
@@ -54,5 +54,4 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
             else
                 table.append "There aren't any pending invitations"
             @$el.append table
-            console.log @model
             @
