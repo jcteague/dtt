@@ -112,7 +112,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 return p
             if parsedBody.notification?
                 add_links = (str) ->
-                    str.replace(/\{0\}/, parsedBody.repository_url).replace(/\{1\}/, parsedBody.url)
+                    str.replace(/\{0\}/, "<a href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_url}</a>").replace(/\{1\}/, "<a href=\"#{parsedBody.url}\">#{parsedBody.url}</a>")
                 return add_links("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
                 
             return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
