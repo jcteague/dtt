@@ -4,8 +4,8 @@ can_map = (event_obj) ->
 map = (event_obj) ->
     message_date = new Date()
     return {
-        user:event_obj.issue.user.login,
-        event_type:'issue',
+        user:event_obj.comment.user.login,
+        event_type:'issue_comment',
         repository_name:event_obj.repository.name,
         repository_url:event_obj.repository.html_url ? event_obj.repository.url,
         content:event_obj.issue.body,
