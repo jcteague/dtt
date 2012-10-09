@@ -16,6 +16,7 @@ methods = {}
 
 methods.receive_github_event = (req,res,next) ->
     values = req.body
+    console.log values
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
         if(rooms?)
             room = rooms[0]
