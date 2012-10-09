@@ -6,7 +6,7 @@ chat_rooms = require('../strategies/chat_rooms_by_owner_id_or_member_strategy')
 chat_room_members = require('../strategies/chat_room_by_id_strategy')
 
 message = null
-callback = (deferred, room_id, user) ->
+create_callback = (deferred, room_id, user) ->
     return (err, reply) ->
         if !err
             rooms = []
@@ -19,9 +19,12 @@ callback = (deferred, room_id, user) ->
                         members.push {user_id: member.id, name:member.first_name }
                     members.push {user_id: room.owner.user_id, name:room.owner.first_name}
                     deferred.resolve({room_id:room_id, messages:reply, user_id:user.id, name:user.name, chat_rooms:rooms, members:members } )
-            
+
 strategy =(params) ->
     deferred = Q.defer()
-    redis.zrevrange "room:#{params.room_id}:messages", 0, 49, callback(deferred, params.room_id, params.user)
+    if params.timestamp?
+        redis.zrangebyscore "room:#{params.room_id}:messages", params.timestamp, '+inf', create_callback(deferred, params.room_id, params.user)
+    else
+        redis.zrevrange "room:#{params.room_id}:messages", 0, 49, create_callback(deferred, params.room_id, params.user)
     deferred.promise
 module.exports = strategy

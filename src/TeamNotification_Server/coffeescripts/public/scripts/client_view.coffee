@@ -26,8 +26,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             for view in @views
                 if view instanceof FormView
                     view.on 'all', @propagate_event, @
-                if view instanceof MessagesView
-                    view.on 'messages:refresh', @render_path, @
                 if @can_display_messages view
                     view.on 'messages:display', @display_messages, @
 

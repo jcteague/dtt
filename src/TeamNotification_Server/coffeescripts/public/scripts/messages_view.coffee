@@ -1,4 +1,5 @@
-define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Prettify) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (GeneralView, underscore, Prettify) ->
+
     class MessagesView extends GeneralView
 
         id: 'messages-container'
@@ -6,20 +7,33 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
 
         initialize: ->
             $(window).focus (e) =>
-                @trigger 'messages:refresh', @model.get('href')
+                last_timestamp =  @get_field('stamp', _.last(@model.get('messages')).data)
+                @get_messages_since last_timestamp
+
+        get_messages_since: (last_timestamp) ->
+            path = "#{@model.get('href')}/since/#{last_timestamp}"
+            console.log path
+            $.getJSON path, (data) =>
+                console.log @model.get('messages').length
+                @add_message(@serialize_message(message)) for message in data.messages.slice(1)
+                console.log @model.get('messages').length
+
+        serialize_message: (message) ->
+            user_id = @get_field 'user_id', message.data
+            name = @get_field 'user', message.data
+            body = @get_field 'body', message.data
+            date = @get_field 'datetime', message.data
+            stamp = @get_field 'stamp', message.data
+            JSON.stringify {body: body, user_id: user_id, name: name, date: date, stamp: stamp}
 
         render: ->
             me = @
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
-            update_dates = () ->
-                get_field = (field_name, data) ->
-                    for field in data
-                        if field.name is field_name
-                            return field.value
+            update_dates = () =>
                 newDate = new Date()
-                $('.chat_message_date').each (idx, element) ->
-                    message_date = get_field 'datetime', me.model.attributes.messages[idx].data
+                $('.chat_message_date').each (idx, element) =>
+                    message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
                     element.innerHTML = (parse_date new Date(message_date), newDate)
 
             render_model = () ->
@@ -53,35 +67,39 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             year = message_date.getFullYear()
             return "#{month}/#{day}/#{year}"
 
-        render_message: (message,curr_date) ->
-            get_field = (field_name, data) ->
-                for field in data
-                    if field.name is field_name
-                        return field.value
-
-            user_id = get_field 'user_id', message.data
-            name = get_field 'user', message.data
-            body = get_field 'body', message.data
-            date = get_field 'datetime', message.data
-            stamp = get_field 'stamp', message.data
+        render_message: (message) ->
+            user_id = @get_field 'user_id', message.data
+            name = @get_field 'user', message.data
+            body = @get_field 'body', message.data
+            date = @get_field 'datetime', message.data
+            stamp = @get_field 'stamp', message.data
             message_paragraph = @read_message_data({user_id: user_id, name:name, date:date, body:body, stamp:stamp})
             r = $(message_paragraph)
             r.removeClass('new_message')
             r.children().removeClass('new_message')
             r
 
+        get_field: (field_name, data) ->
+            for field in data
+                if field.name is field_name
+                    return field.value
+
         append_to: (parent) ->
             @$el.appendTo parent
 
         add_message: (message) =>
             m = JSON.parse message
-            messages = @model.get('messages')
-            messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
-            @model.set({messages: messages}, {silent: true})
+            #messages = @model.get('messages')
+            #messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
+            #@model.set({messages: messages}, {silent: true})
 
             if $("##{m.stamp}").length  == 1
                 @edit_message $("#message-#{m.stamp}"), m
             else
+                messages = @model.get('messages')
+                messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
+                @model.set({messages: messages}, {silent: true})
+
                 @$el.append @read_message_data(m)
                 @$el.scrollTop(@$el.prop('scrollHeight'))
             me = @
