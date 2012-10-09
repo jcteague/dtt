@@ -23,7 +23,7 @@ create_callback = (deferred, room_id, user) ->
 strategy =(params) ->
     deferred = Q.defer()
     if params.timestamp?
-        redis.zrangebyscore "room:#{params.room_id}:messages", params.timestamp, '+inf', create_callback(deferred, params.room_id, params.user)
+        redis.zrevrangebyscore "room:#{params.room_id}:messages", '+inf', params.timestamp, create_callback(deferred, params.room_id, params.user)
     else
         redis.zrevrange "room:#{params.room_id}:messages", 0, 49, create_callback(deferred, params.room_id, params.user)
     deferred.promise
