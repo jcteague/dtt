@@ -1,5 +1,5 @@
 express = require('express')
-http = require('https');
+http = require('https')
 querystring = require('querystring')
 support = require('../support/core').core
 Repository = require('../support/repository')
@@ -23,17 +23,11 @@ methods.receive_github_event = (req,res,next) ->
             notification = github_helper.get_event_message_object values
 
             if notification?
-                notification.message = "Github notification! User, #{notification.user}, just did a #{notification.event_type} on repository: #{notification.repository_name}"
-                message_date =  new Date()
-                message_stamp =  message_date.getTime()
-                notification.date = message_date
-                notification.stamp = message_stamp
-
-                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":message_date, stamp:message_stamp}
+                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":notification.date, stamp:notification.stamp}
                 m = JSON.stringify newMessage
 
                 redis_publisher.publish("chat #{room.id}", m)
-                redis_queryer.zadd(setname,message_stamp, m)
+                redis_queryer.zadd(setname,notification.stamp, m)
                 room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
                 room_message.save (err,saved_message) ->
                     if !err
@@ -41,7 +35,7 @@ methods.receive_github_event = (req,res,next) ->
                     else
                         next(new Error(err.code,err.message))
         else
-            res.send({success:false,messages:["The requested room doesnt exists"]})
+            res.send({success:false,messages:["The requested room does not exist"]})
 
 
 methods.associate_github_repositories = (req, res, next) ->

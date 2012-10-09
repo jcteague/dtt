@@ -111,6 +111,8 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
                 return p
             if parsedBody.notification?
-                return ("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+                add_links = (str) ->
+                    str.replace(/\{0\}/, parsedBody.repository_url).replace(/\{1\}/, parsedBody.url)
+                return add_links("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
                 
             return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
