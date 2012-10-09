@@ -37,16 +37,19 @@ redis_mock =
 
 client_mock =
     auth: sinon.stub()
-    publish: sinon.stub()
+    publish: sinon.spy()
     subscribe: sinon.stub()
     on: sinon.stub()
-    zadd: sinon.stub()
+    zadd: sinon.spy()
 
 redis_mock.open.returns(client_mock)
 
 chat_room_mock =
     find: sinon.stub()
 
+chat_room_message_mock =
+    save: sinon.spy()
+    
 sut = module_loader.require('../routes/github.js', {
     requires:
         'express': express_mock
@@ -56,6 +59,7 @@ sut = module_loader.require('../routes/github.js', {
         '../support/repository': repository_class_mock
         '../support/routes_service': routes_service_mock
         '../support/redis/redis_gateway': redis_mock
+        '../support/github_events_helper': github_helper_mock
 })
 
 push_object =
@@ -94,7 +98,6 @@ describe 'Github', ->
             sinon.assert.calledWith(app.get,'/github/repositories/:access_token', sut.methods.github_repositories)
             sinon.assert.calledWith(app.get,'/github/oauth', sut.methods.github_redirect)
             sinon.assert.calledWith(app.get,'/github/auth/callback', sut.methods.github_authentication_callback)
-            
             sinon.assert.calledWith(app.post,'/github/repositories/:access_token', body_parser_result, sut.methods.associate_github_repositories)
             sinon.assert.calledWith(app.post,'/github/events/:room_key', body_parser_result, sut.methods.receive_github_event)
             done()
@@ -102,7 +105,6 @@ describe 'Github', ->
     describe 'Redirecting to github', ->
         res = req = null
         beforeEach (done) ->
-            
             res =
                 redirect:sinon.spy()
             req = null
@@ -112,15 +114,14 @@ describe 'Github', ->
         it 'should redirect the user to gihub', (done) ->
             expect(res.redirect.called).to.equal(true)
             done()
+
     describe 'associate_github_repositories', ->
         req = res = random_token = null
         beforeEach (done) ->
-            
             repos = ["First"]
             owner = "someone"
             room_key = "random room key"
             random_token = "random access token"
-            
             res =
                 json: sinon.spy()
             req =
@@ -142,20 +143,43 @@ describe 'Github', ->
             expect(res.json.calledWith("server response")).to.equal(true)
             done()
 
-            ###
     describe 'Receiving a github event', ->
-        req = res = null
+        req = res = expected_notification = rooms = m = null
         beforeEach (done) ->
+            room_key = "some key"
+            expected_notification = {a:'property', date:'some date', stamp:15}
+            
+            rooms = [{id:55,owner_id:99, room_key:room_key}]
+            expected_message = {"body": JSON.stringify(expected_notification), "room_id":rooms[0].id, "user_id": rooms[0].owner_id, "name":"", "date":expected_notification.date, stamp:expected_notification.stamp}
+            m = JSON.stringify(expected_message)
+            req =
+                param: sinon.stub()
+                body: null
+            req.param.withArgs("room_key").returns(room_key)
+            
+            promise =
+                "then": (callback) ->
+                    callback(rooms)
+                
+            chat_room_mock.find.withArgs({room_key:room_key}).returns(promise)
+            github_helper_mock.get_event_message_object.withArgs(push_object).returns expected_notification
+            support_mock.core.entity_factory.create.withArgs("ChatRoomMessage", expected_message).returns chat_room_message_mock
             repository_class_mock.withArgs('ChatRoom').returns chat_room_mock
             done()
-        describe 'and the event is a push'
+        describe 'and the event is a push', ->
             beforeEach (done) ->
-                req =
-                    param: sinon.stub()
-                    body: push_object
+                req.body = push_object
                 
+                sut.methods.receive_github_event(req,res)
                 done()
-                
+            
+            it "should save the message to redis", (done) ->
+                expect(client_mock.publish.calledWith("chat 55", m)).to.eql(true)
+                done()
+
+            it "should save the message to postgres", (done) ->
+                expect(chat_room_message_mock.save.called).to.eql(true)
+                done()
 
                     
         
