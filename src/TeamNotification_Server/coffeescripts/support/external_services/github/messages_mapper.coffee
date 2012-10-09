@@ -3,6 +3,7 @@ mapper_paths = [
     './mappers/comment'
     './mappers/fork'
     './mappers/pull_request'
+    './mappers/issue'
 ]
 
 mappers = (require path for path in mapper_paths)
