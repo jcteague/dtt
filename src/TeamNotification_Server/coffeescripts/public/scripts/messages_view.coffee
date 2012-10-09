@@ -48,6 +48,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
+            console.log message_date, curr_date
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
@@ -128,6 +129,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             if parsedBody.notification?
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">change</a>")
-                return add_links("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+                return add_links("<p id='#{message.stamp}' class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
 
             return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
