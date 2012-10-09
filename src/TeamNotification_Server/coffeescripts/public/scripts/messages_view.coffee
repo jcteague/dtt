@@ -2,13 +2,17 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
     class MessagesView extends GeneralView
 
         id: 'messages-container'
-        initialize: -> 
         added_code: false
+
+        initialize: ->
+            $(window).focus (e) =>
+                @trigger 'messages:refresh', @model.get('href')
+
         render: ->
             me = @
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
-            update_dates = () -> 
+            update_dates = () ->
                 get_field = (field_name, data) ->
                     for field in data
                         if field.name is field_name
@@ -17,14 +21,14 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 $('.chat_message_date').each (idx, element) ->
                     message_date = get_field 'datetime', me.model.attributes.messages[idx].data
                     element.innerHTML = (parse_date new Date(message_date), newDate)
-                
+
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
                     me.$el.append me.render_message message, newDate
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
-                
+
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
                 socket = new window.io.connect(@model.get('href'))
@@ -65,7 +69,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             r.removeClass('new_message')
             r.children().removeClass('new_message')
             r
-            
+
         append_to: (parent) ->
             @$el.appendTo parent
 
@@ -74,7 +78,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             messages = @model.get('messages')
             messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
             @model.set({messages: messages}, {silent: true})
-            
+
             if $("##{m.stamp}").length  == 1
                 @edit_message $("#message-#{m.stamp}"), m
             else
@@ -93,7 +97,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             p.attr "class", "new_message"
             console.log $(message)
             p[0].innerHTML = parsedBody.message
-                
+
         read_message_data: (message) ->
             name = message.name
             date = parse_date  new Date(message.date), new Date()
@@ -101,7 +105,7 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
             if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
-                $name_and_date.children().hide() 
+                $name_and_date.children().hide()
 
             @last_user_id_that_posted = message.user_id
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
@@ -114,5 +118,5 @@ define 'messages_view', ['general_view','prettify-languages'], (GeneralView,Pret
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_url}</a>").replace(/\{1\}/, "<a href=\"#{parsedBody.url}\">#{parsedBody.url}</a>")
                 return add_links("<p class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
-                
+
             return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
