@@ -7,7 +7,7 @@ map = (event_obj) ->
         user:event_obj.sender.login,
         event_type:'fork',
         repository_name:event_obj.repository.name,
-        repository_url:event_obj.repository.url,
+        repository_url:event_obj.repository.html_url,
         content:'',
         message: "Github notification! User, #{event_obj.sender.login}, just did a fork on repository: #{event_obj.repository.name} {0} - {1}",
         notification:1,
