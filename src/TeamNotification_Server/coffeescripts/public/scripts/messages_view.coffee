@@ -13,6 +13,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         get_messages_since: (last_timestamp) ->
             path = "#{@model.get('href')}/since/#{last_timestamp}"
             $.getJSON path, (data) =>
+                console.log 'getting these messages', data
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
 
         serialize_message: (message) ->
