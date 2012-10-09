@@ -75,6 +75,7 @@ namespace TeamNotification_Library.Models
             resources["programminglanguage"] = tmpChatMessageBody.programminglanguage;
             resources["stamp"] = stamp;
             resources["date"] = date;
+            resources["notification"] = tmpChatMessageBody.notification;
             return resources;
         }
     }

@@ -15,12 +15,14 @@ namespace TeamNotification_Library.Service.Chat
         private int lastUserThatInserted = 0;
         private IFormatCodeMessages codeMessageFormatter;
         private IFormatPlainMessages plainMessageFormatter;
+        private IFormatNotificationMessages notifitacionMessageFormatter;
+
         private IFormatUserIndicator userMessageFormatter;
         private IFormatDateTime dateMessageFormatter;
         private IBuildTable tableBuilder;
         private ISerializeJSON jsonSerializer;
 
-        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer)
+        public ChatMessagesService(IFormatCodeMessages codeMessageFormatter, IFormatPlainMessages plainMessageFormatter, IFormatUserIndicator userMessageFormatter, IFormatDateTime dateMessageFormatter, IBuildTable tableBuilder, ISerializeJSON jsonSerializer, IFormatNotificationMessages notifitacionMessageFormatter)
         {
             this.codeMessageFormatter = codeMessageFormatter;
             this.plainMessageFormatter = plainMessageFormatter;
@@ -28,6 +30,7 @@ namespace TeamNotification_Library.Service.Chat
             this.dateMessageFormatter = dateMessageFormatter;
             this.tableBuilder = tableBuilder;
             this.jsonSerializer = jsonSerializer;
+            this.notifitacionMessageFormatter = notifitacionMessageFormatter;
         }
 
         public TableRowGroup AppendMessage(ChatUIElements messagesContainer, ScrollViewer scrollViewer, ChatMessageModel chatMessage)
@@ -37,9 +40,22 @@ namespace TeamNotification_Library.Service.Chat
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
                 var date = dateMessageFormatter.GetFormattedElement(chatMessage);
-                var message = chatMessage.chatMessageBody.IsCode
-                                  ? codeMessageFormatter.GetFormattedElement(chatMessage)
-                                  : plainMessageFormatter.GetFormattedElement(chatMessage);
+//                var message = chatMessage.chatMessageBody.IsCode
+//                                  ? codeMessageFormatter.GetFormattedElement(chatMessage)
+//                                  : plainMessageFormatter.GetFormattedElement(chatMessage);
+
+                var message = GetMessageFrom(chatMessage);
+
+//                var messageBody = Collection.getField(message.data, "body");
+//                var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
+//
+//                if (chatMessageBody.IsCode)
+//                    messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
+//
+//                if (!chatMessageBody.notification.IsNullOrWhiteSpace())
+//                {
+//                    int b = 0;
+//                }
 
                 if (!chatMessage.stamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(chatMessage.stamp))
                 {
@@ -59,6 +75,17 @@ namespace TeamNotification_Library.Service.Chat
             messagesContainer.StatusBar.Text = chatMessage.username + " says: " + m;
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(scrollViewer.ScrollToBottom));
             return appendedRowGroup;
+        }
+
+        private Block GetMessageFrom(ChatMessageModel chatMessage)
+        {
+            if (chatMessage.chatMessageBody.IsCode)
+                return codeMessageFormatter.GetFormattedElement(chatMessage);
+
+            if (!chatMessage.chatMessageBody.notification.IsNullOrWhiteSpace())
+                return notifitacionMessageFormatter.GetFormattedElement(chatMessage);
+
+            return plainMessageFormatter.GetFormattedElement(chatMessage);
         }
 
         private TableRowGroup UpdateMessage(ChatUIElements messagesContainer, ChatMessageModel messageModel)
