@@ -6,6 +6,7 @@ using System.Windows.Shapes;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using NLog;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Logging;
@@ -22,7 +23,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         /// </summary>
         public LoginWindow() :
             base(null)
-        {           
+        {
+            var logger = Container.GetInstance<ILog>();
             try
             {
                 // Set the window title reading it from the resources.
@@ -49,8 +51,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             }
             catch(Exception e)
             {
-                Container.GetInstance<ILog>().FatalException(e.Source, "Got a fatal exception: {0}".FormatUsing(e.Message), e);
-                throw e;
+                logger.FatalException(e.Source, "Got a fatal exception: {0}".FormatUsing(e.Message), e);
+                throw;
             }
         }
 

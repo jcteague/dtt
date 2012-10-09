@@ -48,6 +48,19 @@ namespace TeamNotification_Library.Service.Logging
             Log(source, x => x.FatalException(message, exception));
         }
 
+        public void TryOrLog(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception exc)
+            {
+                FatalException(exc.Source, "Got a fatal exception: {0}".FormatUsing(exc.Message), exc);
+                throw;
+            }
+        }
+
         private void Log(object source, Action<NLog.Logger> logAction)
         {
             logAction(LogManager.GetLogger(source.GetType().ToString()));

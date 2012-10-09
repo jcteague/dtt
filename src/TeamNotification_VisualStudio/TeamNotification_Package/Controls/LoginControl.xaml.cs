@@ -8,6 +8,7 @@ using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Content;
 using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Configuration;
+using TeamNotification_Library.Service.Logging;
 
 namespace AvenidaSoftware.TeamNotification_Package.Controls
 {
@@ -21,14 +22,16 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private IGetFieldValue fieldValueGetter;
         private readonly IHandleUserAccountEvents userAccountEvents;
         private IProvideConfiguration<RedisConfiguration> redisConfigurationProvider;
+        private ILog logger;
 
 
-        public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleUserAccountEvents userAccountEvents)
+        public LoginControl(IServiceLoginControl loginControlService, IProvideConfiguration<RedisConfiguration> redisConfigurationProvider, IBuildContent contentBuilder, IGetFieldValue fieldValueGetter, IHandleUserAccountEvents userAccountEvents, ILog logger)
         {
             this.loginControlService = loginControlService;
             this.contentBuilder = contentBuilder;
             this.fieldValueGetter = fieldValueGetter;
             this.userAccountEvents = userAccountEvents;
+            this.logger = logger;
             this.redisConfigurationProvider = redisConfigurationProvider;
             InitializeComponent();
             
@@ -58,12 +61,15 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var collection = new List<CollectionData>();
-            foreach (CollectionData item in (IEnumerable<CollectionData>)Resources["templateData"])
-            {
-                collection.Add(fieldValueGetter.GetValue(item, templateContainer));
-            }
-            loginControlService.HandleClick(collection);
+            logger.TryOrLog(() =>
+                                {
+                                    var collection = new List<CollectionData>();
+                                    foreach (CollectionData item in (IEnumerable<CollectionData>)Resources["templateData"])
+                                    {
+                                        collection.Add(fieldValueGetter.GetValue(item, templateContainer));
+                                    }
+                                    loginControlService.HandleClick(collection);                        
+                                });
         }
     }
 }

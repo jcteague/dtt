@@ -10,6 +10,7 @@ using System.Windows.Interop;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
@@ -19,6 +20,7 @@ using TeamNotification_Library.Service.Controls;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using UserControl = System.Windows.Controls.UserControl;
@@ -36,6 +38,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
         private IStoreDTE dteStore;
+        private ILog logger;
 
         /* We should not depend on this global state */
         private IStoreGlobalState applicationGlobalState;
@@ -52,7 +55,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private bool chatIsEnabled;
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents)
+        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
         {
             chatIsEnabled = true;
 
@@ -63,6 +66,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.userAccountEvents = userAccountEvents;
             this.clipboardHandler = clipboardHandler;
             this.socketIOEvents = socketIOEvents;
+            this.logger = logger;
             this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
@@ -102,12 +106,12 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                             var room = "chat " + e.RoomId;
                                                             subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
-                                                        };
+                                                        };    
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            chatRoomControlService.HandlePaste(messageTextBox, e);
+            logger.TryOrLog(() => chatRoomControlService.HandlePaste(messageTextBox, e));
         }
 
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
@@ -117,8 +121,11 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void OnUserLogout(object sender, UserHasLogout eventArgs)
         {
-            chatIsEnabled = false;
-            Content = Container.GetInstance<LoginControl>();
+            logger.TryOrLog(() =>
+                                {
+                                    chatIsEnabled = false;
+                                    Content = Container.GetInstance<LoginControl>();                        
+                                });
         }
 
         #region Win32_Clipboard
@@ -151,26 +158,29 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
+                logger.TryOrLog(() => chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload));
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)
         {
-            this.SendMessage();
+            logger.TryOrLog(() => SendMessage());
         }
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
             if (!applicationGlobalState.IsEditingCode && e.Key == Key.Enter && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             {
-                this.SendMessage();
-                e.Handled = true;
+                logger.TryOrLog(() =>
+                                    {
+                                        SendMessage();
+                                        e.Handled = true;
+                                    });
             }
         }
 
         private void LogoutUser(object sender, RoutedEventArgs e)
         {
-            chatRoomControlService.LogoutUser(sender);
+            logger.TryOrLog(() => chatRoomControlService.LogoutUser(sender));
         }
 
         #endregion
@@ -234,8 +244,11 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void AddMessages(string currentRoomId)
         {
-            this.roomId = currentRoomId;
-            chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);
+            logger.TryOrLog(() =>
+                                {
+                                    this.roomId = currentRoomId;
+                                    chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);                                    
+                                });
         }
 
         private ChatUIElements GetChatUIElements()

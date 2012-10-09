@@ -12,5 +12,7 @@ namespace TeamNotification_Library.Service.Logging
         void Error(object source, string message);
         void FatalException(string message, Exception exception);
         void FatalException(object source, string message, Exception exception);
+        void TryOrLog(Action action);
+
     }
 }
