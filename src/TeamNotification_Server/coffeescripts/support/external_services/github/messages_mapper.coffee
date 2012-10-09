@@ -1,4 +1,7 @@
 mapper_paths = [
+    './mappers/pull_request_comment'
+    './mappers/issue_comment'
+    './mappers/issue'
     './mappers/push'
     './mappers/comment'
     './mappers/fork'
