@@ -3,11 +3,19 @@ using System.IO;
 using NLog;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service.Async;
 
 namespace TeamNotification_Library.Service.Logging
 {
     public class Logger : ILog
     {
+        private IHandleAlertMessages alertMessageEvents;
+
+        public Logger(IHandleAlertMessages alertMessageEvents)
+        {
+            this.alertMessageEvents = alertMessageEvents;
+        }
+
         public void Info(string message)
         {
             Info(this, message);
@@ -57,7 +65,7 @@ namespace TeamNotification_Library.Service.Logging
             catch (Exception exc)
             {
                 FatalException(exc.Source, "Got a fatal exception: {0}".FormatUsing(exc.Message), exc);
-                throw;
+                alertMessageEvents.OnAlertMessageRequested(exc.Source, new AlertMessageWasRequested {Message = "Exception: {0}".FormatUsing(exc.Message)});
             }
         }
 
