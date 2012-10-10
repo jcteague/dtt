@@ -29,12 +29,10 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @$el.attr("class","well scroll-box span8")
             update_dates = () =>
                 newDate = new Date()
+                console.log 'during update', @get_field 'datetime', me.model.attributes.messages[0].data
                 $('.chat_message_date').each (idx, element) =>
-                    console.log 'dates before', (@get_field('datetime', message.data) for message in me.model.attributes.messages)
                     message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
                     element.innerHTML = (parse_date new Date(message_date), newDate)
-                console.log 'dates after', (@get_field('datetime', message.data) for message in me.model.attributes.messages)
-                console.log '=================================================='
 
             render_model = () ->
                 newDate = new Date()
@@ -43,6 +41,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                     me.$el.append me.render_message message, newDate
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
+            console.log 'in the beginning', @get_field 'datetime', me.model.attributes.messages[0].data
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
                 socket = new window.io.connect(@model.get('href'))
