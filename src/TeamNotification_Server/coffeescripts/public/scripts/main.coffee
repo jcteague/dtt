@@ -6,6 +6,7 @@ require.config
         'cookie': 'jquery.cookie'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
+        'moment': 'moment.min'
         'jquery.autocomplete': 'jquery.autocomplete'
         'jquery.validate': 'jquery.validate.min'
         'config': 'config'

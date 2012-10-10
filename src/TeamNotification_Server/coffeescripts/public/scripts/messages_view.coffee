@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (GeneralView, underscore, Prettify) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment'], (GeneralView, underscore, Prettify, Moment) ->
 
     class MessagesView extends GeneralView
 
@@ -54,11 +54,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         parse_date = (message_date, curr_date) ->
             append_zero = (val) ->
                 if val <= 9 then '0' + val else val
+
             if is_today(message_date, curr_date)
-                hours = message_date.getHours()
-                [formatted_hour, suffix] = [hours % 12, (if hours - 12 >= 0 then 'PM' else 'AM')]
-                minutes = message_date.getMinutes()
-                return "#{append_zero(formatted_hour)}:#{append_zero(minutes)} #{suffix}"
+                return moment(message_date).format('h:mm A')
 
             day = message_date.getDate()
             month = message_date.getMonth() + 1
