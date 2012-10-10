@@ -31,12 +31,15 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
             update_dates = () =>
+                render_model()
+                ###
                 newDate = new Date()
                 console.log 'during update', @get_field 'datetime', @model.get('messages')[0].data
+                messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
-                    messages = @model.get('messages')
                     message_date = @flatten_message(messages[idx]).date
                     element.innerHTML = (parse_date new Date(message_date), newDate)
+                ###
 
             render_model = () ->
                 newDate = new Date()
@@ -72,12 +75,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             return "#{month}/#{day}/#{year}"
 
         render_message: (message) ->
-            user_id = @get_field 'user_id', message.data
-            name = @get_field 'user', message.data
-            body = @get_field 'body', message.data
-            date = @get_field 'datetime', message.data
-            stamp = @get_field 'stamp', message.data
-            message_paragraph = @read_message_data({user_id: user_id, name:name, date:date, body:body, stamp:stamp})
+            flattened_message = @flattened_message(message)
+            message_paragraph = @read_message_data(flattened_message)
             r = $(message_paragraph)
             r.removeClass('new_message')
             r.children().removeClass('new_message')
