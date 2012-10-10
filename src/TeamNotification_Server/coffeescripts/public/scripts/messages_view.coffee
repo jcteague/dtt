@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (GeneralView, underscore, Prettify) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment'], (GeneralView, underscore, Prettify, Moment) ->
 
     class MessagesView extends GeneralView
 
@@ -34,7 +34,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 newDate = new Date()
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
-                    message_date = new Date(@flatten_message(messages[idx]).date)
+                    message_date = new Date(@flatten_message(messages[idx]).stamp)
                     element.innerHTML = (parse_date(message_date, newDate))
 
             render_model = () ->
@@ -52,21 +52,20 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
-            message_time = message_date.getTime()/1000
-            curr_time = Math.floor( curr_date.getTime() /1000)
-            delta_time = curr_time - message_time
-            if delta_time < 60
-                return "just now"
-            if delta_time < 120
-                return "a minute ago"
-            if delta_time < 3600
-                return "#{Math.floor(delta_time/60)} minutes ago"
-            if delta_time < 86400
-                return "#{Math.floor(delta_time/3600)} hours ago"
+            append_zero = (val) ->
+                if val <= 9 then '0' + val else val
+
+            if is_today(message_date, curr_date)
+                return moment(message_date).format('h:mm A')
+
             day = message_date.getDate()
             month = message_date.getMonth() + 1
             year = message_date.getFullYear()
-            return "#{month}/#{day}/#{year}"
+            "#{month}/#{day}/#{year}"
+
+        is_today = (message_date, current_date) ->
+            build_string = (date) -> "#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}"
+            build_string(message_date) == build_string(current_date)
 
         render_message: (message) ->
             flattened_message = @flatten_message(message)
