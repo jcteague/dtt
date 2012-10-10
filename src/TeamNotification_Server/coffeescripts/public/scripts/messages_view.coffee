@@ -32,11 +32,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @$el.attr("class","well scroll-box span8")
             update_dates = () =>
                 newDate = new Date()
-                console.log 'during update', @get_field 'datetime', @model.get('messages')[0].data
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
                     message_date = new Date(@flatten_message(messages[idx]).date)
-                    console.log message_date.getTime(), newDate.getTime()
                     element.innerHTML = (parse_date(message_date, newDate))
 
             render_model = () ->
@@ -46,7 +44,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                     me.$el.append me.render_message message, newDate
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
-            console.log 'in the beginning', @get_field 'datetime', @model.attributes.messages[0].data
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
                 socket = new window.io.connect(@model.get('href'))
@@ -116,7 +113,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             name = message.name
             new_date = new Date()
             date = parse_date  new Date(message.date), new_date
-            console.log 'on read_message_data', new Date(message.date).getTime(), new_date.getTime()
             parsedBody = JSON.parse(message.body)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
