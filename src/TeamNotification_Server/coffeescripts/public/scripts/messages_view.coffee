@@ -35,9 +35,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 console.log 'during update', @get_field 'datetime', @model.get('messages')[0].data
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
-                    message_date = @flatten_message(messages[idx]).date
+                    message_date = new Date(@flatten_message(messages[idx]).date)
                     console.log message_date.getTime(), newDate.getTime()
-                    element.innerHTML = (parse_date(new Date(message_date), newDate))
+                    element.innerHTML = (parse_date(message_date, newDate))
 
             render_model = () ->
                 newDate = new Date()
