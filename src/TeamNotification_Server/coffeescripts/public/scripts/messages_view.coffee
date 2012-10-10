@@ -31,15 +31,13 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @$el.empty()
             @$el.attr("class","well scroll-box span8")
             update_dates = () =>
-                render_model()
-                ###
                 newDate = new Date()
                 console.log 'during update', @get_field 'datetime', @model.get('messages')[0].data
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
                     message_date = @flatten_message(messages[idx]).date
-                    element.innerHTML = (parse_date new Date(message_date), newDate)
-                ###
+                    console.log message_date.getTime(), newDate.getTime()
+                    element.innerHTML = (parse_date(new Date(message_date), newDate))
 
             render_model = () ->
                 newDate = new Date()
@@ -57,7 +55,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
-            #console.log message_date, curr_date
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
@@ -117,7 +114,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
 
         read_message_data: (message) ->
             name = message.name
-            date = parse_date  new Date(message.date), new Date()
+            new_date = new Date()
+            date = parse_date  new Date(message.date), new_date
+            console.log 'on read_message_data', new Date(message.date).getTime(), new_date.getTime()
             parsedBody = JSON.parse(message.body)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
