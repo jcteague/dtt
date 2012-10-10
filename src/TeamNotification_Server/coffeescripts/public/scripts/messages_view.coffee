@@ -16,12 +16,15 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
 
         serialize_message: (message) ->
+            JSON.stringify(@flatten_message(message))
+
+        flatten_message: (message) ->
             user_id = @get_field 'user_id', message.data
             name = @get_field 'user', message.data
             body = @get_field 'body', message.data
             date = @get_field 'datetime', message.data
             stamp = @get_field 'stamp', message.data
-            JSON.stringify {body: body, user_id: user_id, name: name, date: date, stamp: stamp}
+            return {body: body, user_id: user_id, name: name, date: date, stamp: stamp}
 
         render: ->
             me = @
@@ -31,7 +34,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 newDate = new Date()
                 console.log 'during update', @get_field 'datetime', me.model.attributes.messages[0].data
                 $('.chat_message_date').each (idx, element) =>
-                    message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
+                    #message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
+                    message_date = @flatten_message(me.model.attributes.messages[idx]).date
                     element.innerHTML = (parse_date new Date(message_date), newDate)
 
             render_model = () ->
