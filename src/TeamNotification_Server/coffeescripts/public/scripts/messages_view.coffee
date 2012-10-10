@@ -30,8 +30,11 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             update_dates = () =>
                 newDate = new Date()
                 $('.chat_message_date').each (idx, element) =>
+                    console.log 'dates before', (@get_field('datetime', message.data) for message in me.model.attributes.messages)
                     message_date = @get_field 'datetime', me.model.attributes.messages[idx].data
                     element.innerHTML = (parse_date new Date(message_date), newDate)
+                console.log 'dates after', (@get_field('datetime', message.data) for message in me.model.attributes.messages)
+                console.log '=================================================='
 
             render_model = () ->
                 newDate = new Date()
@@ -48,7 +51,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
-            console.log message_date, curr_date
+            #console.log message_date, curr_date
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
