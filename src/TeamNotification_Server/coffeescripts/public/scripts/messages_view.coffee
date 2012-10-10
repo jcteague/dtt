@@ -34,8 +34,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 newDate = new Date()
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
-                    #message_date = new Date(@flatten_message(messages[idx]).date)
-                    console.log @flatten_message(messages[idx]).date
                     message_date = new Date(@flatten_message(messages[idx]).stamp)
                     element.innerHTML = (parse_date(message_date, newDate))
 
@@ -56,10 +54,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         parse_date = (message_date, curr_date) ->
             append_zero = (val) ->
                 if val <= 9 then '0' + val else val
-            message_time = message_date.getTime()/1000
-            curr_time = Math.floor( curr_date.getTime() /1000)
-            delta_time = curr_time - message_time
-            if delta_time < (3600 * 24)
+            if is_today(message_date, curr_date)
                 hours = message_date.getHours()
                 [formatted_hour, suffix] = [hours % 12, (if hours - 12 >= 0 then 'PM' else 'AM')]
                 minutes = message_date.getMinutes()
@@ -69,6 +64,10 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             month = message_date.getMonth() + 1
             year = message_date.getFullYear()
             "#{month}/#{day}/#{year}"
+
+        is_today = (message_date, current_date) ->
+            build_string = (date) -> "#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}"
+            build_string(message_date) == build_string(current_date)
 
         render_message: (message) ->
             flattened_message = @flatten_message(message)
