@@ -74,8 +74,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             year = message_date.getFullYear()
             return "#{month}/#{day}/#{year}"
 
-        render_message: (message) =>
-            flattened_message = @flattened_message(message)
+        render_message: (message) ->
+            flattened_message = @flatten_message(message)
             message_paragraph = @read_message_data(flattened_message)
             r = $(message_paragraph)
             r.removeClass('new_message')
