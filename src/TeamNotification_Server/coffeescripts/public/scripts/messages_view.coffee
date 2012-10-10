@@ -54,6 +54,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             @
 
         parse_date = (message_date, curr_date) ->
+            append_zero = (val) ->
+                if val <= 9 then '0' + val else val
             message_time = message_date.getTime()/1000
             curr_time = Math.floor( curr_date.getTime() /1000)
             delta_time = curr_time - message_time
@@ -61,7 +63,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
                 hours = message_date.getHours()
                 [formatted_hour, suffix] = [hours % 12, (if hours - 12 >= 0 then 'PM' else 'AM')]
                 minutes = message_date.getMinutes()
-                return "#{formatted_hour}:#{minutes} #{suffix}"
+                return "#{append_zero(formatted_hour)}:#{append_zero(minutes)} #{suffix}"
 
             day = message_date.getDate()
             month = message_date.getMonth() + 1
