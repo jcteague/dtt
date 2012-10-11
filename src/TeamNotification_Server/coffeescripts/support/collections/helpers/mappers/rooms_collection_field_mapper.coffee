@@ -1,4 +1,4 @@
-default_mapper = require('./default_collection_field_mapper.')
+default_mapper = require('./default_collection_field_mapper')
 
 get_room_from = (room) ->
     return {

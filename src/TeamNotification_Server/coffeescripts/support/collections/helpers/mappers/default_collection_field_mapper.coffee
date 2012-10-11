@@ -79,7 +79,7 @@ key_object_mapper = (key, value) ->
     obj
 
 map = (property_value) ->
-    collection_data_value = (get_from property_value for key, value of property_value)
+    collection_data_value = (get_from(property_value) for key, value of property_value)
     return {
         data: collection_data_value
     }

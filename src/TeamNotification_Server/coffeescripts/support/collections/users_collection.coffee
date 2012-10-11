@@ -5,6 +5,7 @@ class UsersCollection
     constructor: (@users) ->
 
     to_json: ->
+        ###
         links = ({"name": user.email, "rel": "User", "href": "/user/#{user.id}"} for user in @users)
         get_data_for = (user) ->
             return {
@@ -19,6 +20,15 @@ class UsersCollection
             users: (get_data_for user for user in @users)
             links:  [{"name":"self", "rel": "Users", "href": "/users/query"}].concat(links)
         }
+        ###
+        users =
+            links: ({"name": user.email, "rel": "User", "href": "/user/#{user.id}"} for user in @users)
+            users: @users
+
+        collection = collection_json_mapper.map users
+        console.log collection
+
+        collection.collection
 
     ###
     # return {
