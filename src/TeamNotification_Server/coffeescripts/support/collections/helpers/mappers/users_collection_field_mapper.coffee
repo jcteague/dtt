@@ -1,4 +1,4 @@
-default_mapper = require('./default_collection_field_mapper.')
+default_mapper = require('./default_collection_field_mapper')
 
 get_user_from = (user) ->
     return {
