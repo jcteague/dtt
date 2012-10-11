@@ -379,12 +379,7 @@ describe 'Room', ->
 
             describe 'when all correct parameters where sent to create the message', ->
 
-                user_id = null
-                chat_room_id = null
-                body = null
-                room_message = null
-                saved_message = null
-                request_values = null
+                user_id = chat_room_id = body = room_message = saved_message = request_values = null
 
                 beforeEach (done) ->
                     saved_message = 'blah message'
