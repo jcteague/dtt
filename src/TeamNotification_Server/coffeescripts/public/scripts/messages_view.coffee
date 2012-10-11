@@ -108,12 +108,28 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
             p[0].innerHTML = parsedBody.message
-
+            
+        parse_html: (message) ->
+            #message = escape(message) #.replace('<','&lt').replace('>','&gt')
+            message_words = message.split " "
+            final_message = ''
+            for word in message_words
+                if word.indexOf("://") != -1
+                    word = "<a href='#{word}'>#{word}</a>"
+                else
+                    word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
+                final_message = final_message + word + ' '
+            final_message
+            
         read_message_data: (message) ->
             name = message.name
             new_date = new Date()
             date = parse_date  new Date(message.date), new_date
             parsedBody = JSON.parse(message.body)
+            
+            
+            parsedBody.message = @parse_html(parsedBody.message)
+            
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
             if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
