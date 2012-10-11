@@ -6,7 +6,12 @@ map = (raw_collection) ->
         version: "0.1"
 
     for key, val of raw_collection
-        standard_collection[key] = mappers[key].map val, raw_collection
+        if mappers["#{key}_collection_field_mapper"]?
+            search_key = "#{key}_collection_field_mapper"
+        else
+            search_key = "default_collection_field_mapper"
+
+        standard_collection[key] = mappers[search_key].map val, raw_collection
 
     return {
         collection: standard_collection

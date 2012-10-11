@@ -1,3 +1,5 @@
+collection_json_mapper = require('./helpers/collection_json_mapper')
+
 class UsersCollection
 
     constructor: (@users) ->
