@@ -23,31 +23,30 @@
 #
 # OUTPUT:
 #
-    #template:
-        #type: 'user_edit'
-        #data: [
-            #{name: 'id', value: @data.id, type: 'hidden', rules: {required: true}}
-            #{name: 'first_name', label: 'First Name', value: @data.first_name, type: 'string', rules: {required: true}}
-            #{name: 'last_name', label: 'Last Name', value: @data.last_name, type: 'string', rules: {required: true}}
-            #{name: 'email', label: 'Email', value: @data.email, type: 'string', rules: {required: true, email: true}}
-            #{name: 'password', label: 'Password', type: 'password', rules: {required: false, minlength: 6}}
-            #{name: 'confirm_password', label: 'Confirm Password', type: 'password', rules: {required: false, minlength: 6, equalTo: 'password'}}
-        #]
+#    #template:
+#        #type: 'user_edit'
+#        #data: [
+#            #{name: 'id', value: @data.id, type: 'hidden', rules: {required: true}}
+#            #{name: 'first_name', label: 'First Name', value: @data.first_name, type: 'string', rules: {required: true}}
+#            #{name: 'last_name', label: 'Last Name', value: @data.last_name, type: 'string', rules: {required: true}}
+#            #{name: 'email', label: 'Email', value: @data.email, type: 'string', rules: {required: true, email: true}}
+#            #{name: 'password', label: 'Password', type: 'password', rules: {required: false, minlength: 6}}
+#            #{name: 'confirm_password', label: 'Confirm Password', type: 'password', rules: {required: false, minlength: 6, equalTo: 'password'}}
+#        #]
+#
 
 
-
-#key_value_mapper = ()
+key_value_mapper = (key, value) ->
+    return {
+        name: key
+        label: value.label
+        value: value.value
+        type: value.type
+        rules: value.rules
+    }
 
 map = (template) ->
-    template_data = []
-    for key, value of template.data
-        template_data.push {
-            name: key
-            label: value.label
-            value: value.value
-            type: value.type
-            rules: value.rules
-        }
+    template_data = (key_value_mapper(key, value) for key, value of template.data)
 
     return {
         type: template.type
