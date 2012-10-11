@@ -52,9 +52,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             @
 
         parse_date = (message_date, curr_date) ->
-            append_zero = (val) ->
-                if val <= 9 then '0' + val else val
-
             if is_today(message_date, curr_date)
                 return moment(message_date).format('h:mm A')
 
@@ -64,7 +61,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             "#{month}/#{day}/#{year}"
 
         is_today = (message_date, current_date) ->
-            build_string = (date) -> "#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}"
+            build_string = (date) -> "#{date.getUTCFullYear()}-#{date.getUTCMonth()}-#{date.getUTCDate()}"
             build_string(message_date) == build_string(current_date)
 
         render_message: (message) ->
@@ -111,7 +108,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         read_message_data: (message) ->
             name = message.name
             new_date = new Date()
-            date = parse_date  new Date(message.date), new_date
+            date = parse_date  new Date(message.stamp), new_date
             parsedBody = JSON.parse(message.body)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
