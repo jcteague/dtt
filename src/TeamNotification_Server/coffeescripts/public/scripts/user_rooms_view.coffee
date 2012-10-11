@@ -1,17 +1,20 @@
 define 'user_rooms_view', ['general_view','messages_view','form_view','form_template_renderer'], (GeneralView, MessagesView, FormView, FormTemplateRenderer) ->
 
     class UserRoomsView extends GeneralView
-        
+
         id: 'user-rooms-container'
+
         initialize: ->
             @formTemplateRenderer = new FormTemplateRenderer()
             @data = @model.attributes
+
         render: ->
             @$el.empty()
             navInner = $("<div>",{"class":"navbar-inner"})
             navContent = $("<div>",{"class":"container-fluid"})
             userName = $("<a>", { "class":"brand", "href":"/client#/user/#{@data.user.user_id}/"})
             userName.append @data.user.name
+            roomName = $("<span/>", {"class": "room-name pull-left muted"}).append "(#{@model.get('room').name})"
             @$el.attr('class', 'navbar navbar-fixed-top')
             ul = $("<ul>",{"class":"nav pull-right"})
             ul.append "<li class='divider-vertical'></li>"
@@ -26,6 +29,7 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
             userRooms.append userRoomsList
             ul.append userRooms
             navContent.append userName
+            navContent.append roomName
             navContent.append ul
             navInner.append navContent
             $(userRooms).bind 'click', () ->
