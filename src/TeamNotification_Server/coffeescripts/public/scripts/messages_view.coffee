@@ -127,4 +127,5 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
                 return add_links("<p id='#{message.stamp}' class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
 
-            return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+            escaped_message = $('<div/>').text(parsedBody.message).html()
+            ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{escaped_message}</span></p>")
