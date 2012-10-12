@@ -16,11 +16,8 @@ get_repositories = (access_token) ->
         res.setEncoding('utf8')
         res.on 'data', (repositories) ->
             repositories_response_parts.push(repositories)
-            #console.log repositories
-            #deferred.resolve({success:true, repositories:JSON.parse(repositories)})
         res.on 'end', () ->
-            repositories_string = repositories_response_parts.join('')        
-            console.log( repositories_response_parts.join('') )
+            repositories_string = repositories_response_parts.join('')
             deferred.resolve({success:true, repositories:JSON.parse(repositories_string)})
         res.on 'error', (err) ->
             console.log err
