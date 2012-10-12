@@ -145,17 +145,16 @@ namespace TeamNotification_Library.Service.Controls
             }
         }
 
-        public void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
+        public ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
 
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 
-
             if(chatMessageModel.chatMessageBody.IsCode)
                 messagesEditor.ConfigTableRowGroup(rowGroup, collectionMessage, messagesContainer);
-
+            return chatMessageModel;
         }
 
 
