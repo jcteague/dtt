@@ -100,6 +100,9 @@
       <HintPath>..\packages\WebSocket4Net.0.8\lib\net40\WebSocket4Net.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WPFTaskbarNotifier">
+      <HintPath>..\packages\WPFTaskbarNotifier\WPFTaskbarNotifier.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\TeamNotificationLibraryRegistry.cs" />

@@ -21,6 +21,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Logging;
+using TeamNotification_Library.Service.Providers;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using UserControl = System.Windows.Controls.UserControl;
@@ -42,20 +43,23 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         /* We should not depend on this global state */
         private IStoreGlobalState applicationGlobalState;
-        
+
+        //We should make our own implementation in the future
+        private TaskbarNotifierWindow taskbarNotifierWindow;
+
         private IHandleCodePaste codePasteEvents;
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
         private IHandleSocketIOEvents socketIOEvents;
         private Dictionary<string, TableRowGroup> messagesList;
-
+        private IProvideUser userProvider;
         private string roomId { get; set; }
         private string currentChannel { get; set; }
 
         private bool chatIsEnabled;
         private List<string> subscribedChannels;
 
-        public Chat(IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
         {
             chatIsEnabled = true;
 
@@ -70,7 +74,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
-
+            this.userProvider = userProvider;
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
@@ -106,7 +110,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                             var room = "chat " + e.RoomId;
                                                             subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
-                                                        };    
+                                                        };
+
+            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -158,7 +164,20 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (channel == currentChannel)
             {
-                logger.TryOrLog(() => chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload));
+                logger.TryOrLog(() => {
+
+                    var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
+                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (dteStore.dte.MainWindow.WindowState == vsWindowState.vsWindowStateMinimize))
+                    {
+                        taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
+                                                                                var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
+                                                                                taskbarNotifierWindow.NotifyContent.Clear();
+                                                                                taskbarNotifierWindow.Show();
+                                                                                taskbarNotifierWindow.NotifyContent.Add(new NotifyObject(msg, receivedMessage.name+" says:"));
+                                                                                taskbarNotifierWindow.Notify();
+                        }));
+                    }
+                });
             }
         }
         void SendMessageButtonClick(object sender, RoutedEventArgs e)

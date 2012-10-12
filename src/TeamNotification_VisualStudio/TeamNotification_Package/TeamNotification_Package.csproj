@@ -84,6 +84,9 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
+    <Reference Include="WPFTaskbarNotifier">
+      <HintPath>..\packages\WPFTaskbarNotifier\WPFTaskbarNotifier.dll</HintPath>
+    </Reference>
     <Reference Include="WPFToolkit.Extended">
       <HintPath>..\packages\WPFToolkit.Extended\lib\WPFToolkit.Extended.dll</HintPath>
     </Reference>
@@ -152,6 +155,9 @@
     <Compile Include="Controls\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TaskbarNotifier.xaml.cs">
+      <DependentUpon>TaskbarNotifier.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LoginControl.xaml.cs">
       <DependentUpon>LoginControl.xaml</DependentUpon>
     </Compile>
@@ -214,6 +220,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CustomMessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TaskbarNotifier.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
