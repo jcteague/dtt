@@ -51,7 +51,7 @@ methods.post_room = (req, res, next) ->
     chat_room = support.entity_factory.create('ChatRoom', {name: values.name, owner_id: req.user.id, room_key:room_key })
     chat_room.save (err,saved_chat_room) ->
         if !err
-            res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/" ))
+            res.json( get_server_response(true, ["room #{saved_chat_room.id} created"], "/room/#{saved_chat_room.id}/",true ))
         else
             next(new Error(err.code,err.message))
 
