@@ -10,10 +10,18 @@ get_repositories = (access_token) ->
         port: 443
         method: 'GET'
     deferred = Q.defer()
+    repositories_response_parts = []
+    repositories_string = ""
     req = https.request options, (res) ->
         res.setEncoding('utf8')
         res.on 'data', (repositories) ->
-            deferred.resolve({success:true, repositories:JSON.parse(repositories)})
+            repositories_response_parts.push(repositories)
+            #console.log repositories
+            #deferred.resolve({success:true, repositories:JSON.parse(repositories)})
+        res.on 'end', () ->
+            repositories_string = repositories_response_parts.join('')        
+            console.log( repositories_response_parts.join('') )
+            deferred.resolve({success:true, repositories:JSON.parse(repositories_string)})
         res.on 'error', (err) ->
             console.log err
             deferred.resolve({success:false, messages:[err.message], repositories:null})
