@@ -38,6 +38,8 @@ define 'form_view', ['general_view', 'form_template_renderer','base64'], (Genera
             $.post @$('form').attr('action'), data, (res) => 
                 @trigger 'response:received', res
                 if res.messages?
+                    if res.redirect? && res.redirect
+                        window.location = "##{res.link}"
                     if res.link?
                         res.messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
                     @trigger 'messages:display', res.messages 
