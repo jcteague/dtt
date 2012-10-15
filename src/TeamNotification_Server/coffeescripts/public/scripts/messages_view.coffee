@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment'], (GeneralView, underscore, Prettify, Moment) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (GeneralView, underscore, Prettify) ->
 
     class MessagesView extends GeneralView
 
@@ -34,7 +34,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 newDate = new Date()
                 messages = @model.get('messages')
                 $('.chat_message_date').each (idx, element) =>
-                    message_date = new Date(@flatten_message(messages[idx]).stamp)
+                    message_date = new Date(@flatten_message(messages[idx]).date)
                     element.innerHTML = (parse_date(message_date, newDate))
 
             render_model = () ->
@@ -52,17 +52,21 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             @
 
         parse_date = (message_date, curr_date) ->
-            if is_today(message_date, curr_date)
-                return moment(message_date).format('h:mm A')
-
+            message_time = message_date.getTime()/1000
+            curr_time = Math.floor( curr_date.getTime() /1000)
+            delta_time = curr_time - message_time
+            if delta_time < 60
+                return "just now"
+            if delta_time < 120
+                return "a minute ago"
+            if delta_time < 3600
+                return "#{Math.floor(delta_time/60)} minutes ago"
+            if delta_time < 86400
+                return "#{Math.floor(delta_time/3600)} hours ago"
             day = message_date.getDate()
             month = message_date.getMonth() + 1
             year = message_date.getFullYear()
-            "#{month}/#{day}/#{year}"
-
-        is_today = (message_date, current_date) ->
-            build_string = (date) -> "#{date.getUTCFullYear()}-#{date.getUTCMonth()}-#{date.getUTCDate()}"
-            build_string(message_date) == build_string(current_date)
+            return "#{month}/#{day}/#{year}"
 
         render_message: (message) ->
             flattened_message = @flatten_message(message)
@@ -111,10 +115,12 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             new_date = new Date()
             date = parse_date  new Date(message.stamp), new_date
             parsedBody = JSON.parse(message.body)
+            parsedBody.message = @parse_html(parsedBody.message)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
-            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id and !(parsedBody.notification?)
-                $name_and_date.children().hide()
+            if !(parsedBody.notification?)
+                if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id 
+                    $name_and_date.children().hide()
 
             @last_user_id_that_posted = message.user_id
             escaped_message = $('<div/>').text(parsedBody.message).html()
@@ -127,7 +133,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             if parsedBody.notification?
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                    
                 return add_links("<p id='#{message.stamp}' class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
 
             ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{escaped_message}</span></p>")
