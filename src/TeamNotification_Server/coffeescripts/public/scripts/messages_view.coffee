@@ -115,7 +115,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             new_date = new Date()
             date = parse_date  new Date(message.stamp), new_date
             parsedBody = JSON.parse(message.body)
-            parsedBody.message = @parse_html(parsedBody.message)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
             if !(parsedBody.notification?)
