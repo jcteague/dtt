@@ -60,7 +60,7 @@ app.configure ->
 
     app.use rendered_error
 
-    app.use(express.logger('dev'))
+    app.use(express.logger())
 
     app.use(express_winston.errorLogger({
         transports: [

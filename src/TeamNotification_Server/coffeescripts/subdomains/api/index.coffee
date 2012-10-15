@@ -28,17 +28,6 @@ allowCrossDomain = (req, res, next) ->
     else
         next()
 
-    #next()
-
-###
-allowCrossDomain = (req, res, next) ->
-    res.header('Access-Control-Allow-Origin', config.allowedDomains)
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
-
-    next()
-###
-
 app.configure ->
     logger.info 'Starting the api module'
 
@@ -63,11 +52,10 @@ app.configure ->
 
     app.use rendered_error
 
-    app.use(express.logger('dev'))
+    app.use(express.logger())
 
 print_headers = (req, res, next) ->
-    console.log 'headers are', res.headers
-    #console.log 'Headers:', res.get('Access-Control-Allow-Headers')
+    console.log req.params
     next()
 
 # Apply authentication for all routes in the api

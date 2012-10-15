@@ -18,8 +18,16 @@ development_settings =
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.dtt.local'
+        port: 3000
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'http://api.dtt.local:3000'
+        whitelisted_paths: whitelisted_paths
     redis:
-        host:'dtt.local'
+        #host:'dtt.local'
+        host:'api.dtt.local'
         port: 6379
         password: 'welc0me'
     email:
@@ -43,8 +51,16 @@ test_settings =
         client_secret: 'secret'
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.dtt.local'
+        port: 3000
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'http://api.dtt.local:3000'
+        whitelisted_paths: whitelisted_paths
     redis:
-        host:'dtt.local'
+        #host:'dtt.local'
+        host:'api.dtt.local'
         port: 6380
         password: 'welc0me'
     email:
@@ -68,8 +84,16 @@ production_settings =
         client_secret: 'secret'
         url: 'http://yacketyapp.com'
         whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.yacketyapp.com'
+        port: 80
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'http://api.yacketyapp.com'
+        whitelisted_paths: whitelisted_paths
     redis:
-        host: 'yacketyapp.com'
+        #host: 'yacketyapp.com'
+        host: 'api.yacketyapp.com'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
     email:

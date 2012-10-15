@@ -98,6 +98,7 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
+    console.log 'LOGGED IN USER IS', user_id
 
     methods.set_socket_events(req.socket_io, room_id)
     callback = (collection) ->
@@ -114,6 +115,8 @@ methods.get_room_messages_since_timestamp = (req, res) ->
 
 
 methods.post_room_message = (req, res, next) ->
+    console.log 'LOGGED IN USER IS', user_id
+    console.log 'BODY IS', req.body
     values = req.body
     if values.message != ''
         room_id = req.param('id')
