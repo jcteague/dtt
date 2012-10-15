@@ -7,8 +7,13 @@ define 'client_router', ['backbone'], (Backbone) ->
             '*action': 'render_root'
 
         render_root: ->
-            @trigger 'render', '/'
+            console.log 'rendering the root'
+            #@trigger 'render', '/'
+            #@trigger 'render', 'http://api.dtt.local:3000/?callback=?'
+            #@trigger 'render', 'http://api.dtt.local:3000/?callback=?'
+            @trigger 'render', '/api'
 
         render_path: (routes...) ->
-            @trigger 'render', routes.join('')
+            console.log 'rendering the path'
+            @trigger 'render', "/api/#{routes.join('')}"
 

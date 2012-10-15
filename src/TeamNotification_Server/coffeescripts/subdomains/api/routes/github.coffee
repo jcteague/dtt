@@ -92,9 +92,8 @@ methods.github_redirect = (req, res) ->
 module.exports =
     methods: methods
     build_routes: (app) ->
-        app.get('/api/github/repositories/:access_token', methods.github_repositories)
-        app.get('/api/github/oauth', methods.github_redirect)
+        app.get('/github/repositories/:access_token', methods.github_repositories)
         app.get('/github/oauth', methods.github_redirect)
-        app.get('/api/github/auth/callback', methods.github_authentication_callback)
-        app.post('/api/github/repositories/:access_token', express.bodyParser(), methods.associate_github_repositories)
-        app.post('/api/github/events/:room_key', express.bodyParser(), methods.receive_github_event)
+        app.get('/github/auth/callback', methods.github_authentication_callback)
+        app.post('/github/repositories/:access_token', express.bodyParser(), methods.associate_github_repositories)
+        app.post('/github/events/:room_key', express.bodyParser(), methods.receive_github_event)
