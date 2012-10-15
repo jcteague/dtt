@@ -120,7 +120,7 @@ methods.post_room_message = (req, res, next) ->
         message_date = ''
         message_stamp = ''
         setname = "room:#{room_id}:messages"
-        if typeof values.stamp != 'undefined' && values.stamp != ''
+        if values.stamp? && values.stamp != ''
             message_stamp = values.stamp
             message_date = values.date
             redis_queryer.zremrangebyscore(setname, message_stamp, message_stamp)

@@ -28,6 +28,8 @@ class RoomMessagesCollection
         m = ( get_data_for(JSON.parse(message)) for message in @room_messages)
         r = []
         r.push(room) for room in @data.chat_rooms
+
+        parsed_room_id = parseInt(room_id, 10)
         return {
             href: "/room/#{room_id}/messages"
             redis: config.redis
@@ -41,6 +43,7 @@ class RoomMessagesCollection
                     {'name':'message', 'label':'Send Message', 'type':'string-big'}
                 ]
             messages: m
+            room: (room for room in @data.chat_rooms when room.room_id is parsed_room_id)[0]
             user_rooms: r
             members: (get_data_for_user user for user in @data.members)
             user: {user_id:@data.user_id, name: @data.name}

@@ -42,13 +42,12 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 
         private string FormatDate(DateTime dateTime)
         {
-            var delta = DateTime.UtcNow - dateTime.ToUniversalTime();
-            var seconds = delta.TotalSeconds;
+            return IsToday(dateTime) ? dateTime.ToString("hh:mm tt") : dateTime.ToShortDateString();
+        }
 
-            if (seconds < 3600 * 24)
-                return dateTime.ToString("hh:mm tt");
-
-            return dateTime.ToShortDateString();
+        private bool IsToday(DateTime dateTime)
+        {
+            return DateTime.UtcNow.ToShortDateString() == dateTime.ToUniversalTime().ToShortDateString();
         }
     }
 }

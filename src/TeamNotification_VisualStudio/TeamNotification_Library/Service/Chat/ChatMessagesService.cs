@@ -40,22 +40,7 @@ namespace TeamNotification_Library.Service.Chat
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
                 var date = dateMessageFormatter.GetFormattedElement(chatMessage);
-//                var message = chatMessage.chatMessageBody.IsCode
-//                                  ? codeMessageFormatter.GetFormattedElement(chatMessage)
-//                                  : plainMessageFormatter.GetFormattedElement(chatMessage);
-
                 var message = GetMessageFrom(chatMessage);
-
-//                var messageBody = Collection.getField(message.data, "body");
-//                var chatMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(messageBody);
-//
-//                if (chatMessageBody.IsCode)
-//                    messagesEditor.ConfigTableRowGroup(messagesContainer.MessagesTable.RowGroups[idx], message, messagesContainer);
-//
-//                if (!chatMessageBody.notification.IsNullOrWhiteSpace())
-//                {
-//                    int b = 0;
-//                }
 
                 if (!chatMessage.stamp.IsNullOrEmpty() && messagesContainer.MessagesList.ContainsKey(chatMessage.stamp))
                 {

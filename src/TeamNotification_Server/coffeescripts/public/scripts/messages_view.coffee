@@ -107,11 +107,12 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         edit_message: (p, message) ->
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            p[0].innerHTML = parsedBody.message
-            
+            escaped_message = $('<div/>').text(parsedBody.message).html()
+            p[0].innerHTML = escaped_message
+
         parse_html: (message) ->
-            #message = escape(message) #.replace('<','&lt').replace('>','&gt')
-            message_words = message.split " "
+            
+			message_words = message.split " "
             final_message = ''
             for word in message_words
                 if word.indexOf("://") != -1
@@ -124,27 +125,25 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
         read_message_data: (message) ->
             name = message.name
             new_date = new Date()
-            date = parse_date  new Date(message.date), new_date
+            date = parse_date  new Date(message.stamp), new_date
             parsedBody = JSON.parse(message.body)
-            
-            
             parsedBody.message = @parse_html(parsedBody.message)
-            
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
-            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id && !(parsedBody.notification?)
+            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id and !(parsedBody.notification?)
                 $name_and_date.children().hide()
 
             @last_user_id_that_posted = message.user_id
+            escaped_message = $('<div/>').text(parsedBody.message).html()
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
                 p = document.createElement("p")
                 $(p).attr 'id',"#{message.stamp}"
-                p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{parsedBody.message}</pre>"
+                p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{escaped_message}</pre>"
                 return p
             if parsedBody.notification?
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
                 return add_links("<p id='#{message.stamp}' class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
 
-            return ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+            ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{escaped_message}</span></p>")
