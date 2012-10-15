@@ -13,6 +13,17 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @views_factory = new ViewsFactory()
             Backbone.history.start()
 
+            @set_up_ajax_with_headers()
+
+        set_up_ajax_with_headers: ->
+            return unless $.cookie("authtoken")?
+            console.log 'Going to set the ajax with', $.cookie("authtoken")
+            $.ajaxSetup
+                beforeSend: (jqXHR) ->
+                    authToken = $.cookie 'authtoken'
+                    jqXHR.setRequestHeader('Authorization', authToken )
+                    jqXHR.withCredentials = true
+
         render: ->
             @$el.empty()
             view.render().append_to(@$el) for view in @views
@@ -37,9 +48,28 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         render_path: (path) ->
             @server_response_view.clear()
-            console.log "http://api.#{config.site.host}#{path}"
+            path = '' if path is '/'
             #$.getJSON("api.#{config.site.host}:3000#{path}")
-            $.getJSON("http://api.#{config.site.host}:3000/#{path}", @load_json)
+            #$.getJSON("http://api.#{config.site.host}:3000/#{path}", @load_json)
+            url = "http://api.#{config.site.host}:3000/#{path}"
+            console.log url
+            parameters = {
+                type: 'GET'
+                contentType: 'application/json'
+                dataType: 'json'
+                url: url
+                success: @load_json
+                error: (d) -> console.log('Error')
+            }
+
+            if $.cookie('authtoken')?
+                parameters.beforeSend = (jqXHR) ->
+                        authToken = $.cookie 'authtoken'
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+            $.ajax parameters
+
             #$.getJSON(path, @load_json)
 
         load_json: (data) =>

@@ -18,7 +18,6 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
             @form_view.on 'response:received', @check_login
         
         check_login: (res) ->
-            console.log 'response', res
             if res.success is true
                 console.log res.user.id, res.user.email, res.user.authtoken
                 getIn = () ->

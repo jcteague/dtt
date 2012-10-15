@@ -66,7 +66,7 @@ app.configure ->
     app.use(express.logger('dev'))
 
 print_headers = (req, res, next) ->
-    #res.get('Content-Type')
+    console.log 'headers are', res.headers
     #console.log 'Headers:', res.get('Access-Control-Allow-Headers')
     next()
 
