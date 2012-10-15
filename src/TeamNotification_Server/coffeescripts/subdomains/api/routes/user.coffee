@@ -64,6 +64,7 @@ methods.login = (req, res) ->
     res.json(r)
 
 methods.authenticate = (req, res, next) ->
+    console.log 'AUTHENTICATION HEADER', req.headers.authorization
     values = req.body
     email = values.username
     pass = sha256(values.password)
@@ -79,12 +80,12 @@ methods.authenticate = (req, res, next) ->
 module.exports = 
     methods: methods
     build_routes: (app) ->
-        app.get('/api/user/invitations', methods.get_user_invitations)
-        app.get('/api/users/query', methods.get_users)
-        app.get('/api/user/login', methods.login)
-        app.post('/api/user/login',express.bodyParser(), methods.authenticate)
-        app.get('/api/user/:id', methods.get_user)
-        app.get('/api/user/:id/edit', methods.get_user_edit)
-        app.post('/api/user/:id/edit', methods.post_user_edit)
-        app.get('/api/user/:id/rooms',methods.get_user_rooms)
-        app.get('/api/users', methods.redir_user)
+        app.get('/user/invitations', methods.get_user_invitations)
+        app.get('/users/query', methods.get_users)
+        app.get('/user/login', methods.login)
+        app.post('/user/login',express.bodyParser(), methods.authenticate)
+        app.get('/user/:id', methods.get_user)
+        app.get('/user/:id/edit', methods.get_user_edit)
+        app.post('/user/:id/edit', methods.post_user_edit)
+        app.get('/user/:id/rooms',methods.get_user_rooms)
+        app.get('/users', methods.redir_user)

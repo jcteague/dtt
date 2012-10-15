@@ -147,13 +147,13 @@ methods.post_room_message = (req, res, next) ->
 module.exports =
     methods: methods,
     build_routes: (app, io) ->
-        app.get('/api/room',methods.get_room)
-        app.get('/api/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
-        app.get('/api/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
-        app.get('/api/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
-        app.get('/api/room/:id/messages/since/:timestamp', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages_since_timestamp)
-        app.get('/api/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
-        app.get('/api/room/:id/accept-invitation', methods.get_accept_invitation)
-        app.post('/api/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
-        app.post('/api/room',express.bodyParser(), methods.post_room)
-        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
+        app.get('/room',methods.get_room)
+        app.get('/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
+        app.get('/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
+        app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
+        app.get('/room/:id/messages/since/:timestamp', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages_since_timestamp)
+        app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
+        app.get('/room/:id/accept-invitation', methods.get_accept_invitation)
+        app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
+        app.post('/room',express.bodyParser(), methods.post_room)
+        app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)

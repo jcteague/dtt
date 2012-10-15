@@ -35,7 +35,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64'], (Genera
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
                 
-            $.post @$('form').attr('action'), data, (res) => 
+            $.post "http://api.dtt.local:3000#{@$('form').attr('action')}", data, (res) => 
                 @trigger 'response:received', res
                 if res.messages?
                     if res.redirect? && res.redirect

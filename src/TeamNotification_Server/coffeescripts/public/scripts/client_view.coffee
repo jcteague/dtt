@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'config'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, config) ->
 
     class ClientView extends Backbone.View
 
@@ -37,7 +37,10 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         render_path: (path) ->
             @server_response_view.clear()
-            $.getJSON(path, @load_json)
+            console.log "http://api.#{config.site.host}#{path}"
+            #$.getJSON("api.#{config.site.host}:3000#{path}")
+            $.getJSON("http://api.#{config.site.host}:3000/#{path}", @load_json)
+            #$.getJSON(path, @load_json)
 
         load_json: (data) =>
             @model.clear()

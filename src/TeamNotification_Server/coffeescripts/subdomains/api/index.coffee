@@ -1,13 +1,43 @@
 express = require('express')
+CORS = require('connect-xcors')
+cors_options = {}
+
 config = require('./../../config')()
 
 Authentication = require('./../../support/authentication')
 auth = new Authentication()
 
-app = module.exports = express.createServer()
+#app = module.exports = express.createServer()
+app = module.exports = express.createServer(CORS(cors_options))
+console.log cors_options
 io = require('socket.io').listen(app)
 
 logger = require('./../../support/logging/logger')
+
+allowCrossDomain = (req, res, next) ->
+    #res.header('Access-Control-Allow-Origin', config.allowedDomains)
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
+    #res.header('Access-Control-Allow-Headers', 'Content-Type')
+    #res.header('Access-Control-Allow-Headers', 'Authorization')
+
+    if 'OPTIONS' is req.method
+        res.send 200
+    else
+        next()
+
+    #next()
+
+###
+allowCrossDomain = (req, res, next) ->
+    res.header('Access-Control-Allow-Origin', config.allowedDomains)
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
+
+    next()
+###
 
 app.configure ->
     logger.info 'Starting the api module'
@@ -18,6 +48,7 @@ app.configure ->
 
     app.use(auth.initializeAuth())
 
+    app.use allowCrossDomain
     app.use(app.router)
 
     log_errors = (err, req, res, next) ->
@@ -32,11 +63,16 @@ app.configure ->
 
     app.use rendered_error
 
-    app.use(express.logger())
+    app.use(express.logger('dev'))
 
+print_headers = (req, res, next) ->
+    #res.get('Content-Type')
+    #console.log 'Headers:', res.get('Access-Control-Allow-Headers')
+    next()
 
 # Apply authentication for all routes in the api
-app.all '/api/*', auth.authenticate
+app.all '*', print_headers, auth.authenticate
+#app.all '*', auth.authenticate
 
 # This must live here after authentication has been initialized
 require('./routes')(app, io)
