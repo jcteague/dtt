@@ -39,6 +39,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
 
             # To prevent duplicate results
             $('.acResults').remove()
+            # Move this concern to happen only once globally
             if $.cookie('authtoken')?
                 $.ajaxSetup
                     beforeSend: (jqXHR) ->
