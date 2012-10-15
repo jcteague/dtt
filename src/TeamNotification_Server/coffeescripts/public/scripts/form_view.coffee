@@ -49,8 +49,8 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
             console.log 'Posting to', url
             parameters = {
                 type: 'POST'
-                contentType: 'application/json'
-                dataType: 'json'
+                #contentType: 'application/json'
+                #dataType: 'json'
                 data: data
                 url: url
                 success: callback

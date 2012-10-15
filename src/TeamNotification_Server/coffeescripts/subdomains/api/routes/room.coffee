@@ -115,8 +115,6 @@ methods.get_room_messages_since_timestamp = (req, res) ->
 
 
 methods.post_room_message = (req, res, next) ->
-    console.log 'LOGGED IN USER IS', user_id
-    console.log 'BODY IS', req.body
     values = req.body
     if values.message != ''
         room_id = req.param('id')

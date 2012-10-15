@@ -9,8 +9,7 @@ auth = new Authentication()
 
 #app = module.exports = express.createServer()
 app = module.exports = express.createServer(CORS(cors_options))
-#console.log cors_options
-io = require('socket.io').listen(app)
+io = require('socket.io').listen(app, log: false)
 
 logger = require('./../../support/logging/logger')
 winston = require('winston')
