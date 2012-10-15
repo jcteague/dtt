@@ -46,11 +46,14 @@ namespace :rest_service do
       sh "cp -r #{f} #{RestDeployFolder}"
     end
     sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+    sh "coffee -c #{File.join(RestDeployFolder, 'app.coffee')}"
   end
 
   task :run_production do
-    sh "sudo stop dtt"
-    sh "sudo start dtt"
+    #sh "sudo stop dtt"
+    #sh "sudo start dtt"
+    sh "sh #{File.join(RestDeployFolder, 'stop_production.sh')}"
+    sh "sh #{File.join(RestDeployFolder, 'start_production.sh')}"
   end
 
   task :dev_environment do

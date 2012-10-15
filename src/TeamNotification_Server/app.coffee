@@ -26,6 +26,18 @@ error = (status, msg) ->
     err.status = status
     return err
 
+process.on 'error', (err) ->
+    logger.error 'System error', {error: err}
+
+process.on 'SIGTERM', (err) ->
+    logger.info 'SIGTERM event'
+    process.exit(0)
+
+process.on 'uncaughtException', (err) ->
+    logger.error 'UNCAUGHT EXCEPTION', {error: err}
+    app.close()
+    process.exit(1)
+
 app.configure(->
     logger.info 'Configuring Application'
 
@@ -53,6 +65,20 @@ app.configure(->
     app.use(auth.initializeAuth())
 
     app.use(app.router)
+
+    log_errors = (err, req, res, next) ->
+        logger.error 'Error:', {error: err}
+        next err
+
+    rendered_error = (err, req, res, next) ->
+        res.status 500
+        res.render 'error.jade'
+
+    app.use log_errors
+
+    app.use rendered_error
+
+    app.use(express.logger())
 
     app.use(express_winston.errorLogger({
         transports: [
