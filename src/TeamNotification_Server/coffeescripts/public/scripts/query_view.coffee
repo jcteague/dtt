@@ -40,8 +40,6 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
                 console.log 'Posting to', url
                 parameters = {
                     type: 'POST'
-                    #contentType: 'application/json'
-                    #dataType: 'json'
                     data: data
                     url: url
                     success: callback

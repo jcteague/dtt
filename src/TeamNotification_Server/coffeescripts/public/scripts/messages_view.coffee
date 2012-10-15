@@ -1,4 +1,4 @@
-define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment'], (GeneralView, underscore, Prettify, Moment) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment', 'config'], (GeneralView, underscore, Prettify, Moment, config) ->
 
     class MessagesView extends GeneralView
 
@@ -11,7 +11,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @get_messages_since last_timestamp
 
         get_messages_since: (last_timestamp) ->
-            path = "#{@model.get('href')}/since/#{last_timestamp}"
+            #path = "#{@model.get('href')}/since/#{last_timestamp}"
+            path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
+            console.log path
             $.getJSON path, (data) =>
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
 
@@ -46,7 +48,10 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
 
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
-                socket = new window.io.connect(@model.get('href'))
+                #socket = new window.io.connect(@model.get('href'))
+                url = "#{config.api.url}#{@model.get('href')}"
+                console.log url
+                socket = new window.io.connect(url)
                 socket.on 'message', @add_message
                 render_model()
             @
