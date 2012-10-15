@@ -11,11 +11,28 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @get_messages_since last_timestamp
 
         get_messages_since: (last_timestamp) ->
-            #path = "#{@model.get('href')}/since/#{last_timestamp}"
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
-            console.log path
-            $.getJSON path, (data) =>
+            @get_cross_domain_json path, (data) =>
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
+
+        get_cross_domain_json: (url, callback) ->
+            console.log url
+            parameters = {
+                type: 'GET'
+                contentType: 'application/json'
+                dataType: 'json'
+                url: url
+                success: callback
+                error: (d) -> console.log('Error')
+            }
+
+            if $.cookie('authtoken')?
+                parameters.beforeSend = (jqXHR) ->
+                        authToken = $.cookie 'authtoken'
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+            $.ajax parameters
 
         serialize_message: (message) ->
             JSON.stringify(@flatten_message(message))
