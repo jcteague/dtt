@@ -110,18 +110,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             escaped_message = $('<div/>').text(parsedBody.message).html()
             p[0].innerHTML = escaped_message
 
-        parse_html: (message) ->
-            
-			message_words = message.split " "
-            final_message = ''
-            for word in message_words
-                if word.indexOf("://") != -1
-                    word = "<a href='#{word}'>#{word}</a>"
-                else
-                    word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
-                final_message = final_message + word + ' '
-            final_message
-            
         read_message_data: (message) ->
             name = message.name
             new_date = new Date()
@@ -130,8 +118,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             parsedBody.message = @parse_html(parsedBody.message)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
-            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id and !(parsedBody.notification?)
-                $name_and_date.children().hide()
+            if !(parsedBody.notification?)
+                if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id 
+                    $name_and_date.children().hide()
 
             @last_user_id_that_posted = message.user_id
             escaped_message = $('<div/>').text(parsedBody.message).html()
