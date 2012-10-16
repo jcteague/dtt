@@ -1,3 +1,5 @@
+console.log 'User Integration Test Pending!'
+return
 expect = require('expect.js')
 sinon = require('sinon')
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
@@ -51,7 +53,7 @@ describe 'User ', ->
     describe 'When a user logins', ->
         describe 'if the user is invalid',  ->
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/user/login').then( -> 
+                browser.visit('http://dtt.local:3000/#/user/login').then( -> 
                         browser.fill("username", "foo@bars.com")
                         browser.fill("password", "something wrong")
                     ).then(-> browser.pressButton('input[type=submit]')).
@@ -63,7 +65,7 @@ describe 'User ', ->
     
         describe 'if the user is valid', ->
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/user/login').then( ->  
+                browser.visit('http://dtt.local:3000/#/user/login').then( ->  
                         browser.fill("username", "foo@bar.com")
                         browser.fill("password", "1234")).
                     then(-> browser.pressButton('input[type=submit]')).
@@ -81,7 +83,7 @@ describe 'User ', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/#/user/1').
+                    visit('http://dtt.local:3000/#/user/1').
                     then(done, done)
 
             it 'should contain an anchor for the user rooms and the create room', (done) ->

@@ -1,3 +1,6 @@
+console.log 'User Account Registration Test Pending'
+return
+
 expect = require('expect.js')
 sinon = require('sinon')
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
@@ -30,7 +33,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/registration').then(done, done)
+                browser.visit('http://dtt.local:3000/#/registration').then(done, done)
 
             it 'should contain all the inputs for the user registration', (done) ->
                 expect(browser.html('input[name=first_name]')).to.not.be.empty()
@@ -44,7 +47,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -62,7 +65,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page and submits an email that is already registered', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -80,7 +83,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', '').

@@ -63,14 +63,14 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/#/room/1').
+                    visit('http://dtt.local:3000/#/room/1').
                     then(done, done)
 
-            it 'should contain an anchor to the room manage members', (done) ->
+            xit 'should contain an anchor to the room manage members', (done) ->
                 expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 done()
 
-            it 'should contain a anchor to the room messages', (done) ->
+            xit 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/1/messages"]')).to.not.be.empty()
                 done()
 
@@ -78,13 +78,13 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/#/room/2').
+                    visit('http://dtt.local:3000/#/room/2').
                     then(done, done)
 
-            it 'should not contain an anchor to the room manage members', (done) ->
+            xit 'should not contain an anchor to the room manage members', (done) ->
                 expect(browser.html('a[href="#/room/2/users"]')).to.be.empty()
                 done()
 
-            it 'should contain a anchor to the room messages', (done) ->
+            xit 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/2/messages"]')).to.not.be.empty()
                 done()
