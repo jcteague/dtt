@@ -5,6 +5,7 @@ config = require('./config')()
 app = module.exports = express.createServer()
 logger = require('./support/logging/logger')
 
+socket_io = require('socket.io').listen(app, log: false)
 
 process.on 'error', (err) ->
     logger.error 'System error', {error: err}
@@ -19,13 +20,10 @@ process.on 'uncaughtException', (err) ->
     process.exit(1)
 
 allowCrossDomain = (req, res, next) ->
-    #res.header('Access-Control-Allow-Origin', config.allowedDomains)
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     res.header('Access-Control-Allow-Credentials', true)
     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
-    #res.header('Access-Control-Allow-Headers', 'Content-Type')
-    #res.header('Access-Control-Allow-Headers', 'Authorization')
 
     if 'OPTIONS' is req.method
         res.send 200
@@ -45,12 +43,12 @@ app.configure('test', ->
 )
 
 app.configure('production', ->
-    io.set 'log level', 1
+    socket_io.set 'log level', 1
     app.use(express.errorHandler())
 )
 
-app.use express.vhost("api.#{config.site.host}", require('./subdomains/api').app)
-app.use express.vhost("#{config.site.host}", require('./subdomains/default').app)
+app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
+app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 app.listen(config.site.port, ->
     logger.info "Application Started. Listening on port #{app.address().port}", {mode: app.settings.env}
 )

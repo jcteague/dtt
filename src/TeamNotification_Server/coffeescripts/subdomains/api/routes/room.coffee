@@ -98,7 +98,6 @@ methods.get_room = (req, res) ->
 methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
-    console.log 'LOGGED IN USER IS', user_id
 
     methods.set_socket_events(req.socket_io, room_id)
     callback = (collection) ->

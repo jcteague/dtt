@@ -9,8 +9,7 @@ auth = new Authentication()
 
 #app = module.exports = express.createServer()
 app = module.exports = express.createServer(CORS(cors_options))
-console.log cors_options
-io = require('socket.io').listen(app, log: false)
+#io = require('socket.io').listen(app, log: false)
 
 logger = require('./../../support/logging/logger')
 
@@ -55,7 +54,6 @@ app.configure ->
     app.use(express.logger())
 
 print_headers = (req, res, next) ->
-    console.log req.params
     next()
 
 # Apply authentication for all routes in the api
@@ -63,7 +61,7 @@ app.all '*', print_headers, auth.authenticate
 #app.all '*', auth.authenticate
 
 # This must live here after authentication has been initialized
-require('./routes')(app, io)
+#require('./routes')(app, io)
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
@@ -74,9 +72,12 @@ app.configure('test', ->
 )
 
 app.configure('production', ->
-    io.set 'log level', 1
+    #io.set 'log level', 1
     app.use(express.errorHandler())
 )
 
 module.exports =
-    app: app
+    #app: app
+    app: (socket_io) ->
+        require('./routes')(app, socket_io)
+        app
