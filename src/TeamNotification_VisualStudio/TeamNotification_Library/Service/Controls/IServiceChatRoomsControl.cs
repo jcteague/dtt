@@ -12,7 +12,7 @@ namespace TeamNotification_Library.Service.Controls
         void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
         void SendMessage(RichTextBox textBox, string roomId);
         void ResetContainer(ChatUIElements textBox);
-        void AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);
+        ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);
         void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId);
         void HandleDock(ChatUIElements chatUIElements);
         void LogoutUser(object sender);
