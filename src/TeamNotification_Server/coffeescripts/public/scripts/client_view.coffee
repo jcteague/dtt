@@ -39,14 +39,13 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @server_response_view.clear()
             path = '' if path is '/'
             url = "#{config.api.url}/#{path}"
-            console.log url
             parameters = {
                 type: 'GET'
                 contentType: 'application/json'
                 dataType: 'json'
                 url: url
                 success: @load_json
-                error: (d) -> console.log('Error')
+                error: (d) -> return
             }
 
             if $.cookie('authtoken')?

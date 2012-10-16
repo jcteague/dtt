@@ -46,13 +46,12 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                     @trigger 'messages:display', res.messages 
 
             url = "#{config.api.url}#{@$('form').attr('action')}"
-            console.log 'Posting to', url
             parameters = {
                 type: 'POST'
                 data: data
                 url: url
                 success: callback
-                error: (d) -> console.log('Error')
+                error: (d) -> return
             }
 
             if $.cookie('authtoken')?
@@ -61,9 +60,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true
 
-            console.log $.cookie('authtoken')
 
-            console.log 'parameters is', parameters
 
             $.ajax parameters
 

@@ -37,13 +37,12 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
                     @trigger 'messages:display', res.messages
 
                 url = "#{config.api.url}#{@$('form').attr('action')}"
-                console.log 'Posting to', url
                 parameters = {
                     type: 'POST'
                     data: data
                     url: url
                     success: callback
-                    error: (d) -> console.log('Error')
+                    error: (d) -> return
                 }
 
                 if $.cookie('authtoken')?

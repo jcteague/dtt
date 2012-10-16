@@ -16,14 +16,13 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
 
         get_cross_domain_json: (url, callback) ->
-            console.log url
             parameters = {
                 type: 'GET'
                 contentType: 'application/json'
                 dataType: 'json'
                 url: url
                 success: callback
-                error: (d) -> console.log('Error')
+                error: (d) -> return
             }
 
             if $.cookie('authtoken')?
@@ -65,9 +64,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
 
             if @model.has('messages')
                 setInterval((() -> update_dates() ), 10000)
-                #socket = new window.io.connect(@model.get('href'))
                 url = "#{config.api.url}#{@model.get('href')}"
-                console.log url
                 socket = new window.io.connect(url)
                 socket.on 'message', @add_message
                 render_model()

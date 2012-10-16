@@ -64,7 +64,6 @@ methods.login = (req, res) ->
     res.json(r)
 
 methods.authenticate = (req, res, next) ->
-    console.log 'AUTHENTICATION HEADER', req.headers.authorization
     values = req.body
     email = values.username
     pass = sha256(values.password)

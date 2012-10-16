@@ -18,7 +18,6 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
         
         check_login: (res) ->
             if res.success is true
-                console.log res.user.id, res.user.email, res.user.authtoken
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
                     redirect = "#/user/#{res.user.id}"
