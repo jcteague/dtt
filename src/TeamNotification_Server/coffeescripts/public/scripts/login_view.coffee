@@ -16,7 +16,10 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
         
-        check_login: (res) ->
+        check_login: (response) ->
+            res = $.parseJSON response
+            res = response unless res?
+
             if res.success is true
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })

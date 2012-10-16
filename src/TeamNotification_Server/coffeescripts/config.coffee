@@ -26,7 +26,6 @@ development_settings =
         url: 'http://api.dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     redis:
-        #host:'dtt.local'
         host:'api.dtt.local'
         port: 6379
         password: 'welc0me'
@@ -91,7 +90,6 @@ production_settings =
         url: 'http://api.yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     redis:
-        #host: 'yacketyapp.com'
         host: 'api.yacketyapp.com'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
