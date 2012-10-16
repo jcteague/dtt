@@ -12,7 +12,7 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view'], (GeneralVi
 
         check_user_edit: (res) =>
             if res.success is true
-                window.location.href = "/client#/user/#{res.data.id}"
+                window.location.href = "/#/user/#{res.data.id}"
             else
                 @trigger 'messages:display', res.messages
 
