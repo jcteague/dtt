@@ -77,7 +77,7 @@ methods.github_authentication_callback = (req, res) ->
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
             if(typeof(data.access_token) != undefined)
-                res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
+                res.redirect("#{config.site.url}/#/github/repositories/#{data.access_token}")
             else
                 res.send({success:false, messages:['There was a problem contacting github']})
         post_res.on 'error', (error) ->
