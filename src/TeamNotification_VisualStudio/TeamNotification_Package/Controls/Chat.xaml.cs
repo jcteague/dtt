@@ -156,6 +156,9 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
 
         [DllImport("user32.dll")]
+        private extern static IntPtr GetActiveWindow();
+
+        [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 
@@ -167,7 +170,10 @@ namespace AvenidaSoftware.TeamNotification_Package
                 logger.TryOrLog(() => {
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
-                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (dteStore.dte.MainWindow.WindowState == vsWindowState.vsWindowStateMinimize))
+
+                    var activeWindow = GetActiveWindow();
+                    var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
+                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
                                                                                 var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
