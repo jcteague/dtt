@@ -7,20 +7,15 @@ config = require('./../../config')()
 Authentication = require('./../../support/authentication')
 auth = new Authentication()
 
-#app = module.exports = express.createServer()
 app = module.exports = express.createServer(CORS(cors_options))
-#io = require('socket.io').listen(app, log: false)
 
 logger = require('./../../support/logging/logger')
 
 allowCrossDomain = (req, res, next) ->
-    #res.header('Access-Control-Allow-Origin', config.allowedDomains)
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     res.header('Access-Control-Allow-Credentials', true)
     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
-    #res.header('Access-Control-Allow-Headers', 'Content-Type')
-    #res.header('Access-Control-Allow-Headers', 'Authorization')
 
     if 'OPTIONS' is req.method
         res.send 200
@@ -53,12 +48,9 @@ app.configure ->
 
     app.use(express.logger())
 
-print_headers = (req, res, next) ->
-    next()
 
 # Apply authentication for all routes in the api
-app.all '*', print_headers, auth.authenticate
-#app.all '*', auth.authenticate
+app.all '*', auth.authenticate
 
 # This must live here after authentication has been initialized
 #require('./routes')(app, io)
@@ -77,7 +69,6 @@ app.configure('production', ->
 )
 
 module.exports =
-    #app: app
     app: (socket_io) ->
         require('./routes')(app, socket_io)
         app
