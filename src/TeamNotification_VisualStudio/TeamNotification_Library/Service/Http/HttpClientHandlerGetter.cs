@@ -5,6 +5,7 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service.Factories;
 using TeamNotification_Library.Service.FileSystem;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -27,7 +28,8 @@ namespace TeamNotification_Library.Service.Http
             var handler = httpClientHandlerFactory.GetInstance();
 
             var user = userProvider.GetUser();
-            if (user != null){
+            if (user.IsNotNull())
+            {
                 handler.Credentials = new NetworkCredential(user.email, user.password);
                 var encrypted = encoder.Encode(user.email + ":" + user.password);
                 var uri = new Uri(serverConfigurationProvider.Get().Uri);
