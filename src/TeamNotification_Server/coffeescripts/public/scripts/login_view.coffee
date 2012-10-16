@@ -14,8 +14,6 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     authToken = "Basic " + encodeBase64(email + ":" + password)
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true
-                    #$.cookie("authtoken", null, { expires: 1, path: '/' })
-                    #$.cookie("authtoken", authToken, { expires: 1, path: '/' })
             @form_view.on 'response:received', @check_login
         
         check_login: (response) ->
@@ -24,9 +22,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
 
             if res.success is true
                 getIn = () ->
-                    #console.log 'setting cookie value to', res.user.authtoken
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
-                    #redirect = "#/user/#{res.user.id}"
                     redirect = "#/user"
                     if(window.location.href.lastIndexOf('/user/login') > -1)
                         window.location.href = redirect
