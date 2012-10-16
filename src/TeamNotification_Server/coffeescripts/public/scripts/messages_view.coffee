@@ -113,10 +113,12 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             parsedBody = JSON.parse(message.body)
             $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
 
-            if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id
-                $name_and_date.children().hide()
-
+            if !(parsedBody.notification?)
+                if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id 
+                    $name_and_date.children().hide()
+            
             @last_user_id_that_posted = message.user_id
+            
             escaped_message = $('<div/>').text(parsedBody.message).html()
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
@@ -125,8 +127,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{escaped_message}</pre>"
                 return p
             if parsedBody.notification?
+                @last_user_id_that_posted = -1 
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                return add_links("<p id='#{message.stamp}' class='new_message'><span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+                return add_links("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()}<span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
 
             ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{escaped_message}</span></p>")
