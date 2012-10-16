@@ -31,7 +31,7 @@ describe 'Basic Authentication Test', ->
         response = null
         login_div_id = 'login-container'
         beforeEach (done) ->
-            browser.visit 'http://localhost:3000/client#/user/1', (e, browser, status) ->
+            browser.visit 'http://localhost:3000/#/user/1', (e, browser, status) ->
                 response = status
                 done()
 

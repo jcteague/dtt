@@ -51,7 +51,7 @@ describe 'User ', ->
     describe 'When a user logins', ->
         describe 'if the user is invalid',  ->
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/user/login').then( -> 
+                browser.visit('http://localhost:3000/#/user/login').then( -> 
                         browser.fill("username", "foo@bars.com")
                         browser.fill("password", "something wrong")
                     ).then(-> browser.pressButton('input[type=submit]')).
@@ -63,7 +63,7 @@ describe 'User ', ->
     
         describe 'if the user is valid', ->
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/user/login').then( ->  
+                browser.visit('http://localhost:3000/#/user/login').then( ->  
                         browser.fill("username", "foo@bar.com")
                         browser.fill("password", "1234")).
                     then(-> browser.pressButton('input[type=submit]')).
@@ -77,11 +77,11 @@ describe 'User ', ->
             browser.authenticate().basic('foo@bar.com', '1234')
             done()
 
-        describe 'When a user visits the client#/user/1 page', ->
+        describe 'When a user visits the #/user/1 page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/client#/user/1').
+                    visit('http://localhost:3000/#/user/1').
                     then(done, done)
 
             it 'should contain an anchor for the user rooms and the create room', (done) ->

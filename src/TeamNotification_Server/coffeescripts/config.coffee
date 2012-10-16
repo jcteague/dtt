@@ -52,14 +52,13 @@ test_settings =
         url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
     api:
-        host: 'api.dtt.local'
+        host: 'localhost'
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://api.dtt.local:3000'
+        url: 'http://localhost:3000'
         whitelisted_paths: whitelisted_paths
     redis:
-        #host:'dtt.local'
         host:'api.dtt.local'
         port: 6380
         password: 'welc0me'

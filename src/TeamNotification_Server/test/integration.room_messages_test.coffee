@@ -59,7 +59,7 @@ describe 'Room Messages', ->
             db.redis.clear ["room:#{room_id}:messages"]
             handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms), done
 
-        describe 'When a user visits the client#/room/:id/messages page', ->
+        describe 'When a user visits the #/room/:id/messages page', ->
 
             beforeEach (done) ->
                 messages =
@@ -74,7 +74,7 @@ describe 'Room Messages', ->
             describe 'and wants to see the messages', ->
 
                 beforeEach (done) ->
-                    browser.visit('http://localhost:3000/client#/room/1/messages').then(done, done)
+                    browser.visit('http://localhost:3000/#/room/1/messages').then(done, done)
 
                 it 'should contain the messages in the container', (done) ->
                     expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
@@ -84,7 +84,7 @@ describe 'Room Messages', ->
                     expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
                     done()
 
-        describe 'When a user visits the client#/room/:id/messages page and there are less than fifty messages', ->
+        describe 'When a user visits the #/room/:id/messages page and there are less than fifty messages', ->
             beforeEach (done) ->
                 messages =
                     #name: 'chat_room_messages'
@@ -97,7 +97,7 @@ describe 'Room Messages', ->
 
             describe 'and wants to see the messages', ->
                 beforeEach (done) ->
-                    browser.visit("http://localhost:3000/client#/room/1/messages").then(done, done) 
+                    browser.visit("http://localhost:3000/#/room/1/messages").then(done, done) 
                     
                 it 'should contain the messages in the container', (done) ->
                     expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
@@ -107,7 +107,7 @@ describe 'Room Messages', ->
                     expect(browser.queryAll('#messages-container p').length).to.equal(10)
                     done()
 
-        describe 'When a user visits the client#/room/:id/messages page', ->
+        describe 'When a user visits the #/room/:id/messages page', ->
 
             beforeEach (done) ->
                 room_users = 
@@ -120,8 +120,8 @@ describe 'Room Messages', ->
                 message_to_post = null
                 beforeEach (done) ->
                     message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
-                    browser2.visit('http://localhost:3000/client#/room/1/messages').then( -> )
-                    browser.visit('http://localhost:3000/client#/room/1/messages').
+                    browser2.visit('http://localhost:3000/#/room/1/messages').then( -> )
+                    browser.visit('http://localhost:3000/#/room/1/messages').
                         then( -> 
                             browser.fill("message", message_to_post)).
                         then(-> browser.pressButton('input[type=submit]')).
