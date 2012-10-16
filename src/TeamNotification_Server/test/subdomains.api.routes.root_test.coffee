@@ -5,9 +5,9 @@ module_loader = require('sandboxed-module')
 routes_service_mock =
     build: sinon.stub()
 
-sut = module_loader.require('../routes/root', {
+sut = module_loader.require('../subdomains/api/routes/root', {
     requires:
-        '../support/routes_service': routes_service_mock
+        '../../../support/routes_service': routes_service_mock
 })
 
 describe 'Root', ->
@@ -39,14 +39,10 @@ describe 'Root', ->
                     to_json: ->
                         collection_value
 
-                collection_factory =
-                    for: sinon.stub()
-                routes_service_mock.build.withArgs('root_collection').returns(collection_factory)
-
                 collection_action =
                     fetch_to: (callback) ->
                         callback(collection)
-                collection_factory.for.withArgs().returns(collection_action)
+                routes_service_mock.build.withArgs('root_collection').returns(collection_action)
 
                 res = 
                     json: sinon.spy()

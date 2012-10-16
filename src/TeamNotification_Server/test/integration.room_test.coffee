@@ -59,11 +59,11 @@ describe 'Client Room', ->
             browser.authenticate().basic('foo@bar.com', '1234')
             handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
 
-        describe 'When a user visits the client#/room page and he is the owner of the room', ->
+        describe 'When a user visits the #/room page and he is the owner of the room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/client#/room/1').
+                    visit('http://localhost:3000/#/room/1').
                     then(done, done)
 
             it 'should contain an anchor to the room manage members', (done) ->
@@ -74,11 +74,11 @@ describe 'Client Room', ->
                 expect(browser.html('a[href="#/room/1/messages"]')).to.not.be.empty()
                 done()
 
-        describe 'When a user visits the client#/room page and he is the owner of the room', ->
+        describe 'When a user visits the #/room page and he is the owner of the room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/client#/room/2').
+                    visit('http://localhost:3000/#/room/2').
                     then(done, done)
 
             it 'should not contain an anchor to the room manage members', (done) ->

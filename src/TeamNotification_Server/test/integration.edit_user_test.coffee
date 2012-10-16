@@ -34,11 +34,11 @@ describe 'Edit User Account', ->
             browser.authenticate().basic('foo@bar.com', '1234')
             handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
 
-        describe 'When a user visits the client#/user/:id/edit page', ->
+        describe 'When a user visits the #/user/:id/edit page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://localhost:3000/client#/user/1/edit').
+                    visit('http://localhost:3000/#/user/1/edit').
                     then(done, done)
 
             it 'should contain all the inputs for the user values', (done) ->
@@ -50,10 +50,10 @@ describe 'Edit User Account', ->
                 expect(browser.html('input[type=submit]')).to.not.be.empty()
                 done()
 
-        describe 'When a user visits the client#/user/:id/edit page and fills the form with valid user data', ->
+        describe 'When a user visits the #/user/:id/edit page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/user/1/edit').
+                browser.visit('http://localhost:3000/#/user/1/edit').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -71,7 +71,7 @@ describe 'Edit User Account', ->
         describe 'When a user visits the client#/user/:id/edit page and fills the form with valid user data leaving the password empty', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/user/1/edit').
+                browser.visit('http://localhost:3000/#/user/1/edit').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -90,7 +90,7 @@ describe 'Edit User Account', ->
         describe 'When a user visits the client#/user/:id/edit page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/user/1/edit').
+                browser.visit('http://localhost:3000/#/user/1/edit').
                     then(-> 
                         browser.
                             fill('first_name', '').

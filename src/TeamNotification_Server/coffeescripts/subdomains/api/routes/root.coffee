@@ -6,7 +6,6 @@ methods.get_root = (req, res) ->
     callback = (collection) ->
         res.json(collection.to_json())
 
-    console.log 'ON API ROOT'
     build('root_collection').fetch_to callback
 
 module.exports =

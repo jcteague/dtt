@@ -50,16 +50,16 @@ chat_room_mock =
 chat_room_message_mock =
     save: sinon.spy()
     
-sut = module_loader.require('../routes/github.js', {
+sut = module_loader.require('../subdomains/api/routes/github', {
     requires:
         'express': express_mock
         'https': http_mock
         'querystring': querystring_mock
-        '../support/core': support_mock
-        '../support/repository': repository_class_mock
-        '../support/routes_service': routes_service_mock
-        '../support/redis/redis_gateway': redis_mock
-        '../support/github_events_helper': github_helper_mock
+        '../../../support/core': support_mock
+        '../../../support/repository': repository_class_mock
+        '../../../support/routes_service': routes_service_mock
+        '../../../support/redis/redis_gateway': redis_mock
+        '../../../support/github_events_helper': github_helper_mock
 })
 
 push_object =
