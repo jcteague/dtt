@@ -25,7 +25,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://yacketyapp.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://api.yacketyapp.com/")]
         public string Site {
             get {
                 return ((string)(this["Site"]));
@@ -34,7 +34,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yacketyapp.com:6379")]
+        [global::System.Configuration.DefaultSettingValueAttribute("api.yacketyapp.com:6379")]
         public string Redis {
             get {
                 return ((string)(this["Redis"]));
@@ -43,7 +43,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://yacketyapp.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://api.yacketyapp.com/")]
         public string siteb {
             get {
                 return ((string)(this["siteb"]));
@@ -52,7 +52,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yacketyapp.com:6379")]
+        [global::System.Configuration.DefaultSettingValueAttribute("api.yacketyapp.com:6379")]
         public string redisb {
             get {
                 return ((string)(this["redisb"]));
