@@ -16,8 +16,6 @@ redis_queryer = redis_connector.open()
 methods = {}
 methods.receive_github_event = (req,res,next) ->
     values = req.body
-    console.log 'GITHUB EVENT'
-    console.log values
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
         if(rooms?)
             room = rooms[0]
@@ -25,7 +23,7 @@ methods.receive_github_event = (req,res,next) ->
             notification = github_helper.get_event_message_object values
 
             if notification?
-                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"", "date":notification.date, stamp:notification.stamp}
+                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"github", "date":notification.date, stamp:notification.stamp}
                 m = JSON.stringify newMessage
 
                 redis_publisher.publish("chat #{room.id}", m)
