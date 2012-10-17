@@ -18,7 +18,6 @@ https_app = module.exports = express.createServer(credentials)
 
 logger = require('./support/logging/logger')
 
-#socket_io = require('socket.io').listen(app, log: false)
 socket_io = require('socket.io').listen(https_app, log: false)
 
 process.on 'error', (err) ->
@@ -76,7 +75,6 @@ https_app.configure('production', ->
     https_app.use(express.errorHandler())
 )
 
-#app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
 https_app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
 app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 
