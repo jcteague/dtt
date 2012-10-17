@@ -39,6 +39,7 @@ namespace TeamNotification_Library.Service.Chat
             messagesContainer.MessagesTable.Dispatcher.Invoke(new Action(() =>
             {
                 var user = userMessageFormatter.GetFormattedElement(chatMessage, lastUserThatInserted);
+                var name = user.GetText();
                 var date = dateMessageFormatter.GetFormattedElement(chatMessage);
                 var message = GetMessageFrom(chatMessage);
 

@@ -108,7 +108,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
                                                             var room = "chat " + e.RoomId;
-                                                            subscribedChannels.Remove(room);
+//                                                            subscribedChannels.Remove(room);
+                                                            messageListener.ResetSubscriptionFor(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
 
@@ -260,11 +261,12 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.ResetContainer(GetChatUIElements());
             AddMessages(newRoomId);
 
-            if (subscribedChannels.Contains(currentChannel)) return;
+//            if (subscribedChannels.Contains(currentChannel)) return;
+            if (messageListener.IsSubscribedTo(currentChannel)) return;
             
             btnReconnect.Visibility = Visibility.Hidden;
             messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
-            subscribedChannels.Add(currentChannel);
+//            subscribedChannels.Add(currentChannel);
         }
 
         private void AddMessages(string currentRoomId)

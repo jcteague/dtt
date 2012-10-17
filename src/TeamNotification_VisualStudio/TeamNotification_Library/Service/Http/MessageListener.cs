@@ -28,5 +28,15 @@ namespace TeamNotification_Library.Service.Http
         {
             get { return onMessageReceivedActionExcecution; }
         }
+
+        public bool IsSubscribedTo(string channel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ResetSubscriptionFor(string channel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

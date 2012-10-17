@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using TeamNotification_Library.Models;

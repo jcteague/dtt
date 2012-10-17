@@ -1,4 +1,5 @@
-﻿using AurelienRibon.Ui.SyntaxHighlightBox;
+﻿using System;
+using AurelienRibon.Ui.SyntaxHighlightBox;
 using ICSharpCode.AvalonEdit.Highlighting;
 using StructureMap.Configuration.DSL;
 using TeamNotification_Library.Configuration;
@@ -32,6 +33,7 @@ namespace TeamNotification_Library.Application
             For<IProvideSyntaxHighlighter<IHighlightingDefinition>>().Singleton();
 			For<IStoreDTE>().Singleton();
             For<IHandleVisualStudioClipboard>().Singleton();
+            For<IListenToMessages<Action<string, string>>>().Singleton();
         }
     }
 }

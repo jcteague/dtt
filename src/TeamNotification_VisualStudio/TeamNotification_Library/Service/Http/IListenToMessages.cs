@@ -6,5 +6,7 @@ namespace TeamNotification_Library.Service.Http
     {
         void ListenOnChannel(string channel,MessageReceivedAction action);
         T SubscribeResponse { get; }
+        bool IsSubscribedTo(string channel);
+        void ResetSubscriptionFor(string channel);
     }
 }
