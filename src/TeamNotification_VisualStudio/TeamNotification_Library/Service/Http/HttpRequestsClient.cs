@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Service.Logging;
@@ -16,6 +19,7 @@ namespace TeamNotification_Library.Service.Http
         {
             get
             {
+                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
                 return new HttpClient(httpClientHandlerGetter.GetHandler());
             }
         }
