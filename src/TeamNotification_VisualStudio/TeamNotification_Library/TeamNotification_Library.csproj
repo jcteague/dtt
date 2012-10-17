@@ -58,9 +58,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="SocketIOClient">
-      <HintPath>..\packages\SocketIOCustom\SocketIOClient.dll</HintPath>
-    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
@@ -318,6 +315,10 @@
     <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
       <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
       <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIO\SocketIOClient.csproj">
+      <Project>{352C9BC1-F74C-4741-A09D-7227BC60C057}</Project>
+      <Name>SocketIOClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
