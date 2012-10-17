@@ -64,40 +64,6 @@ configure_server_for = (application) ->
 configure_server_for app
 configure_server_for https_app
 
-###
-app.configure ->
-    app.use allowCrossDomain
-
-https_app.configure ->
-    https_app.use allowCrossDomain
-
-app.configure('development', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-app.configure('test', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-app.configure('production', ->
-    socket_io.set 'log level', 1
-    app.use(express.errorHandler())
-)
-
-https_app.configure('development', ->
-    https_app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-https_app.configure('test', ->
-    https_app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-https_app.configure('production', ->
-    socket_io.set 'log level', 1
-    https_app.use(express.errorHandler())
-)
-###
-
 app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 https_app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
 https_app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
