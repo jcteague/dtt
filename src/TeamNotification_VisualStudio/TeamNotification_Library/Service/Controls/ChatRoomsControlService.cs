@@ -78,12 +78,13 @@ namespace TeamNotification_Library.Service.Controls
             return c;
         }
 
-        public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
+        public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
+                chatMessageModel.chatMessageBody.message = codeShower.Show(chatMessageModel.chatMessageBody.message);
                 var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;

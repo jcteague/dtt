@@ -9,7 +9,7 @@ namespace TeamNotification_Library.Service.Controls
     {
         Collection GetCollection();
         Collection GetMessagesCollection(string roomId);
-        void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs);
+        void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs);
         void SendMessage(RichTextBox textBox, string roomId);
         void ResetContainer(ChatUIElements textBox);
         ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);

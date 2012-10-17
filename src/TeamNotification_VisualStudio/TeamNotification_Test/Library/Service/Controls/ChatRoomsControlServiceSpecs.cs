@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using AvenidaSoftware.TeamNotification_Package;
 using EnvDTE;
 using Machine.Specifications;
+using S2Snext.GUI.Dialogs;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
@@ -149,20 +150,23 @@ namespace TeamNotification_Test.Library.Service.Controls
             {
                 var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
                 var chatMessageBody = fake.an<ChatMessageBody>();
+                codeShower = fake.an<ModalDialog>();
                 chatMessageBody.solution = "testSolution";
                 clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
+                
             };
 
             Because of = () =>
-                sut.HandlePaste(textBox, args);
+                sut.HandlePaste(textBox, codeShower, args);
 
             It should_set_the_textbox_with_a_syntax_highlight_block = () =>
                 textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
 
             private static BlockUIContainer syntaxHighlightBox;
+            private static IShowCode codeShower;
         }
 
         public class when_sending_a_message : Concern
