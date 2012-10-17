@@ -16,14 +16,16 @@ development_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://dtt.local:3000'
+        #url: 'http://dtt.local:3000'
+        url: 'https://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://api.dtt.local:3000'
+        #url: 'http://api.dtt.local:3000'
+        url: 'https://api.dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
