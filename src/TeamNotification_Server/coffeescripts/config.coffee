@@ -17,15 +17,15 @@ development_settings =
         client_ID: '1234'
         client_secret: 'secret'
         #url: 'http://dtt.local:3000'
-        url: 'https://dtt.local:3000'
+        url: 'http://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
-        port: 3000
+        port: 3001
         client_ID: '1234'
         client_secret: 'secret'
         #url: 'http://api.dtt.local:3000'
-        url: 'https://api.dtt.local:3000'
+        url: 'https://api.dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
@@ -54,10 +54,10 @@ test_settings =
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
-        port: 3000
+        port: 3001
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://api.dtt.local:3000'
+        url: 'https://api.dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
@@ -86,10 +86,10 @@ production_settings =
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.yacketyapp.com'
-        port: 80
+        port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://api.yacketyapp.com'
+        url: 'https://api.yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     redis:
         host: 'api.yacketyapp.com'
