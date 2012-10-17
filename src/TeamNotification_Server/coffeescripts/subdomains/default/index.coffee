@@ -60,6 +60,14 @@ app.configure ->
         ]
     }))
 
+app.all '*', (req, res, next) ->
+    console.log 'Connection', req.secure
+    console.log 'URL ->', req.url
+    console.log 'HOST ->', req.headers.host
+    unless req.secure
+        console.log 'REDIRECTING'
+        res.redirect "#{config.site.surl}#{req.url}"
+    next()
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

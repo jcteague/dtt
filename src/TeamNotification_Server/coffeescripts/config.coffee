@@ -17,6 +17,7 @@ development_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
+        surl: 'https://dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
@@ -49,6 +50,7 @@ test_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
+        surl: 'https://dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
@@ -81,6 +83,7 @@ production_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://yacketyapp.com'
+        surl: 'https://yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.yacketyapp.com'
