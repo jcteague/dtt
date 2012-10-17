@@ -9,6 +9,7 @@ db_config =
 
 whitelisted_paths = ['/', '/client', '/registration','/user/login', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
 development_settings =
+    env: 'development'
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
@@ -42,6 +43,7 @@ development_settings =
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
 
 test_settings =
+    env: 'test'
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_test}"
     site:
@@ -75,6 +77,7 @@ test_settings =
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
 
 production_settings =
+    env: 'production'
     db:
         connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
     site:

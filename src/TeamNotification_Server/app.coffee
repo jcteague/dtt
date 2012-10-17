@@ -4,8 +4,12 @@ path = require('path')
 http = require('http')
 config = require('./config')()
 
-private_key = fs.readFileSync(path.join(__dirname, 'certificates', 'privatekey.pem'))
-certificate = fs.readFileSync(path.join(__dirname, 'certificates', 'certificate.pem'))
+#private_key = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'privatekey.pem'))
+#certificate = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'certificate.pem'))
+
+private_key = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'star_yacketyapp_com.key'))
+certificate = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'sslchain.crt'))
+
 
 credentials = 
     key: private_key
