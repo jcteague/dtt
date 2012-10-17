@@ -18,10 +18,10 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
         {
             Establish context = () =>
             {
-                userIndicatorFormatter = depends.on<IFormatUserIndicator>();
+                messageLinksParser = depends.on<IParseMessagesForLinks>();
             };
 
-            protected static IFormatUserIndicator userIndicatorFormatter;
+            protected static IParseMessagesForLinks messageLinksParser;
         }
 
         public class when_getting_the_formatted_element : Concern
@@ -34,6 +34,10 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
                         username = "foo user",
                         chatMessageBody = new ChatMessageBody { message = "foo message" }
                     };
+
+                parsedMessage = "parsed foo message";
+                var parsedSpan = new Span(new Run(parsedMessage));
+                messageLinksParser.Stub(x => x.Parse(chatMessage.chatMessageBody.message)).Return(parsedSpan);
             };
 
             Because of = () =>
@@ -42,11 +46,12 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             It should_return_a_paragraph_filled_with_the_message = () =>
             {
                 var paragraph = ((Paragraph) result);
-                paragraph.GetText().ShouldEqual(chatMessage.chatMessageBody.message);
+                paragraph.GetText().ShouldEqual(parsedMessage);
             };
 
             private static Block result;
             private static ChatMessageModel chatMessage;
+            private static string parsedMessage;
         }
     }
 }

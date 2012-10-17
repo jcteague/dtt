@@ -25,7 +25,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.dtt.local:3000/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.dtt.local:3001/")]
         public string Site {
             get {
                 return ((string)(this["Site"]));
