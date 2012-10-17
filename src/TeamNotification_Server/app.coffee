@@ -1,9 +1,11 @@
 crypto = require('crypto')
 fs = require('fs')
+path = require('path')
 http = require('http')
+config = require('./config')()
 
-private_key = fs.readFileSync('certificates/privatekey.pem')
-certificate = fs.readFileSync('certificates/certificate.pem')
+private_key = fs.readFileSync(path.join(__dirname, 'certificates', 'privatekey.pem'))
+certificate = fs.readFileSync(path.join(__dirname, 'certificates', 'certificate.pem'))
 
 credentials = 
     key: private_key
@@ -11,7 +13,6 @@ credentials =
 
 express = require('express')
 
-config = require('./config')()
 
 app = module.exports = express.createServer()
 https_app = module.exports = express.createServer(credentials)
