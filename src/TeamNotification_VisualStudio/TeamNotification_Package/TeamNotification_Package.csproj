@@ -84,7 +84,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
-    <Reference Include="WPFTaskbarNotifier">
+    <Reference Include="WPFTaskbarNotifier, Version=1.0.4668.17861, Culture=neutral, PublicKeyToken=c711700d560bd03a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPFTaskbarNotifier\WPFTaskbarNotifier.dll</HintPath>
     </Reference>
     <Reference Include="WPFToolkit.Extended">
@@ -261,8 +262,14 @@
       <Project>{DDCC2E40-EFCB-43DD-97F4-8DE50AF26173}</Project>
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\wpfmodaldialog\WpfModalDialog\WpfModalDialog.csproj">
+      <Project>{38951BDB-95FB-46CE-900E-0B4FF29292F9}</Project>
+      <Name>WpfModalDialog</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

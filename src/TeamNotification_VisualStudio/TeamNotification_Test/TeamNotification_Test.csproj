@@ -148,6 +148,10 @@
       <Project>{C824899B-65C3-4A2B-85BB-E49B12BC54B6}</Project>
       <Name>TeamNotification_Package</Name>
     </ProjectReference>
+    <ProjectReference Include="..\wpfmodaldialog\WpfModalDialog\WpfModalDialog.csproj">
+      <Project>{38951BDB-95FB-46CE-900E-0B4FF29292F9}</Project>
+      <Name>WpfModalDialog</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\Service\Async\" />

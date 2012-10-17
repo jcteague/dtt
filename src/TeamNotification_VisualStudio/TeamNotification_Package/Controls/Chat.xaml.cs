@@ -24,6 +24,7 @@ using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Providers;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Thread = System.Threading.Thread;
 using UserControl = System.Windows.Controls.UserControl;
 
 
@@ -113,11 +114,12 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                         };
 
             taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
+            ModalDialog.LockElement = mainGrid;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            logger.TryOrLog(() => chatRoomControlService.HandlePaste(messageTextBox, e));
+            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, ModalDialog, e))));
         }
 
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
