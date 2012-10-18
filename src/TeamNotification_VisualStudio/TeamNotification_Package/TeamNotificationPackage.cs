@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using System.Windows;
 using EnvDTE;
+using Microsoft.VisualStudio.ExtensionManager;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -14,6 +16,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using StructureMap;
+using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Logging;
@@ -126,6 +129,41 @@ namespace AvenidaSoftware.TeamNotification_Package
             Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
+            Func<IInstalledExtension, RepositoryEntry, IInstallableExtension> fetchIfUpdate = (IInstalledExtension extension, RepositoryEntry entry) =>
+                                    {
+                                        var version = extension.Header.Version;
+                                        var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
+                                        try
+                                        {
+                                            var newestVersion = repoManager.Download(entry);
+                                            if (newestVersion.Header.Version > extension.Header.Version)
+                                            {
+                                                return newestVersion;
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // may not have internet connection, etc...
+                                            Console.WriteLine(ex.Message);
+                                        }
+                                        return null;
+                                    };
+
+            Func<IInstalledExtension, RepositoryEntry> webRepositoryGetFor = (extension) =>
+                                                                                 {
+                                                                                     return new RepositoryEntry
+                                                                                                {
+                                                                                                    DownloadUrl = "fooUrl",
+                                                                                                    Name = "BlahName",
+                                                                                                    VsixReferences = "Refernce"
+                                                                                                };
+                                                                                 };
+
+
+            var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+            var teamNotificationExtension = updateManager.GetInstalledExtensions().First(x => GlobalConstants.PackageName == x.Header.Name);
+            var updatedVersion = fetchIfUpdate(teamNotificationExtension, webRepositoryGetFor(teamNotificationExtension));
+
             var pdm = GetService(typeof(SVsProfileDataManager)) as IVsProfileDataManager;
             string settingsLocation;
             pdm.GetDefaultSettingsLocation(out settingsLocation);
@@ -185,5 +223,12 @@ namespace AvenidaSoftware.TeamNotification_Package
                        0,        // false
                        out result));
         }
+    }
+
+    public class RepositoryEntry : IRepositoryEntry
+    {
+        public string Name { get; set; }
+        public string DownloadUrl { get; set; }
+        public string VsixReferences { get; set; }
     }
 }
