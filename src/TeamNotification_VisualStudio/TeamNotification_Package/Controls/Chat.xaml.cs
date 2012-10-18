@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Navigation;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
@@ -24,6 +25,7 @@ using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Providers;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Process = System.Diagnostics.Process;
 using UserControl = System.Windows.Controls.UserControl;
 
 
@@ -329,5 +331,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
         
         private string lastStamp;
+
+        private void feedback_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
+        }
     }
 }
