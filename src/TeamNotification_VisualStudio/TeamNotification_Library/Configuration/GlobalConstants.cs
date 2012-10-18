@@ -2,6 +2,8 @@
 {
     public class GlobalConstants
     {
+        public const string PackageName = "TeamNotification";
+
         public static class Fields
         {
             public const string Password = "password";
