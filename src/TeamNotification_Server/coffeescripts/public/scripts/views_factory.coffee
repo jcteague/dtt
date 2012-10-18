@@ -18,4 +18,8 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
                 if props.pattern.test(collection_data.href) or props.pattern.test(collection_data.href)
                     return [(new props.view(model:collection_model))] 
             keys = _.keys(collection_data)
-            (new view(model: collection_model) for key, view of @registry when keys.contains(key))
+            (new view(model: collection_model) for key, view of @registry when contains(keys, key))
+
+        contains = (arr, element) ->
+            arr.indexOf(element) != -1;
+
