@@ -30,11 +30,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             syntaxHighlighter = new AvalonSyntaxHighlighterProvider();
         }
 
-        public Panel RefControl
-        {
-            get;
-            set;
-        }
+        public Panel RefControl { get; set; }
 
         public string SyntaxHighlighting { get; set; }
 
@@ -49,12 +45,6 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                           };
             mce.Visibility = Visibility.Visible;
             mce.tbxInsertedText.Text = code;
-            
-            //this.tbxInsertedText.SyntaxHighlighting = syntaxHighlighter.GetFor(programmingLanguageIdentifier);
-            //this.rectShadowingArea.Height = RefControl.Height;
-            //this.rectShadowingArea.Width = RefControl.Width;
-            //this.Visibility = Visibility.Visible;
-            //this.tbxInsertedText.Text = code;
             return mce.ShowDialog() == true ? mce.tbxInsertedText.Text : "";
         }
 

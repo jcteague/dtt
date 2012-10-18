@@ -56,8 +56,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                 toolWindowActionGetter = depends.on<IGetToolWindowAction>();
                 localStorageService = depends.on<IStoreDataLocally>();
                 userAccountEvents = depends.on<IHandleUserAccountEvents>();
+                textEditorCreator = depends.on<ICreateSyntaxHighlightBox<TextEditor>>();
             };
 
+            protected static ICreateSyntaxHighlightBox<TextEditor> textEditorCreator;
             protected static IProvideUser userProvider;
             protected static IProvideConfiguration<ServerConfiguration> configuration;
             protected static ISendHttpRequests httpClient;
@@ -146,17 +148,28 @@ namespace TeamNotification_Test.Library.Service.Controls
 
         public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
         {
+            private class fakeCodeEitor : IShowCode
+            {
+                public string Show(string code, int programmingLanguageIdentifier)
+                {
+                    return "";
+                }
+            }
+
             Establish context = () =>
             {
                 var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
                 var chatMessageBody = fake.an<ChatMessageBody>();
-                codeShower = fake.an<ModalCodeEditor>();
+                codeShower = new fakeCodeEitor();
+
                 chatMessageBody.solution = "testSolution";
+                chatMessageBody.message = "A test message";
                 clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
-                
+                textEditorCreator.Stub(x => x.Get(clipboardData.chatMessageBody.message, clipboardData.chatMessageBody.programminglanguage));
+
             };
 
             Because of = () =>

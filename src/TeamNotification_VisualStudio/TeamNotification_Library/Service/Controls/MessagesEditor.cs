@@ -3,9 +3,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
@@ -20,16 +22,17 @@ namespace TeamNotification_Library.Service.Controls
         public Collection.Messages editingMessage { get; set; }
         public ChatMessageModel editingMessageModel { get; set; }
         public IStoreGlobalState applicationGlobalState;
-
         public ComboBox comboRooms;
         private Brush editingColor;
         private ISerializeJSON jsonSerializer;
         private IShowCode codeEditor;
-        public MessagesEditor(ISerializeJSON jsonSerializer, IStoreGlobalState applicationGlobalState)
+        private ICreateSyntaxHighlightBox<TextEditor> textEditorCreator;
+        public MessagesEditor(ISerializeJSON jsonSerializer, IStoreGlobalState applicationGlobalState, ICreateSyntaxHighlightBox<TextEditor> textEditorCreator)
         {
             editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
             this.jsonSerializer = jsonSerializer;
             this.applicationGlobalState = applicationGlobalState;
+            this.textEditorCreator = textEditorCreator;
         }
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, ChatUIElements messagesContainer)
@@ -92,10 +95,10 @@ namespace TeamNotification_Library.Service.Controls
                 chatMessageBody.stamp = "";
                 editingMessageModel.chatMessageBody = chatMessageBody;
                 inputMethod.Document.Blocks.Clear();
-                inputMethod.Document.Blocks.Add(new Paragraph(new Run(
-                    codeEditor.Show(editingMessageModel.chatMessageBody.message,
-                    editingMessageModel.chatMessageBody.programminglanguage))
-                ));
+                var editedCode = codeEditor.Show(editingMessageModel.chatMessageBody.message,
+                                                 editingMessageModel.chatMessageBody.programminglanguage);
+                var editor = textEditorCreator.Get(editedCode, editingMessageModel.chatMessageBody.programminglanguage);
+                inputMethod.Document.Blocks.Add(new BlockUIContainer(editor));
             }else{
                 SetControls(row);
                 applicationGlobalState.IsEditingCode = true;
