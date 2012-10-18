@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -81,14 +82,17 @@ namespace TeamNotification_Library.Service.Controls
         public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+            dataObjectPastingEventArgs.CancelCommand();
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
-                dataObjectPastingEventArgs.CancelCommand();
                 chatMessageModel.chatMessageBody.message = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
                 var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
-                textBox.Document.Blocks.Add(block);
-                textBox.CaretPosition = textBox.Document.ContentEnd;
+                textBox.Dispatcher.Invoke(new Action( () =>{
+                    textBox.Document.Blocks.Clear();
+                    textBox.Document.Blocks.Add(block);
+                    textBox.CaretPosition = textBox.Document.ContentEnd;
+                }));
             }
         }
 
