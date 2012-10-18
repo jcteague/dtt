@@ -84,11 +84,11 @@ namespace TeamNotification_Library.Service.Controls
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
-                chatMessageModel.chatMessageBody.message = codeShower.Show(chatMessageModel.chatMessageBody.message);
+                dataObjectPastingEventArgs.CancelCommand();
+                chatMessageModel.chatMessageBody.message = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
                 var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
                 textBox.Document.Blocks.Add(block);
                 textBox.CaretPosition = textBox.Document.ContentEnd;
-                dataObjectPastingEventArgs.CancelCommand();
             }
         }
 

@@ -60,6 +60,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         private bool chatIsEnabled;
         private List<string> subscribedChannels;
 
+        private IShowCode codeEditor;
+
         public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
         {
             chatIsEnabled = true;
@@ -79,8 +81,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
+
+            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
+
             InitializeComponent();
             
+            var mce = new ModalCodeEditor { RefControl = this.mainGrid };
+            codeEditor = mce;
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = FormatRooms(collection.rooms);
             
@@ -113,13 +120,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
 
-            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
-            ModalDialog.LockElement = mainGrid;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, ModalDialog, e))));
+            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, codeEditor, e))));
         }
 
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
@@ -298,7 +303,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                 InputBox = messageTextBox,
                 MessagesList = messagesList,
                 LastStamp = lastStamp,
-                ComboRooms = comboRooms
+                ComboRooms = comboRooms,
+                codeEditor = codeEditor
             };
         }
         

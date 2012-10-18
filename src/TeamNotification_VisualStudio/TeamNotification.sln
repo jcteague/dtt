@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AurelienRibon.Ui.SyntaxHigh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketIOClient", "SocketIO\SocketIOClient.csproj", "{352C9BC1-F74C-4741-A09D-7227BC60C057}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfModalDialog", "wpfmodaldialog\WpfModalDialog\WpfModalDialog.csproj", "{38951BDB-95FB-46CE-900E-0B4FF29292F9}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = TeamNotification.vsmdi
@@ -70,14 +68,6 @@ Global
 		{352C9BC1-F74C-4741-A09D-7227BC60C057}.Release|Any CPU.Build.0 = Release|Any CPU
 		{352C9BC1-F74C-4741-A09D-7227BC60C057}.ReleaseILMerge|Any CPU.ActiveCfg = ReleaseILMerge|Any CPU
 		{352C9BC1-F74C-4741-A09D-7227BC60C057}.ReleaseILMerge|Any CPU.Build.0 = ReleaseILMerge|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.DebugILMerge|Any CPU.ActiveCfg = Debug|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.DebugILMerge|Any CPU.Build.0 = Debug|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.ReleaseILMerge|Any CPU.ActiveCfg = Release|Any CPU
-		{38951BDB-95FB-46CE-900E-0B4FF29292F9}.ReleaseILMerge|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

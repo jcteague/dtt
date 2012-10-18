@@ -24,7 +24,7 @@ namespace TeamNotification_Library.Service.Controls
         public ComboBox comboRooms;
         private Brush editingColor;
         private ISerializeJSON jsonSerializer;
-
+        private IShowCode codeEditor;
         public MessagesEditor(ISerializeJSON jsonSerializer, IStoreGlobalState applicationGlobalState)
         {
             editingColor =  new SolidColorBrush(Color.FromRgb(252, 249, 206));
@@ -34,6 +34,7 @@ namespace TeamNotification_Library.Service.Controls
 
         public void ConfigTableRowGroup(TableRowGroup row, Collection.Messages message, ChatUIElements messagesContainer)
         {
+            codeEditor = messagesContainer.codeEditor;
             var currentStamp = Collection.getField(message.data, "stamp");
             var charMessageBody = jsonSerializer.Deserialize<ChatMessageBody>(Collection.getField(message.data,"body"));
             var containsKey = false;
@@ -83,16 +84,22 @@ namespace TeamNotification_Library.Service.Controls
                 username = Collection.getField(editingMessage.data, "user"),
                 body = Collection.getField(editingMessage.data, "body")
             };
-
+            
             var chatMessageBody = editingMessageModel.chatMessageBody;
 
             if (chatMessageBody.IsCode)
             {
                 chatMessageBody.stamp = "";
                 editingMessageModel.chatMessageBody = chatMessageBody;
+                inputMethod.Document.Blocks.Clear();
+                inputMethod.Document.Blocks.Add(new Paragraph(new Run(
+                    codeEditor.Show(editingMessageModel.chatMessageBody.message,
+                    editingMessageModel.chatMessageBody.programminglanguage))
+                ));
+            }else{
+                SetControls(row);
+                applicationGlobalState.IsEditingCode = true;
             }
-            SetControls(row);
-            applicationGlobalState.IsEditingCode = true;
         }
 
         private void SetControls(TableRowGroup row)
@@ -102,6 +109,7 @@ namespace TeamNotification_Library.Service.Controls
             row.Background = editingColor;
             inputMethod.Background = editingColor;
             comboRooms.IsEnabled = false;
+
             inputMethod.Document.Blocks.Clear();
             inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
             inputMethod.Focus();
@@ -130,13 +138,14 @@ namespace TeamNotification_Library.Service.Controls
         {
             inputMethod.Document.Blocks.Clear();
             if (editingMessage == null) return;
-            currentRowGroup.Background = originalBackground;
-            inputMethod.Background = originalBackground;
-
-            inputMethod.PreviewKeyDown -= CancelEditMessage;
-            inputMethod.TextChanged -= OnInputMethodTextChanged;
-            inputMethod.LostFocus -= inputMethod_LostFocus;
-
+            if (!editingMessageModel.chatMessageBody.IsCode){
+                currentRowGroup.Background = originalBackground;
+                inputMethod.Background = originalBackground;
+            
+                inputMethod.PreviewKeyDown -= CancelEditMessage;
+                inputMethod.TextChanged -= OnInputMethodTextChanged;
+                inputMethod.LostFocus -= inputMethod_LostFocus;
+            }
             currentRowGroup = null;
             editingMessage = null;
             editingMessageModel = null;

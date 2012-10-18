@@ -7,6 +7,6 @@ namespace TeamNotification_Library.Service.Controls
 {
     public interface IShowCode
     {
-        string Show(string code);
+        string Show(string code, int programmingLanguageIdentifier);
     }
 }

@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using AvenidaSoftware.TeamNotification_Package;
+using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Machine.Specifications;
-using S2Snext.GUI.Dialogs;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
@@ -150,7 +150,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             {
                 var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
                 var chatMessageBody = fake.an<ChatMessageBody>();
-                codeShower = fake.an<ModalDialog>();
+                codeShower = fake.an<ModalCodeEditor>();
                 chatMessageBody.solution = "testSolution";
                 clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
