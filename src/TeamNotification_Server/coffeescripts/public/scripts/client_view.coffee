@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'config'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, config) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'jquery.ie.cors', 'config'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, IECors, config) ->
 
     class ClientView extends Backbone.View
 
