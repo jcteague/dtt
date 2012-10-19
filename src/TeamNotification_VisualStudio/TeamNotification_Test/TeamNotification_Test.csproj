@@ -130,6 +130,7 @@
     <Compile Include="Library\Service\ToolWindow\ToolWindowPositionGetterSpecs.cs" />
     <Compile Include="Library\Service\Update\PackageUpdateManagerSpecs.cs" />
     <Compile Include="Library\Service\Update\PackageUpdatesDownloaderSpecs.cs" />
+    <Compile Include="Library\Service\Update\PackageUpdatesInstallerSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubDocument.cs" />
     <Compile Include="Stubs\StubProjectItem.cs" />
