@@ -2,7 +2,7 @@ using System;
 
 namespace TeamNotification_Library.Functional
 {
-    public class Nothing<T> : Maybe<T> where T : class 
+    public class Nothing<T> : Maybe<T>
     {
         public bool IsDefined
         {
@@ -16,7 +16,10 @@ namespace TeamNotification_Library.Functional
 
         public T Value
         {
-            get { return null; }
+            get
+            {
+                return Activator.CreateInstance<T>();
+            }
         }
 
         public Maybe<R> Select<R>(Func<T, R> func) where R : class 

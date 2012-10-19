@@ -3,7 +3,7 @@ using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Functional
 {
-    public class Just<T> : Maybe<T> where T : class 
+    public class Just<T> : Maybe<T>
     {
         public T Value { get; private set; }
 

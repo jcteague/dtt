@@ -131,9 +131,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
-            var updateManager = Package.GetGlobalService(typeof (SVsExtensionManager)) as IVsExtensionManager;
-            var repoManager = Package.GetGlobalService(typeof (SVsExtensionRepository)) as IVsExtensionRepository;
-
             var pdm = GetService(typeof (SVsProfileDataManager)) as IVsProfileDataManager;
             string settingsLocation;
             pdm.GetDefaultSettingsLocation(out settingsLocation);
@@ -157,6 +154,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Bootstrapper.Initialize();
 
+            var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+            var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
+            
             ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
 
             var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();

@@ -299,8 +299,11 @@
     <Compile Include="Service\ToolWindow\MessageInputAtRight.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowActionGetter.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowOrientationGetter.cs" />
+    <Compile Include="Service\Update\IFetchUpdates.cs" />
+    <Compile Include="Service\Update\IInstallUpdates.cs" />
     <Compile Include="Service\Update\IUpdatePackage.cs" />
     <Compile Include="Service\Update\PackageUpdateManager.cs" />
+    <Compile Include="Service\Update\PackageUpdatesDownloader.cs" />
     <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
