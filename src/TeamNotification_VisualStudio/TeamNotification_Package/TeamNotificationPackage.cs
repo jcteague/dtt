@@ -154,15 +154,18 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Bootstrapper.Initialize();
 
-            var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
-            var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
-            
-            ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
-
             var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
             alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
 
             ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
+
+            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
+            {
+                var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+                var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
+
+                ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
+            });
         }
 
         #endregion

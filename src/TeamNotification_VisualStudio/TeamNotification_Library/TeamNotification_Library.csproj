@@ -304,6 +304,7 @@
     <Compile Include="Service\Update\IUpdatePackage.cs" />
     <Compile Include="Service\Update\PackageUpdateManager.cs" />
     <Compile Include="Service\Update\PackageUpdatesDownloader.cs" />
+    <Compile Include="Service\Update\PackageUpdatesInstaller.cs" />
     <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
