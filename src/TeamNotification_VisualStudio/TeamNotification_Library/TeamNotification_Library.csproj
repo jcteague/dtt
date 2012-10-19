@@ -49,6 +49,7 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
@@ -298,6 +299,9 @@
     <Compile Include="Service\ToolWindow\MessageInputAtRight.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowActionGetter.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowOrientationGetter.cs" />
+    <Compile Include="Service\Update\IUpdatePackage.cs" />
+    <Compile Include="Service\Update\PackageUpdateManager.cs" />
+    <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
