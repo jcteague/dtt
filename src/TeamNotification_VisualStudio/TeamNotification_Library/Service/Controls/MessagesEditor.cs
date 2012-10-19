@@ -97,10 +97,13 @@ namespace TeamNotification_Library.Service.Controls
                 inputMethod.Document.Blocks.Clear();
                 var editedCode = codeEditor.Show(editingMessageModel.chatMessageBody.message,
                                                  editingMessageModel.chatMessageBody.programminglanguage);
-                var editor = textEditorCreator.Get(editedCode, editingMessageModel.chatMessageBody.programminglanguage);
-                editingMessageModel.chatMessageBody.message = editedCode;
-                var blockUIContainer = new BlockUIContainer(editor) {Resources = editingMessageModel.AsResources()};
-                inputMethod.Document.Blocks.Add(blockUIContainer);
+
+                if(editedCode.Trim()!= ""){
+                    var editor = textEditorCreator.Get(editedCode, editingMessageModel.chatMessageBody.programminglanguage);
+                    editingMessageModel.chatMessageBody.message = editedCode;
+                    var blockUIContainer = new BlockUIContainer(editor) {Resources = editingMessageModel.AsResources()};
+                    inputMethod.Document.Blocks.Add(blockUIContainer);
+                }
             }else{
                 SetControls(row);
                 applicationGlobalState.IsEditingCode = true;

@@ -86,13 +86,17 @@ namespace TeamNotification_Library.Service.Controls
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
-                chatMessageModel.chatMessageBody.message = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
-                var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
-                textBox.Dispatcher.Invoke(new Action( () =>{
-                    textBox.Document.Blocks.Clear();
-                    textBox.Document.Blocks.Add(block);
-                    textBox.CaretPosition = textBox.Document.ContentEnd;
-                }));
+                var pastedCode = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
+                if(pastedCode.Trim() != "")
+                {
+                    chatMessageModel.chatMessageBody.message = pastedCode;
+                    var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
+                    textBox.Dispatcher.Invoke(new Action( () =>{
+                        textBox.Document.Blocks.Clear();
+                        textBox.Document.Blocks.Add(block);
+                        textBox.CaretPosition = textBox.Document.ContentEnd;
+                    }));
+                }
             }
         }
 
