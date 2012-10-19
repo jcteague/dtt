@@ -2,7 +2,7 @@ using System;
 
 namespace TeamNotification_Library.Functional
 {
-    public interface Maybe<T> where T : class
+    public interface Maybe<T>
     {
         bool IsDefined { get; }
 

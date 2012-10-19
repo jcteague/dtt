@@ -1,4 +1,5 @@
-﻿using TeamNotification_Library.Functional;
+﻿using System;
+using TeamNotification_Library.Functional;
 using TeamNotification_Library.Models;
 
 namespace TeamNotification_Library.Extensions
@@ -11,6 +12,14 @@ namespace TeamNotification_Library.Extensions
                 return new Nothing<T>();
 
             return new Just<T>(source);
+        }
+
+        public static Maybe<T> ToMaybe<T>(this T? source) where T : struct
+        {
+            if (!source.HasValue)
+                return new Nothing<T>();
+
+            return new Just<T>(source.Value);
         }
     }
 }
