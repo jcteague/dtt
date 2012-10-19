@@ -9,7 +9,7 @@ namespace TeamNotification_Test.Library.Service.Update
     [Subject(typeof(PackageUpdatesInstaller))]
     public class PackageUpdatesInstallerSpecs
     {
-        public abstract class Concern : Observes<IInstallUpdates>
+        public abstract class Concern : Observes<IInstallUpdates, PackageUpdatesInstaller>
         {
             
         }
@@ -57,6 +57,32 @@ namespace TeamNotification_Test.Library.Service.Update
 
             It should_enable_the_newly_installed_extension = () =>
                 extensionManager.AssertWasCalled(x => x.Enable(updatedExtensionInstalled));
+
+            private static IInstalledExtension updatedExtensionInstalled;
+        }
+
+        public class when_installing_an_update_and_the_newly_installed_version_is_not_installed : when_installing_an_update
+        {
+            Establish context = () =>
+            {
+                updatedExtensionInstalled = null;
+                extensionManager.Stub(x => x.GetInstalledExtension(updatedVersionIdentifier)).Return(updatedExtensionInstalled);
+            };
+
+            Because of = () =>
+                sut.Install(extensionManager, currentExtension, updatedExtension);
+
+            It should_disable_the_current_extension = () =>
+                extensionManager.AssertWasCalled(x => x.Disable(currentExtension));
+
+            It should_uninstall_the_current_extension = () =>
+                extensionManager.AssertWasCalled(x => x.Uninstall(currentExtension));
+
+            It should_install_the_new_extension = () =>
+                extensionManager.AssertWasCalled(x => x.Install(updatedExtension, false));
+
+            It should_not_enable_the_newly_installed_extension = () =>
+                extensionManager.AssertWasNotCalled(x => x.Enable(updatedExtensionInstalled));
 
             private static IInstalledExtension updatedExtensionInstalled;
         }
