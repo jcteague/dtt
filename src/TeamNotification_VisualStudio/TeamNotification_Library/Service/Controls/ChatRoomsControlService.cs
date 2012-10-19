@@ -109,17 +109,17 @@ namespace TeamNotification_Library.Service.Controls
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            messagesEditor.inputMethod = textBox;
-            if (messagesEditor.editingMessage != null)
-            {
-                var text = messagesEditor.inputMethod.Document.GetDocumentText();
-                messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
-                messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
-            }
-            else
-            {
-                messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            }
+            //messagesEditor.inputMethod = textBox;
+            //if (messagesEditor.editingMessage != null)
+            //{
+            //    var text = messagesEditor.inputMethod.Document.GetDocumentText();
+            //    messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
+            //    messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
+            //}
+            //else
+            //{
+            messageSender.SendMessages(textBox.Document.Blocks, roomId);
+            //}
             messagesEditor.ResetControls();
 
         }

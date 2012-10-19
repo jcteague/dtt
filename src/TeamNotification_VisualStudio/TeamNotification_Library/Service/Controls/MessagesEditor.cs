@@ -98,7 +98,9 @@ namespace TeamNotification_Library.Service.Controls
                 var editedCode = codeEditor.Show(editingMessageModel.chatMessageBody.message,
                                                  editingMessageModel.chatMessageBody.programminglanguage);
                 var editor = textEditorCreator.Get(editedCode, editingMessageModel.chatMessageBody.programminglanguage);
-                inputMethod.Document.Blocks.Add(new BlockUIContainer(editor));
+                var blockUIContainer = new BlockUIContainer(editor) {Resources = editingMessageModel.AsResources()};
+                inputMethod.Document.Blocks.Add(blockUIContainer);
+                editingMessageModel.chatMessageBody.message = editedCode;
             }else{
                 SetControls(row);
                 applicationGlobalState.IsEditingCode = true;
