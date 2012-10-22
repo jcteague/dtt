@@ -2,7 +2,7 @@
 {
     public class GlobalConstants
     {
-        public const string PackageName = "TeamNotification";
+        public const string PackageName = "YacketyApp";
         public const string PackageDownloadUrl = "http://localhost/App_Data/Extensions/TeamNotification_Package.vsix";
 
         public static class Fields
