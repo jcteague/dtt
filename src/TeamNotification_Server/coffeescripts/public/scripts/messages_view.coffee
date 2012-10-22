@@ -126,16 +126,17 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             p[0].innerHTML = escaped_message
 
 		parsing_links: (message) ->
-            #console.log message
+            console.log message
             message_words =  message.split ' '
             final_message = ''
-            for word in message_words
-                if word.indexOf("://") != -1
-                    word = "<a href='#{word}'>#{word}</a>"
-                else
-                    word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
-                
-				final_message =final_message + word
+            if(message_words.length > 0)
+                for word in message_words
+                    if word.indexOf("://") != -1
+                        word = "<a href='#{word}'>#{word}</a>"
+                    else
+                        word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
+                    
+				    final_message =final_message + word
 			final_message
 
         read_message_data: (message) ->
