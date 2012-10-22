@@ -1,2 +1,3 @@
 #!/bin/sh
-coffee src/TeamNotification_Server/app.coffee
+coffee -c src/TeamNotification_Server/app.coffee
+node src/TeamNotification_Server/app.js
