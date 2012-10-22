@@ -130,10 +130,10 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             message_words. message.split ' '
             final_message = ''
             for word in message_words
-                if word.indexOf(":&#x2F&#x2F") != -1
+                if word.indexOf("://") != -1
                     word = "<a href='#{word}'>#{word}</a>"
-                #else
-                #    word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
+                else
+                    word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
                 
 				final_message += word
 			final_message
@@ -151,7 +151,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             @last_user_id_that_posted = message.user_id
             
-            escaped_message = @parsing_links $('<div/>').text(parsedBody.message).html()
+            escaped_message = @parsing_links parsedBody.message # $('<div/>').text(parsedBody.message).html()
 
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
