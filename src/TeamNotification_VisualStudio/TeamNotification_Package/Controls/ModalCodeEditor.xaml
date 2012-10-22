@@ -13,15 +13,15 @@
         <Rectangle Name="rectShadowingArea" Fill="Gray"></Rectangle>
         <Grid>
             <Grid.RowDefinitions>
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="15"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="15"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5"></ColumnDefinition>
+            <ColumnDefinition Width="15"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="5"></ColumnDefinition>
+            <ColumnDefinition Width="15"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <avalonEdit:TextEditor  Grid.Row="1" Grid.Column="1" Name="tbxInsertedText" FontFamily="Consolas" FontSize="10pt" SyntaxHighlighting="C#"/>
         <!--<TextBox Name="tbxInsertedText" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>-->

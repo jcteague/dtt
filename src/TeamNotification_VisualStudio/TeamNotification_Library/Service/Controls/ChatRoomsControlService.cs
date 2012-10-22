@@ -96,6 +96,10 @@ namespace TeamNotification_Library.Service.Controls
                         textBox.Document.Blocks.Add(block);
                         textBox.CaretPosition = textBox.Document.ContentEnd;
                     }));
+                }else
+                {
+                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+                    dataObjectPastingEventArgs.CancelCommand();
                 }
             }
         }

@@ -41,7 +41,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
                               RefControl = RefControl,
                               tbxInsertedText =
                                   {SyntaxHighlighting = syntaxHighlighter.GetFor(programmingLanguageIdentifier)},
-                              rectShadowingArea = {Height = RefControl.Height, Width = RefControl.Width}
+                              rectShadowingArea = {Height = RefControl.Height*0.8, Width = RefControl.Width*0.8}
                           };
             mce.Visibility = Visibility.Visible;
             mce.tbxInsertedText.Text = code;
