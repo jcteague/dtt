@@ -1,7 +1,6 @@
 define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment', 'config'], (GeneralView, underscore, Prettify, Moment, config) ->
 
     class MessagesView extends GeneralView
-
         id: 'messages-container'
         added_code: false
 
@@ -14,6 +13,19 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
             @get_cross_domain_json path, (data) =>
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
+
+        parsing_links: (message) ->
+            console.log message
+            message_words =  message.split ' '
+            final_message = ''
+            for word in message_words
+                w = word
+                if word.indexOf("://") != -1
+                    w = "<a href='#{w}'>#{w}</a>"
+                else
+                    w = w.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
+                final_message = final_message + w
+            final_message
 
         get_cross_domain_json: (url, callback) ->
             parameters = {
@@ -124,20 +136,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             p.attr "class", "new_message"
             escaped_message = @parsing_links parsedBody.message  #$('<div/>').text(parsedBody.message).html()
             p[0].innerHTML = escaped_message
-
-		parsing_links: (message) ->
-            console.log message
-            message_words =  message.split ' '
-            final_message = ''
-            if(message_words.length > 0)
-                for word in message_words
-                    if word.indexOf("://") != -1
-                        word = "<a href='#{word}'>#{word}</a>"
-                    else
-                        word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
-                    
-				    final_message =final_message + word
-			final_message
 
         read_message_data: (message) ->
             name = message.name
