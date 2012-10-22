@@ -122,12 +122,12 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         edit_message: (p, message) ->
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            escaped_message = $('<div/>').text(parsedBody.message).html()
+            escaped_message = @parsing_links parsedBody.message  #$('<div/>').text(parsedBody.message).html()
             p[0].innerHTML = escaped_message
 
 		parsing_links: (message) ->
-            console.log message
-            message_words. message.split ' '
+            #console.log message
+            message_words =  message.split ' '
             final_message = ''
             for word in message_words
                 if word.indexOf("://") != -1
@@ -135,7 +135,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 else
                     word = word.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
                 
-				final_message += word
+				final_message =final_message + word
 			final_message
 
         read_message_data: (message) ->
