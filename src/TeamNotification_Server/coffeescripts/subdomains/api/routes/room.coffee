@@ -22,6 +22,10 @@ methods.user_authorized_in_room = (req, res, next) ->
 list_of_listeners = {}
 
 
+methods.unsubscribe = (req,res) ->
+    console.log "reqest received"
+    res.json get_server_response(true, ["Unsubscribed successfully"], "",false )
+
 methods.get_room_invitations = (req, res) ->
 
     callback = (collection) ->
@@ -157,3 +161,4 @@ module.exports =
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/room',express.bodyParser(), methods.post_room)
         app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
+        app.post('/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
