@@ -13,13 +13,17 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     password = $('input[name=password]').val()
                     authToken = "Basic " + encodeBase64(email + ":" + password)
                     jqXHR.setRequestHeader('Authorization', authToken )
+                    jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
         
-        check_login: (res) ->
+        check_login: (response) ->
+            res = $.parseJSON response
+            res = response unless res?
+
             if res.success is true
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
-                    redirect = "client#/user/#{res.user.id}"
+                    redirect = "#/user"
                     if(window.location.href.lastIndexOf('/user/login') > -1)
                         window.location.href = redirect
                     window.location.reload(true)

@@ -1,12 +1,12 @@
 express = require('express')
 http = require('https')
 querystring = require('querystring')
-support = require('../support/core').core
-Repository = require('../support/repository')
-config = require('../config')()
-routes_service = require('../support/routes_service')
-github_helper = require('../support/github_events_helper')
-redis_connector = require('../support/redis/redis_gateway')
+support = require('../../../support/core').core
+Repository = require('../../../support/repository')
+config = require('../../../config')()
+routes_service = require('../../../support/routes_service')
+github_helper = require('../../../support/github_events_helper')
+redis_connector = require('../../../support/redis/redis_gateway')
 
 build = routes_service.build
 redis_publisher = redis_connector.open()
@@ -77,7 +77,7 @@ methods.github_authentication_callback = (req, res) ->
         post_res.on 'data', (chunk) ->
             data = JSON.parse(chunk)
             if(typeof(data.access_token) != undefined)
-                res.redirect("#{config.site.url}/client#github/repositories/#{data.access_token}")
+                res.redirect("#{config.site.url}/#/github/repositories/#{data.access_token}")
             else
                 res.send({success:false, messages:['There was a problem contacting github']})
         post_res.on 'error', (error) ->

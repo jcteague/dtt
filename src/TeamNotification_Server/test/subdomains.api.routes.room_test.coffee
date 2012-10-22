@@ -36,14 +36,14 @@ node_hash_mock =
 config = require('../config')()
 redis_mock.open.returns(client_mock)
 
-sut = module_loader.require('../routes/room.js', {
+sut = module_loader.require('../subdomains/api/routes/room', {
     requires:
-        '../support/core': support_mock
+        '../../../support/core': support_mock
         'express': express_mock
-        '../support/redis/redis_gateway': redis_mock
-        '../support/routes_service': routes_service_mock
-        '../support/repository': repository_class_mock
-        '../support/middlewares': middleware_mock
+        '../../../support/redis/redis_gateway': redis_mock
+        '../../../support/routes_service': routes_service_mock
+        '../../../support/repository': repository_class_mock
+        '../../../support/middlewares': middleware_mock
         'node_hash' : node_hash_mock
 })
 

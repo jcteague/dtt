@@ -39,7 +39,15 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
 
             # To prevent duplicate results
             $('.acResults').remove()
-            input.autocomplete("#{config.site.url}#{template.href}", {
+            # Move this concern to happen only once globally
+            if $.cookie('authtoken')?
+                $.ajaxSetup
+                    beforeSend: (jqXHR) ->
+                        authToken = $.cookie('authtoken')
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+            input.autocomplete("#{config.api.url}#{template.href}", {
                 remoteDataType: 'json'
                 processData: processor
                 onItemSelect: on_select

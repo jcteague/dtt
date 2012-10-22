@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'jquery.ie.cors', 'config'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, IECors, config) ->
 
     class ClientView extends Backbone.View
 
@@ -37,7 +37,24 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         render_path: (path) ->
             @server_response_view.clear()
-            $.getJSON(path, @load_json)
+            path = '' if path is '/'
+            url = "#{config.api.url}/#{path}"
+            parameters = {
+                type: 'GET'
+                #contentType: 'application/json'
+                dataType: 'json'
+                url: url
+                success: @load_json
+                error: (d) -> return
+            }
+
+            if $.cookie('authtoken')?
+                parameters.beforeSend = (jqXHR) ->
+                        authToken = $.cookie 'authtoken'
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+            $.ajax parameters
 
         load_json: (data) =>
             @model.clear()

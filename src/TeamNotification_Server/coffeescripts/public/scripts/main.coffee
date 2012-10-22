@@ -9,6 +9,7 @@ require.config
         'moment': 'moment.min'
         'jquery.autocomplete': 'jquery.autocomplete'
         'jquery.validate': 'jquery.validate.min'
+        'jquery.ie.cors': 'jquery.ie.cors'
         'config': 'config'
         'client_view': 'client_view'
         'user_edit_view': 'user_edit_view'

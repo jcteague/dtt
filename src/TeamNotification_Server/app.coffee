@@ -1,30 +1,25 @@
-###
-Module dependencies.
-###
+crypto = require('crypto')
+fs = require('fs')
+path = require('path')
+http = require('http')
+config = require('./config')()
+
+private_key = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'star_yacketyapp_com.key'))
+certificate = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'sslchain.crt'))
+
+credentials = 
+    key: private_key
+    cert: certificate
 
 express = require('express')
-config = require('./config')()
-Authentication = require('./support/authentication')
-auth = new Authentication()
+
 
 app = module.exports = express.createServer()
-require('./helper')(app)
-io = require('socket.io').listen(app)
+https_app = module.exports = express.createServer(credentials)
 
 logger = require('./support/logging/logger')
-winston = require('winston')
-express_winston = require('express-winston')
 
-###
-  Mock Database
-###
-
-apiKeys = ['foo', 'bar', 'baz']
-
-error = (status, msg) ->
-    err = new Error(msg)
-    err.status = status
-    return err
+socket_io = require('socket.io').listen(https_app, log: false)
 
 process.on 'error', (err) ->
     logger.error 'System error', {error: err}
@@ -38,77 +33,43 @@ process.on 'uncaughtException', (err) ->
     app.close()
     process.exit(1)
 
-app.configure(->
-    logger.info 'Configuring Application'
+allowCrossDomain = (req, res, next) ->
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
 
-    app.set('views', __dirname + '/views')
-    app.set('view engine', 'jade')
-    app.use(express.cookieParser())
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
-
-    app.use('/', (req, res, next) ->
-        #disable
+    if 'OPTIONS' is req.method
+        res.send 200
+    else
         next()
-        return
-        #disable
 
-        key = req.param('api-key')
-        return next(error(400, 'api key required')) if (!key)
-        return next(error(401, 'invalid api key')) if (!~apiKeys.indexOf(key))
-        req.key = key
-        next()
+configure_server_for = (application) ->
+    application.configure ->
+        application.use allowCrossDomain
+
+    application.configure('development', ->
+        application.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
     )
 
-    app.use(express.static(__dirname + '/public'))
+    application.configure('test', ->
+        application.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
+    )
 
-    app.use(auth.initializeAuth())
+    application.configure('production', ->
+        socket_io.set 'log level', 1
+        application.use(express.errorHandler())
+    )
 
-    app.use(app.router)
+configure_server_for app
+configure_server_for https_app
 
-    log_errors = (err, req, res, next) ->
-        logger.error 'Error:', {error: err}
-        next err
+app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
+https_app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
+https_app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 
-    rendered_error = (err, req, res, next) ->
-        res.status 500
-        res.render 'error.jade'
-
-    app.use log_errors
-
-    app.use rendered_error
-
-    app.use(express.logger())
-
-    app.use(express_winston.errorLogger({
-        transports: [
-            new winston.transports.File({
-                filename: config.log.path
-            })
-        ]
-    }))
-)
-
-# Apply authentication for all routes
-app.all '*', auth.authenticate
-
-
-# This must live here after authentication has been initialized
-require('./routes')(app, io)
-
-app.configure('development', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-app.configure('test', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-app.configure('production', ->
-    io.set 'log level', 1
-    app.use(express.errorHandler())
-)
-
-app.listen(config.site.port, ->
+app.listen config.site.port, ->
     logger.info "Application Started. Listening on port #{app.address().port}", {mode: app.settings.env}
-)
+
+https_app.listen config.api.port, ->
+    logger.info "API Application Started. Listening on port #{https_app.address().port}", {mode: https_app.settings.env}

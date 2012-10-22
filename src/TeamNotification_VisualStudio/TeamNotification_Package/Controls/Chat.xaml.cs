@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Navigation;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
@@ -24,6 +25,7 @@ using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Providers;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Process = System.Diagnostics.Process;
 using UserControl = System.Windows.Controls.UserControl;
 
 
@@ -156,6 +158,9 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
 
         [DllImport("user32.dll")]
+        private extern static IntPtr GetActiveWindow();
+
+        [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 
@@ -167,7 +172,10 @@ namespace AvenidaSoftware.TeamNotification_Package
                 logger.TryOrLog(() => {
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
-                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (dteStore.dte.MainWindow.WindowState == vsWindowState.vsWindowStateMinimize))
+
+                    var activeWindow = GetActiveWindow();
+                    var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
+                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
                                                                                 var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
@@ -323,5 +331,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
         
         private string lastStamp;
+
+        private void feedback_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
+        }
     }
 }

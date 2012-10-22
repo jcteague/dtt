@@ -12,7 +12,7 @@
             <UserControl.Resources>
                 <ResourceDictionary Source="Themes/BureauBlue.xaml"/>
             </UserControl.Resources>
-    <Grid Height="auto">
+    <Grid Height="auto" Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="*" />
@@ -20,11 +20,16 @@
             <RowDefinition Name="outerGridRowDefinition3" Height="0" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="125" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button Content="Logout" Grid.Row="0" Grid.Column="0" Height="auto" HorizontalAlignment="Center" Name="btnLogout" VerticalAlignment="Center" Width="60" Click="LogoutUser" />
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0,5,0">
+            <Button Content="Logout" Height="auto" HorizontalAlignment="Center" Name="btnLogout" VerticalAlignment="Center" Width="60" Click="LogoutUser" />
+            <TextBlock VerticalAlignment="Center"  Width="100" Margin="5,0,0,0">
+                <Hyperlink RequestNavigate="feedback_RequestNavigate" NavigateUri="http://yacketyapp.uservoice.com/forums/180731-general">Feedback</Hyperlink>
+            </TextBlock>
+        </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="15,5,5,0" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" />
             <ComboBox Height="auto" Name="comboRooms" Width="auto" Margin="15,0,0,0" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">

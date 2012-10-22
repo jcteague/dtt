@@ -9,6 +9,7 @@ db_config =
 
 whitelisted_paths = ['/', '/client', '/registration','/user/login', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
 development_settings =
+    env: 'development'
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
@@ -17,9 +18,17 @@ development_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
+        surl: 'https://dtt.local:3001'
+        whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.dtt.local'
+        port: 3001
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'https://api.dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'dtt.local'
+        host:'api.dtt.local'
         port: 6379
         password: 'welc0me'
     email:
@@ -28,23 +37,32 @@ development_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: '238dc978aaf2621d38b5'
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
-        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
 
 test_settings =
+    env: 'test'
     db:
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_test}"
     site:
-        host: 'localhost'
+        host: 'dtt.local'
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://localhost:3000'
+        url: 'http://dtt.local:3000'
+        surl: 'https://dtt.local:3001'
+        whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.dtt.local'
+        port: 3001
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'https://api.dtt.local:3001'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'dtt.local'
+        host:'api.dtt.local'
         port: 6380
         password: 'welc0me'
     email:
@@ -53,12 +71,13 @@ test_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: '238dc978aaf2621d38b5'
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
-        redirect_url: 'http://dtt.local:3000/github/auth/callback'
+        redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
 
 production_settings =
+    env: 'production'
     db:
         connection_string: "postgres://huyuuxyveqegxe:tMU5vspNvcoPxePlBbK5DX1Jvx@ec2-23-21-91-108.compute-1.amazonaws.com:5432/d9er2dp9rejk7k"
     site:
@@ -67,9 +86,17 @@ production_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://yacketyapp.com'
+        surl: 'https://yacketyapp.com'
+        whitelisted_paths: whitelisted_paths
+    api:
+        host: 'api.yacketyapp.com'
+        port: 443
+        client_ID: '1234'
+        client_secret: 'secret'
+        url: 'https://api.yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     redis:
-        host: 'yacketyapp.com'
+        host: 'api.yacketyapp.com'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
     email:
@@ -78,7 +105,7 @@ production_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: 'cfb1bc4d1ed5dc9199bf'
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
-        redirect_url: 'http://yacketyapp.com/github/auth/callback'
+        redirect_url: 'http://api.yacketyapp.com/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join('/var', 'log', 'yackety.log')

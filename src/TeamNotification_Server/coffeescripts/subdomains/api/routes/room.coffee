@@ -1,11 +1,12 @@
 methods = {}
-support = require('../support/core').core
+support = require('../../../support/core').core
 express = require('express')
 sha256 = require('node_hash').sha256
-routes_service = require('../support/routes_service')
-config = require('../config')()
+routes_service = require('../../../support/routes_service')
+config = require('../../../config')()
 build = routes_service.build
-redis_connector = require('../support/redis/redis_gateway')
+redis_connector = require('../../../support/redis/redis_gateway')
+socket_middleware = require('../../../support/middlewares').socket_io
 get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
@@ -141,8 +142,6 @@ methods.post_room_message = (req, res, next) ->
                 res.send({success:true, newMessage:saved_message})
             else
                 next(new Error(err.code,err.message))
-
-socket_middleware = require('../support/middlewares').socket_io
 
 
 module.exports =

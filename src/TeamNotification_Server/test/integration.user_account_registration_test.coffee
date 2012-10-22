@@ -1,3 +1,6 @@
+console.log 'User Account Registration Test Pending'
+return
+
 expect = require('expect.js')
 sinon = require('sinon')
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
@@ -27,10 +30,10 @@ describe 'User Account Registration', ->
             browser = new Browser()
             handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
 
-        describe 'When a user visits the client#/registration page', ->
+        describe 'When a user visits the #/registration page', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/registration').then(done, done)
+                browser.visit('http://dtt.local:3000/#/registration').then(done, done)
 
             it 'should contain all the inputs for the user registration', (done) ->
                 expect(browser.html('input[name=first_name]')).to.not.be.empty()
@@ -41,10 +44,10 @@ describe 'User Account Registration', ->
                 expect(browser.html('input[type=submit]')).to.not.be.empty()
                 done()
 
-        describe 'When a user visits the client#/registration page and fills the form with valid user data', ->
+        describe 'When a user visits the #/registration page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -59,10 +62,10 @@ describe 'User Account Registration', ->
                 expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>You can view the new resource   <a href=\"#/user/1/\">here</a>\n</p>"
                 done()
 
-        describe 'When a user visits the client#/registration page and submits an email that is already registered', ->
+        describe 'When a user visits the #/registration page and submits an email that is already registered', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -77,10 +80,10 @@ describe 'User Account Registration', ->
                 expect(browser.html('#server-response-container p')).to.equal "<p>Email is already registered</p>"
                 done()
 
-        describe 'When a user visits the client#/registration page and fills the form with invalid user data', ->
+        describe 'When a user visits the #/registration page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://localhost:3000/client#/registration').
+                browser.visit('http://dtt.local:3000/#/registration').
                     then(-> 
                         browser.
                             fill('first_name', '').

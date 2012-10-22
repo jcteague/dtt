@@ -18,7 +18,7 @@ define 'room_users_view', ['general_view'] , (GeneralView) ->
             for member in @data.members
                 user_id = get_user_field(member,'id')
                 user_name = get_user_field(member,'name')
-                nav.append "<li><a href='client#/user/#{user_id}'>#{user_name}</a></li>"
+                nav.append "<li><a href='/#/user/#{user_id}'>#{user_name}</a></li>"
             @$el.append nav
             @$el.append "</ul>"
             @

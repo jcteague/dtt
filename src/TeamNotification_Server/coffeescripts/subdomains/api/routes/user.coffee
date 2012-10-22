@@ -1,14 +1,19 @@
 methods = {}
-build = require('../support/routes_service').build
-user_validator = require('../support/validation/user_validator')
-user_callback_factory = require('../support/factories/user_callback_factory')
+build = require('../../../support/routes_service').build
+user_validator = require('../../../support/validation/user_validator')
+user_callback_factory = require('../../../support/factories/user_callback_factory')
 
 express = require('express')
 sha256 = require('node_hash').sha256
-config = require('../config')()
+config = require('../../../config')()
 
 methods.get_user = (req, res) ->
-    user_id = req.param('id')
+    get_user_collection(req, res, req.param('id'))
+
+methods.get_logged_user = (req, res) ->
+    get_user_collection(req, res, req.user.id)
+
+get_user_collection = (req, res, user_id) ->
     callback = (collection) ->
         res.json(collection.to_json())
 
@@ -70,7 +75,9 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
-            res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:req.headers.authorization}})
+            auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
+            #res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:req.headers.authorization}})
+            res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send({})
           
@@ -83,6 +90,7 @@ module.exports =
         app.get('/users/query', methods.get_users)
         app.get('/user/login', methods.login)
         app.post('/user/login',express.bodyParser(), methods.authenticate)
+        app.get('/user', methods.get_logged_user)
         app.get('/user/:id', methods.get_user)
         app.get('/user/:id/edit', methods.get_user_edit)
         app.post('/user/:id/edit', methods.post_user_edit)

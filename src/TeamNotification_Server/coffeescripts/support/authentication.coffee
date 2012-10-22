@@ -27,6 +27,7 @@ class Authentication
         if @is_whitelisted(request.path)
             next()
         else
+            #console.log 'AUTH', request.cookies, request.headers.authorization
             if typeof request.cookies != 'undefined' && typeof request.cookies.authtoken != 'undefined'
                 request.headers.authorization = request.cookies.authtoken
             passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)

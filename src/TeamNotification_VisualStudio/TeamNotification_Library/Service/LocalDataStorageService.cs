@@ -3,6 +3,7 @@ using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Service.FileSystem;
 using System.Linq;
+using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service
 {
@@ -22,7 +23,7 @@ namespace TeamNotification_Library.Service
             if (_user == null )
             {
                 var result = resourceHandler.Read();
-                if(result != null)
+                if(result.IsNotNull())
                     _user = result.user;
             }
             return _user;
@@ -42,6 +43,7 @@ namespace TeamNotification_Library.Service
         public void DeleteUser()
         {
             resourceHandler.Delete();
+            _user = null;
         }
 
         public void Store(LoginResponse response)

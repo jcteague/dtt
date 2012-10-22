@@ -1,6 +1,6 @@
-build = require('../support/routes_service').build
-registration_validator = require('../support/validation/registration_validator')
-registration_callback_factory = require('../support/factories/registration_callback_factory')
+build = require('../../../support/routes_service').build
+registration_validator = require('../../../support/validation/registration_validator')
+registration_callback_factory = require('../../../support/factories/registration_callback_factory')
 
 methods = {}
 methods.get_registration = (req, res) ->

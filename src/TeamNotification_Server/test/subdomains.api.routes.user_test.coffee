@@ -20,11 +20,11 @@ user_callback_factory_mock =
     get_for_success: sinon.stub()
     get_for_failure: sinon.stub()
 
-user = module_loader.require('../routes/user', {
+user = module_loader.require('../subdomains/api/routes/user', {
     requires:
-        '../support/validation/user_validator': user_validator_mock
-        '../support/factories/user_callback_factory': user_callback_factory_mock
-        '../support/routes_service': routes_service_mock
+        '../../../support/validation/user_validator': user_validator_mock
+        '../../../support/factories/user_callback_factory': user_callback_factory_mock
+        '../../../support/routes_service': routes_service_mock
         'express': express_mock
 })
 

@@ -153,6 +153,7 @@ namespace SocketIOClient
 						else
 						{
 							string wsScheme = (uri.Scheme == Uri.UriSchemeHttps ? "wss" : "ws");
+
 							this.wsClient = new WebSocket(
 								string.Format("{0}://{1}:{2}/socket.io/1/websocket/{3}", wsScheme, uri.Host, uri.Port, this.HandShake.SID),
 								string.Empty,

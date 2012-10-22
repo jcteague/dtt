@@ -12,11 +12,11 @@ registration_callback_factory_mock =
     get_for_success: sinon.stub()
     get_for_failure: sinon.stub()
 
-sut = module_loader.require('../routes/registration', {
+sut = module_loader.require('../subdomains/api/routes/registration', {
     requires:
-        '../support/routes_service': routes_service_mock
-        '../support/validation/registration_validator': registration_validator_mock
-        '../support/factories/registration_callback_factory': registration_callback_factory_mock
+        '../../../support/routes_service': routes_service_mock
+        '../../../support/validation/registration_validator': registration_validator_mock
+        '../../../support/factories/registration_callback_factory': registration_callback_factory_mock
 })
 
 describe 'Registration', ->

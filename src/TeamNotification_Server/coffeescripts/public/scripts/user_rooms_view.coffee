@@ -12,7 +12,7 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
             @$el.empty()
             navInner = $("<div>",{"class":"navbar-inner"})
             navContent = $("<div>",{"class":"container-fluid"})
-            userName = $("<a>", { "class":"brand", "href":"/client#/user/#{@data.user.user_id}/"})
+            userName = $("<a>", { "class":"brand", "href":"/#/user/#{@data.user.user_id}/"})
             userName.append @data.user.name
             roomName = $("<span/>", {"class": "room-name pull-left muted"}).append "(#{@model.get('room').name})"
             @$el.attr('class', 'navbar navbar-fixed-top')
@@ -24,7 +24,7 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
             userRoomsList = $("<ul>",{"class":"dropdown-menu"})
             
             for room in @data.user_rooms
-                userRoomsList.append "<li><a href='client#/room/#{room.room_id}/messages'>#{room.name}</a></li>"
+                userRoomsList.append "<li><a href='/#/room/#{room.room_id}/messages'>#{room.name}</a></li>"
             
             userRooms.append userRoomsList
             ul.append userRooms

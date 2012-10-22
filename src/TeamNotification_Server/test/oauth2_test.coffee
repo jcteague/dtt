@@ -1,3 +1,4 @@
+return
 should = require('should')
 sinon = require('sinon')
 module_loader = require('sandboxed-module')
