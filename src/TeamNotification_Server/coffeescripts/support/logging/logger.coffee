@@ -13,9 +13,7 @@ log_message = (level, args...) ->
         else
             msg.push val
 
-    #console.log 'To save...'
-    #console.log msg.join(', ')
-    #logentries_log[level](msg.join(', '))
+    logentries_log[level](msg.join(', '))
 
 module.exports =
     info: (args...) ->
