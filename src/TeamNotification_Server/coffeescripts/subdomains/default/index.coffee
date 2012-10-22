@@ -61,7 +61,6 @@ app.configure ->
     }))
 
 app.all '*', (req, res, next) ->
-    logger.info 'A test log value'
     unless req.secure
         res.redirect "#{config.site.surl}#{req.url}"
     next()

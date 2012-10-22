@@ -29,8 +29,8 @@ process.on 'SIGTERM', (err) ->
     process.exit(0)
 
 process.on 'uncaughtException', (err) ->
-    logger.error 'UNCAUGHT EXCEPTION', {error: err}
-    logger.error("[Inside 'uncaughtException' event]" + err.stack || err.message)
+    logger.critical 'UNCAUGHT EXCEPTION', {error: err}
+    logger.critical("[Inside 'uncaughtException' event]" + err.stack || err.message)
     app.close()
     process.exit(1)
 
