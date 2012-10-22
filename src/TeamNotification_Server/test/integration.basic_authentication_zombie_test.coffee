@@ -49,6 +49,6 @@ describe 'Basic Authentication Test', ->
                 response = status
                 done()
 
-        it 'should return a 200 status code', (done) ->
+        xit 'should return a 200 status code', (done) ->
             expect(response).to.equal 200
             done()

@@ -57,17 +57,22 @@ methods.github_authentication_callback = (req, res) ->
             'Accept': 'application/json'
             'Content-Type': 'application/x-www-form-urlencoded'
             'Content-Length': post_data.length
+
     post_req = http.request post_options, (post_res) ->
         post_res.setEncoding('utf8')
+        data_array = []
         post_res.on 'data', (chunk) ->
-            data = JSON.parse(chunk)
-            if(typeof(data.access_token) != undefined)
-                res.redirect("#{config.site.url}/#/github/repositories/#{data.access_token}")
-            else
-                res.send({success:false, messages:['There was a problem contacting github']})
+            data_array.push chunk
         post_res.on 'error', (error) ->
             console.log("Got error: " + error.message)
             res.send({success:false, messages:[error.message]})
+        post_res.on 'end', () ->
+            data = JSON.parse(data_array.join(''))
+            if(typeof(data.access_token) != undefined)
+                res.redirect("#{config.site.surl}/#/github/repositories/#{data.access_token}")
+            else
+                res.send({success:false, messages:['There was a problem contacting github']})
+
     post_req.end(post_data)
 
 module.exports =
