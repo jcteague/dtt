@@ -110,6 +110,15 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             escaped_message = $('<div/>').text(parsedBody.message).html()
             p[0].innerHTML = escaped_message
 
+		parsing_links: (message) ->
+            message_words = message.split " "
+            final_message = ''
+            for word in message_words
+                if word.indexOf("://") != -1
+                    word = "<a href='#{word}'>#{word}</a>"
+				final_message += word
+			final_message
+
         read_message_data: (message) ->
             name = message.name
             new_date = new Date()
@@ -123,7 +132,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages'], (G
             
             @last_user_id_that_posted = message.user_id
             
-            escaped_message = $('<div/>').text(parsedBody.message).html()
+            escaped_message = @parsing_links $('<div/>').text(parsedBody.message).html()
+			
+
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
                 p = document.createElement("p")
