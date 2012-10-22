@@ -24,7 +24,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                     w = "<a href='#{w}' target='_blank'>#{w}</a>"
                 else
                     w = w.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;').replace("'",'&#x27;').replace('/','&#x2F;')
-                final_message = final_message + w
+                final_message = final_message + w + ' '
             final_message
 
         get_cross_domain_json: (url, callback) ->
