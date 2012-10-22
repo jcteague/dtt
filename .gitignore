@@ -41,6 +41,7 @@ application.txt
 *.ncrunchproject
 *.ncrunchsolution
 *.swo
+.DS_Store
 
 config.js
 mocha_setup.js

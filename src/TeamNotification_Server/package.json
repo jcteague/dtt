@@ -37,8 +37,7 @@
     "jquery": "1.7.x",
     "sandboxed-module": "0.1.x",
     "sinon": "1.4.x",
-    "tobi": "*",
-    "jquery": "1.7.x"
+    "tobi": "*"
   },
   "subdomain": "dtt",
   "scripts": {
