@@ -10,8 +10,13 @@ task :build_local => [
   'rest_service:build_local'
 ]
 
-task :build_release => [:build_local] do
-end
+task :build_release => [
+  'rest_service:build_production'
+]
+
+task :build_vs_package => [
+  'visual_studio:build'
+]
 
 task :create_migration, :migration_name do |t, args|
   migration_name = args[:migration_name]
@@ -26,4 +31,8 @@ end
 
 task :rollback_db => [
   'rest_service:rollback_db'
+]
+
+task :deploy => [
+  'rest_service:deploy'
 ]

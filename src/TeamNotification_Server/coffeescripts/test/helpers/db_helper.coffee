@@ -2,19 +2,18 @@ Q = require('q')
 _ = require('underscore')
 async = require('async')
 pg_gateway = require('../../support/database/pg_gateway')
-redis_cli = require("redis").createClient()
+redis_cli = require("../../support/redis/redis_gateway").open()
 
-redis ={ 
+redis =
     save: (table_object) ->
         table_name = table_object.name
-        console.log table_name
         for entity in table_object.entities
-            #redis3.zadd("room:#{room_id}:messages", new Date().getTime(), JSON.stringify(newMessage))
             redis_cli.zadd(table_name,new Date().getTime(), JSON.stringify(entity))
     clear: (tables) ->
         for table_name in tables
             redis_cli.del(table_name)
-    }
+    end: ->
+        redis_cli.end()
 
 clear = (tables...) ->
     return (callback) ->
@@ -40,7 +39,13 @@ deferred_create = (table_structure) ->
     return (callback) ->
         pg_gateway.open (client) ->
             column_types = ("#{name} #{type}" for name, type of table_structure.columns).join(',')
-            client.query "CREATE TABLE #{table_structure.name}(#{column_types})", (err, result) ->
+            has_id_column = (column for column, type of table_structure.columns when column is 'id').length > 0
+            if has_id_column
+                create_statement = "CREATE TABLE #{table_structure.name}(#{column_types}, PRIMARY KEY(id))"
+            else
+                create_statement = "CREATE TABLE #{table_structure.name}(#{column_types})"
+
+            client.query create_statement, (err, result) ->
                 if err
                     console.log err
 

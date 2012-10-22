@@ -17,10 +17,8 @@ class Authentication
         passport.initialize()
 
     findByUserName: (username,password,done) ->
-        @repository.find(email: username).then (users) ->
+        @repository.find(email: username, password: sha256(password)).then (users) ->
             if !users? or !users[0]?
-                return done(null, false)
-            if users[0].password != sha256(password)
                 return done(null, false)
             user = users[0]
             done(null, id: user.id, email: user.email, name: user.first_name)
@@ -29,9 +27,16 @@ class Authentication
         if @is_whitelisted(request.path)
             next()
         else
-            passport.authenticate('basic', {session:false})(request, response, next)
+            #console.log 'AUTH', request.cookies, request.headers.authorization
+            if typeof request.cookies != 'undefined' && typeof request.cookies.authtoken != 'undefined'
+                request.headers.authorization = request.cookies.authtoken
+            passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)
 
     is_whitelisted: (path) ->
-        whitelisted_paths.indexOf(path) isnt -1
+        for allowed_path in whitelisted_paths
+            if typeof allowed_path is 'object'
+                return true if path.match(allowed_path)?
+            return true if path is allowed_path
+        false
 
 exports = module.exports = Authentication

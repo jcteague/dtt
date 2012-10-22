@@ -6,7 +6,7 @@ RoomMessagesCollection = module_loader.require('../support/collections/room_mess
 
 describe 'Room Messages Collection', ->
         
-    sut = room_id = room_messages = messages = body = null
+    sut = room_id = room_messages = messages = body = data = null
 
     describe 'and there are room messages', ->
 
@@ -14,11 +14,14 @@ describe 'Room Messages Collection', ->
             room_id = 1
             body = {message: 'blah!'}
             room_messages = [ 
-                JSON.stringify({ "id":10, "body":JSON.stringify(body), "date":'2012-06-29 11:11', "user_id":1, "name":"james", "room_id":room_id })
-                JSON.stringify({ "id":11, "body":JSON.stringify(body), "date":'2012-06-29 11:12', "user_id":1, "name":"jhon", "room_id":room_id })
+                JSON.stringify({ "id":10, "body":JSON.stringify(body), "date":'2012-06-29 11:11', "user_id":1, "name":"james", "room_id":room_id, 'stamp':1234 })
+                JSON.stringify({ "id":11, "body":JSON.stringify(body), "date":'2012-06-29 11:12', "user_id":1, "name":"jhon", "room_id":room_id,'stamp':1234 })
                 ]
-            
-            sut = new RoomMessagesCollection(room_messages)
+            user = {id:1, name:'James'}
+            rooms = []
+            members= []
+            data = {room_id:room_id, messages:room_messages, user_id:user.id, name:user.name, chat_rooms:rooms, members:members }
+            sut = new RoomMessagesCollection(data)
             done()
 
         describe 'constructor', ->
@@ -50,7 +53,7 @@ describe 'Room Messages Collection', ->
                     message = result['messages'][0]
                     room_message_parsed = JSON.parse(room_messages[0])
                     
-                    expect(message['data']).to.eql [{ 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': body.message}, { 'name':'datetime', 'value':room_message_parsed.date }]
+                    expect(message['data']).to.eql [{ 'name':'user_id', 'value': room_message_parsed.user_id}, { 'name':'user', 'value': room_message_parsed.name}, { 'name':'body', 'value': JSON.stringify(body)}, { 'name':'datetime', 'value':room_message_parsed.date }, {'name':'stamp', 'value':1234}]
                     done()
 
                 it 'should return a links array in the collection links', (done) ->
@@ -61,21 +64,23 @@ describe 'Room Messages Collection', ->
 
                 it 'should contain template data for the message', (done) ->
                     template = result['template']['data']
-                    expect(template[0]).to.eql {'name': 'message', 'label': 'Message', 'type': 'string-big', 'maxlength': 100}
+                    expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big'}
                     done()
 
     describe 'and there are not any room messages', ->
 
         beforeEach (done) ->
             room_id = 1
-            room_messages = is_empty: true, room_id: room_id
-            sut = new RoomMessagesCollection(room_messages)
+            data.is_empty = true
+            data.messages = []
+            room_messages = []
+            sut = new RoomMessagesCollection(data)
             done()
 
         describe 'constructor', ->
 
             it 'should have the current room_messages value set inside the object', (done) ->
-                expect(sut.room_messages).to.equal(room_messages)
+                expect(sut.data.messages).to.eql room_messages
                 done()
 
         describe 'to_json', ->
@@ -83,7 +88,7 @@ describe 'Room Messages Collection', ->
             result = room = null
 
             beforeEach (done) ->
-                sut.room_messages = is_empty: true, room_id: room_id
+                #sut.room_messages = is_empty: true, room_id: room_id
                 result = sut.to_json()
                 done()
 
@@ -104,5 +109,5 @@ describe 'Room Messages Collection', ->
 
             it 'should contain template data for the message', (done) ->
                 template = result['template']['data']
-                expect(template[0]).to.eql {'name': 'message', 'label': 'Message', 'type': 'string-big', 'maxlength': 100}
+                expect(template[0]).to.eql {'name': 'message', 'label': 'Send Message', 'type': 'string-big'}
                 done()

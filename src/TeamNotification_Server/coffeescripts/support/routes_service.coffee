@@ -1,28 +1,40 @@
 Q = require('q')
 Repository = require('./repository')
 CollectionActionResolver = require('./collection_action_resolver')
+email_sender = require('./email/email_sender')
+email_template = require('./email/templates/email_template')
 
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
 
-add_user_to_chat_room = (user_id, room_id) ->
+add_user_to_chat_room = (current_user, email, room_id) ->
     # TODO: How can we make this instances live outside and created within require?
     user_repository = new Repository('User')
     chat_room_repository = new Repository('ChatRoom')
-
-    user_id = parseInt(user_id, 10)
+    chat_room_invitation_repository = new Repository('ChatRoomInvitation')
     defer = Q.defer()
-    user_repository.get_by_id(user_id).then (user) ->
-        if user?
+    user_repository.find(email:email).then (users) ->
+        if users?
+            user = users[0]
             chat_room_repository.get_by_id(room_id).then (chat_room) ->
-                if (member for member in chat_room.users when member.id is user_id).length is 0
+                if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
-                        defer.resolve({success: true, messages: ["user added"]})
+                        response = get_server_response(true, ["user added"], "/room/#{room_id}/users/")
+                        defer.resolve(response)
                     )
                 else
-                    defer.resolve({success: false, messages: ["user is already in the room"]})
+                    response = get_server_response(false, ["user is already in the room"], "/user/#{user.id}/")
+                    defer.resolve(response)
         else
-            defer.resolve({success: false, messages: ["user does not exist"]})
+            chat_room_repository.get_by_id(room_id).then (chat_room) ->
+                chat_room_invitation_repository.save({email:email, chat_room_id:room_id, user_id: current_user.id})
+                
+                template = email_template.for.invitation.using
+                    email: email
+                    chat_room: chat_room
+                email_sender.send template
+                response = get_server_response(false, ["An email invitation has been sent to #{email}"], "/room/#{room_id}/invitations/")
+                defer.resolve(response)
 
     defer.promise
 
@@ -38,7 +50,12 @@ is_user_in_room = (user_id, room_id) ->
 
     defer.promise
 
+get_server_response = (success, messages, link, redirect=false) ->
+    return {success:success, messages:messages, link:link, redirect:redirect}
+
+
 module.exports =
     build: build
+    get_server_response: get_server_response
     add_user_to_chat_room: add_user_to_chat_room
     is_user_in_room: is_user_in_room

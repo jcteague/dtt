@@ -2,5 +2,7 @@ link(rel='stylesheet', href='/stylesheets/jquery.autocomplete.css')
 div
   #client-content
 
-script(type='text/javascript', src='/scripts/extensions.js')
+script(type='text/javascript', src='#{model.api}/socket.io/socket.io.js')
+script(type='text/javascript', src='/scripts/has.js')
+script(type='text/javascript', src='/scripts/prettify/prettify.js')
 script(type='text/javascript', data-main='/scripts/main.js', src='/scripts/require.js')

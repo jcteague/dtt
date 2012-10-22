@@ -7,15 +7,15 @@ development:
 
 test:
   adapter: postgresql
-  database: dtt_main
+  database: dtt_test
   username: intellisys
   password: welc0me
   host: test_ip
 
 production:
   adapter: postgresql
-  database: dtt_main
-  username: intellisys
-  password: welc0me
-  host: production_ip
-
+  database: d9er2dp9rejk7k
+  username: huyuuxyveqegxe
+  password: tMU5vspNvcoPxePlBbK5DX1Jvx
+  host: ec2-23-21-91-108.compute-1.amazonaws.com
+  port: 5432

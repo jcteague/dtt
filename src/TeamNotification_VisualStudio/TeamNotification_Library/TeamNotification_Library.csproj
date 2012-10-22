@@ -40,11 +40,31 @@
     <Reference Include="BookSleeve">
       <HintPath>..\packages\BookSleeve.1.1.0.7\lib\BookSleeve.dll</HintPath>
     </Reference>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Json">
       <HintPath>..\packages\System.Json.4.0.20126.16343\lib\net40\System.Json.dll</HintPath>
     </Reference>
@@ -66,31 +86,244 @@
     <Reference Include="System.Web.Http.WebHost">
       <HintPath>..\packages\AspNetWebApi.4.0.20126.16343\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net">
+      <HintPath>..\packages\WebSocket4Net.0.8\lib\net40\WebSocket4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WPFTaskbarNotifier">
+      <HintPath>..\packages\WPFTaskbarNotifier\WPFTaskbarNotifier.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\TeamNotificationLibraryRegistry.cs" />
+    <Compile Include="Configuration\GlobalConstants.cs" />
+    <Compile Include="Configuration\IStoreConfiguration.cs" />
+    <Compile Include="Configuration\LoginConfiguration.cs" />
+    <Compile Include="Configuration\IProvideConfiguration.cs" />
+    <Compile Include="Configuration\LoginConfigurationProvider.cs" />
+    <Compile Include="Configuration\RedisConfiguration.cs" />
+    <Compile Include="Configuration\RedisConfigurationProvider.cs" />
+    <Compile Include="Configuration\ServerConfiguration.cs" />
+    <Compile Include="Configuration\ServerConfigurationProvider.cs" />
+    <Compile Include="Extensions\DTEExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\FlowDocumentExtensions.cs" />
+    <Compile Include="Extensions\FunctionalExtensions.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Functional\Just.cs" />
+    <Compile Include="Functional\Maybe.cs" />
+    <Compile Include="Functional\Nothing.cs" />
+    <Compile Include="Models\ChatMessageBody.cs" />
+    <Compile Include="Models\ChatMessageModel.cs" />
+    <Compile Include="Models\Collection.cs" />
+    <Compile Include="Models\CollectionData.cs" />
+    <Compile Include="Models\ICanBeMappedAsResources.cs" />
+    <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\ServerResponse.cs" />
+    <Compile Include="Models\UI\ChatUIElements.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Async\AbstractEventHandler.cs" />
+    <Compile Include="Service\Async\AlertMessagesEvents.cs" />
+    <Compile Include="Service\Async\AlertMessageWasRequested.cs" />
+    <Compile Include="Service\Async\ClipboardEvents.cs" />
+    <Compile Include="Service\Async\CodePasteEvents.cs" />
+    <Compile Include="Service\Async\CustomEventHandler.cs" />
+    <Compile Include="Service\Async\CustomEventArgs.cs" />
+    <Compile Include="Service\Async\IHandleAlertMessages.cs" />
+    <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
+    <Compile Include="Service\Async\IHandleCodePaste.cs" />
+    <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
+    <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
+    <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
+    <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
+    <Compile Include="Service\Async\Models\UserHasLogout.cs" />
+    <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
+    <Compile Include="Service\Async\UserAccountEvents.cs" />
+    <Compile Include="Service\Async\Models\ClipboardHasChanged.cs" />
+    <Compile Include="Service\Async\Models\CodePasteWasClicked.cs" />
+    <Compile Include="Service\Async\Models\IHaveEventArguments.cs" />
+    <Compile Include="Service\Async\Models\ToolWindowWasDocked.cs" />
+    <Compile Include="Service\Async\Models\ToolWindowWasMoved.cs" />
+    <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
+    <Compile Include="Service\Async\Models\UserHasLogged.cs" />
+    <Compile Include="Service\Async\ToolWindowEvents.cs" />
+    <Compile Include="Service\Chat\ChatMessagesService.cs" />
+    <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatNotificationMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IParseMessagesForLinks.cs" />
+    <Compile Include="Service\Chat\Formatters\MessageLinksParser.cs" />
+    <Compile Include="Service\Chat\Formatters\NotificationMessageFormatter.cs" />
+    <Compile Include="Service\Controls\IEditMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
+    <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
+    <Compile Include="Service\Controls\MessagesEditor.cs" />
+    <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
+    <Compile Include="Service\Chat\Formatters\UserMessageIndicatorFormatter.cs" />
+    <Compile Include="Service\Chat\IHandleChatMessages.cs" />
+    <Compile Include="Service\Clipboard\ClipboardDataStorageService.cs" />
+    <Compile Include="Service\Clipboard\IHandleSystemClipboard.cs" />
+    <Compile Include="Service\Clipboard\IHandleVisualStudioClipboard.cs" />
+    <Compile Include="Service\Clipboard\IStoreClipboardData.cs" />
+    <Compile Include="Service\Clipboard\SystemClipboardHandler.cs" />
+    <Compile Include="Service\Clipboard\VisualStudioClipboardHandler.cs" />
     <Compile Include="Service\Container.cs" />
+    <Compile Include="Service\Content\ContentBuilder.cs" />
+    <Compile Include="Service\Content\FieldValueGetter.cs" />
+    <Compile Include="Service\Controls\IAnimateControl.cs" />
+    <Compile Include="Service\Content\IBuildContent.cs" />
+    <Compile Include="Service\Content\IBuildTable.cs" />
+    <Compile Include="Service\Content\ICreateElementsFromFields.cs" />
+    <Compile Include="Service\Content\IBuildStackPanels.cs" />
+    <Compile Include="Service\Content\IGetFieldValue.cs" />
+    <Compile Include="Service\Content\StackPanelBuilder.cs" />
+    <Compile Include="Service\Content\TableBuilder.cs" />
+    <Compile Include="Service\Controls\ChatRoomsControlService.cs" />
+    <Compile Include="Service\Controls\FormControlHelpers.cs" />
+    <Compile Include="Service\Controls\IHelpControls.cs" />
+    <Compile Include="Service\Controls\IServiceChatRoomsControl.cs" />
+    <Compile Include="Service\Controls\IServiceLoginControl.cs" />
+    <Compile Include="Service\Controls\LoginControlService.cs" />
+    <Compile Include="Service\Factories\ChatMessageDataFactory.cs" />
+    <Compile Include="Service\Factories\ClipboardHasChangedArgumentsFactory.cs" />
+    <Compile Include="Service\Factories\FormUrlEncodedContentFactory.cs" />
+    <Compile Include="Service\Factories\HttpClientHandlerFactory.cs" />
+    <Compile Include="Service\Factories\ICreateCallback.cs" />
+    <Compile Include="Service\Factories\ICreateChatMessageData.cs" />
+    <Compile Include="Service\Factories\ICreateClipboardArguments.cs" />
+    <Compile Include="Service\Factories\ICreateFormUrlEncodedContent.cs" />
+    <Compile Include="Service\Factories\ICreateInstances.cs" />
+    <Compile Include="Service\Factories\ICreateUserFromResponse.cs" />
+    <Compile Include="Service\Factories\PanelFactory.cs" />
+    <Compile Include="Service\Factories\SocketIOClientFactory.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromPasswordFactory.cs" />
+    <Compile Include="Service\Factories\UI\CollectionDataFromTextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\AvalonSyntaxHighlightBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\ICreateSyntaxBlockUIInstances.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\ICreateSyntaxHighlightBox.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\SyntaxBlockUIContainerFactory.cs" />
+    <Compile Include="Service\Factories\UI\IBuildCollectionDataFromElement.cs" />
+    <Compile Include="Service\Factories\UI\ICreateLabels.cs" />
+    <Compile Include="Service\Factories\UI\ICreateUIElements.cs" />
+    <Compile Include="Service\Factories\UI\LabelFactory.cs" />
+    <Compile Include="Service\Factories\UI\StackPanelFactory.cs" />
+    <Compile Include="Service\Factories\UI\Highlighters\AurelienRibonSyntaxHighlightBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\TextBoxFactory.cs" />
+    <Compile Include="Service\Factories\UI\PasswordBoxFactory.cs" />
+    <Compile Include="Service\FileSystem\Base64Encoder.cs" />
+    <Compile Include="Service\FileSystem\FileHandler.cs" />
+    <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
+    <Compile Include="Service\FileSystem\IHandleFiles.cs" />
+    <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
+    <Compile Include="Service\Highlighters\AurelianRibonSyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
+    <Compile Include="Service\Http\HttpClientHandlerGetter.cs" />
     <Compile Include="Service\Http\HttpRequestsClient.cs" />
+    <Compile Include="Service\Http\IGetHttpClientHandler.cs" />
     <Compile Include="Service\Http\IListenToMessages.cs" />
     <Compile Include="Service\Http\IConnectToRedis.cs" />
     <Compile Include="Service\Http\IRedisConnection.cs" />
     <Compile Include="Service\Http\ISendHttpRequests.cs" />
     <Compile Include="Service\Http\ISendChatMessages.cs" />
     <Compile Include="Service\Http\ChatMessageSender.cs" />
+    <Compile Include="Service\Http\ISerializeJSON.cs" />
+    <Compile Include="Service\Http\ISubscribeToPubSub.cs" />
+    <Compile Include="Service\Http\IWrapSocketIOClient.cs" />
+    <Compile Include="Service\Http\JSONSerializer.cs" />
     <Compile Include="Service\Http\MessageListener.cs" />
     <Compile Include="Service\Http\MessageReceivedAction.cs" />
     <Compile Include="Service\Http\RedisClient.cs" />
     <Compile Include="Service\Http\RedisConnection.cs" />
+    <Compile Include="Service\Http\SocketIOClientWrapper.cs" />
+    <Compile Include="Service\Http\SocketIOPubSubClient.cs" />
+    <Compile Include="Service\Http\SocketIOMessageListener.cs" />
+    <Compile Include="Service\IStoreDataLocally.cs" />
+    <Compile Include="Service\LocalDataStorageService.cs" />
+    <Compile Include="Service\LocalSystem\ApplicationGlobalState.cs" />
+    <Compile Include="Service\LocalSystem\DocumentWrapper.cs" />
+    <Compile Include="Service\LocalSystem\DteHandler.cs" />
+    <Compile Include="Service\LocalSystem\DteHandlerCreator.cs" />
+    <Compile Include="Service\LocalSystem\DteStore.cs" />
+    <Compile Include="Service\LocalSystem\IFindVisualStudioItems.cs" />
+    <Compile Include="Service\LocalSystem\IHandleDTE.cs" />
+    <Compile Include="Service\LocalSystem\ICreateDteHandler.cs" />
+    <Compile Include="Service\LocalSystem\IListVisualStudioProjects.cs" />
+    <Compile Include="Service\LocalSystem\IStoreDTE.cs" />
+    <Compile Include="Service\LocalSystem\IStoreGlobalState.cs" />
+    <Compile Include="Service\LocalSystem\Messages\IShowAlertMessages.cs" />
+    <Compile Include="Service\LocalSystem\PastingResponse.cs" />
+    <Compile Include="Service\LocalSystem\SelectionWrapper.cs" />
+    <Compile Include="Service\LocalSystem\SolutionWrapper.cs" />
+    <Compile Include="Service\LocalSystem\TextDocumentWrapper.cs" />
+    <Compile Include="Service\LocalSystem\VisualStudioItemsFinder.cs" />
+    <Compile Include="Service\LocalSystem\VisualStudioProjectsList.cs" />
+    <Compile Include="Service\LocalSystem\WindowWrapper.cs" />
+    <Compile Include="Service\Logging\ILog.cs" />
+    <Compile Include="Service\Logging\Logger.cs" />
+    <Compile Include="Service\Logging\Providers\IConfigureLogging.cs" />
+    <Compile Include="Service\Logging\Providers\LeTarget.cs" />
+    <Compile Include="Service\Logging\Providers\NLogConfiguration.cs" />
+    <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
+    <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
+    <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
+    <Compile Include="Service\Mappers\CollectionDataListToFormUrlEncodedContentMapper.cs" />
+    <Compile Include="Service\Mappers\IMapEntities.cs" />
+    <Compile Include="Service\Providers\DbConnectionProvider.cs" />
+    <Compile Include="Service\Providers\IProvideDbConnection.cs" />
+    <Compile Include="Service\Providers\IProvideUser.cs" />
+    <Compile Include="Service\Providers\UserProvider.cs" />
+    <Compile Include="Service\ToolWindow\IActOnChatElements.cs" />
+    <Compile Include="Service\ToolWindow\IGetToolWindowAction.cs" />
+    <Compile Include="Service\ToolWindow\IGetToolWindowOrientation.cs" />
+    <Compile Include="Service\ToolWindow\MessageInputAtBottom.cs" />
+    <Compile Include="Service\ToolWindow\MessageInputAtRight.cs" />
+    <Compile Include="Service\ToolWindow\ToolWindowActionGetter.cs" />
+    <Compile Include="Service\ToolWindow\ToolWindowOrientationGetter.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Key.snk" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj">
+      <Project>{10A9ECD3-AE1E-494D-9A27-8A32DD581759}</Project>
+      <Name>AurelienRibon.Ui.SyntaxHighlightBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketIO\SocketIOClient.csproj">
+      <Project>{352C9BC1-F74C-4741-A09D-7227BC60C057}</Project>
+      <Name>SocketIOClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\Timing\" />
+    <Folder Include="Service\Wrappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

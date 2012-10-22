@@ -1,4 +1,4 @@
-define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jquery_autocomplete, underscore) ->
+define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config'], ($, jquery_autocomplete, underscore, config) ->
 
     class QueryRenderer
 
@@ -13,9 +13,8 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
 
         autocomplete: (template) ->
             entity = template.rel
-            input = $('<input>',{"type":"text","name":template.data[0].name})
-            hidden_input = $('<input>',{"type":"hidden","name": "id"})
-            submit = $('<input>', {"type":"submit", "class": "submit"})
+            input = $('<input>',{"type":"text","name":template.data[0].name,"class":"search-query"})
+            submit = $('<input>', {"type":"submit", "class": "btn btn-primary"})
 
             label = $('<label>', {"for":template.data[0].name})
             label.text(template.prompt)
@@ -25,7 +24,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
                 id = _.find data, (obj) ->
                     obj.name is 'id'
                 name = _.find data, (obj) ->
-                    obj.name is 'name'
+                    obj.name is 'email'
 
                 """<span class="name">#{name.value}</span><span class="hidden">#{id.value}</span>"""
 
@@ -35,26 +34,33 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore'], ($, jq
 
             on_select = (selected) ->
                 element = $(selected.value)
-                input.val(element.filter('.name').text())
-                hidden_input.val(element.filter('.hidden').text())
+                selection = element.filter('.name').text()
+                input.val(selection)
 
             # To prevent duplicate results
             $('.acResults').remove()
-            input.autocomplete("http://localhost:3000#{template.href}", {
+            # Move this concern to happen only once globally
+            if $.cookie('authtoken')?
+                $.ajaxSetup
+                    beforeSend: (jqXHR) ->
+                        authToken = $.cookie('authtoken')
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+            input.autocomplete("#{config.api.url}#{template.href}", {
                 remoteDataType: 'json'
                 processData: processor
                 onItemSelect: on_select
-                mustMatch: true
-                selectFirst: true
+                mustMatch: false
+                selectFirst: false
                 autoFill: true
                 minChars: 1
-                onNoMatch: ->
-                    hidden_input.val ''
-                onFinish: ->
-                    $('input[name=id]').val($('.acSelect .hidden').text())
-
             })
-            $('<form>', {action: template.submit}).append(label, input, hidden_input, submit)
+            query_class = "well form-horizontal"
+            if typeof template.query_class != 'undefined'
+                query_class = template.query_class
+                
+            $('<form>', {action: template.submit, "class":query_class}).append(label, input, submit)
 
         generator_selector: (field) =>
             @autocomplete if field is 'autocomplete'

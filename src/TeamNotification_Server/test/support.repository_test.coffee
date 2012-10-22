@@ -125,3 +125,48 @@ describe 'Repository', ->
         it 'should resolve the promise with the saved entity', (done) ->
             sinon.assert.calledWith(deferred.resolve, saved_entity)
             done()
+
+    describe 'update', ->
+
+        result = expected_result = entity_data = deferred = updated_entity = db_entity = save_spy = null
+
+        beforeEach (done) ->
+            entity_data =
+                id: 99
+                name: 'foo updated'
+                email: 'bar updated'
+
+            save_spy = sinon.spy()
+
+            db_entity =
+                id: 99
+                name: 'foo'
+                email: 'bar'
+                save: (callback) ->
+                    save_spy()
+                    callback(false, updated_entity)
+
+            db_entity_promise =
+                then: (callback) ->
+                    callback(db_entity)
+            sinon.stub(sut, 'get_by_id').withArgs(entity_data.id).returns(db_entity_promise)
+            deferred =
+                promise: 'q-promise'
+                resolve: sinon.stub()
+            q_mock.defer.returns deferred
+
+            expected_result = deferred.promise
+            result = sut.update(entity_data)
+            done()
+
+        it 'should return a promise', (done) ->
+            expect(result).to.equal expected_result
+            done()
+
+        it 'should save the entity', (done) ->
+            sinon.assert.called(save_spy)
+            done()
+
+        it 'should resolve the promise with the saved entity', (done) ->
+            sinon.assert.calledWith(deferred.resolve, updated_entity)
+            done()

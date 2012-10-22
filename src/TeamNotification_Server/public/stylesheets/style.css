@@ -9,9 +9,9 @@ a {
 
 label { vertical-align: top;}
 
-textarea { vertical-align: bottom;}
+/*textarea { vertical-align: bottom;}*/
 
-input { vertical-align: bottom;}
+/*input { vertical-align: top; }*/
 
 .string-big { color: green; }
 .string { color: green; }
@@ -21,3 +21,27 @@ input { vertical-align: bottom;}
 .key { color: red; }
 
 .hidden { display: none; }
+
+.scroll-box {
+    overflow-x:hidden;
+    overflow:auto;
+    
+}
+
+.new_message {
+    background-color:#fcf9ce;
+}
+pre {
+	font-weight: bolder;
+	border:0 !important; 
+}
+
+#user-rooms-container .room-name {
+    padding: 8px 20px 12px;
+}
+
+#messages-container p {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

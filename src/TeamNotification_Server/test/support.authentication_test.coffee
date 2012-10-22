@@ -74,20 +74,20 @@ describe 'Authentication', ->
 
         describe 'and the user exists on the database', ->
 
-            express_done = null
+            express_done = promise = null
 
             beforeEach (done) ->
-                hash_mock.sha256.withArgs(password).returns(encrypted)
                 user = {id: 1, email: username, password: encrypted, name:name}
                 promise = 
                     then: (callback) ->
                         callback([user])
-                sinon.stub(sut.repository, 'find').withArgs(email: username).returns(promise)
                 done()
 
             describe 'and the password matches the username', ->
 
                 beforeEach (done) ->
+                    hash_mock.sha256.withArgs(password).returns(encrypted)
+                    sinon.stub(sut.repository, 'find').withArgs(email: username, password: encrypted).returns(promise)
                     express_done = sinon.spy()
                     sut.findByUserName(username, password, express_done)
                     done()
@@ -99,8 +99,14 @@ describe 'Authentication', ->
             describe 'and the password does not match the username', ->
 
                 beforeEach (done) ->
+                    user = null
+                    wrong_encrypted = 'wrong encrypted'
+                    wrong_password = 'foo123f'
+                    hash_mock.sha256.withArgs(wrong_password).returns(wrong_encrypted)
                     express_done = sinon.spy()
-                    sut.findByUserName(username, 'foo123f', express_done)
+                    sut.repository.find = sinon.stub()
+                    sut.repository.find.withArgs(email: username, password: wrong_encrypted).returns(promise)
+                    sut.findByUserName(username, wrong_password, express_done)
                     done()
 
                 it 'should call the done with false', (done) ->
@@ -113,10 +119,12 @@ describe 'Authentication', ->
 
             beforeEach (done) ->
                 express_done = sinon.spy()
+                hash_mock.sha256.withArgs(password).returns(encrypted)
+                username = 'wrong username =('
                 promise = 
                     then: (callback) ->
                         callback(null)
-                sinon.stub(sut.repository, 'find').withArgs(email: username).returns(promise)
+                sinon.stub(sut.repository, 'find').withArgs(email: username, password:encrypted ).returns(promise)
 
                 sut.findByUserName(username, password, express_done)
                 done()
@@ -145,12 +153,12 @@ describe 'Authentication', ->
                 passport_mock.authenticate.reset()
                 sinon.stub(sut, 'is_whitelisted').withArgs(req.path).returns(false)
                 authentication_func = sinon.spy()
-                passport_mock.authenticate.withArgs('basic', session: false).returns(authentication_func)
+                passport_mock.authenticate.withArgs('basic', session: false, failureRedirect: '/user/login').returns(authentication_func)
                 sut.authenticate(req, res, next)
                 done()
 
             it 'should authenticate with basic', (done) ->
-                sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false)
+                sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false, failureRedirect: '/user/login')
                 done()
 
             it 'should call the authentication function with the request, response and next', (done) ->

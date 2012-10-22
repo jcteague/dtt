@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Syntax name="javaScript">
+  <!-- Words rules will only highlight the provided words -->
+  <HighlightWordsRule name="Blue words">
+    <Words>
+      break case catch continue debugger default delete do else finally for function 
+      if in instanceof new return switch this throw try typeof var void while with
+    </Words>
+    <IgnoreCase>true</IgnoreCase>
+    <Foreground>#0000FF</Foreground>
+    <FontWeight>Bold</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </HighlightWordsRule>
+
+  <!-- Line rules will highlight the LineStart token as well as the rest of the line -->
+  <HighlightLineRule name="Comments">
+    <LineStart>//</LineStart>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#008800</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </HighlightLineRule>
+
+  <!-- Advanced rules use a regular expression to find what they must highlight -->
+  <!-- Do not overuse them, as they have a great computer time cost -->
+  <AdvancedHighlightRule name="Numbers">
+    <Expression>\b([0-9]+)\b</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#0022FF</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+
+  <AdvancedHighlightRule name="Strings">
+    <Expression>"(?:[^"\\]+|\\.)*"</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#AA0000</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+
+  <AdvancedHighlightRule name="MultiLineComments">
+    <Expression>(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)</Expression>
+    <IgnoreCase>false</IgnoreCase>
+    <Foreground>#008800</Foreground>
+    <FontWeight>Normal</FontWeight>
+    <FontStyle>Normal</FontStyle>
+  </AdvancedHighlightRule>
+</Syntax>

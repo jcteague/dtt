@@ -56,7 +56,7 @@ describe 'Room Members Collection', ->
             expect(result['queries'][0]).to.have.property('type', 'autocomplete')
             expect(result['queries'][0]).to.have.property('submit', "/room/#{chat_room.id}/users")
             expect(result['queries'][0]['data']).to.have.length(1)
-            expect(result['queries'][0]['data'][0]).to.have.property('name', 'name')
+            expect(result['queries'][0]['data'][0]).to.have.property('name', 'email')
             expect(result['queries'][0]['data'][0]).to.have.property('value')
                        
             done()

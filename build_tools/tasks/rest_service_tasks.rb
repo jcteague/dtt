@@ -11,15 +11,61 @@ namespace :rest_service do
     :migrate
   ]
 
+  task :build_production => [
+    :prod_environment,
+    :update_packages,
+    :compile_coffeescript,
+    #:test, # This should run on staging env
+    :migrate,
+    #:package_and_deploy
+    :package,
+    :run_production
+  ]
+
+  task :deploy => [
+    #:compile_coffeescript,
+    #:test,
+    :package_and_deploy
+  ]
+
+  task :package_and_deploy do
+      Dir.make_temp_dir(RestDeployFolder) do |deploy|
+        Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
+          sh "cp -r #{f} #{deploy}"
+        end
+        sh "cp #{File.join(RestServiceBuildTools, 'templates', 'nodejitsu_package.json')} package.json"
+        sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+        sh "coffee -c app.coffee"
+        sh "jitsu deploy"
+      end
+  end
+
+  task :package do
+    Dir.recreate_dir RestDeployFolder
+    Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
+      sh "cp -r #{f} #{RestDeployFolder}"
+    end
+    sh "node #{File.join(RestServiceBuildTools, "r.js")} -o #{File.join(RestServiceRoot, 'public', 'scripts', 'build.js')}"
+    sh "coffee -c #{File.join(RestDeployFolder, 'app.coffee')}"
+  end
+
+  task :run_production do
+    #sh "sudo stop dtt"
+    #sh "sudo start dtt"
+    sh "sh #{File.join(RestDeployFolder, 'stop_production.sh')}"
+    sh "sh #{File.join(RestDeployFolder, 'start_production.sh')}"
+  end
+
   task :dev_environment do
     ActiveRecord::Base.establish_connection(db_config["development"])
   end
 
-  task :compile_coffeescript do
-      sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
+  task :prod_environment do
+    ActiveRecord::Base.establish_connection(db_config["production"])
   end
 
-  multitask :integration_test => [:run_test_server] do
+  task :compile_coffeescript do
+      sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
   end
 
   task :test do

@@ -1,71 +1,76 @@
-###
-Module dependencies.
-###
+crypto = require('crypto')
+fs = require('fs')
+path = require('path')
+http = require('http')
+config = require('./config')()
+
+private_key = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'star_yacketyapp_com.key'))
+certificate = fs.readFileSync(path.join(__dirname, 'certificates', config.env, 'sslchain.crt'))
+
+credentials = 
+    key: private_key
+    cert: certificate
 
 express = require('express')
 
-Authentication = require('./support/authentication')
-auth = new Authentication()
 
 app = module.exports = express.createServer()
-require('./helper')(app)
-io = require('socket.io').listen(app)
+https_app = module.exports = express.createServer(credentials)
 
-###
-  Mock Database
-###
+logger = require('./support/logging/logger')
 
-apiKeys = ['foo', 'bar', 'baz']
+socket_io = require('socket.io').listen(https_app, log: false)
 
-error = (status, msg) -> 
-    err = new Error(msg)
-    err.status = status
-    return err
+process.on 'error', (err) ->
+    logger.error 'System error', {error: err}
 
-app.configure(->
-    app.set('views', __dirname + '/views')
-    app.set('view engine', 'jade')
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
+process.on 'SIGTERM', (err) ->
+    logger.info 'SIGTERM event'
+    process.exit(0)
 
-    app.use('/', (req, res, next) ->
-        #disable
+process.on 'uncaughtException', (err) ->
+    logger.error 'UNCAUGHT EXCEPTION', {error: err}
+    logger.error("[Inside 'uncaughtException' event]" + err.stack || err.message)
+    app.close()
+    process.exit(1)
+
+allowCrossDomain = (req, res, next) ->
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
+
+    if 'OPTIONS' is req.method
+        res.send 200
+    else
         next()
-        return
-        #disable
 
-        key = req.param('api-key')
-        return next(error(400, 'api key required')) if (!key) 
-        return next(error(401, 'invalid api key')) if (!~apiKeys.indexOf(key)) 
-        req.key = key
-        next()
+configure_server_for = (application) ->
+    application.configure ->
+        application.use allowCrossDomain
+
+    application.configure('development', ->
+        application.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
     )
 
-    app.use(express.static(__dirname + '/public'))
+    application.configure('test', ->
+        application.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
+    )
 
-    app.use(auth.initializeAuth())
-    
-    app.use(app.router)
-)
+    application.configure('production', ->
+        socket_io.set 'log level', 1
+        application.use(express.errorHandler())
+    )
 
-# Apply authentication for all routes
-app.all '*', auth.authenticate
+configure_server_for app
+configure_server_for https_app
 
-# This must live here after authentication has been initialized
-require('./routes')(app, io)
+app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
+https_app.use express.vhost(config.api.host, require('./subdomains/api').app(socket_io))
+https_app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 
-app.configure('development', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
+app.listen config.site.port, ->
+    logger.info "Application Started. Listening on port #{app.address().port}", {mode: app.settings.env}
 
-app.configure('test', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
-)
-
-app.configure('production', ->
-    app.use(express.errorHandler())
-)
-
-app.listen(3000, ->
-    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
-)
+https_app.listen config.api.port, ->
+    logger.info "API Application Started. Listening on port #{https_app.address().port}", {mode: https_app.settings.env}

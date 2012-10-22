@@ -1,6 +1,6 @@
-define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) ->
+define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView, QueryRenderer, config) ->
 
-    class QueryView extends Backbone.View
+    class QueryView extends GeneralView
 
         id: 'queries-container'
 
@@ -13,8 +13,9 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
 
         render: ->
             @$el.empty()
+            @$el.attr('class','hero-unit')
             if @model.has('queries')
-                @$el.append('<h1>Queries</h1>')
+                @$el.append('<h2>Queries</h2>')
                 @$el.append(@query_renderer.render(@model.get('queries')))
             @delegateEvents(@events)
             @
@@ -31,8 +32,31 @@ define 'query_view', ['backbone', 'query_renderer'], (Backbone, QueryRenderer) -
                     $current = $(this)
                     data[$current.attr('name')] = $current.val()
 
-                $.post @$('form').attr('action'), data, (res) => 
+                callback = (res) => 
                     @$('input').not(':submit').val('')
                     @trigger 'messages:display', res.messages
+
+                url = "#{config.api.url}#{@$('form').attr('action')}"
+                parameters = {
+                    type: 'POST'
+                    data: data
+                    url: url
+                    success: callback
+                    error: (d) -> return
+                }
+
+                if $.cookie('authtoken')?
+                    parameters.beforeSend = (jqXHR) ->
+                        authToken = $.cookie 'authtoken'
+                        jqXHR.setRequestHeader('Authorization', authToken )
+                        jqXHR.withCredentials = true
+
+                $.ajax parameters
+
+                ###
+                $.post "#{config.api.url}#{@$('form').attr('action')}", data, (res) => 
+                    @$('input').not(':submit').val('')
+                    @trigger 'messages:display', res.messages
+                ###
 
             setTimeout func, 200
