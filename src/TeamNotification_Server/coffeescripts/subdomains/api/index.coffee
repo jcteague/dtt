@@ -35,7 +35,7 @@ app.configure ->
     app.use(app.router)
 
     log_errors = (err, req, res, next) ->
-        logger.error 'Error:', {error: err}
+        logger.error 'Error:', err.stack || err.message
         next err
 
     rendered_error = (err, req, res, next) ->
