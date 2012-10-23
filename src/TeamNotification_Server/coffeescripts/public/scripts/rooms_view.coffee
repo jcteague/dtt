@@ -27,11 +27,15 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
                     if(field.name == name)
                         return field.value
                 return ""
-            generate_unsubscribe_link = (room_id, container) ->
-                anchor = $('<a>Unsubscribe</a>')
+            generate_unsubscribe_link = (room_id, room_name, container) ->
+                anchor = $('<a href="#">Unsubscribe</a>')
                 anchor.bind 'click',() ->
-                    $.post "#{config.api.url}/room/#{room_id}/unsubscribe", (data) ->
-                        container.hide()
+                    del = confirm("Are you sure you want to leave room '#{room_name}'?")
+                    if(del)
+                        $.post "#{config.api.url}/room/#{room_id}/unsubscribe", (data) ->
+                            $("#server-response-container").html(data.messages[0])
+                            container.hide()
+                    return false
                 anchor
             link = room.links[0]
             room_key = get_field(room.data, 'room_key')
@@ -39,7 +43,7 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
                 p = $("<p/>")
                 p.append """<a href="##{link.href}">#{link.name}</a>"""
                 p.append " - "
-                unsubscribe_room_link = generate_unsubscribe_link get_field(room.data,'id'), p
+                unsubscribe_room_link = generate_unsubscribe_link get_field(room.data,'id'),link.name, p
                 p.append unsubscribe_room_link
                 #@$el.append("""<p><a href="##{link.href}">#{link.name}</a> - #{unsubscribe_room_link} </p>""")
                 @$el.append p
