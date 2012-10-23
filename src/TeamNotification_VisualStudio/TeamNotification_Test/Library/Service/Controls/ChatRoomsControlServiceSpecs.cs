@@ -152,7 +152,7 @@ namespace TeamNotification_Test.Library.Service.Controls
             {
                 public string Show(string code, int programmingLanguageIdentifier)
                 {
-                    return "";
+                    return "Not an empty stuff ;D";
                 }
             }
 
