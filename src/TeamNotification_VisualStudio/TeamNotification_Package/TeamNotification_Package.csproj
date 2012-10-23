@@ -35,6 +35,10 @@
     <CopyVsixExtensionLocation>bin\Release\</CopyVsixExtensionLocation>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
@@ -84,7 +88,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
-    <Reference Include="WPFTaskbarNotifier">
+    <Reference Include="WPFTaskbarNotifier, Version=1.0.4668.17861, Culture=neutral, PublicKeyToken=c711700d560bd03a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPFTaskbarNotifier\WPFTaskbarNotifier.dll</HintPath>
     </Reference>
     <Reference Include="WPFToolkit.Extended">
@@ -155,6 +160,9 @@
     <Compile Include="Controls\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ModalCodeEditor.xaml.cs">
+      <DependentUpon>ModalCodeEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TaskbarNotifier.xaml.cs">
       <DependentUpon>TaskbarNotifier.xaml</DependentUpon>
     </Compile>
@@ -223,6 +231,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\ModalCodeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\TaskbarNotifier.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -262,7 +274,9 @@
       <Name>TeamNotification_Library</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

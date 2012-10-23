@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using AvenidaSoftware.TeamNotification_Package;
+using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Machine.Specifications;
 using TeamNotification_Library.Configuration;
@@ -55,8 +56,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                 toolWindowActionGetter = depends.on<IGetToolWindowAction>();
                 localStorageService = depends.on<IStoreDataLocally>();
                 userAccountEvents = depends.on<IHandleUserAccountEvents>();
+                textEditorCreator = depends.on<ICreateSyntaxHighlightBox<TextEditor>>();
             };
 
+            protected static ICreateSyntaxHighlightBox<TextEditor> textEditorCreator;
             protected static IProvideUser userProvider;
             protected static IProvideConfiguration<ServerConfiguration> configuration;
             protected static ISendHttpRequests httpClient;
@@ -145,24 +148,38 @@ namespace TeamNotification_Test.Library.Service.Controls
 
         public class when_handling_the_paste_and_the_clipboard_has_code : when_handling_the_paste
         {
+            private class fakeCodeEitor : IShowCode
+            {
+                public string Show(string code, int programmingLanguageIdentifier)
+                {
+                    return "Not an empty stuff ;D";
+                }
+            }
+
             Establish context = () =>
             {
                 var clipboardData = fake.an<ChatMessageModel>(); //new ChatMessageModel
                 var chatMessageBody = fake.an<ChatMessageBody>();
+                codeShower = new fakeCodeEitor();
+
                 chatMessageBody.solution = "testSolution";
+                chatMessageBody.message = "A test message";
                 clipboardData.Stub(x => x.chatMessageBody).Return(chatMessageBody);
                 clipboardDataStorageService.Stub(x => x.Get<ChatMessageModel>()).Return(clipboardData);
                 syntaxHighlightBox = new BlockUIContainer();
                 syntaxBlockUIFactory.Stub(x => x.Get(clipboardData)).Return(syntaxHighlightBox);
+                textEditorCreator.Stub(x => x.Get(clipboardData.chatMessageBody.message, clipboardData.chatMessageBody.programminglanguage));
+
             };
 
             Because of = () =>
-                sut.HandlePaste(textBox, args);
+                sut.HandlePaste(textBox, codeShower, args);
 
             It should_set_the_textbox_with_a_syntax_highlight_block = () =>
                 textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
 
             private static BlockUIContainer syntaxHighlightBox;
+            private static IShowCode codeShower;
         }
 
         public class when_sending_a_message : Concern
