@@ -41,7 +41,7 @@ development_settings =
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
-        token: 'dbc2a3a0-2801-4ab9-8009-f01dd3ac7706'
+        token: ''
 
 test_settings =
     env: 'test'
@@ -76,7 +76,7 @@ test_settings =
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
-        token: 'dbc2a3a0-2801-4ab9-8009-f01dd3ac7706'
+        token: ''
 
 production_settings =
     env: 'production'
