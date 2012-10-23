@@ -52,6 +52,6 @@ describe 'Root', ->
                 sut.methods.get_root(req, res)
                 done()
 
-            it 'should return the built collection for the user model', (done) ->
+            it 'should return the built collection for the root model', (done) ->
                 sinon.assert.calledWith(res.json, collection_value)
                 done()

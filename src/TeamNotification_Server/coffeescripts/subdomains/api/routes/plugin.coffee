@@ -10,4 +10,4 @@ methods.get_plugin_version = (req, res) ->
 module.exports =
     methods: methods,
     build_routes: (app, io) ->
-        app.get('/plugin/version', methods.get_plugin_version)
+        app.get('/plugin', methods.get_plugin_version)

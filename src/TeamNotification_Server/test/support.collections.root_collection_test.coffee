@@ -9,15 +9,8 @@ describe 'Root Collection', ->
     sut = user_id = null
 
     beforeEach (done) ->
-   #     user_id = 3
         sut = new RootCollection()
         done()
-
-#    describe 'constructor', ->
-
- #       it 'should set the collection with the constructor values', (done) ->
- #           expect(sut.user_id).to.equal user_id
-  #          done()
 
     describe 'to_json', ->
 

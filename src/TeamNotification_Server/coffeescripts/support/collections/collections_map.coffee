@@ -12,5 +12,6 @@ mapping =
     user_invitations_collection: 'user_invitations_collection'
     room_invitations_collection: 'room_invitations_collection'
     github_repositories_collection: 'github_repositories_collection'
+    plugin_collection: 'plugin_collection'
 
 module.exports = mapping

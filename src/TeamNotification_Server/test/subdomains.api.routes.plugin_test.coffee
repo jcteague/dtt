@@ -22,7 +22,7 @@ describe 'Plugin', ->
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/plugin/version', sut.methods.get_plugin_version) 
+            sinon.assert.calledWith(app.get,'/plugin', sut.methods.get_plugin_version) 
             done() 
 
     describe 'methods', ->
