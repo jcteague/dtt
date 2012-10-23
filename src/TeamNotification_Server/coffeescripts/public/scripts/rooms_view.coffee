@@ -31,7 +31,6 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
                 anchor = $('<a>Unsubscribe</a>')
                 anchor.bind 'click',() ->
                     $.post "#{config.api.url}/room/#{room_id}/unsubscribe", (data) ->
-                        alert data 
                         container.hide()
                 anchor
             link = room.links[0]

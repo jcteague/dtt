@@ -11,6 +11,7 @@ get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
 redis_queryer = redis_connector.open()
+Repository = require('../../../support/repository')
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -23,8 +24,22 @@ list_of_listeners = {}
 
 
 methods.unsubscribe = (req,res) ->
-    console.log "reqest received"
-    res.json get_server_response(true, ["Unsubscribed successfully"], "",false )
+    room_id = req.param('id')
+    console.log "request received"
+    
+    chat_room_user = new Repository('ChatRoomUser')
+    chat_room_user.find(user_id:req.user.id, chat_room_id:room_id).then (chat_room_users) ->
+        if (!chat_room_users)
+            res.json get_server_response(true, ["The user is not subscribed to the room ):"], "",false )
+        console.log 'here'
+        callback = (info) ->
+            console.log info
+            res.json get_server_response(true, ["Unsubscribed successfully"], "",false )
+        
+        room_user = chat_room_users[0]
+        console.log room_user
+        room_user.remove callback
+        #res.json get_server_response(true, ["Unsubscribed unsuccessful"], "",false )
 
 methods.get_room_invitations = (req, res) ->
 
