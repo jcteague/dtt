@@ -162,14 +162,13 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
 
-//            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
-//            {
+            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
+            {
                 var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
                 var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
 
-//                ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
                 ObjectFactory.GetInstance<ICheckForUpdates>().CheckForUpdates(updateManager, repoManager);
-//            });
+            });
         }
 
         #endregion
