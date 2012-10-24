@@ -193,7 +193,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
                 0,
                 ref clsid,
-                "TeamNotification",
+                "YacketyApp",
                 message,
                 string.Empty,
                 0,

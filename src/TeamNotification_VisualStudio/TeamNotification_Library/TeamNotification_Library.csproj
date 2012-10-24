@@ -143,6 +143,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
+    <Compile Include="Service\Async\BackgroundRunner.cs" />
     <Compile Include="Service\Async\DialogMessagesEvents.cs" />
     <Compile Include="Service\Async\AlertMessageWasRequested.cs" />
     <Compile Include="Service\Async\ClipboardEvents.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
     <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
+    <Compile Include="Service\Async\IRunInBackgroundWorker.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
     <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
