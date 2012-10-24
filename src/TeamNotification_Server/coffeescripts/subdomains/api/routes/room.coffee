@@ -30,16 +30,12 @@ methods.unsubscribe = (req,res) ->
     chat_room_user = new Repository('ChatRoomUser')
     chat_room_user.find(user_id:req.user.id, chat_room_id:room_id).then (chat_room_users) ->
         if (!chat_room_users)
-            res.json get_server_response(true, ["The user is not subscribed to the room ):"], "",false )
-        console.log 'here'
-        callback = (info) ->
-            console.log info
-            res.json get_server_response(true, ["Unsubscribed successfully"], "",false )
-        
-        room_user = chat_room_users[0]
-        console.log room_user
-        room_user.remove callback
-        #res.json get_server_response(true, ["Unsubscribed unsuccessful"], "",false )
+            res.json get_server_response(false, ["The user is not subscribed to the room ):"], "" )
+        else
+            callback = () ->
+                res.json get_server_response(true, ["Unsubscribed successfully"], "" )
+            room_user = chat_room_users[0]
+            room_user.remove callback
 
 methods.get_room_invitations = (req, res) ->
 
