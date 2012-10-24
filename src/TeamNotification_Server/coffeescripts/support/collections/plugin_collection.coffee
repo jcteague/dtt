@@ -12,8 +12,8 @@ class PluginCollection
                 {"name": "version", "value": @data.version}
             ],
             links: [
-                {"rel": "Plugin", "name": @data.name, "href": "/plugin/download/#{@data.file_name}"}
-
+                #{"rel": "Plugin", "name": @data.name, "href": "/plugin/download/#{@data.file_name}"}
+                {"rel": "Plugin", "name": @data.name, "href": "https://s3.amazonaws.com/yackety-vs-plugin/TeamNotification_Package.vsix"}
             ]
 
         return {
