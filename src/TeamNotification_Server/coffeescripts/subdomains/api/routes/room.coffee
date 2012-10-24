@@ -25,8 +25,6 @@ list_of_listeners = {}
 
 methods.unsubscribe = (req,res) ->
     room_id = req.param('id')
-    console.log "request received"
-    
     chat_room_user = new Repository('ChatRoomUser')
     chat_room_user.find(user_id:req.user.id, chat_room_id:room_id).then (chat_room_users) ->
         if (!chat_room_users)
