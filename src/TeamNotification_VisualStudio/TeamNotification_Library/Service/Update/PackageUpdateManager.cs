@@ -1,10 +1,6 @@
-using System;
-using System.Diagnostics;
-using System.IO.Packaging;
 using System.Linq;
 using Microsoft.VisualStudio.ExtensionManager;
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Extensions;
 
 namespace TeamNotification_Library.Service.Update
 {
@@ -24,6 +20,11 @@ namespace TeamNotification_Library.Service.Update
             var teamNotificationExtension =
                 extensionManager.GetInstalledExtensions().First(x => GlobalConstants.PackageName == x.Header.Name);
 
+            return UpdateIfAvailable(teamNotificationExtension, extensionManager, repositoryManager);
+        }
+
+        public bool UpdateIfAvailable(IInstalledExtension teamNotificationExtension, IVsExtensionManager extensionManager, IVsExtensionRepository repositoryManager)
+        {
             var version = packageUpdatesDownloader.Fetch(teamNotificationExtension, repositoryManager);
             if (version.IsDefined)
             {

@@ -19,6 +19,8 @@ namespace TeamNotification_Library.Service.Http
         {
             get
             {
+                // TODO: Remove ServerCertificateValidationCallback after using the correct certificate. 
+                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
                 return new HttpClient(httpClientHandlerGetter.GetHandler());
             }
         }
@@ -45,7 +47,8 @@ namespace TeamNotification_Library.Service.Http
 
         public Task<T> Get<T>(string uri) where T : class
         {
-            return httpClient.GetStringAsync(uri)
+            return httpClient
+                .GetStringAsync(uri)
                 .ContinueWith(response => serializer.Deserialize<T>(response.Result));
         }
         

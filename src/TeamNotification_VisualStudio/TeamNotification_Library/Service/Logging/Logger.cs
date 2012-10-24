@@ -9,11 +9,11 @@ namespace TeamNotification_Library.Service.Logging
 {
     public class Logger : ILog
     {
-        private IHandleAlertMessages alertMessageEvents;
+        private IHandleDialogMessages dialogMessageEvents;
 
-        public Logger(IHandleAlertMessages alertMessageEvents)
+        public Logger(IHandleDialogMessages dialogMessageEvents)
         {
-            this.alertMessageEvents = alertMessageEvents;
+            this.dialogMessageEvents = dialogMessageEvents;
         }
 
         public void Info(string message)
@@ -65,7 +65,7 @@ namespace TeamNotification_Library.Service.Logging
             catch (Exception exc)
             {
                 FatalException(exc.Source, "Got a fatal exception: {0}".FormatUsing(exc.Message), exc);
-                alertMessageEvents.OnAlertMessageRequested(exc.Source, new AlertMessageWasRequested {Message = "Exception: {0}".FormatUsing(exc.Message)});
+                dialogMessageEvents.OnAlertMessageRequested(exc.Source, new AlertMessageWasRequested {Message = "Exception: {0}".FormatUsing(exc.Message)});
             }
         }
 

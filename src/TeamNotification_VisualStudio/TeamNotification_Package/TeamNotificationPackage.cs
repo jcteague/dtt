@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using System.Windows;
+using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.ExtensionManager;
 using Microsoft.Win32;
@@ -154,18 +155,21 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             Bootstrapper.Initialize();
 
-            var alertMessagesEvents = ObjectFactory.GetInstance<IHandleAlertMessages>();
-            alertMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
+            var dialogMessagesEvents = ObjectFactory.GetInstance<IHandleDialogMessages>();
+            dialogMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
+            dialogMessagesEvents.DialogMessageWasRequested += (s, e) => ShowOkCancelDialog(e.Message, e.OkAction, e.CancelAction);
+            
 
             ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
 
-            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
-            {
+//            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
+//            {
                 var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
                 var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
 
-                ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
-            });
+//                ObjectFactory.GetInstance<IUpdatePackage>().UpdateIfAvailable(updateManager, repoManager);
+                ObjectFactory.GetInstance<ICheckForUpdates>().CheckForUpdates(updateManager, repoManager);
+//            });
         }
 
         #endregion
@@ -199,6 +203,11 @@ namespace AvenidaSoftware.TeamNotification_Package
                 OLEMSGICON.OLEMSGICON_INFO,
                 0, // false
                 out result));
+        }
+
+        private void ShowOkCancelDialog(string message, Action okAction, Action cancelAction)
+        {
+            CustomMessageBox.ShowOkCancel(message, okAction, cancelAction);
         }
     }
 }
