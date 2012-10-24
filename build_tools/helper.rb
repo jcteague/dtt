@@ -12,6 +12,19 @@ def generate_timestamp
   Time.now.to_i
 end
 
+def convert_xml_file_to_hash(file_path)
+  require 'crack'
+  Crack::XML.parse(File.read(file_path))
+end
+
+def write_hash_to_json_file(file_path, hash)
+  require 'crack'
+  require 'json'
+  File.open(file_path, "w") do |f|
+    f.write(hash.to_json)
+  end
+end
+
 class String
   def to_camel_case
     words = self.downcase.split("_")
