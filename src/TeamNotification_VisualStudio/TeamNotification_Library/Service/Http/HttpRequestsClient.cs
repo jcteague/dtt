@@ -7,14 +7,13 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
-        private ILog logger;
-
         private HttpClient httpClient
         {
             get
@@ -25,14 +24,17 @@ namespace TeamNotification_Library.Service.Http
             }
         }
 
+        private ILog logger;
         private IGetHttpClientHandler httpClientHandlerGetter;
-        readonly ISerializeJSON serializer;
+        private IRunInBackgroundWorker backgroundRunner;
+        private readonly ISerializeJSON serializer;
 
-        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, ILog logger)
+        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, ILog logger, IRunInBackgroundWorker backgroundRunner)
         {
             this.serializer = serializer;
             this.httpClientHandlerGetter = httpClientHandlerGetter;
             this.logger = logger;
+            this.backgroundRunner = backgroundRunner;
         }
 
         public void Get(string uri)
@@ -65,17 +67,7 @@ namespace TeamNotification_Library.Service.Http
 
         public void Post(IEnumerable<Tuple<string, HttpContent>> values)
         {
-            logger.TryOrLog(() =>
-                                {
-                                    var backgroundWorker = new BackgroundWorker();
-                                    backgroundWorker.WorkerSupportsCancellation = true;
-                                    backgroundWorker.DoWork += (o, args) =>
-                                    {
-                                        values.Each(x => PostSync(x.Item1, x.Item2));
-                                        args.Cancel = true;
-                                    };
-                                    backgroundWorker.RunWorkerAsync();                        
-                                });
+            logger.TryOrLog(() => backgroundRunner.Run(() => values.Each(x => PostSync(x.Item1, x.Item2))));
         }
 
         public HttpResponseMessage PostSync(string uri, HttpContent content)

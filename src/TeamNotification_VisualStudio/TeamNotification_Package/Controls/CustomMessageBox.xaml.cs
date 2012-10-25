@@ -37,12 +37,8 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         public static void ShowOkCancel(String caption, Action okAction, Action cancelAction)
         {
             var cmb = new CustomMessageBox {tbxMessageCaption = {Text = caption}, Visibility = Visibility.Visible};
-//            cmb.gButtons.Children.Add(new Button { Content = "Ok", IsDefault = false, IsCancel = false, CommandParameter = CustomMessageBoxValues.Ok, Width = 75});
-//            cmb.gButtons.Children.Add(new Button { Content = "Cancel", IsDefault = false, IsCancel = true, CommandParameter = CustomMessageBoxValues.Cancel, Width = 75});
-
             cmb.gButtons.Children.Add(GetButtonFor("Ok", okAction, cmb));
             cmb.gButtons.Children.Add(GetButtonFor("Cancel", cancelAction, cmb));
-//            cmb.gButtons.Children.Add(new Button { Content = "Cancel", IsDefault = false, IsCancel = true, CommandParameter = CustomMessageBoxValues.Cancel, Width = 75});
 
             cmb.ShowDialog();
         }
