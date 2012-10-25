@@ -8,15 +8,22 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @model = new CollectionModel
             @setElement '#client-content'
             @router = new ClientRouter()
-            @server_response_view = new ServerResponseView(model: @model)
+            @server_response_view = new ServerResponseView()
             @router.on 'render', @render_path, @
             @views_factory = new ViewsFactory()
             Backbone.history.start()
 
+        display_messages: (messages) ->
+            @server_response_view.update(messages)
+            @server_response_view.render().append_to @$el
+            
         render: ->
             @$el.empty()
             view.render().append_to(@$el) for view in @views
-            @server_response_view.render().append_to @$el
+            if( typeof(@model.attributes.server_messages) != 'undefined')
+                @display_messages @model.attributes.server_messages 
+            else
+                @server_response_view.render().append_to @$el
             if $('.prettyprint')?
                 prettyPrint()
                 $('.prettyprint').removeClass('prettyprint')
@@ -64,6 +71,3 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             view.listen_to @ for view in @views
             @render()
 
-        display_messages: (messages) ->
-            @server_response_view.update(messages)
-            @server_response_view.render().append_to @$el

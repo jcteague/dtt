@@ -18,7 +18,8 @@ methods.user_authorized_in_room = (req, res, next) ->
     routes_service.is_user_in_room(req.user.id, room_id).then (is_user_in) ->
         if is_user_in
             return next()
-        res.redirect '/'
+
+        res.json {"server_messages":["You're not subscribed to this room"]}
 
 list_of_listeners = {}
 
@@ -72,7 +73,10 @@ methods.post_room = (req, res, next) ->
 methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        res.json(collection.to_json())
+        json = collection.to_json()
+        console.log 'json '
+        console.log json
+        res.json(json)#(collection.to_json())
 
     build('room_collection').for(room_id: room_id, user_id: req.user.id).fetch_to callback
 
