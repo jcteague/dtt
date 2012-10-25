@@ -50,7 +50,13 @@ app.configure ->
 
 
 # Apply authentication for all routes in the api
-app.all '*', auth.authenticate
+#app.all '*', auth.authenticate
+app.all '*', (req, res, next) ->
+    req.user =
+        id: 1
+        name: 'User TEST'
+
+    next()
 
 # This must live here after authentication has been initialized
 #require('./routes')(app, io)

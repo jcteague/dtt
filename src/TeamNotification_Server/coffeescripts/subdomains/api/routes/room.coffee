@@ -70,6 +70,7 @@ methods.post_room = (req, res, next) ->
             next(new Error(err.code,err.message))
 
 methods.get_room_by_id = (req, res) ->
+    console.log 'HERE GETTING THE ROOM'
     room_id = req.param('id')
     callback = (collection) ->
         res.json(collection.to_json())
