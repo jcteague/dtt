@@ -34,11 +34,11 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             return new CustomMessageBoxResult<string> { Value = "cancel" };
         }
 
-        public static void ShowOkCancel(String caption, Action okAction, Action cancelAction)
+        public static void ShowYesNoDialog(String caption, Action okAction, Action cancelAction)
         {
             var cmb = new CustomMessageBox {tbxMessageCaption = {Text = caption}, Visibility = Visibility.Visible};
-            cmb.gButtons.Children.Add(GetButtonFor("Ok", okAction, cmb));
-            cmb.gButtons.Children.Add(GetButtonFor("Cancel", cancelAction, cmb));
+            cmb.gButtons.Children.Add(GetButtonFor("Yes", okAction, cmb));
+            cmb.gButtons.Children.Add(GetButtonFor("No", cancelAction, cmb));
 
             cmb.ShowDialog();
         }

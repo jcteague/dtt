@@ -157,7 +157,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             var dialogMessagesEvents = ObjectFactory.GetInstance<IHandleDialogMessages>();
             dialogMessagesEvents.AlertMessageWasRequested += (s, e) => Alert(e.Message);
-            dialogMessagesEvents.DialogMessageWasRequested += (s, e) => ShowOkCancelDialog(e.Message, e.OkAction, e.CancelAction);
+            dialogMessagesEvents.DialogMessageWasRequested += (s, e) => ShowYesNoDialog(e.Message, e.OkAction, e.CancelAction);
             
 
             ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
@@ -204,9 +204,9 @@ namespace AvenidaSoftware.TeamNotification_Package
                 out result));
         }
 
-        private void ShowOkCancelDialog(string message, Action okAction, Action cancelAction)
+        private void ShowYesNoDialog(string message, Action okAction, Action cancelAction)
         {
-            CustomMessageBox.ShowOkCancel(message, okAction, cancelAction);
+            CustomMessageBox.ShowYesNoDialog(message, okAction, cancelAction);
         }
     }
 }
