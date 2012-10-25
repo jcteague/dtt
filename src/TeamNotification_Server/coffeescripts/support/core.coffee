@@ -17,6 +17,7 @@ orm.then (db) ->
         date : {type:'date', default:'now()'}
 
     _entity.ChatRoomUser = db.define 'chat_room_users'
+        chat_room_user_id: {type:'int'}
         chat_room_id : {type: 'int'}
         user_id : {type:'int'}
 
@@ -36,6 +37,7 @@ orm.then (db) ->
     
     _entity.ChatRoomInvitation.hasOne('user',_entity.User,'user',{autoFetch:true})
     _entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
+    #_entity.ChatRoomUser.sync()
     #_entity.ChatRoomMessage.sync()
     #_entity.ChatRoom.sync()
     #_entity.ChatRoomInvitation.sync()

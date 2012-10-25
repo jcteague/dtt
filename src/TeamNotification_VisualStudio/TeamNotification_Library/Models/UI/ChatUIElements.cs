@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Documents;
 using EnvDTE;
+using TeamNotification_Library.Service.Controls;
 
 namespace TeamNotification_Library.Models.UI
 {
@@ -24,5 +25,6 @@ namespace TeamNotification_Library.Models.UI
         public Dictionary<string, TableRowGroup> MessagesList { get; set; }
         public ComboBox ComboRooms { get; set; }
         public RichTextBox InputBox { get; set; }
+        public IShowCode codeEditor { get; set; }
     }
 }

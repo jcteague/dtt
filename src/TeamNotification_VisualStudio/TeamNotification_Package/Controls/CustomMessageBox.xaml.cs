@@ -88,6 +88,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         public CustomMessageBox()
         {
             InitializeComponent();
+            this.Owner = Application.Current.MainWindow;
         }
     }
 }

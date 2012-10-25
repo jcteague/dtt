@@ -182,6 +182,7 @@
     <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
+    <Compile Include="Service\Controls\IShowCode.cs" />
     <Compile Include="Service\Controls\MessagesEditor.cs" />
     <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\UserMessageIndicatorFormatter.cs" />

@@ -11,6 +11,7 @@ get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
 redis_queryer = redis_connector.open()
+Repository = require('../../../support/repository')
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -21,6 +22,18 @@ methods.user_authorized_in_room = (req, res, next) ->
 
 list_of_listeners = {}
 
+
+methods.unsubscribe = (req,res) ->
+    room_id = req.param('id')
+    chat_room_user = new Repository('ChatRoomUser')
+    chat_room_user.find(user_id:req.user.id, chat_room_id:room_id).then (chat_room_users) ->
+        if (!chat_room_users)
+            res.json get_server_response(false, ["The user is not subscribed to the room ):"], "" )
+        else
+            callback = () ->
+                res.json get_server_response(true, ["Unsubscribed successfully"], "" )
+            room_user = chat_room_users[0]
+            room_user.remove callback
 
 methods.get_room_invitations = (req, res) ->
 
@@ -157,3 +170,4 @@ module.exports =
         app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/room',express.bodyParser(), methods.post_room)
         app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
+        app.post('/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)

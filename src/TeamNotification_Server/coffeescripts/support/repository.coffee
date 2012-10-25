@@ -17,7 +17,7 @@ class Repository
         callback = @get_on_resolve_callback(deferred)
         entity_factory.get(@entity).find.apply(@, query_args.concat(callback))
         deferred.promise
-
+        
     save: (entity_data) ->
         deferred = Q.defer()
         entity_factory.create(@entity, entity_data).save (err, saved_entity) ->

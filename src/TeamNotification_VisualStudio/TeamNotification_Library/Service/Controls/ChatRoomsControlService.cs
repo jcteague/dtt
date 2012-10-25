@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -78,16 +79,28 @@ namespace TeamNotification_Library.Service.Controls
             return c;
         }
 
-        public void HandlePaste(RichTextBox textBox, DataObjectPastingEventArgs dataObjectPastingEventArgs)
+        public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+            dataObjectPastingEventArgs.CancelCommand();
 
             if (chatMessageModel.chatMessageBody.IsCode)
             {
-                var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
-                textBox.Document.Blocks.Add(block);
-                textBox.CaretPosition = textBox.Document.ContentEnd;
-                dataObjectPastingEventArgs.CancelCommand();
+                var pastedCode = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
+                if(pastedCode.Trim() != "")
+                {
+                    chatMessageModel.chatMessageBody.message = pastedCode;
+                    var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
+                    textBox.Dispatcher.Invoke(new Action( () =>{
+                        textBox.Document.Blocks.Clear();
+                        textBox.Document.Blocks.Add(block);
+                        textBox.CaretPosition = textBox.Document.ContentEnd;
+                    }));
+                }else
+                {
+                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+                    dataObjectPastingEventArgs.CancelCommand();
+                }
             }
         }
 
@@ -104,17 +117,17 @@ namespace TeamNotification_Library.Service.Controls
 
         public void SendMessage(RichTextBox textBox, string roomId)
         {
-            messagesEditor.inputMethod = textBox;
-            if (messagesEditor.editingMessage != null)
-            {
-                var text = messagesEditor.inputMethod.Document.GetDocumentText();
-                messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
-                messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
-            }
-            else
-            {
-                messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            }
+            //messagesEditor.inputMethod = textBox;
+            //if (messagesEditor.editingMessage != null)
+            //{
+            //    var text = messagesEditor.inputMethod.Document.GetDocumentText();
+            //    messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
+            //    messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
+            //}
+            //else
+            //{
+            messageSender.SendMessages(textBox.Document.Blocks, roomId);
+            //}
             messagesEditor.ResetControls();
 
         }

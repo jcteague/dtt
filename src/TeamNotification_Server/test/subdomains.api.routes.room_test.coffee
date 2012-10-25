@@ -85,6 +85,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.post,'/room', body_parser_result, sut.methods.post_room)
             sinon.assert.calledWith(app.post,'/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
             sinon.assert.calledWith(app.post,'/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)
+            sinon.assert.calledWith(app.post,'/room/:id/unsubscribe', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.unsubscribe)
             done()
 
     describe 'methods', ->
@@ -561,3 +562,57 @@ describe 'Room', ->
                 for field in data
                     expect(field).to.have.keys(['name', 'label', 'type'])
                 done()
+                
+        describe 'unsubscribe', ->
+            req = res = fake_ChatRoomUser = expected_response = room_id=null
+            beforeEach (done) ->
+                res =
+                    json: sinon.spy()
+                req =
+                    param: sinon.stub()
+                    user:
+                        id: 1
+                room_id = 1
+                
+                req.param.withArgs('id').returns room_id
+                fake_ChatRoomUser = 
+                    find: sinon.stub()
+                    remove: (callback) ->
+                        callback()
+                repository_class_mock.withArgs('ChatRoomUser').returns(fake_ChatRoomUser)
+                done()
+
+            describe 'when the user exists', ->
+                beforeEach (done) ->
+                    callback =
+                        'then':(func) ->
+                            func([fake_ChatRoomUser])
+                    fake_ChatRoomUser.find.withArgs({user_id:req.user.id, chat_room_id:room_id}).returns(callback)
+                    expected_response = {success:true, messages:["Unsubscribed successfully"], link:"",redirect:false}
+                    routes_service_mock.get_server_response.withArgs(true,["Unsubscribed successfully"],"").returns(expected_response)
+                    sut.methods.unsubscribe(req,res)
+                    done()
+                    
+                it 'should return a successful response', (done) ->
+                    sinon.assert.calledWith(res.json,expected_response)
+                    done()
+
+            describe 'when the user doesnt exists', ->
+                beforeEach (done) ->
+                    callback =
+                        'then':(func) ->
+                            func(null)
+                    fake_ChatRoomUser.find.withArgs({user_id:req.user.id, chat_room_id:room_id}).returns(callback)
+                    expected_response = {success:false, messages:["The user is not subscribed to the room ):"], link:"",redirect:false}
+                    routes_service_mock.get_server_response.withArgs(false,["The user is not subscribed to the room ):"],"").returns(expected_response)
+                    sut.methods.unsubscribe(req,res)
+                    done()
+                    
+                it 'should return an unsuccessful response', (done) ->
+                    sinon.assert.calledWith(res.json, expected_response)
+                    done()
+            
+            
+            
+            
+            

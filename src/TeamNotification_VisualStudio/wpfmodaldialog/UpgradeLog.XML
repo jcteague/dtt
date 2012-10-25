@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="WpfModalDialog">
+</Property><Property Name="Solution File" Value="C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\WpfModalDialog.sln">
+</Property><Property Name="Date" Value="Tuesday, October 16, 2012">
+</Property><Property Name="Time" Value="11:15 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="WpfModalDialog.sln" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog.sln">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\WpfModalDialog.csproj" Description="Project file successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\WpfModalDialog.csproj">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\WpfModalDialog.csproj.user" Description="Project user file successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\WpfModalDialog.csproj.user">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\AnimatedImage.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\AnimatedImage.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\App.xaml.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\App.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\ThreadSafeIndicator.xaml.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\ThreadSafeIndicator.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\LoadIndicator.xaml.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\LoadIndicator.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\MainWindow.xaml.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\MainWindow.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\ModalDialog.xaml.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\ModalDialog.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\Properties\Settings.Designer.cs" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\app.config" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\app.config">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\packages.config" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\packages.config">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\Properties\Settings.settings" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\dll\WPFToolkit.Extended.dll" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\dll\WPFToolkit.Extended.dll">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\Images\loader.gif" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\Images\loader.gif">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\App.xaml" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\App.xaml">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\LoadIndicator.xaml" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\LoadIndicator.xaml">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\MainWindow.xaml" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\MainWindow.xaml">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\ModalDialog.xaml" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\ModalDialog.xaml">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\ThreadSafeIndicator.xaml" Description="File successfully backed up as C:\Users\eatskolnikov\Desktop\wpfmodaldialog-18611\Backup\WpfModalDialog\ThreadSafeIndicator.xaml">
+</Event><Event ErrorLevel="0" Project="WpfModalDialog" Source="WpfModalDialog\WpfModalDialog.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="WpfModalDialog" Source="WpfModalDialog\WpfModalDialog.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="" Source="WpfModalDialog.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="WpfModalDialog.sln" Description="Converted">
+</Event></UpgradeLog>

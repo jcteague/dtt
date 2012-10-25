@@ -6,20 +6,21 @@
              xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
              xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package"
              xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
-             mc:Ignorable="d" 
+             xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="424"
              Name="ChatWindow">
             <UserControl.Resources>
                 <ResourceDictionary Source="Themes/BureauBlue.xaml"/>
             </UserControl.Resources>
-    <Grid Height="auto" Name="mainGrid">
-        <Grid.RowDefinitions>
+    <Grid Name="mainGrid">
+        <Grid Height="auto" >
+            <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Name="outerGridRowDefinition3" Height="0" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -42,7 +43,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <Border Name="messageContainerBorder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0">
+            <Border Name="messageContainerBorder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0">
             <ScrollViewer Name="messageScroll" Height="auto"  Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
                 <RichTextBox Name="messagesContainer" Height="auto" Width="auto" Background="White" Margin="2,2,2,10" IsReadOnly="True" IsDocumentEnabled="True">
                     <FlowDocument IsEnabled="True" IsHyphenationEnabled="True">
@@ -57,8 +58,8 @@
                 </RichTextBox>
             </ScrollViewer>
         </Border>
-        <GridSplitter Name="messageTextBoxGridSplitter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeBehavior="PreviousAndNext" />
-        <Grid Name="messageTextBoxGrid" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Height="auto" Margin="5,0,5,2">
+            <GridSplitter Name="messageTextBoxGridSplitter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeBehavior="PreviousAndNext" />
+            <Grid Name="messageTextBoxGrid" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Height="auto" Margin="5,0,5,2">
             <Grid.RowDefinitions>
                 <RowDefinition Name="messageGridRowDefinition1" Height="*" />
                 <RowDefinition Name="messageGridRowDefinition2" Height="34" />
@@ -76,5 +77,7 @@
             </RichTextBox>
             <Button Grid.Row="1" Grid.Column="0"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
         </Grid>
+        </Grid>
+       
     </Grid>
 </UserControl>
