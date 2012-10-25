@@ -1,9 +1,10 @@
 config = require('../../config')()
 logentries = require('node-logentries')
 winston = require('winston')
-
-logentries_log = logentries.logger { token: config.log.token }
-logentries_log.level 'info'
+loggr = require("loggr")
+log = loggr.logs.get(config.log.logkey, config.log.apikey)
+#logentries_log = logentries.logger { token: config.log.token }
+#logentries_log.level 'info'
 
 log_message = (level, args...) ->
     msg = []
@@ -12,15 +13,16 @@ log_message = (level, args...) ->
             msg.push JSON.stringify(val)
         else
             msg.push val
-
-    logentries_log[level](msg.join(', '))
+    logMessage = msg.join(', ')
+    console.log logMessage
+    log.events.createEvent().text(logMessage).tags(level).source("web service").post()
 
 module.exports =
     info: (args...) ->
         log_message('info', args)
 
     error: (args...) ->
-        log_message('err', args)
+        log_message('error', args)
 
     warn: (args...) ->
         log_message('warning', args)

@@ -11,6 +11,7 @@ get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
 redis_queryer = redis_connector.open()
+logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
 
 methods.user_authorized_in_room = (req, res, next) ->
@@ -74,9 +75,7 @@ methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
         json = collection.to_json()
-        console.log 'json '
-        console.log json
-        res.json(json)#(collection.to_json())
+        res.json(json)
 
     build('room_collection').for(room_id: room_id, user_id: req.user.id).fetch_to callback
 
