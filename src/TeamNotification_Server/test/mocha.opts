@@ -5,4 +5,4 @@
 --compilers coffee:coffee-script
 
 --globals k
---timeout 10000
+--timeout 60000

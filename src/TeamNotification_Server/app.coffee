@@ -70,7 +70,7 @@ https_app.use express.vhost(config.api.host, require('./subdomains/api').app(soc
 https_app.use express.vhost(config.site.host, require('./subdomains/default').app(socket_io))
 
 app.listen config.site.port, ->
-    logger.info "Application Started. Listening on port #{app.address().port}", {mode: app.settings.env}
+    logger.info "HTTP Server Started. Listening on port #{app.address().port}", {mode: app.settings.env}
 
 https_app.listen config.api.port, ->
-    logger.info "API Application Started. Listening on port #{https_app.address().port}", {mode: https_app.settings.env}
+    logger.info "HTTPS Server Started. Listening on port #{https_app.address().port}", {mode: https_app.settings.env}

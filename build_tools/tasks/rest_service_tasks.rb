@@ -12,14 +12,14 @@ namespace :rest_service do
   ]
 
   task :build_production => [
-    :prod_environment,
+    #:prod_environment,
     :update_packages,
     :compile_coffeescript,
     #:test, # This should run on staging env
-    :migrate,
+    #:migrate,
     #:package_and_deploy
     :package,
-    :run_production
+    #:run_production
   ]
 
   task :deploy => [
