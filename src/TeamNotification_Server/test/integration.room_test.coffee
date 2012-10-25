@@ -63,10 +63,11 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/room/1').
+                    visit('https://dtt.local:3001/#/room/1').
                     then(done, done)
 
             xit 'should contain an anchor to the room manage members', (done) ->
+                console.log browser.html()
                 expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 done()
 
@@ -78,7 +79,7 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/room/2').
+                    visit('https://dtt.local:3001/#/room/2').
                     then(done, done)
 
             xit 'should not contain an anchor to the room manage members', (done) ->
