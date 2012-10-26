@@ -43,6 +43,8 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @trigger event, values
 
         render_path: (path) ->
+            $.support.cors = true
+
             @server_response_view.clear()
             path = '' if path is '/'
             url = "#{config.api.url}/#{path}"
@@ -57,9 +59,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
             if $.cookie('authtoken')?
                 parameters.beforeSend = (jqXHR) ->
-                        authToken = $.cookie 'authtoken'
-                        jqXHR.setRequestHeader('Authorization', authToken )
-                        jqXHR.withCredentials = true
+                    authToken = $.cookie 'authtoken'
+                    jqXHR.setRequestHeader('Authorization', authToken )
+                    jqXHR.withCredentials = true
 
             $.ajax parameters
 
