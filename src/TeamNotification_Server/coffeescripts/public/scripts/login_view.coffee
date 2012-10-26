@@ -12,6 +12,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     email = $('input[name=username]').val()
                     password = $('input[name=password]').val()
                     authToken = "Basic " + encodeBase64(email + ":" + password)
+                    console.log authToken
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
