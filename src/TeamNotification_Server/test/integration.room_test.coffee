@@ -58,8 +58,11 @@ describe 'Client Room', ->
             win.document.querySelector('#form-container')
 
         beforeEach (done) ->
-            #browser = new Browser()
-            browser = new Browser(waitFor: 45000)
+            browser = new Browser()
+            browser.on 'error', (error) ->
+                console.log 'Browser test', error
+
+            #browser = new Browser(waitFor: 45000)
             #browser = new Browser(debug: true)
             browser.authenticate().basic('foo@bar.com', '1234')
             #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
@@ -70,7 +73,8 @@ describe 'Client Room', ->
             beforeEach (done) ->
                 browser.
                     #visit('https://dtt.local:3001/#/room/1').
-                    visit('https://dtt.local:3001/#/registration').
+                    #visit('https://dtt.local:3001/#/registration').
+                    visit('https://dtt.local:3001').
                     #visit('https://api.dtt.local:3001/registration').
                     #then(-> browser.wait(45000)).
                     #then(-> browser.dump()).
@@ -87,10 +91,10 @@ describe 'Client Room', ->
                     done()
                 )
                 ###
-                console.log browser.html()
+                #console.log browser.html()
                 console.log browser.lastRequest
                 #console.log browser.lastResponse
-                #browser.resources.dump()
+                browser.resources.dump()
                 expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 done()
 
