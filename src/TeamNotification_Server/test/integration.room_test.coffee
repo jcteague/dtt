@@ -1,6 +1,7 @@
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
+
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 module_loader = require('sandboxed-module')
 Browser = require('zombie').Browser
@@ -60,15 +61,14 @@ describe 'Client Room', ->
                 console.log 'Browser test', error
 
             browser.authenticate().basic('foo@bar.com', '1234')
-            #browser.cookies('dtt.local', '/').set('authtoken', 'Basic ZWVzcGluYWxAaW50ZWxsaXN5cy5jb20uZG86MTIzNDU2') # For ee@i.com
-            browser.cookies('dtt.local', '/').set('authtoken', 'Basic Zm9vQGJhci5jb206MTIzNDU2') # For foo@bar.com, 1234
+            browser.cookies(config.site.host, '/').set('authtoken', 'Basic Zm9vQGJhci5jb206MTIzNDU2') # For foo@bar.com, 1234
             handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the #/room page and he is the owner of the room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('https://dtt.local:3001/#/room/1').
+                    visit("#{config.site.surl}/#/room/1").
                     then(done, done)
 
             it 'should contain an anchor to the room manage members', (done) ->
@@ -83,7 +83,7 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('https://dtt.local:3001/#/room/2').
+                    visit("#{config.site.surl}/#/room/2").
                     then(done, done)
 
             it 'should not contain an anchor to the room manage members', (done) ->
