@@ -104,6 +104,7 @@ describe 'Room', ->
                 req.param.withArgs('id').returns(room_id)
                 res =
                     redirect: sinon.spy()
+                    json: sinon.spy()
                 next = sinon.spy()
                 done()
 
@@ -132,7 +133,7 @@ describe 'Room', ->
                     done()
 
                 it 'should call the next function', (done) ->
-                    sinon.assert.calledWith(res.redirect, '/')
+                    sinon.assert.calledWith(res.json, "server_messages":["You're not subscribed to this room"])
                     done()
 
         describe 'set_up_message_transmission', ->
