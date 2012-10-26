@@ -54,11 +54,6 @@ describe 'Client Room', ->
 
         browser = null
 
-        is_loaded = (win) ->
-            win.document.querySelector('#form-container')
-
-        is_ready = (window) -> window.document.querySelector('#form-container')
-
         beforeEach (done) ->
             browser = new Browser()
             #browser = new Browser(waitFor: 45000)
@@ -70,6 +65,7 @@ describe 'Client Room', ->
 
             #browser = new Browser(debug: true)
             browser.authenticate().basic('foo@bar.com', '1234')
+            browser.cookies('dtt.local', '/').set('authtoken', 'Basic ZWVzcGluYWxAaW50ZWxsaXN5cy5jb20uZG86MTIzNDU2')
             #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
             done()
 
@@ -77,11 +73,11 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    #visit('https://dtt.local:3001/#/room/1').
-                    visit('https://dtt.local:3001/#/registration').
+                    visit('https://dtt.local:3001/#/room/1').
+                    #visit('https://dtt.local:3001/#/registration').
                     #visit('https://dtt.local:3001').
                     #visit('https://api.dtt.local:3001/registration').
-                    then(-> browser.wait(450000)).
+                    #then(-> browser.wait(450000)).
                     #then(-> browser.dump()).
                     then(done, done)
 
@@ -96,20 +92,25 @@ describe 'Client Room', ->
                     done()
                 )
                 ###
+                ###
                 browser.wait(900000, ->
                     #browser.resources.dump()
                     console.log browser.html()
                     expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                     done()
                 )
+                ###
                 #console.log browser.html()
                 #console.log browser.lastRequest
                 #console.log browser.lastResponse
                 #browser.resources.dump()
                 #expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 #done()
+                console.log browser.html()
+                expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
+                done()
 
-            xit 'should contain a anchor to the room messages', (done) ->
+            it 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/1/messages"]')).to.not.be.empty()
                 done()
 
@@ -120,10 +121,10 @@ describe 'Client Room', ->
                     visit('https://dtt.local:3001/#/room/2').
                     then(done, done)
 
-            xit 'should not contain an anchor to the room manage members', (done) ->
+            it 'should not contain an anchor to the room manage members', (done) ->
                 expect(browser.html('a[href="#/room/2/users"]')).to.be.empty()
                 done()
 
-            xit 'should contain a anchor to the room messages', (done) ->
+            it 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/2/messages"]')).to.not.be.empty()
                 done()
