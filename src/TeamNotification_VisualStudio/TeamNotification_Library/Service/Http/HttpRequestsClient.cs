@@ -7,6 +7,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Service.Http
@@ -26,11 +27,11 @@ namespace TeamNotification_Library.Service.Http
         private IGetHttpClientHandler httpClientHandlerGetter;
         readonly ISerializeJSON serializer;
 
-        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, ILog logger)
+        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter)
         {
             this.serializer = serializer;
             this.httpClientHandlerGetter = httpClientHandlerGetter;
-            this.logger = logger;
+            this.logger = new Loggr(this, new AlertMessagesEvents());
         }
 
         public void Get(string uri)

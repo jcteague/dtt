@@ -282,6 +282,7 @@
     <Compile Include="Service\Logging\Logger.cs" />
     <Compile Include="Service\Logging\Providers\IConfigureLogging.cs" />
     <Compile Include="Service\Logging\Providers\LeTarget.cs" />
+    <Compile Include="Service\Logging\Loggr.cs" />
     <Compile Include="Service\Logging\Providers\NLogConfiguration.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
