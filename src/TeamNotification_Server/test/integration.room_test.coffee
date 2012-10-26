@@ -56,57 +56,22 @@ describe 'Client Room', ->
 
         beforeEach (done) ->
             browser = new Browser()
-            #browser = new Browser(waitFor: 45000)
             browser.on 'error', (error) ->
                 console.log 'Browser test', error
 
-            browser.on 'done', (b) ->
-                console.log 'done'
-
-            #browser = new Browser(debug: true)
             browser.authenticate().basic('foo@bar.com', '1234')
-            browser.cookies('dtt.local', '/').set('authtoken', 'Basic ZWVzcGluYWxAaW50ZWxsaXN5cy5jb20uZG86MTIzNDU2')
-            #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
-            done()
+            #browser.cookies('dtt.local', '/').set('authtoken', 'Basic ZWVzcGluYWxAaW50ZWxsaXN5cy5jb20uZG86MTIzNDU2') # For ee@i.com
+            browser.cookies('dtt.local', '/').set('authtoken', 'Basic Zm9vQGJhci5jb206MTIzNDU2') # For foo@bar.com, 1234
+            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the #/room page and he is the owner of the room', ->
 
             beforeEach (done) ->
                 browser.
                     visit('https://dtt.local:3001/#/room/1').
-                    #visit('https://dtt.local:3001/#/registration').
-                    #visit('https://dtt.local:3001').
-                    #visit('https://api.dtt.local:3001/registration').
-                    #then(-> browser.wait(450000)).
-                    #then(-> browser.dump()).
                     then(done, done)
 
             it 'should contain an anchor to the room manage members', (done) ->
-                ###
-                browser.wait(4500, -> 
-                    #console.log browser.html()
-                    #console.log browser.lastRequest
-                    #console.log browser.lastResponse
-                    browser.resources.dump()
-                    expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
-                    done()
-                )
-                ###
-                ###
-                browser.wait(900000, ->
-                    #browser.resources.dump()
-                    console.log browser.html()
-                    expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
-                    done()
-                )
-                ###
-                #console.log browser.html()
-                #console.log browser.lastRequest
-                #console.log browser.lastResponse
-                #browser.resources.dump()
-                #expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
-                #done()
-                console.log browser.html()
                 expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 done()
 
