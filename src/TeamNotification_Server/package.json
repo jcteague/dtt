@@ -25,7 +25,8 @@
     "forever": "0.9.x",
     "requireindex": "*",
     "connect-xcors": "0.5.x",
-    "node-logentries": "0.0.2"
+    "node-logentries": "0.0.2",
+    "loggr":"1.1.2"
   },
   "devDependencies": {
     "coffee-script": "1.3.x",
