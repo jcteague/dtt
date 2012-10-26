@@ -63,6 +63,7 @@ describe 'Client Room', ->
             browser.authenticate().basic('foo@bar.com', '1234')
             browser.cookies(config.site.host, '/').set('authtoken', 'Basic Zm9vQGJhci5jb206MTIzNDU2') # For foo@bar.com, 1234
             handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
+            #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the #/room page and he is the owner of the room', ->
 
