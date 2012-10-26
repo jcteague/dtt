@@ -8,9 +8,9 @@ development:
 test:
   adapter: postgresql
   database: dtt_test
-  username: intellisys
-  password: welc0me
-  host: test_ip
+  username: postgres
+  password: 1234
+  host: localhost
 
 production:
   adapter: postgresql

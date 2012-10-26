@@ -4,28 +4,32 @@ require 'yaml'
 
 namespace :rest_service do
   task :build_local =>[
-    :dev_environment,
     :update_packages,
     :compile_coffeescript,
-    :test,
+    :test_all,
+    :dev_environment,
     :migrate
   ]
 
   task :build_production => [
-    #:prod_environment,
     :update_packages,
     :compile_coffeescript,
+    :prod_environment,
     #:test, # This should run on staging env
-    #:migrate,
-    #:package_and_deploy
+    :migrate,
     :package,
-    #:run_production
+    :run_production
   ]
 
   task :deploy => [
-    #:compile_coffeescript,
-    #:test,
     :package_and_deploy
+  ]
+
+  task :test_all => [
+    :test_environment,
+    :drop_all_tables,
+    :migrate,
+    :test
   ]
 
   task :package_and_deploy do
@@ -41,6 +45,7 @@ namespace :rest_service do
   end
 
   task :package do
+    section_title "Packaging the application and preparing deploy folder"
     Dir.recreate_dir RestDeployFolder
     Dir.glob(File.join(RestServiceRoot, '*')).select{|f| !["coffeescripts", "db", "test"].include? f.split('/').last}.each do |f|
       sh "cp -r #{f} #{RestDeployFolder}"
@@ -50,21 +55,28 @@ namespace :rest_service do
   end
 
   task :run_production do
-    #sh "sudo stop dtt"
-    #sh "sudo start dtt"
+    section_title "Restarting production server"
     sh "sh #{File.join(RestDeployFolder, 'stop_production.sh')}"
     sh "sh #{File.join(RestDeployFolder, 'start_production.sh')}"
   end
 
   task :dev_environment do
+    section_title "Using dev environment"
     ActiveRecord::Base.establish_connection(db_config["development"])
   end
 
+  task :test_environment do
+    section_title "Using test environment"
+    ActiveRecord::Base.establish_connection(db_config["test"])
+  end
+
   task :prod_environment do
+    section_title "Using production environment"
     ActiveRecord::Base.establish_connection(db_config["production"])
   end
 
   task :compile_coffeescript do
+    section_title "Compiling coffeescript files"
       sh "coffee -o #{RestServiceRoot} -c #{File.join(RestServiceRoot, 'coffeescripts')}"
   end
 
@@ -76,6 +88,7 @@ namespace :rest_service do
   end
 
   task :update_packages do
+    section_title "Updating the nodejs packages"
     current_dir = Dir.pwd
     Dir.chdir(RestServiceRoot)
     sh "npm install"
@@ -84,7 +97,18 @@ namespace :rest_service do
 
   desc "Migrate the database through scripts in db/migrate"
   task :migrate do
+    section_title "Migrating the database #{ActiveRecord::Base.connection.current_database}"
     ActiveRecord::Migrator.migrate(RestServiceMigrations, ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+  end
+
+  desc "Truncate all tables in the database and set as create state"
+  task :drop_all_tables do
+    connection = ActiveRecord::Base.connection
+    return unless connection.current_database == db_config["test"]["database"]
+    section_title "Dropping all tables in #{connection.current_database}"
+    tables = connection.tables
+    tables.delete "schema_migrations"
+    tables.each { |t| connection.execute("DROP TABLE #{t}") }
   end
 
   task :rollback_db => [:dev_environment] do
@@ -98,6 +122,12 @@ namespace :rest_service do
 
   def db_config
     YAML::load(File.open(RestServiceDatabaseConfig))
+  end
+
+  def section_title(message)
+      puts "======================================================"
+      puts message.upcase
+      puts "======================================================"
   end
 end
 
