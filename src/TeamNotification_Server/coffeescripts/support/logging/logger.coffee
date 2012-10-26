@@ -6,16 +6,18 @@ log = loggr.logs.get(config.log.logkey, config.log.apikey)
 #logentries_log = logentries.logger { token: config.log.token }
 #logentries_log.level 'info'
 
-log_message = (level, args...) ->
+log_message = (level, args) ->
+    console.log args
     msg = []
     for val in args
         if typeof val is 'object'
             msg.push JSON.stringify(val)
         else
             msg.push val
+    title = msg[0].substring( 0, 45 )
+    console.log title
     logMessage = msg.join(', ')
-    console.log logMessage
-    log.events.createEvent().text(logMessage).tags(level).source("web service").post()
+    log.events.createEvent().text(title).data(logMessage).tags(level).source("web service").post()
 
 module.exports =
     info: (args...) ->
