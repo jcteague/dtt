@@ -27,8 +27,7 @@ namespace :rest_service do
 
   task :test_all => [
     :test_environment,
-    :drop_all_tables,
-    :migrate,
+    :reset_database,
     :test
   ]
 
@@ -101,13 +100,19 @@ namespace :rest_service do
     ActiveRecord::Migrator.migrate(RestServiceMigrations, ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
   end
 
+  desc "Reset the database and migrate"
+  task :reset_database => :drop_all_tables do
+    section_title "Resetting database #{ActiveRecord::Base.connection.current_database}"
+    return unless ActiveRecord::Base.connection.current_database == db_config["test"]["database"]
+    ActiveRecord::Migrator.migrate(RestServiceMigrations)
+  end
+
   desc "Truncate all tables in the database and set as create state"
   task :drop_all_tables do
     connection = ActiveRecord::Base.connection
     return unless connection.current_database == db_config["test"]["database"]
-    section_title "Dropping all tables in #{connection.current_database}"
+    puts "Dropping all tables in #{connection.current_database}"
     tables = connection.tables
-    tables.delete "schema_migrations"
     tables.each { |t| connection.execute("DROP TABLE #{t}") }
   end
 
