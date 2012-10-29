@@ -11,6 +11,17 @@ namespace :rest_service do
     :migrate
   ]
 
+  task :build_staging => [
+    :update_packages,
+    :compile_coffeescript,
+    :staging_environment,
+    :test,
+    :migrate,
+    :package,
+    :run_staging
+  ]
+
+
   task :build_production => [
     :update_packages,
     :compile_coffeescript,
@@ -53,6 +64,12 @@ namespace :rest_service do
     sh "coffee -c #{File.join(RestDeployFolder, 'app.coffee')}"
   end
 
+  task :run_staging do
+    section_title "Restarting staging server"
+    sh "sh #{File.join(RestDeployFolder, 'stop_staging.sh')}"
+    sh "sh #{File.join(RestDeployFolder, 'start_staging.sh')}"
+  end
+
   task :run_production do
     section_title "Restarting production server"
     sh "sh #{File.join(RestDeployFolder, 'stop_production.sh')}"
@@ -67,6 +84,11 @@ namespace :rest_service do
   task :test_environment do
     section_title "Using test environment"
     ActiveRecord::Base.establish_connection(db_config["test"])
+  end
+
+  task :staging_environment do
+    section_title "Using staging environment"
+    ActiveRecord::Base.establish_connection(db_config["staging"])
   end
 
   task :prod_environment do

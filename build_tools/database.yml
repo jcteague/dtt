@@ -12,6 +12,13 @@ test:
   password: 1234
   host: localhost
 
+staging:
+  adapter: postgresql
+  database: dtt_main
+  username: postgres
+  password: 1234
+  host: localhost
+
 production:
   adapter: postgresql
   database: d9er2dp9rejk7k
