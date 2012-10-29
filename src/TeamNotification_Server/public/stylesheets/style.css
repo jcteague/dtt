@@ -9,6 +9,10 @@ a {
 
 label { vertical-align: top;}
 
+label.error {
+    color: #FF0000;
+}
+
 /*textarea { vertical-align: bottom;}*/
 
 /*input { vertical-align: top; }*/
