@@ -1,12 +1,7 @@
-console.log 'User Account Registration Test Pending'
-return
-
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 users =
     name: 'users'
@@ -20,20 +15,17 @@ users =
         }
     ]
 
-describe 'User Account Registration', ->
+context.for.integration_test() (browser) ->
 
-    describe 'Set Up', ->
-
-        browser = null
+    describe 'User Account Registration', ->
 
         beforeEach (done) ->
-            browser = new Browser()
-            handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
+            handle_in_series server.start(), db.save(users), done
 
         describe 'When a user visits the #/registration page', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/registration').then(done, done)
+                browser.visit("#{config.site.surl}/#/registration").then(done, done)
 
             it 'should contain all the inputs for the user registration', (done) ->
                 expect(browser.html('input[name=first_name]')).to.not.be.empty()
@@ -47,7 +39,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/registration').
+                browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -59,13 +51,13 @@ describe 'User Account Registration', ->
                     then(done, done)
 
             it 'should receive a success message', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>You can view the new resource   <a href=\"#/user/1/\">here</a>\n</p>"
+                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>You can view the new resource <a href=\"#/user/1/\">here</a></p>"
                 done()
 
         describe 'When a user visits the #/registration page and submits an email that is already registered', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/registration').
+                browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
@@ -83,7 +75,7 @@ describe 'User Account Registration', ->
         describe 'When a user visits the #/registration page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/registration').
+                browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
                             fill('first_name', '').

@@ -1,11 +1,8 @@
-console.log 'Room Messages'
-return
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, handle_in_series: handle_in_series, server: server} = require('./helpers/specs_helper')
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
 room_id = 1
 users =
     name: 'users'
@@ -46,94 +43,93 @@ generate_message = (i) ->
         "name": 'bob'
     }
 
-describe 'Room Messages', ->
+context.for.integration_test(browsers: 2) (browsers...) ->
 
-    browser = null
-    browser2 = null
-    describe 'Set Up', ->
+    [browser, browser2] = browsers
 
-        browser = null
-        beforeEach (done) ->
-            browser = new Browser()
-            browser.authenticate().basic('foo@bar.com', '1234')
-            browser2 = new Browser()
-            browser2.authenticate().basic('bar@foo.com', '1234')
-            db.redis.clear ["room:#{room_id}:messages"]
-            handle_in_series server.start(), db.clear('users', 'chat_room','chat_room_messages'), db.create(entities.users, entities.chat_rooms,entities.chat_room_messages), db.save(users, chat_rooms), done
+    describe 'Room Messages', ->
 
-        describe 'When a user visits the #/room/:id/messages page', ->
+        #browser2 = null
+
+        describe 'Set Up', ->
 
             beforeEach (done) ->
-                messages =
-                    #name: 'chat_room_messages'
-                    name: "room:#{room_id}:messages"
-                    entities: (generate_message(i) for i in [1..55])
+                #browser2 = new Browser()
+                #browser2.authenticate().basic('bar@foo.com', '1234')
+                db.redis.clear ["room:#{room_id}:messages"]
+                handle_in_series server.start(), db.save(users, chat_rooms), done
 
-                db.redis.save(messages)
-                done()
-                #handle_in_series db.save(messages), done
-
-            describe 'and wants to see the messages', ->
+            describe 'When a user visits the #/room/:id/messages page', ->
 
                 beforeEach (done) ->
-                    browser.visit('http://dtt.local:3000/#/room/1/messages').then(done, done)
+                    messages =
+                        name: "room:#{room_id}:messages"
+                        entities: (generate_message(i) for i in [1..55])
 
-                it 'should contain the messages in the container', (done) ->
-                    expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
+                    db.redis.save(messages)
                     done()
 
-                it 'should contain not more than fifty elements at a time', (done) ->
-                    expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
-                    done()
+                describe 'and wants to see the messages', ->
 
-        describe 'When a user visits the #/room/:id/messages page and there are less than fifty messages', ->
-            beforeEach (done) ->
-                messages =
-                    #name: 'chat_room_messages'
-                    name: "room:#{room_id}:messages"
-                    entities: (generate_message(i) for i in [1..10])
+                    beforeEach (done) ->
+                        browser.visit("#{config.site.surl}/#/room/1/messages").
+                            then(done, done)
 
-                db.redis.save(messages)
-                done()
-                #handle_in_series db.save(messages), done
+                    it 'should contain the messages in the container', (done) ->
+                        expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
+                        done()
 
-            describe 'and wants to see the messages', ->
+                    it 'should contain not more than fifty elements at a time', (done) ->
+                        expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
+                        done()
+
+            describe 'When a user visits the #/room/:id/messages page and there are less than fifty messages', ->
                 beforeEach (done) ->
-                    browser.visit("http://dtt.local:3000/#/room/1/messages").then(done, done) 
-                    
-                it 'should contain the messages in the container', (done) ->
-                    expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
-                    done()
-                    
-                it 'should contain only ten messages if there are ten messages', (done) ->
-                    expect(browser.queryAll('#messages-container p').length).to.equal(10)
+                    messages =
+                        name: "room:#{room_id}:messages"
+                        entities: (generate_message(i) for i in [1..10])
+
+                    db.redis.save(messages)
                     done()
 
-        describe 'When a user visits the #/room/:id/messages page', ->
+                describe 'and wants to see the messages', ->
+                    beforeEach (done) ->
+                        browser.visit("#{config.site.surl}/#/room/1/messages").
+                            then(done, done) 
+                        
+                    it 'should contain the messages in the container', (done) ->
+                        expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
+                        done()
+                        
+                    xit 'should contain only ten messages if there are ten messages', (done) ->
+                        expect(browser.queryAll('#messages-container p').length).to.equal(10)
+                        done()
 
-            beforeEach (done) ->
-                room_users = 
-                    name: "chat_room_users"
-                    entities: [ {chat_room_id:1, user_id:2}]
-                handle_in_series db.save(room_users), done
+            describe 'When a user visits the #/room/:id/messages page', ->
 
-            describe 'and wants to send a message', ->
-
-                message_to_post = null
                 beforeEach (done) ->
-                    message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
-                    browser2.visit('http://dtt.local:3000/#/room/1/messages').then( -> )
-                    browser.visit('http://dtt.local:3000/#/room/1/messages').
-                        then( -> 
-                            browser.fill("message", message_to_post)).
-                        then(-> browser.pressButton('input[type=submit]')).
-                        then(done, done)
+                    room_users = 
+                        name: "chat_room_users"
+                        entities: [ {chat_room_id:1, user_id:2}]
+                    handle_in_series db.save(room_users), done
 
-                it 'should show in the message pool', (done) ->
-                    expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
-                    done()
-                    
-                #it 'should appear in the others users chat pages', (done) ->
-                #    expect(browser2.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
-                #    done()
-                    
+                describe 'and wants to send a message', ->
+
+                    message_to_post = null
+                    beforeEach (done) ->
+                        message_to_post = "This is indeed a pretty clever and most schoolarish of messages"
+                        browser2.visit("#{config.site.surl}/#/room/1/messages").then( -> )
+                        browser.visit("#{config.site.surl}/#/room/1/messages").
+                            then( -> 
+                                browser.fill("message", message_to_post)).
+                            then(-> browser.pressButton('input[type=submit]')).
+                            then(done, done)
+
+                    it 'should show in the message pool', (done) ->
+                        expect(browser.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
+                        done()
+                        
+                    #it 'should appear in the others users chat pages', (done) ->
+                    #    expect(browser2.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
+                    #    done()
+                        

@@ -1,12 +1,7 @@
-console.log 'Resend Room Invitations'
-return
-
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 users =
     name: 'users'
@@ -62,22 +57,18 @@ chat_room_invitations =
     ]
     
     
+context.for.integration_test() (browser) ->    
     
-    
-describe 'Resend Room Invitations', ->
-    describe 'Set Up', ->
-        browser = null
+    describe 'Resend Room Invitations', ->
+
         beforeEach (done) ->
-            browser = new Browser()
-            browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users','chat_room_invitation'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users, entities.chat_room_invitation), db.save(users, chat_rooms),db.save(chat_room_invitations) , done
-    
+            handle_in_series server.start(), db.save(users, chat_rooms), db.save(chat_room_invitations) , done
 
         describe 'When a user visits the #/room/:id/invitations page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/room/1/invitations').
+                    visit("#{config.site.surl}/#/room/1/invitations").
                     then(done, done)
 
             it 'should contain an autocomplete input', (done) ->
@@ -87,7 +78,7 @@ describe 'Resend Room Invitations', ->
         describe 'When a user clicks to resend an invitation', ->
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/room/1/invitations').
+                    visit("#{config.site.surl}/#/room/1/invitations").
                     then(-> browser.pressButton('button[type=submit]')).
                     then(done, done)
             

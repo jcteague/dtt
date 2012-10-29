@@ -1,9 +1,7 @@
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 users =
     name: 'users'
@@ -23,25 +21,21 @@ users =
         }
     ]
 
-describe 'Edit User Account', ->
+context.for.integration_test() (browser) ->
 
-    describe 'Set Up', ->
-
-        browser = null
+    describe 'Edit User Account', ->
 
         beforeEach (done) ->
-            browser = new Browser()
-            browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
+            handle_in_series server.start(), db.save(users), done
 
         describe 'When a user visits the #/user/:id/edit page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/user/1/edit').
+                    visit("#{config.site.surl}/#/user/1/edit").
                     then(done, done)
 
-            xit 'should contain all the inputs for the user values', (done) ->
+            it 'should contain all the inputs for the user values', (done) ->
                 expect(browser.html('input[name=first_name]')).to.not.be.empty()
                 expect(browser.html('input[name=last_name]')).to.not.be.empty()
                 expect(browser.html('input[name=email]')).to.not.be.empty()
@@ -50,11 +44,13 @@ describe 'Edit User Account', ->
                 expect(browser.html('input[type=submit]')).to.not.be.empty()
                 done()
 
+
         ###
         describe 'When a user visits the #/user/:id/edit page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/user/1/edit').
+                #browser.visit('http://dtt.local:3000/#/user/1/edit').
+                browser.visit("#{config.site.surl}/#/user/1/edit").
                     then(-> 
                         browser.
                             fill('first_name', 'foo').
