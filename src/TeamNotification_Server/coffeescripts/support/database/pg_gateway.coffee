@@ -18,7 +18,7 @@ open_promise = ->
             logger.error "Could not connect to POSTGRES database using #{db_config.connection_string}.", {error: err}
             return
 
-        q.resolve client
+        deferred.resolve client
 
     deferred.promise
 
