@@ -20,6 +20,7 @@ describe 'Plugin Version Strategy', ->
 
         beforeEach (done) ->
             expected_result = 'blah result'
+            console.log config
             file_reader_mock.read_as_json.withArgs(config.plugins.visual_studio.manifest).returns(expected_result)
             result = sut()
             done()

@@ -44,15 +44,15 @@ development_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
     log:
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
         token: ''
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
-	plugins:
-        visual_studio:
-            manifest: visual_studio_plugin_json
-            installer: visual_studio_plugin_installer
 
 
 test_settings =
@@ -86,15 +86,15 @@ test_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
     log:
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
         token: ''
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
-	plugins:
-        visual_studio:
-            manifest: visual_studio_plugin_json
-            installer: visual_studio_plugin_installer
         
 
 production_settings =
@@ -128,15 +128,15 @@ production_settings =
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
         redirect_url: 'http://api.yacketyapp.com/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
     log:
         path: path.join('/var', 'log', 'yackety.log')
         token: 'dbc2a3a0-2801-4ab9-8009-f01dd3ac7706'
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
-    plugins:
-        visual_studio:
-            manifest: visual_studio_plugin_json
-            installer: visual_studio_plugin_installer
 
 
 module.exports = ->
