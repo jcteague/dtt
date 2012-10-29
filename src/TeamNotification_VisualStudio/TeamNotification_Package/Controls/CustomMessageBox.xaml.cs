@@ -16,7 +16,14 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
     /// </summary>
     public partial class CustomMessageBox : Window
     {
+        public static class CustomMessageBoxValues
+        {
+            public const int Ok = 1;
+            public const int Cancel = 2;
+        }
+
         public object LastResult;
+
         public static CustomMessageBoxResult<string> Show(String caption)
         {
             var cmb = new CustomMessageBox {tbxMessageCaption = {Text = caption}, Visibility = Visibility.Visible};
@@ -25,6 +32,26 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             if (cmb.DialogResult.HasValue && cmb.DialogResult.Value)
                 return new CustomMessageBoxResult<string> { Value="Ok"};
             return new CustomMessageBoxResult<string> { Value = "cancel" };
+        }
+
+        public static void ShowYesNoDialog(String caption, Action okAction, Action cancelAction)
+        {
+            var cmb = new CustomMessageBox {tbxMessageCaption = {Text = caption}, Visibility = Visibility.Visible};
+            cmb.gButtons.Children.Add(GetButtonFor("Yes", okAction, cmb));
+            cmb.gButtons.Children.Add(GetButtonFor("No", cancelAction, cmb));
+
+            cmb.ShowDialog();
+        }
+
+        private static Button GetButtonFor(string content, Action action, CustomMessageBox cmb)
+        {
+            var button = new Button {Content = content, IsDefault = false, IsCancel = false, Width = 75};
+            button.Click += (s, e) =>
+                                {
+                                    action();
+                                    cmb.Close();
+                                };
+            return button;
         }
 
         public static CustomMessageBoxResult<T> Show<T>(String caption, CustomMessageBoxResult<T>[] customMessageBoxResults)

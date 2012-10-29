@@ -12,6 +12,7 @@ namespace TeamNotification_Library.Models
         public IEnumerable<Room> rooms { get; set; }
         public IEnumerable<Members> members { get; set; }
         public IEnumerable<Messages> messages { get; set; }
+        public Plugin plugin { get; set; }
 
         public static string getField(IEnumerable<CollectionData> data, string fieldName)
         {
@@ -72,5 +73,12 @@ namespace TeamNotification_Library.Models
             public string type { get; set; }
             public string submit { get; set; }
         }
+
+        public class Plugin
+        {
+            public IEnumerable<CollectionData> data;
+            public IEnumerable<Link> links;
+        }
     }
+
 }

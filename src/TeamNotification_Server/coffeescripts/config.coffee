@@ -7,7 +7,12 @@ db_config =
     db_main: 'dtt_main'
     db_test: 'dtt_test'
 
-whitelisted_paths = ['/', '/client', '/registration','/user/login', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
+whitelisted_paths = ['/', '/client', '/registration','/user/login', '/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
+
+data_path = path.join(__dirname, 'data')
+visual_studio_plugin_json = path.join(data_path, 'vs.extension.json')
+visual_studio_plugin_installer = path.join(data_path, 'TeamNotification_Package.vsix')
+
 development_settings =
     env: 'development'
     db:
@@ -44,6 +49,11 @@ development_settings =
         token: ''
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
+	plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
+
 
 test_settings =
     env: 'test'
@@ -81,6 +91,10 @@ test_settings =
         token: ''
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
+	plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
         
 
 production_settings =
@@ -119,7 +133,11 @@ production_settings =
         token: 'dbc2a3a0-2801-4ab9-8009-f01dd3ac7706'
         logkey: 'eespinal'
         apikey: '38af1eb61bad44a0b8ca6db044d672ff'
-        
+    plugins:
+        visual_studio:
+            manifest: visual_studio_plugin_json
+            installer: visual_studio_plugin_installer
+
 
 module.exports = ->
     switch process.env.NODE_ENV

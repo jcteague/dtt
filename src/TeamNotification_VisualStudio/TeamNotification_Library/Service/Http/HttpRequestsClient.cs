@@ -20,18 +20,22 @@ namespace TeamNotification_Library.Service.Http
         {
             get
             {
+                // TODO: Remove ServerCertificateValidationCallback after using the correct certificate. 
+                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
                 return new HttpClient(httpClientHandlerGetter.GetHandler());
             }
         }
 
+        private ILog logger;
         private IGetHttpClientHandler httpClientHandlerGetter;
         readonly ISerializeJSON serializer;
 
-        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter)
+        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, IRunInBackgroundWorker backgroundRunner)
         {
             this.serializer = serializer;
             this.httpClientHandlerGetter = httpClientHandlerGetter;
-            this.logger = new Loggr(this, new AlertMessagesEvents());
+   			this.logger = new Loggr(this, new AlertMessagesEvents());
+            this.backgroundRunner = backgroundRunner;
         }
 
         public void Get(string uri)
@@ -46,7 +50,8 @@ namespace TeamNotification_Library.Service.Http
 
         public Task<T> Get<T>(string uri) where T : class
         {
-            return httpClient.GetStringAsync(uri)
+            return httpClient
+                .GetStringAsync(uri)
                 .ContinueWith(response => serializer.Deserialize<T>(response.Result));
         }
         
@@ -74,6 +79,8 @@ namespace TeamNotification_Library.Service.Http
                                     };
                                     backgroundWorker.RunWorkerAsync();                        
                                 });
+//           logger.TryOrLog(() => backgroundRunner.Run(() => values.Each(x => PostSync(x.Item1, x.Item2))));
+ 
         }
 
         public HttpResponseMessage PostSync(string uri, HttpContent content)

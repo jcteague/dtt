@@ -9,12 +9,12 @@ namespace TeamNotification_Library.Service.Http
 {
     public class SocketIOClientWrapper : Client, IWrapSocketIOClient
     {
-        private IHandleAlertMessages alertMessageEvents;
+        private IHandleDialogMessages dialogMessageEvents;
         private IHandleSocketIOEvents socketIOEvents;
 
         public SocketIOClientWrapper(string url) : base(url) 
         {
-            alertMessageEvents = Container.GetInstance<IHandleAlertMessages>();
+            dialogMessageEvents = Container.GetInstance<IHandleDialogMessages>();
             socketIOEvents = Container.GetInstance<IHandleSocketIOEvents>();
         }
 
@@ -33,7 +33,7 @@ namespace TeamNotification_Library.Service.Http
             SocketConnectionClosed += (s, e) =>
                                                {
                                                    var alertMessage = new AlertMessageWasRequested { Message = "Socket Connection Lost" };
-                                                   alertMessageEvents.OnAlertMessageRequested(this, alertMessage);
+                                                   dialogMessageEvents.OnAlertMessageRequested(this, alertMessage);
 
                                                    var roomId = socketNamespace.Split('/')[2];
                                                    socketIOEvents.OnSocketWasDisconnected(this, new SocketWasDisconnected { RoomId = roomId });

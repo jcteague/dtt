@@ -49,6 +49,7 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
@@ -108,6 +109,8 @@
     <Compile Include="Configuration\LoginConfiguration.cs" />
     <Compile Include="Configuration\IProvideConfiguration.cs" />
     <Compile Include="Configuration\LoginConfigurationProvider.cs" />
+    <Compile Include="Configuration\PluginServerConfiguration.cs" />
+    <Compile Include="Configuration\PluginServerConfigurationProvier.cs" />
     <Compile Include="Configuration\RedisConfiguration.cs" />
     <Compile Include="Configuration\RedisConfigurationProvider.cs" />
     <Compile Include="Configuration\ServerConfiguration.cs" />
@@ -129,6 +132,7 @@
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\Plugin.cs" />
     <Compile Include="Models\ServerResponse.cs" />
     <Compile Include="Models\UI\ChatUIElements.cs" />
     <Compile Include="Models\User.cs" />
@@ -139,18 +143,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
-    <Compile Include="Service\Async\AlertMessagesEvents.cs" />
+    <Compile Include="Service\Async\BackgroundRunner.cs" />
+    <Compile Include="Service\Async\DialogMessagesEvents.cs" />
     <Compile Include="Service\Async\AlertMessageWasRequested.cs" />
     <Compile Include="Service\Async\ClipboardEvents.cs" />
     <Compile Include="Service\Async\CodePasteEvents.cs" />
     <Compile Include="Service\Async\CustomEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventArgs.cs" />
-    <Compile Include="Service\Async\IHandleAlertMessages.cs" />
+    <Compile Include="Service\Async\DialogMessageWasRequested.cs" />
+    <Compile Include="Service\Async\IHandleDialogMessages.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
     <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
     <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
+    <Compile Include="Service\Async\IRunInBackgroundWorker.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
     <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
@@ -284,6 +291,7 @@
     <Compile Include="Service\Logging\Providers\LeTarget.cs" />
     <Compile Include="Service\Logging\Loggr.cs" />
     <Compile Include="Service\Logging\Providers\NLogConfiguration.cs" />
+    <Compile Include="Service\Mappers\CollectionPluginToPluginMapper.cs" />
     <Compile Include="Service\Mappers\IMapPropertiesToFormUrlEncodedContent.cs" />
     <Compile Include="Service\Mappers\CollectionMessagesToChatMessageModelMapper.cs" />
     <Compile Include="Service\Mappers\ObjectToFormUrlEncodedContentMapper.cs" />
@@ -300,6 +308,17 @@
     <Compile Include="Service\ToolWindow\MessageInputAtRight.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowActionGetter.cs" />
     <Compile Include="Service\ToolWindow\ToolWindowOrientationGetter.cs" />
+    <Compile Include="Service\Update\DialogForUpdateFactory.cs" />
+    <Compile Include="Service\Update\ICheckForUpdates.cs" />
+    <Compile Include="Service\Update\ICreateDialogForUpdate.cs" />
+    <Compile Include="Service\Update\IFetchUpdates.cs" />
+    <Compile Include="Service\Update\IInstallUpdates.cs" />
+    <Compile Include="Service\Update\IUpdatePackage.cs" />
+    <Compile Include="Service\Update\PackageUpdateManager.cs" />
+    <Compile Include="Service\Update\PackageUpdatesDownloader.cs" />
+    <Compile Include="Service\Update\PackageUpdatesInstaller.cs" />
+    <Compile Include="Service\Update\PackageUpdateVerifier.cs" />
+    <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
