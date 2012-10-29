@@ -1,10 +1,8 @@
 expect = require('expect.js')
 sinon = require('sinon')
+context = require('./helpers/context')
 
 {db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
 
 users =
     name: 'users'
@@ -49,24 +47,14 @@ chat_room_users =
         }
     ]
 
-describe 'Client Room', ->
+context.for.integration_test() (browser) ->
 
-    describe 'Set Up', ->
-
-        browser = null
+    describe 'Client Room', ->
 
         beforeEach (done) ->
-            browser = new Browser()
-            browser.on 'error', (error) ->
-                console.log 'Browser test', error
-
-            browser.authenticate().basic('foo@bar.com', '1234')
-            browser.cookies(config.site.host, '/').set('authtoken', 'Basic Zm9vQGJhci5jb206MTIzNDU2') # For foo@bar.com, 1234
-            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
-            #handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.save(users, chat_rooms, chat_room_users), done
+            handle_in_series server.start(), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the #/room page and he is the owner of the room', ->
-
             beforeEach (done) ->
                 browser.
                     visit("#{config.site.surl}/#/room/1").

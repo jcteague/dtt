@@ -1,12 +1,7 @@
-console.log 'Add Account To Chat Room Test Pending!'
-return
-
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 # To not be polluting anyone's email
 email_not_in_room = 'eespinal@intellisys.com.do'
@@ -43,22 +38,18 @@ chat_rooms =
         }
     ]
 
-describe 'Add Account To Chat Room', ->
+context.for.integration_test() (browser) ->
 
-    describe 'Set Up', ->
-
-        browser = null
+    describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
-            browser = new Browser()
-            browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms), done
+            handle_in_series server.start(), db.save(users, chat_rooms), done
 
         describe 'When a user visits the client#/room/:id/users page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('http://dtt.local:3000/#/room/1/users').
+                    visit("#{config.site.surl}/#/room/1/users").
                     then(done, done)
 
             it 'should contain an autocomplete input', (done) ->
@@ -74,7 +65,7 @@ describe 'Add Account To Chat Room', ->
                 beforeEach (done) ->
                     user_id = 2
                     browser.
-                        visit('http://dtt.local:3000/#/room/1/users').
+                        visit("#{config.site.surl}/#/room/1/users").
                         then(-> 
                             browser.fill('email', email_not_in_room)
                         ).
@@ -93,7 +84,7 @@ describe 'Add Account To Chat Room', ->
                     nonexistent_email = 'nonexistent@bar.com'
                     user_id = 100
                     browser.
-                        visit('http://dtt.local:3000/#/room/1/users').
+                        visit("#{config.site.surl}/#/room/1/users").
                         then(-> 
                             browser.fill('email', nonexistent_email)
                         ).
