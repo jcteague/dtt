@@ -49,6 +49,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
             parameters = {
                 type: 'POST'
                 data: data
+                dataType: 'json'
                 url: url
                 success: callback
                 error: (d) -> return
