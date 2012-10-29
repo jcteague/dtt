@@ -2,28 +2,6 @@ Q = require('q')
 pg_gateway = require('../../support/database/pg_gateway')
 config = require('../../config')()
 
-###
-using = (client) ->
-    Q.nbind(client.query, client)
-
-using_client = (client) ->
-    return (queries_array) ->
-        reduce_func = (processed_queries, next_query) ->
-            processed_queries.then(client).then(next_query)
-
-        queries_array.reduce reduce_func, Q.resolve(client)
-
-handle = (client, query) ->
-    Q.ncall(client.query, client)
-
-handle_queries = (queries_array) ->
-    return (client) ->
-        reduce_func = (processed_queries, next_query) ->
-            processed_queries.then(client).then(next_query)
-
-        queries_array.reduce reduce_func, Q.resolve(client)
-###
-
 unit_test = (path, mocks) ->
     sut = ''
 
@@ -52,7 +30,7 @@ integration_test = (block) ->
     beforeEach (done) ->
         truncate_all_tables().then(done)
 
-    describe 'This is an integration test context', ->
+    describe '', ->
         block()
 
 module.exports =
