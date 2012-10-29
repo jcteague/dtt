@@ -23,4 +23,9 @@ define 'config', [], ->
     if has('production')
         return production_settings
     else
+        # Need explicit support in some local clients.
+        # TODO: Remove when handling CORS correctly
+        if jQuery.browser?.mozilla
+            jQuery.support.cors = true
+
         return development_settings
