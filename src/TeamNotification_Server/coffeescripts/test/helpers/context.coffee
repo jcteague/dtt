@@ -24,7 +24,7 @@ truncate_all_tables = ->
         ).then((result) ->
             (row.tablename for row in result.rows when row.tablename isnt 'schema_migrations')
         ).then((tables) ->
-            queries = ("TRUNCATE TABLE #{table};" for table in tables)
+            queries = ("TRUNCATE TABLE #{table} RESTART IDENTITY CASCADE;" for table in tables)
             binded_client(queries.join(' '))
         ).then -> null
 
@@ -39,28 +39,30 @@ integration_test = (options) ->
             email: 'foo@bar.com'
             password: '1234'
         log_errors: false
+        browsers: 1
 
     opt = _.extend(default_options, options)
 
     return (block) ->
-        browser = new Browser()
+        browsers = (new Browser() for i in [0...opt.browsers])
 
         beforeEach (done) ->
-            if opt.authenticate
-                email = opt.authenticated_user.email
-                password = opt.authenticated_user.password
-                browser.authenticate().basic(email, password)
-                auth_token = get_auth_token(email, password)
-                browser.cookies(config.site.host, '/').set('authtoken', auth_token)
+            for browser in browsers
+                if opt.authenticate
+                    email = opt.authenticated_user.email
+                    password = opt.authenticated_user.password
+                    browser.authenticate().basic(email, password)
+                    auth_token = get_auth_token(email, password)
+                    browser.cookies(config.site.host, '/').set('authtoken', auth_token)
 
-            if opt.log_errors
-                browser.on 'error', (error) ->
-                    console.log 'Browser', error
+                if opt.log_errors
+                    browser.on 'error', (error) ->
+                        console.log 'Browser', error
 
             truncate_all_tables().then(done)
 
         describe '', ->
-            block(browser)
+            block.apply(null, browsers)
 
 module.exports =
     for:

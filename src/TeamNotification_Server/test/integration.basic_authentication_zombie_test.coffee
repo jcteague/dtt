@@ -1,10 +1,7 @@
 expect = require('expect.js')
 sinon = require('sinon')
-expect = require('expect.js')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
-
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+context = require('./helpers/context')
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 users =
     name: 'users'
@@ -18,37 +15,37 @@ users =
         }
     ]
 
-describe 'Basic Authentication Test', ->
 
-    browser = null
+context.for.integration_test(authenticate: false) (browser) ->
 
-    beforeEach (done) ->
-        browser = new Browser()
-        handle_in_series server.start(), db.clear('users'), db.create(entities.users), db.save(users), done
-
-    describe 'When an unauthenticated request is received', ->
-
-        response = null
-        login_div_id = 'login-container'
-        beforeEach (done) ->
-            browser.visit 'http://dtt.local:3000/#/user/1', (e, browser, status) ->
-                response = status
-                done()
-
-        xit 'should redirect to the login page', (done) ->
-            expect(browser.html()).to.contain login_div_id
-            done()
-
-    describe 'When an authenticated header is found', ->
-
-        response = null
+    describe 'Basic Authentication', ->
 
         beforeEach (done) ->
-            browser.authenticate().basic('foo@bar.com', '1234')
-            browser.visit 'http://dtt.local:3000/', (e, browser, status) ->
-                response = status
+            handle_in_series server.start(), db.save(users), done
+
+        describe 'When an unauthenticated request is received', ->
+
+            response = null
+            login_div_id = 'login-container'
+            beforeEach (done) ->
+                browser.visit "#{config.site.surl}/#/user/1", (e, browser, status) ->
+                    response = status
+                    done()
+
+            xit 'should redirect to the login page', (done) ->
+                expect(browser.html()).to.contain login_div_id
                 done()
 
-        xit 'should return a 200 status code', (done) ->
-            expect(response).to.equal 200
-            done()
+        describe 'When an authenticated header is found', ->
+
+            response = null
+
+            beforeEach (done) ->
+                browser.authenticate().basic('foo@bar.com', '1234')
+                browser.visit 'http://dtt.local:3000/', (e, browser, status) ->
+                    response = status
+                    done()
+
+            xit 'should return a 200 status code', (done) ->
+                expect(response).to.equal 200
+                done()
