@@ -2,7 +2,7 @@ expect = require('expect.js')
 sinon = require('sinon')
 context = require('./helpers/context')
 
-context.for.integration_test ->
+context.for.integration_test() ->
 
     describe 'Inner Spec', ->
 
