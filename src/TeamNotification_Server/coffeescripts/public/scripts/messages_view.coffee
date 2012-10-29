@@ -15,7 +15,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
 
         parsing_links: (message) ->
-            console.log message
             message_words =  message.split ' '
             final_message = ''
             for word in message_words

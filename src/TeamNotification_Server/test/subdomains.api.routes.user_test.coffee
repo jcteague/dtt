@@ -183,7 +183,7 @@ describe 'User', ->
                 done()
                 
             it 'should contain the login form', (done) ->
-                expect(template.data[0]).to.eql {'name':'username', 'label':'Username', 'type':'string'}
+                expect(template.data[0]).to.eql {'name':'username', 'label':'Email', 'type':'string'}
                 expect(template.data[1]).to.eql {'name':'password', 'label':'Password', 'type':'password'}
                 done()
 
