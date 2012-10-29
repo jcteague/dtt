@@ -51,8 +51,8 @@ development_settings =
     log:
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
         token: ''
-        logkey: 'eespinal'
-        apikey: '38af1eb61bad44a0b8ca6db044d672ff'
+        logkey: 'Yackety'
+        apikey: 'ab92172f734744139af7e4edaed1ae1a'
 
 
 test_settings =
@@ -93,8 +93,8 @@ test_settings =
     log:
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
         token: ''
-        logkey: 'eespinal'
-        apikey: '38af1eb61bad44a0b8ca6db044d672ff'
+        logkey: 'Yackety'
+        apikey: 'ab92172f734744139af7e4edaed1ae1a'
         
 
 production_settings =
@@ -135,8 +135,8 @@ production_settings =
     log:
         path: path.join('/var', 'log', 'yackety.log')
         token: 'dbc2a3a0-2801-4ab9-8009-f01dd3ac7706'
-        logkey: 'eespinal'
-        apikey: '38af1eb61bad44a0b8ca6db044d672ff'
+        logkey: 'Yackety'
+        apikey: 'ab92172f734744139af7e4edaed1ae1a'
 
 
 module.exports = ->
