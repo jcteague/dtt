@@ -36,8 +36,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @trigger event, values
 
         render_path: (path) ->
-            $.support.cors = true
-
             @server_response_view.clear()
             path = '' if path is '/'
             url = "#{config.api.url}/#{path}"
