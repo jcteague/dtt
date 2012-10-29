@@ -1,6 +1,9 @@
 Q = require('q')
 pg_gateway = require('../../support/database/pg_gateway')
 config = require('../../config')()
+_ = require('underscore')
+
+Browser = require('zombie').Browser
 
 unit_test = (path, mocks) ->
     sut = ''
@@ -25,13 +28,39 @@ truncate_all_tables = ->
             binded_client(queries.join(' '))
         ).then -> null
 
-integration_test = (block) ->
+get_auth_token = (email, password) ->
+    "Basic " + (new Buffer(email + ":" + password).toString('base64'))
 
-    beforeEach (done) ->
-        truncate_all_tables().then(done)
+integration_test = (options) ->
 
-    describe '', ->
-        block()
+    default_options =
+        authenticate: true
+        authenticated_user:
+            email: 'foo@bar.com'
+            password: '1234'
+        log_errors: false
+
+    opt = _.extend(default_options, options)
+
+    return (block) ->
+        browser = new Browser()
+
+        beforeEach (done) ->
+            if opt.authenticate
+                email = opt.authenticated_user.email
+                password = opt.authenticated_user.password
+                browser.authenticate().basic(email, password)
+                auth_token = get_auth_token(email, password)
+                browser.cookies(config.site.host, '/').set('authtoken', auth_token)
+
+            if opt.log_errors
+                browser.on 'error', (error) ->
+                    console.log 'Browser', error
+
+            truncate_all_tables().then(done)
+
+        describe '', ->
+            block(browser)
 
 module.exports =
     for:
