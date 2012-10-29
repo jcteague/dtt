@@ -76,7 +76,6 @@ methods.authenticate = (req, res, next) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
             auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
-            #res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:req.headers.authorization}})
             res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send({})
