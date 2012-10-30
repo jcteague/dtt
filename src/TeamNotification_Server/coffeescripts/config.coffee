@@ -51,8 +51,8 @@ development_settings =
     log:
         path: path.join(process.cwd(), 'development_logs', 'dev.log')
         token: ''
-        logkey: 'Yackety'
-        apikey: 'ab92172f734744139af7e4edaed1ae1a'
+        logkey: 'Invalid during development ):'
+        apikey: 'Invalid during development ):' #'ab92172f734744139af7e4edaed1ae1a'
 
 
 test_settings =
@@ -93,8 +93,8 @@ test_settings =
     log:
         path: path.join(process.cwd(), '..', '..', 'development_logs', 'test.log')
         token: ''
-        logkey: 'Yackety'
-        apikey: 'ab92172f734744139af7e4edaed1ae1a'
+        logkey: 'Invalid during testing ):' #'Yackety'
+        apikey: 'Invalid during testing ):'#'ab92172f734744139af7e4edaed1ae1a'
         
 
 production_settings =
