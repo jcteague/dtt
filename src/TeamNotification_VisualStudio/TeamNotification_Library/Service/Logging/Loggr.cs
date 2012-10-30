@@ -10,8 +10,8 @@ namespace TeamNotification_Library.Service.Logging
 {
     public class Loggr : ILog
     {
-        private string APIKEY { get { return "91eb0db843e44c38b678e38b21fa0294"; } }
-        private string LOGKEY { get { return "yacketyapp"; } }
+        private string APIKEY { get { return "ab92172f734744139af7e4edaed1ae1a"; } }
+        private string LOGKEY { get { return "Yackety"; } }
         private string URI { get { return String.Format("http://post.loggr.net/1/logs/{0}/events",LOGKEY); } }
 
         private IHandleDialogMessages alertMessageEvents;
