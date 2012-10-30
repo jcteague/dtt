@@ -14,6 +14,10 @@ task :build_release => [
   'rest_service:build_production'
 ]
 
+task :build_staging => [
+  'rest_service:build_staging'
+]
+
 task :build_vs_package => [
   'visual_studio:build'
 ]
