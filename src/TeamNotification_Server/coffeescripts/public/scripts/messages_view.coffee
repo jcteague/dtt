@@ -182,6 +182,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @last_user_id_that_posted = -1 
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                return add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><span class='chat_message_date'>#{date}</span><td></tr>")
+                return add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
 
             ("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
