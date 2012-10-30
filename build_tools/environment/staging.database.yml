@@ -1,0 +1,21 @@
+development:
+  adapter: postgresql
+  database: dtt_main
+  username: postgres
+  password: 1234
+  host: localhost
+
+test:
+  adapter: postgresql
+  database: dtt_test
+  username: postgres
+  password: 1234
+  host: localhost
+
+production:
+  adapter: postgresql
+  database: d9er2dp9rejk7k
+  username: huyuuxyveqegxe
+  password: tMU5vspNvcoPxePlBbK5DX1Jvx
+  host: ec2-23-21-91-108.compute-1.amazonaws.com
+  port: 5432

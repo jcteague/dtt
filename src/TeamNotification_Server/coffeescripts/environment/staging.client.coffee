@@ -2,14 +2,14 @@ define 'config', [], ->
 
     settings =
         site:
-            host: 'dtt.local'
-            port: 3000
-            url: 'http://dtt.local:3000'
+            host: 'staging.dtt.local'
+            port: 80
+            url: 'http://staging.dtt.local'
         api:
-            host: 'api.dtt.local'
-            port: 3001
-            url: 'https://api.dtt.local:3001'
-            
+            host: 'api.staging.dtt.local'
+            port: 443
+            url: 'https://api.staging.dtt.local'
+
     # Need explicit support in some local clients.
     # TODO: Remove when handling CORS correctly
     if jQuery.browser?.mozilla
