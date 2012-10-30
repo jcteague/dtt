@@ -176,7 +176,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @added_code = true
                 p = document.createElement("tr")
                 $(p).attr 'id',"#{message.stamp}"
-                p.innerHTML = "<td>#{$name_span.html()} </td><td><pre class='new_message prettyprint linenums'>#{escaped_message}</pre></td><td><b><span class='chat_message_date'>#{date}</span></b></td>"
+                p.innerHTML = "<td>#{$name_span.html()} </td><td><pre class='prettyprint linenums'>#{escaped_message}</pre></td><td><b><span class='chat_message_date'>#{date}</span></b></td>"
                 return p
             if parsedBody.notification?
                 @last_user_id_that_posted = -1 
