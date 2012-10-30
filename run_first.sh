@@ -27,4 +27,11 @@ echo '------------------------------------------------------------';
 sudo su postgres -c "createdb dtt_main" &&
 sudo su postgres -c "createdb dtt_test";
 echo '------------------------------------------------------------';
+echo '------------------------------------------------------------';
+echo 'Setting the environment variable';
+echo 'Change it if using non-local environment';
+echo '------------------------------------------------------------';
+sudo echo "DTT_ENV=local" >> ~/.bashrc &&
+sudo echo "export DTT_ENV" >> ~/.bashrc;
+echo '------------------------------------------------------------';
 echo 'NOTE: Remember to set up your postgres user with the correct password'

@@ -5,6 +5,7 @@ require 'yaml'
 namespace :rest_service do
   task :build_local =>[
     :update_packages,
+    :copy_environment_files,
     :compile_coffeescript,
     :test_all,
     :dev_environment,
@@ -13,6 +14,7 @@ namespace :rest_service do
 
   task :build_staging => [
     :update_packages,
+    :copy_environment_files,
     :compile_coffeescript,
     :test_all,
     :staging_environment,
@@ -21,9 +23,9 @@ namespace :rest_service do
     :run_staging
   ]
 
-
   task :build_production => [
     :update_packages,
+    :copy_environment_files,
     :compile_coffeescript,
     :prod_environment,
     #:test, # This should run on staging env
@@ -41,6 +43,12 @@ namespace :rest_service do
     :reset_database,
     :test
   ]
+
+  task :copy_environment_files do
+    section_title "Copying environment configuration"
+    source = File.join(RestServiceRoot, "coffeescripts", "environment", "#{ENV['DTT_ENV']}.coffee")
+    sh "cp #{source} #{File.join(RestServiceRoot, "coffeescripts", 'config.coffee')}"
+  end
 
   task :package_and_deploy do
       Dir.make_temp_dir(RestDeployFolder) do |deploy|
