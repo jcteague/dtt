@@ -15,6 +15,7 @@ src/**/test/**/*.js
 src/**/helper/*.js
 
 src/TeamNotification_Server/support/
+src/TeamNotification_Server/coffeescripts/config.coffee
 
 *.suo
 *.TMP
