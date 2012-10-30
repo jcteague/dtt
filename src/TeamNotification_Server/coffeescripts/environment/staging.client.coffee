@@ -2,13 +2,13 @@ define 'config', [], ->
 
     settings =
         site:
-            host: 'staging.dtt.local'
+            host: 'stagingdtt.local'
             port: 80
-            url: 'http://staging.dtt.local'
+            url: 'http://stagingdtt.local'
         api:
-            host: 'api.staging.dtt.local'
+            host: 'api.stagingdtt.local'
             port: 443
-            url: 'https://api.staging.dtt.local'
+            url: 'https://api.stagingdtt.local'
 
     # Need explicit support in some local clients.
     # TODO: Remove when handling CORS correctly

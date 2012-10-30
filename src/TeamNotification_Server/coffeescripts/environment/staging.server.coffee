@@ -19,22 +19,22 @@ development_settings =
         user: 'postgres'
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
-        host: 'staging.dtt.local'
+        host: 'stagingdtt.local'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://staging.dtt.local'
-        surl: 'https://staging.dtt.local'
+        url: 'http://stagingdtt.local'
+        surl: 'https://stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.staging.dtt.local'
+        url: 'https://api.stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'api.staging.dtt.local'
+        host:'api.stagingdtt.local'
         port: 6379
         password: 'welc0me'
     email:
@@ -60,22 +60,22 @@ test_settings =
         user: 'postgres'
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_test}"
     site:
-        host: 'staging.dtt.local'
+        host: 'stagingdtt.local'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://staging.dtt.local'
-        surl: 'https://staging.dtt.local'
+        url: 'http://stagingdtt.local'
+        surl: 'https://stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     api:
-        host: 'api.staging.dtt.local'
+        host: 'api.stagingdtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.staging.local'
+        url: 'https://api.staginglocal'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'api.staging.dtt.local'
+        host:'api.stagingdtt.local'
         port: 6380
         password: 'welc0me'
     email:
@@ -100,22 +100,22 @@ production_settings =
         user: 'postgres'
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
-        host: 'staging.dtt.local'
+        host: 'stagingdtt.local'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://staging.dtt.local'
-        surl: 'https://staging.dtt.local'
+        url: 'http://stagingdtt.local'
+        surl: 'https://stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     api:
-        host: 'api.staging.dtt.local'
+        host: 'api.stagingdtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.staging.dtt.local'
+        url: 'https://api.stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     redis:
-        host: 'api.staging.dtt.local'
+        host: 'api.stagingdtt.local'
         port: 6379
         password: '15439fde8d415f7ab4a3cc9b389badea'
     email:
@@ -124,7 +124,7 @@ production_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: 'cfb1bc4d1ed5dc9199bf'
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
-        redirect_url: 'http://api.staging.dtt.local/github/auth/callback'
+        redirect_url: 'http://api.stagingdtt.local/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     log:
         path: path.join('/var', 'log', 'yackety.log')
