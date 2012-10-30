@@ -3,19 +3,25 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
     class MessagesView extends GeneralView
         id: 'messages-container'
         added_code: false
-
+        
         initialize: ->
+            @authToken = $.cookie 'authtoken'
+            @messages_table = $("<table/>")
             $(window).focus (e) =>
                 last_timestamp =  @get_field('stamp', _.last(@model.get('messages')).data)
                 @get_messages_since last_timestamp
 
         get_messages_since: (last_timestamp) ->
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
+            console.log "PATH", path
             @get_cross_domain_json path, (data) =>
+                console.log "RESPONSE"
+                console.log data
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
-
+        
+        
+        
         parsing_links: (message) ->
-            console.log message
             message_words =  message.split ' '
             final_message = ''
             for word in message_words
@@ -30,19 +36,28 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         get_cross_domain_json: (url, callback) ->
             parameters = {
                 type: 'GET'
+                accept : "application/json"
                 contentType: 'application/json'
                 dataType: 'json'
                 url: url
+                headers:
+                    authorization: $.cookie 'authtoken'
                 success: callback
-                error: (d) -> return
+                error: (jqXHR, textStatus)->
+                    console.log this
+                    console.log "ERROR"
+                    console.log textStatus
+                    console.log "Token value in ERROR"
+                    console.log $.cookie 'authtoken'
+                    $.ajax this
+                    return
+                #beforeSend: (jqXHR) ->
+                    #authToken = $.cookie 'authtoken'
+                    #jqXHR.setRequestHeader('Authorization', authToken )
+                    #jqXHR.withCredentials = true
             }
-
-            if $.cookie('authtoken')?
-                parameters.beforeSend = (jqXHR) ->
-                        authToken = $.cookie 'authtoken'
-                        jqXHR.setRequestHeader('Authorization', authToken )
-                        jqXHR.withCredentials = true
-
+            console.log "Parameters"
+            console.log parameters
             $.ajax parameters
 
         serialize_message: (message) ->
@@ -71,7 +86,11 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
-                    me.$el.append me.render_message message, newDate
+                
+                    me.messages_table.append me.render_message message, newDate
+                
+                #    me.$el.append me.render_message message, newDate
+                me.$el.append me.messages_table
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
             if @model.has('messages')
@@ -97,8 +116,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
 
         render_message: (message) ->
             flattened_message = @flatten_message(message)
-            message_paragraph = @read_message_data(flattened_message)
-            r = $(message_paragraph)
+            message_row = @read_message_data(flattened_message)
+            r = $(message_row)
             r.removeClass('new_message')
             r.children().removeClass('new_message')
             r
@@ -121,7 +140,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 messages.push {data:[{name:"body", value: m.body}, {name:"user", value:m.name}, {name:"datetime", value:m.date},{name:"stamp", value:m.stamp}] }
                 @model.set({messages: messages}, {silent: true})
 
-                @$el.append @read_message_data(m)
+                @messages_table.append @read_message_data(m)
+                @$el.append @messages_table
                 @$el.scrollTop(@$el.prop('scrollHeight'))
             me = @
             $('.new_message').animate {backgroundColor: '#F07746'}, 300, () ->
@@ -142,11 +162,11 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             new_date = new Date()
             date = parse_date  new Date(message.stamp), new_date
             parsedBody = JSON.parse(message.body)
-            $name_and_date = $("""<span><b>#{name}(<span class='chat_message_date'>#{date}</span>):</b></span>""")
+            $name_span = $("""<span><b>#{name}:</b></span>""")
 
             if !(parsedBody.notification?)
                 if @last_user_id_that_posted? and @last_user_id_that_posted is message.user_id 
-                    $name_and_date.children().hide()
+                    $name_span.children().hide()
             
             @last_user_id_that_posted = message.user_id
             
@@ -156,12 +176,12 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 @added_code = true
                 p = document.createElement("p")
                 $(p).attr 'id',"#{message.stamp}"
-                p.innerHTML = "#{$name_and_date.html()} <pre class='new_message prettyprint linenums'>#{escaped_message}</pre>"
+                p.innerHTML = "#{$name_span.html()} <pre class='new_message prettyprint linenums'>#{escaped_message}</pre>"
                 return p
             if parsedBody.notification?
                 @last_user_id_that_posted = -1 
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                return add_links("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()}<span id='message-#{message.stamp}'>#{parsedBody.message}</span></p>")
+                return add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><span class='chat_message_date'>#{date}</span><td></tr>")
 
-            ("<p id='#{message.stamp}' class='new_message'>#{$name_and_date.html()} <span id='message-#{message.stamp}'>#{escaped_message}</span></p>")
+            ("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
