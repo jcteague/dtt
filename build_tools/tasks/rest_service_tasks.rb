@@ -14,8 +14,8 @@ namespace :rest_service do
   task :build_staging => [
     :update_packages,
     :compile_coffeescript,
+    :test_all,
     :staging_environment,
-    :test,
     :migrate,
     :package,
     :run_staging
