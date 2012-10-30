@@ -14,7 +14,7 @@ namespace TeamNotification_Library.Service.Logging
         private string LOGKEY { get { return "yacketyapp"; } }
         private string URI { get { return String.Format("http://post.loggr.net/1/logs/{0}/events",LOGKEY); } }
 
-        private IHandleAlertMessages alertMessageEvents;
+        private IHandleDialogMessages alertMessageEvents;
         private ISendHttpRequests httpRequestSender;
 
         
@@ -31,7 +31,7 @@ namespace TeamNotification_Library.Service.Logging
             httpRequestSender.Post(URI, parameters.ToArray());
         }
 
-        public Loggr(ISendHttpRequests httpRequestSender, IHandleAlertMessages alertMessageEvents)
+        public Loggr(ISendHttpRequests httpRequestSender, IHandleDialogMessages alertMessageEvents)
         {
             this.httpRequestSender = httpRequestSender;
             this.alertMessageEvents = alertMessageEvents;
