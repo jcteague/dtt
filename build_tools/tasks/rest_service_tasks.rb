@@ -35,8 +35,10 @@ namespace :rest_service do
 
   task :copy_environment_files do
     section_title "Copying environment configuration"
+    yml_source = File.join(BuildToolsRoot, 'environment', "#{ENV['DTT_ENV']}.database.yml")
     server_source = File.join(RestServiceRoot, "coffeescripts", "environment", "#{ENV['DTT_ENV']}.server.coffee")
     client_source = File.join(RestServiceRoot, "coffeescripts", "environment", "#{ENV['DTT_ENV']}.client.coffee")
+    sh "cp #{yml_source} #{File.join(BuildToolsRoot, 'database.yml')}"
     sh "cp #{server_source} #{File.join(RestServiceRoot, "coffeescripts", 'config.coffee')}"
     sh "cp #{client_source} #{File.join(RestServiceRoot, "coffeescripts", 'public', 'scripts', 'config.coffee')}"
   end

@@ -12,3 +12,5 @@ VisualStudioRoot = File.join(root_dir, 'src', 'TeamNotification_VisualStudio')
 VisualStudioSolution = File.join(VisualStudioRoot, 'TeamNotification.sln')
 VisualStudioReleaseFolder = File.join(VisualStudioRoot, 'TeamNotification_Package', 'bin', 'Release')
 VisualStudioManifest = File.join(VisualStudioRoot, 'TeamNotification_Package', 'source.extension.vsixmanifest')
+
+BuildToolsRoot = File.join(root_dir, 'build_tools')
