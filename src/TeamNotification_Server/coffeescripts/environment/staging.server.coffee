@@ -19,22 +19,22 @@ development_settings =
         user: 'postgres'
         connection_string: "postgres://#{db_config.user}:#{db_config.password}@#{db_config.host}/#{db_config.db_main}"
     site:
-        host: 'stating.dtt.local'
+        host: 'staging.dtt.local'
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://staging.dtt.local'
-        surl: 'https://stating.dtt.local'
+        surl: 'https://staging.dtt.local'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.stating.dtt.local'
+        url: 'https://api.staging.dtt.local'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'api.stating.dtt.local'
+        host:'api.staging.dtt.local'
         port: 6379
         password: 'welc0me'
     email:
@@ -64,18 +64,18 @@ test_settings =
         port: 80
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://stating.dtt.local'
-        surl: 'https://stating.dtt.local'
+        url: 'http://staging.dtt.local'
+        surl: 'https://staging.dtt.local'
         whitelisted_paths: whitelisted_paths
     api:
-        host: 'api.stating.dtt.local'
+        host: 'api.staging.dtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.stating.local'
+        url: 'https://api.staging.local'
         whitelisted_paths: whitelisted_paths
     redis:
-        host:'api.stating.dtt.local'
+        host:'api.staging.dtt.local'
         port: 6380
         password: 'welc0me'
     email:
@@ -105,14 +105,14 @@ production_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://staging.dtt.local'
-        surl: 'https://stating.dtt.local'
+        surl: 'https://staging.dtt.local'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.staging.dtt.local'
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.stating.dtt.local'
+        url: 'https://api.staging.dtt.local'
         whitelisted_paths: whitelisted_paths
     redis:
         host: 'api.staging.dtt.local'
