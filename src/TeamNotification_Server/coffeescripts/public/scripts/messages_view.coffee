@@ -94,7 +94,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
             if @model.has('messages')
-                setInterval((() -> update_dates() ), 10000)
+                #setInterval((() -> update_dates() ), 10000)
                 url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
                 socket.on 'message', @add_message
