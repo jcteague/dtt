@@ -3,7 +3,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
     class MessagesView extends GeneralView
         id: 'messages-container'
         added_code: false
-        
+
         initialize: ->
             @authToken = $.cookie 'authtoken'
             @messages_table = $("<table/>")
@@ -13,14 +13,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
 
         get_messages_since: (last_timestamp) ->
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
-            console.log "PATH", path
             @get_cross_domain_json path, (data) =>
-                console.log "RESPONSE"
-                console.log data
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
-        
-        
-        
+
         parsing_links: (message) ->
             message_words =  message.split ' '
             final_message = ''
@@ -44,11 +39,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                     authorization: $.cookie 'authtoken'
                 success: callback
                 error: (jqXHR, textStatus)->
-                    console.log this
-                    console.log "ERROR"
-                    console.log textStatus
-                    console.log "Token value in ERROR"
-                    console.log $.cookie 'authtoken'
                     $.ajax this
                     return
                 #beforeSend: (jqXHR) ->
@@ -56,8 +46,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                     #jqXHR.setRequestHeader('Authorization', authToken )
                     #jqXHR.withCredentials = true
             }
-            console.log "Parameters"
-            console.log parameters
+
             $.ajax parameters
 
         serialize_message: (message) ->
@@ -86,10 +75,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
-                
                     me.messages_table.append me.render_message message, newDate
-                
-                #    me.$el.append me.render_message message, newDate
                 me.$el.append me.messages_table
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 

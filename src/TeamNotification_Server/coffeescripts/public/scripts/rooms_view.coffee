@@ -22,7 +22,6 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
             @
 
         render_room: (room) ->
-            
             get_field = (data, name) ->
                 for field in data
                     if(field.name == name)

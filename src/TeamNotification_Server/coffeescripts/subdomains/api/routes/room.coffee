@@ -123,12 +123,7 @@ methods.get_room_messages = (req,res) ->
 
 methods.get_room_messages_since_timestamp = (req, res) ->
     room_id = req.param('id')
-    console.log "Fetching messages since"
-    console.log req.param('timestamp')
-    console.log room_id
     callback = (collection) ->
-        console.log "About to send the response"
-        console.log collection.to_json()
         res.json collection.to_json()
 
     build('room_messages_collection').for({room_id:room_id, user:req.user, timestamp: req.param('timestamp')}).fetch_to callback
