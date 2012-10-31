@@ -33,6 +33,8 @@ app.configure ->
     app.use(express.bodyParser())
     app.use(express.methodOverride())
 
+    app.use(auth.initializeAuth())
+
     app.use(express.static(__dirname + '/../../public'))
 
     app.use allowCrossDomain
@@ -60,10 +62,24 @@ app.configure ->
         ]
     }))
 
-app.all '*', (req, res, next) ->
+https_redirect = (req, res, next) ->
     unless req.secure
         res.redirect "#{config.site.surl}#{req.url}"
     next()
+
+#app.all '*', https_redirect, auth.authenticate
+app.all '*', auth.authenticate
+
+###
+app.all '*', (req, res, next) ->
+    req.user =
+        id: 1
+        name: 'Eddy'
+    next()
+###
+
+# Apply authentication for all routes in the api
+#app.all '/api/*', auth.authenticate
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

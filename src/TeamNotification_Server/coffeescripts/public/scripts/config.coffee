@@ -8,7 +8,7 @@ define 'config', [], ->
         api:
             host: 'api.yacketyapp.com'
             port: 443
-            url: 'https://api.yacketyapp.com'
+            url: 'https://api.yacketyapp.com/api'
 
     development_settings =
         site:
@@ -18,7 +18,7 @@ define 'config', [], ->
         api:
             host: 'api.dtt.local'
             port: 3001
-            url: 'https://api.dtt.local:3001'
+            url: 'https://dtt.local:3001/api'
 
     if has('production')
         return production_settings

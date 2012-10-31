@@ -50,7 +50,12 @@ app.configure ->
 
 
 # Apply authentication for all routes in the api
-app.all '*', auth.authenticate
+# app.all '*', auth.authenticate
+
+default_domain_redirect = (req, res, next) ->
+    res.redirect "#{config.site.surl}/api#{req.url}"
+
+app.all '*', default_domain_redirect
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

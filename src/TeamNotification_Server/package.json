@@ -29,7 +29,7 @@
     "loggr":"1.1.2"
   },
   "devDependencies": {
-    "coffee-script": "1.3.x",
+    "coffee-script": "1.4.x",
     "mocha": "1.3.x",
     "zombie": "git://github.com/eespinal/zombie.git",
     "should": ">= 0",

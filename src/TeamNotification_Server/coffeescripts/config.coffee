@@ -7,7 +7,8 @@ db_config =
     db_main: 'dtt_main'
     db_test: 'dtt_test'
 
-whitelisted_paths = ['/', '/client', '/registration','/user/login', '/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
+#whitelisted_paths = ['/', '/client', '/registration','/user/login', '/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
+whitelisted_paths = ['/', '/client', '/api/', '/api/registration','/api/user/login', '/api/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
 
 data_path = path.join(__dirname, 'data')
 visual_studio_plugin_json = path.join(data_path, 'vs.extension.json')
@@ -31,7 +32,7 @@ development_settings =
         port: 3001
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.dtt.local:3001'
+        url: 'https://dtt.local:3001/api'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
@@ -43,7 +44,7 @@ development_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: '238dc978aaf2621d38b5'
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
-        redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
+        redirect_url: 'https://dtt.local:3001/api/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     plugins:
         visual_studio:
@@ -74,7 +75,7 @@ test_settings =
         port: 3001
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.dtt.local:3001'
+        url: 'https://dtt.local:3001/api'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
@@ -86,7 +87,7 @@ test_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: '238dc978aaf2621d38b5'
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
-        redirect_url: 'http://api.dtt.local:3000/github/auth/callback'
+        redirect_url: 'https://dtt.local:3001/api/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     plugins:
         visual_studio:
@@ -117,7 +118,7 @@ production_settings =
         port: 443
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://api.yacketyapp.com'
+        url: 'https://yacketyapp.com/api'
         whitelisted_paths: whitelisted_paths
     redis:
         host: 'api.yacketyapp.com'
@@ -129,7 +130,7 @@ production_settings =
     github:#FOR TEST PURPOSES, TODO: ask John for the real deal
         client_id: 'cfb1bc4d1ed5dc9199bf'
         secret: '404f517c7c588165277fe3d1550360a77d1d388e'
-        redirect_url: 'http://api.yacketyapp.com/github/auth/callback'
+        redirect_url: 'https://yacketyapp.com/api/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
     plugins:
         visual_studio:
