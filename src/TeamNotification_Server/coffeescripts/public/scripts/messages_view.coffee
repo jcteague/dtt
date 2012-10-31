@@ -7,16 +7,20 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         initialize: ->
             @authToken = $.cookie 'authtoken'
             @messages_table = $("<table/>")
-            $(window).focus (e) =>
-                last_timestamp =  @get_field('stamp', _.last(@model.get('messages')).data)
-                @get_messages_since last_timestamp
+            doFocus = true
+            
+            focus_func = () =>
+                if(doFocus)
+                    doFocus = false
+                    last_timestamp =  @get_field('stamp', _.last(@model.get('messages')).data)
+                    @get_messages_since last_timestamp
+            $(window).bind "focus", focus_func
+            $(window).bind "blur", () => 
+                doFocus = true
 
         get_messages_since: (last_timestamp) ->
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
-            console.log "PATH", path
-            @get_cross_domain_json path, (data) =>
-                console.log "RESPONSE"
-                console.log data
+            @get_cross_domain_json path, (data) => 
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
         
         
@@ -34,6 +38,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             final_message
 
         get_cross_domain_json: (url, callback) ->
+            me = this
             parameters = {
                 type: 'GET'
                 accept : "application/json"
@@ -44,20 +49,18 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                     authorization: $.cookie 'authtoken'
                 success: callback
                 error: (jqXHR, textStatus)->
-                    console.log this
-                    console.log "ERROR"
-                    console.log textStatus
-                    console.log "Token value in ERROR"
-                    console.log $.cookie 'authtoken'
-                    $.ajax this
+                    params = this
+                    u = this.url
+                    head = this.headers
+                    $.ajax 
+                        type:'GET' 
+                        url:u
+                        success: () ->
+                            console.log 'Error request'
+                            me.get_cross_domain_json(u,callback)
+                            
                     return
-                #beforeSend: (jqXHR) ->
-                    #authToken = $.cookie 'authtoken'
-                    #jqXHR.setRequestHeader('Authorization', authToken )
-                    #jqXHR.withCredentials = true
             }
-            console.log "Parameters"
-            console.log parameters
             $.ajax parameters
 
         serialize_message: (message) ->
