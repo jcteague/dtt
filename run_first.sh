@@ -4,6 +4,7 @@ sudo apt-get -y install postgresql &&
 sudo apt-get -y install nodejs npm &&
 sudo apt-get -y install ruby rubygems &&
 sudo apt-get -y install sendmail &&
+sudo apt-get -y install nginx &&
 sudo ./install_dependencies &&
 sudo gem install pg -v '0.13.2' &&
 sudo gem install bundler &&
@@ -17,9 +18,19 @@ echo 'Finished installing dependencies';
 echo '------------------------------------------------------------';
 
 echo '------------------------------------------------------------';
+echo 'Starting services';
+echo '------------------------------------------------------------';
+sudo service nginx start;
+
+echo '------------------------------------------------------------';
+echo 'Registering nginx in startup';
+echo '------------------------------------------------------------';
+update-rc.d nginx defaults;
+
+echo '------------------------------------------------------------';
 echo 'Creating log directories';
 echo '------------------------------------------------------------';
-mkdir development_logs
+mkdir development_logs;
 
 echo '------------------------------------------------------------';
 echo 'Creating the environment databases';
