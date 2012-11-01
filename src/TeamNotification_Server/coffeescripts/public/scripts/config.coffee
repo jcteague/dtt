@@ -13,12 +13,12 @@ define 'config', [], ->
     development_settings =
         site:
             host: 'dtt.local'
-            port: 3000
-            url: 'http://dtt.local:3000'
+            port: 443
+            url: 'https://dtt.local'
         api:
             host: 'api.dtt.local'
-            port: 3001
-            url: 'https://dtt.local:3001/api'
+            port: 443
+            url: 'https://dtt.local/api'
 
     if has('production')
         return production_settings

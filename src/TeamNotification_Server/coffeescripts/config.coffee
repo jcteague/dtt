@@ -25,14 +25,14 @@ development_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
-        surl: 'https://dtt.local:3001'
+        surl: 'https://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
-        port: 3001
+        port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://dtt.local:3001/api'
+        url: 'https://dtt.local:3000/api'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
@@ -68,14 +68,14 @@ test_settings =
         client_ID: '1234'
         client_secret: 'secret'
         url: 'http://dtt.local:3000'
-        surl: 'https://dtt.local:3001'
+        surl: 'https://dtt.local:3000'
         whitelisted_paths: whitelisted_paths
     api:
         host: 'api.dtt.local'
         port: 3001
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'https://dtt.local:3001/api'
+        url: 'https://dtt.local:3000/api'
         whitelisted_paths: whitelisted_paths
     redis:
         host:'api.dtt.local'
