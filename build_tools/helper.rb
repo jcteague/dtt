@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'erb'
+require 'ostruct'
 
 def all_tasks
   FileList.new(File.join(File.dirname(File.expand_path(__FILE__)),'tasks','*_tasks.rb'))
@@ -22,6 +24,17 @@ def write_hash_to_json_file(file_path, hash)
   require 'json'
   File.open(file_path, "w") do |f|
     f.write(hash.to_json)
+  end
+end
+
+def get_config_file_for(file_path, config)
+  template = File.read(file_path)
+  ErbTemplate.new(config).render(template)
+end
+
+class ErbTemplate < OpenStruct
+  def render(template)
+    ERB.new(template).result(binding)
   end
 end
 

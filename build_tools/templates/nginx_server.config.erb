@@ -1,42 +1,38 @@
 upstream yacketyapp_upstream {
-  server 127.0.0.1:3000;
+  server 127.0.0.1:<%= server_port %>;
   keepalive 64;
 }
 
 # redirects the non ssl requests to ssl
 server {
   listen        80;
-  server_name   dtt.local;
+  server_name   <%= server_host %>;
   rewrite       ^ https://$server_name$request_uri? permanent;
 }
 
 server {
   listen 443 ssl;
-  ssl_certificate /home/eddy/yacketyapp.com/certificates/sslchain.crt;
-  ssl_certificate_key /home/eddy/yacketyapp.com/certificates/star_yacketyapp_com.key;
+  ssl_certificate <%= certificates_path %>/sslchain.crt;
+  ssl_certificate_key <%= certificates_path %>/star_yacketyapp_com.key;
   ssl_protocols        SSLv3 TLSv1;
   ssl_ciphers HIGH:!aNULL:!MD5;
 
-  server_name api.dtt.local;
+  server_name <%= api_server_name %>;
 
   location / {
-    proxy_pass  https://dtt.local/api/;
+    proxy_pass  https://<%= server_host %>/api/;
   }
-
-
-  #rewrite       ^ https://$server_name/api$request_uri? last;
-  #return 301 $scheme://dtt.local/api$request_uri;
 }
 
 server {
     listen 80;
     listen 443 ssl;
-    ssl_certificate /home/eddy/yacketyapp.com/certificates/sslchain.crt;
-    ssl_certificate_key /home/eddy/yacketyapp.com/certificates/star_yacketyapp_com.key;
+    ssl_certificate <%= certificates_path %>/sslchain.crt;
+    ssl_certificate_key <%= certificates_path %>/star_yacketyapp_com.key;
     ssl_protocols        SSLv3 TLSv1;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
-    server_name dtt.local;
+    server_name <%= server_host %>;
 
     location / {
       proxy_redirect off;
@@ -50,3 +46,4 @@ server {
       proxy_pass         http://yacketyapp_upstream;
     }
 }
+

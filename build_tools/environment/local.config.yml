@@ -1,0 +1,5 @@
+nginx:
+  server_host: dtt.local
+  api_server_name: api.dtt.local
+  server_port: 3000
+  certificates_path: /home/eddy/yacketyapp.com/certificates
