@@ -8,7 +8,7 @@ db_config =
     db_test: 'dtt_test'
 
 #whitelisted_paths = ['/', '/client', '/registration','/user/login', '/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
-whitelisted_paths = ['/', '/client', '/api/', '/api/registration','/api/user/login', '/api/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
+whitelisted_paths = ['/', '/client', '/api/', '/socket', '/api/registration','/api/user/login', '/api/plugin', /\/github\/events\/*/, /^\/room\/.+\/accept-invitation$/]
 
 data_path = path.join(__dirname, 'data')
 visual_studio_plugin_json = path.join(data_path, 'vs.extension.json')

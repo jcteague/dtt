@@ -1,5 +1,7 @@
 nginx:
-  server_host: dtt.local
-  api_server_name: api.dtt.local
-  server_port: 3000
-  certificates_path: /home/eddy/yacketyapp.com/certificates
+  server_host: stagingdtt.local
+  api_server_name: api.stagingdtt.local
+  server_port: 80
+  certificates_path: /home/ubuntu/yacketyapp.com/certificates
+  sites_available_path: /etc/nginx/sites-available/
+  sites_enabled_path: /etc/nginx/sites-enabled/

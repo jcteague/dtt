@@ -3,3 +3,5 @@ nginx:
   api_server_name: api.dtt.local
   server_port: 3000
   certificates_path: /home/eddy/yacketyapp.com/certificates
+  sites_available_path: /etc/nginx/sites-available/
+  sites_enabled_path: /etc/nginx/sites-enabled/
