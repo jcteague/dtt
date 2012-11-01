@@ -174,17 +174,19 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             @last_user_id_that_posted = message.user_id
             
             escaped_message = @parsing_links parsedBody.message # $('<div/>').text(parsedBody.message).html()
-
+            build_new_row = (name, message, time) ->
+                return "<tr class='new'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
+            
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                p = document.createElement("tr")
-                $(p).attr 'id',"#{message.stamp}"
-                p.innerHTML = "<td>#{$name_span.html()} </td><td><pre class='prettyprint linenums'>#{escaped_message}</pre></td><td><b><span class='chat_message_date'>#{date}</span></b></td>"
-                return p
+                #p = document.createElement("tr")
+                #$(p).attr 'id',"#{message.stamp}"
+                #p.innerHTML = "<td>#{$name_span.html()} </td><td><pre class='prettyprint linenums'>#{escaped_message}</pre></td><td><b><span class='chat_message_date'>#{date}</span></b></td>"
+                return build_new_row( $name_span.html(), "<pre class='prettyprint linenums'>#{escaped_message}</pre>", date)
             if parsedBody.notification?
                 @last_user_id_that_posted = -1 
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                return add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
-
-            ("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
+                return build_new_row($name_span.html(), add_links(parsedBody.message), date) #add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b></td></tr>")
+            return build_new_row($name_span.html(), parsedBody.message, date)
+            #("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
