@@ -1,7 +1,6 @@
 express = require('express')
 http = require('https')
 querystring = require('querystring')
-config = require('../../../config')()
 support = require('../../../support/core').core
 Repository = require('../../../support/repository')
 config = require('../../../config')()
