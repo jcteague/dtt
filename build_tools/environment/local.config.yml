@@ -1,7 +1,7 @@
 nginx:
-  server_host: dtt.local
+  host: dtt.local
   api_server_name: api.dtt.local
-  server_port: 3000
+  port: 3000
   certificates_path: /home/eddy/yacketyapp.com/certificates
   sites_available_path: /etc/nginx/sites-available/
   sites_enabled_path: /etc/nginx/sites-enabled/
@@ -9,7 +9,9 @@ nginx:
 stunnel:
   config_path: /etc/stunnel
   certificates_path: /home/eddy/yacketyapp.com/certificates
-  stunnel_default: /etc/default/stunnel4
+  default: /etc/default/stunnel4
 
 varnish:
+  node_port: 3000
   config_path: /etc/varnish
+  default: /etc/default/varnish

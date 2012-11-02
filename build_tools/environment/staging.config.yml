@@ -1,7 +1,18 @@
 nginx:
-  server_host: stagingdtt.local
+  host: stagingdtt.local
   api_server_name: api.stagingdtt.local
-  server_port: 80
+  port: 3000
   certificates_path: /home/ubuntu/yacketyapp.com/certificates
   sites_available_path: /etc/nginx/sites-available/
   sites_enabled_path: /etc/nginx/sites-enabled/
+
+stunnel:
+  config_path: /etc/stunnel
+  certificates_path: /home/ubuntu/yacketyapp.com/certificates
+  default: /etc/default/stunnel4
+
+varnish:
+  node_port: 3000
+  config_path: /etc/varnish
+  default: /etc/default/varnish
+

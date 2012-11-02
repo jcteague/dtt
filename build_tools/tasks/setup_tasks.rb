@@ -22,6 +22,8 @@ namespace :setup do
     write_config_file(nginx_config, file_name)
     sh "cp #{File.join(TemplatesFolder, file_name)} #{config['nginx']['sites_available_path']}"
     sh "ln -s #{File.join(config['nginx']['sites_available_path'], file_name)} #{File.join(config['nginx']['sites_enabled_path'], file_name)}"
+    # To unconfigure the the default port
+    sh "rm #{File.join(config['nginx']['sites_enabled_path'], 'default')}"
   end
 
   def set_stunnel_for(environment)
@@ -30,7 +32,7 @@ namespace :setup do
     file_name = 'https-proxy.conf'
     write_config_file(stunnel_config, file_name)
     sh "cp #{File.join(TemplatesFolder, file_name)} #{config['stunnel']['config_path']}"
-    replace_config_file_value(config["stunnel"]["stunnel_default"], /ENABLED=0\n/, "ENABLED=1\n")
+    sh "cp #{STunnelDefault} #{config['stunnel']['default']}"
   end
 
   def set_varnish_for(environment)
@@ -39,7 +41,7 @@ namespace :setup do
     file_name = 'default.vcl'
     write_config_file(varnish_config, file_name)
     sh "cp #{File.join(TemplatesFolder, file_name)} #{config['varnish']['config_path']}"
-    puts "REMEMBER TO SET THE VARNISH RUN PORT IN /etc/default/varnish"
+    sh "cp #{VarnishDefault} #{config['varnish']['default']}"
   end
 
   def environment_config(environment)

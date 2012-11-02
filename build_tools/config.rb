@@ -16,6 +16,14 @@ VisualStudioManifest = File.join(VisualStudioRoot, 'TeamNotification_Package', '
 BuildToolsRoot = File.join(root_dir, 'build_tools')
 TemplatesFolder = File.join(BuildToolsRoot, 'templates')
 EnvironmentFoler = File.join(BuildToolsRoot, 'environment')
-NginXTemplate = File.join(TemplatesFolder, 'nginx_server.config.erb')
-VarnishTemplate = File.join(TemplatesFolder, 'varnish_server.config.erb')
-STunnelTemplate = File.join(TemplatesFolder, 'stunnel_server.config.erb')
+
+NginXFolder = File.join(TemplatesFolder, 'nginx')
+NginXTemplate = File.join(NginXFolder, 'nginx_server.config.erb')
+
+VarnishFolder = File.join(TemplatesFolder, 'varnish')
+VarnishDefault = File.join(VarnishFolder, 'varnish')
+VarnishTemplate = File.join(VarnishFolder, 'varnish_server.config.erb')
+
+STunnelFolder = File.join(TemplatesFolder, 'stunnel')
+STunnelDefault = File.join(STunnelFolder, 'stunnel')
+STunnelTemplate = File.join(STunnelFolder, 'stunnel_server.config.erb')
