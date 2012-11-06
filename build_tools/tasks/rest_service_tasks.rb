@@ -73,7 +73,7 @@ namespace :rest_service do
 
   task :dev_environment do
     section_title "Using dev environment"
-    ActiveRecord::Base.establish_connection(db_config["development"])
+    ActiveRecord::Base.establish_connection(db_config["default"])
   end
 
   task :test_environment do
