@@ -9,6 +9,12 @@ namespace :setup do
     set_nginx_for "local"
   end
 
+  task :staging do
+    set_stunnel_for "staging"
+    set_varnish_for "staging"
+    set_nginx_for "staging"
+  end
+
   task :production do
     set_stunnel_for "production"
     set_varnish_for "production"

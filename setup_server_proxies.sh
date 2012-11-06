@@ -1,6 +1,6 @@
 #/bin/sh
 if [[ -z "$1" ]]; then
-    echo 'You must specify an environment: setup_local or setup_production';
+    echo 'You must specify an environment: setup_local, setup_staging or setup_production';
     exit;
 fi
 

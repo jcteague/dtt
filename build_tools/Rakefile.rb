@@ -22,6 +22,10 @@ task :setup_local => [
   'setup:local'
 ]
 
+task :setup_staging => [
+  'setup:staging'
+]
+
 task :setup_production => [
   'setup:production'
 ]
