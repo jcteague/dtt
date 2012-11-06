@@ -17,5 +17,5 @@ methods.post_registration = (req, res) ->
 module.exports =
     methods: methods
     build_routes: (app) ->
-        app.get('/registration', methods.get_registration)
-        app.post('/registration', methods.post_registration)
+        app.get('/api/registration', methods.get_registration)
+        app.post('/api/registration', methods.post_registration)

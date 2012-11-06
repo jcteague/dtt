@@ -5,7 +5,7 @@ module_loader = require('sandboxed-module')
 routes_service_mock =
     build: sinon.stub()
 
-sut = module_loader.require('../subdomains/api/routes/root', {
+sut = module_loader.require('../subdomains/default/routes/root', {
     requires:
         '../../../support/routes_service': routes_service_mock
 })
@@ -22,7 +22,7 @@ describe 'Root', ->
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/', sut.methods.get_root) 
+            sinon.assert.calledWith(app.get,'/api/', sut.methods.get_root) 
             done() 
 
     describe 'methods', ->

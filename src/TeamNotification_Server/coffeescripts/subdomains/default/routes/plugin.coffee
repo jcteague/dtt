@@ -13,5 +13,5 @@ methods.get_plugin_download = (req, res) ->
 module.exports =
     methods: methods,
     build_routes: (app, io) ->
-        app.get('/plugin', methods.get_plugin_version)
-        app.get('/plugin/download/TeamNotification_Package.vsix', methods.get_plugin_download)
+        app.get('/api/plugin', methods.get_plugin_version)
+        app.get('/api/plugin/download/TeamNotification_Package.vsix', methods.get_plugin_download)

@@ -18,6 +18,14 @@ task :build_vs_package => [
   'visual_studio:build'
 ]
 
+task :setup_local => [
+  'setup:local'
+]
+
+task :setup_production => [
+  'setup:production'
+]
+
 task :create_migration, :migration_name do |t, args|
   migration_name = args[:migration_name]
   filename = "#{generate_timestamp}_#{migration_name}.rb"

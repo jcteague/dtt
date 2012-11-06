@@ -10,6 +10,7 @@ using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
+using TeamNotification_Library.Service.Logging;
 
 namespace TeamNotification_Library.Application
 {
@@ -32,6 +33,7 @@ namespace TeamNotification_Library.Application
             For<IProvideSyntaxHighlighter<IHighlightingDefinition>>().Singleton();
 			For<IStoreDTE>().Singleton();
             For<IHandleVisualStudioClipboard>().Singleton();
+            For<ILog>().Use<Loggr>();
         }
     }
 }

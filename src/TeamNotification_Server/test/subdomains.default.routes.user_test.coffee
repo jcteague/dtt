@@ -20,7 +20,7 @@ user_callback_factory_mock =
     get_for_success: sinon.stub()
     get_for_failure: sinon.stub()
 
-user = module_loader.require('../subdomains/api/routes/user', {
+user = module_loader.require('../subdomains/default/routes/user', {
     requires:
         '../../../support/validation/user_validator': user_validator_mock
         '../../../support/factories/user_callback_factory': user_callback_factory_mock
@@ -41,14 +41,14 @@ describe 'User', ->
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/users/query',user.methods.get_users)
-            sinon.assert.calledWith(app.get,'/user/login',user.methods.login)
-            sinon.assert.calledWith(app.post,'/user/login',body_parser_result,user.methods.authenticate)
-            sinon.assert.calledWith(app.get,'/user/:id',user.methods.get_user)
-            sinon.assert.calledWith(app.get,'/user/:id/edit',user.methods.get_user_edit)
-            sinon.assert.calledWith(app.post,'/user/:id/edit',user.methods.post_user_edit)
-            sinon.assert.calledWith(app.get,'/user/:id/rooms',user.methods.get_user_rooms)
-            sinon.assert.calledWith(app.get,'/users',user.methods.redir_user)
+            sinon.assert.calledWith(app.get,'/api/users/query',user.methods.get_users)
+            sinon.assert.calledWith(app.get,'/api/user/login',user.methods.login)
+            sinon.assert.calledWith(app.post,'/api/user/login',body_parser_result,user.methods.authenticate)
+            sinon.assert.calledWith(app.get,'/api/user/:id',user.methods.get_user)
+            sinon.assert.calledWith(app.get,'/api/user/:id/edit',user.methods.get_user_edit)
+            sinon.assert.calledWith(app.post,'/api/user/:id/edit',user.methods.post_user_edit)
+            sinon.assert.calledWith(app.get,'/api/user/:id/rooms',user.methods.get_user_rooms)
+            sinon.assert.calledWith(app.get,'/api/users',user.methods.redir_user)
             done()
 
     describe 'methods', ->

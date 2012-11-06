@@ -14,26 +14,27 @@ namespace TeamNotification_Library.Service.Http
 {
     public class HttpRequestsClient : ISendHttpRequests
     {
+        private ILog logger;
+
         private HttpClient httpClient
         {
             get
             {
                 // TODO: Remove ServerCertificateValidationCallback after using the correct certificate. 
-                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
+//                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
                 return new HttpClient(httpClientHandlerGetter.GetHandler());
             }
         }
 
-        private ILog logger;
         private IGetHttpClientHandler httpClientHandlerGetter;
+        readonly ISerializeJSON serializer;
         private IRunInBackgroundWorker backgroundRunner;
-        private readonly ISerializeJSON serializer;
 
-        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, ILog logger, IRunInBackgroundWorker backgroundRunner)
+        public HttpRequestsClient(ISerializeJSON serializer, IGetHttpClientHandler httpClientHandlerGetter, IRunInBackgroundWorker backgroundRunner)
         {
             this.serializer = serializer;
             this.httpClientHandlerGetter = httpClientHandlerGetter;
-            this.logger = logger;
+   			this.logger = new Loggr(this, new DialogMessagesEvents());
             this.backgroundRunner = backgroundRunner;
         }
 
@@ -67,7 +68,7 @@ namespace TeamNotification_Library.Service.Http
 
         public void Post(IEnumerable<Tuple<string, HttpContent>> values)
         {
-            logger.TryOrLog(() => backgroundRunner.Run(() => values.Each(x => PostSync(x.Item1, x.Item2))));
+           logger.TryOrLog(() => backgroundRunner.Run(() => values.Each(x => PostSync(x.Item1, x.Item2))));
         }
 
         public HttpResponseMessage PostSync(string uri, HttpContent content)

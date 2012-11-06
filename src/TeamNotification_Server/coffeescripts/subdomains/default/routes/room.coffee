@@ -11,6 +11,7 @@ get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
 redis_queryer = redis_connector.open()
+logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
 
 methods.user_authorized_in_room = (req, res, next) ->
@@ -18,7 +19,8 @@ methods.user_authorized_in_room = (req, res, next) ->
     routes_service.is_user_in_room(req.user.id, room_id).then (is_user_in) ->
         if is_user_in
             return next()
-        res.redirect '/'
+
+        res.json {"server_messages":["You're not subscribed to this room"]}
 
 list_of_listeners = {}
 
@@ -51,7 +53,7 @@ methods.set_up_message_transmission = (io, room_id, listener_name) ->
             namespace_io.send(message)
 
 methods.set_socket_events = (io, room_id) ->
-    listener_name = "/room/#{room_id}/messages"
+    listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
         methods.set_up_message_transmission(io, room_id, listener_name)
@@ -72,7 +74,8 @@ methods.post_room = (req, res, next) ->
 methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        res.json(collection.to_json())
+        json = collection.to_json()
+        res.json(json)
 
     build('room_collection').for(room_id: room_id, user_id: req.user.id).fetch_to callback
 
@@ -160,14 +163,14 @@ methods.post_room_message = (req, res, next) ->
 module.exports =
     methods: methods,
     build_routes: (app, io) ->
-        app.get('/room',methods.get_room)
-        app.get('/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
-        app.get('/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
-        app.get('/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
-        app.get('/room/:id/messages/since/:timestamp', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages_since_timestamp)
-        app.get('/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
-        app.get('/room/:id/accept-invitation', methods.get_accept_invitation)
-        app.post('/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
-        app.post('/room',express.bodyParser(), methods.post_room)
-        app.post('/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
-        app.post('/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
+        app.get('/api/room',methods.get_room)
+        app.get('/api/room/:id', methods.user_authorized_in_room, methods.get_room_by_id)
+        app.get('/api/room/:id/invitations', methods.user_authorized_in_room, methods.get_room_invitations)
+        app.get('/api/room/:id/messages', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages)
+        app.get('/api/room/:id/messages/since/:timestamp', methods.user_authorized_in_room, socket_middleware(io), methods.get_room_messages_since_timestamp)
+        app.get('/api/room/:id/users', methods.user_authorized_in_room, methods.manage_room_members)
+        app.get('/api/room/:id/accept-invitation', methods.get_accept_invitation)
+        app.post('/api/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
+        app.post('/api/room',express.bodyParser(), methods.post_room)
+        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
+        app.post('/api/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
