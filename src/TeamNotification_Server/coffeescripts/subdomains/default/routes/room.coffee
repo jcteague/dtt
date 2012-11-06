@@ -53,7 +53,6 @@ methods.set_up_message_transmission = (io, room_id, listener_name) ->
             namespace_io.send(message)
 
 methods.set_socket_events = (io, room_id) ->
-    #listener_name = "/room/#{room_id}/messages"
     listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true

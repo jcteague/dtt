@@ -8,15 +8,12 @@ sha256 = require('node_hash').sha256
 config = require('../../../config')()
 
 methods.get_user = (req, res) ->
-    console.log 'normal user route'
     get_user_collection(req, res, req.param('id'))
 
 methods.get_logged_user = (req, res) ->
-    console.log 'logged user route'
     get_user_collection(req, res, req.user.id)
 
 get_user_collection = (req, res, user_id) ->
-    console.log 'User id', user_id
     callback = (collection) ->
         res.json(collection.to_json())
 
