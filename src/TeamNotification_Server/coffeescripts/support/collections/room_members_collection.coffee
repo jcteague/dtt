@@ -21,9 +21,15 @@ class RoomMembersCollection
           "submit": self
           "data" :[{"name" : "email", "value" : ""}]
         }]
+
+        if @room? and @room.users?
+            members = (get_data_for user for user in @room.users)
+        else
+            members = []
+
         return {
             href: self
-            members: (get_data_for user for user in @room.users)
+            members: members
             links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"},{"name":"Room", "rel": "Room", "href": "/room/#{@room.id}"}]
             queries: queries
         }
