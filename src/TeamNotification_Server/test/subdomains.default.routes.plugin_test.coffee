@@ -5,7 +5,7 @@ module_loader = require('sandboxed-module')
 routes_service_mock =
     build: sinon.stub()
 
-sut = module_loader.require('../subdomains/api/routes/plugin', {
+sut = module_loader.require('../subdomains/default/routes/plugin', {
     requires:
         '../../../support/routes_service': routes_service_mock
 })
@@ -22,7 +22,7 @@ describe 'Plugin', ->
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get,'/plugin', sut.methods.get_plugin_version) 
+            sinon.assert.calledWith(app.get,'/api/plugin', sut.methods.get_plugin_version) 
             done() 
 
     describe 'methods', ->

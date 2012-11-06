@@ -12,7 +12,7 @@ registration_callback_factory_mock =
     get_for_success: sinon.stub()
     get_for_failure: sinon.stub()
 
-sut = module_loader.require('../subdomains/api/routes/registration', {
+sut = module_loader.require('../subdomains/default/routes/registration', {
     requires:
         '../../../support/routes_service': routes_service_mock
         '../../../support/validation/registration_validator': registration_validator_mock
@@ -31,8 +31,8 @@ describe 'Registration', ->
             done() 
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith(app.get, '/registration', sut.methods.get_registration) 
-            sinon.assert.calledWith(app.post, '/registration', sut.methods.post_registration) 
+            sinon.assert.calledWith(app.get, '/api/registration', sut.methods.get_registration) 
+            sinon.assert.calledWith(app.post, '/api/registration', sut.methods.post_registration) 
             done() 
 
     describe 'methods', ->
