@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://api.yacketyapp.com/</Value>
+      <Value Profile="(Default)">https://api.stagingdtt.local/</Value>
     </Setting>
     <Setting Name="Redis" Type="System.String" Scope="Application">
       <Value Profile="(Default)">api.yacketyapp.com:6379</Value>
