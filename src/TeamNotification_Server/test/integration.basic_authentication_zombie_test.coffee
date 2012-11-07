@@ -32,7 +32,7 @@ context.for.integration_test(authenticate: false) (browser) ->
                     response = status
                     done()
 
-            xit 'should redirect to the login page', (done) ->
+            it 'should redirect to the login page', (done) ->
                 expect(browser.html()).to.contain login_div_id
                 done()
 
@@ -42,10 +42,10 @@ context.for.integration_test(authenticate: false) (browser) ->
 
             beforeEach (done) ->
                 browser.authenticate().basic('foo@bar.com', '1234')
-                browser.visit 'http://dtt.local:3000/', (e, browser, status) ->
+                browser.visit "#{config.site.surl}", (e, browser, status) ->
                     response = status
                     done()
 
-            xit 'should return a 200 status code', (done) ->
+            it 'should return a 200 status code', (done) ->
                 expect(response).to.equal 200
                 done()
