@@ -126,8 +126,10 @@ namespace TeamNotification_Library.Service.Controls
             //}
             //else
             //{
+            messagesEditor.inputMethod = textBox;
             messageSender.SendMessages(textBox.Document.Blocks, roomId);
             //}
+            textBox.Document.Blocks.Clear();
             messagesEditor.ResetControls();
 
         }

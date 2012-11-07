@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using System.Windows.Controls;
+using SocketIOClient.Messages;
 using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
@@ -16,12 +18,12 @@ namespace TeamNotification_Library.Service.Http
             this.client = client;
         }
 
-        public void ListenOnChannel(string channel, MessageReceivedAction action)
+        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback)
         {
             onMessageReceivedAction = action;
             onMessageReceivedActionExcecution = (c, bytes) => 
                 onMessageReceivedAction(c, new UTF8Encoding().GetString(bytes));
-            client.Subscribe(channel, SubscribeResponse);
+            client.Subscribe(channel, SubscribeResponse, reconnectCallback);
         }
 
         public Action<string, byte[]> SubscribeResponse

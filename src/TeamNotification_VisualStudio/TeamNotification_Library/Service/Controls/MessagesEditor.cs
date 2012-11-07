@@ -144,8 +144,9 @@ namespace TeamNotification_Library.Service.Controls
 
         public void ResetControls()
         {
-            inputMethod.Document.Blocks.Clear();
             if (editingMessage == null) return;
+            if (inputMethod == null) return;
+            inputMethod.Document.Blocks.Clear();
             if (!editingMessageModel.chatMessageBody.IsCode){
                 currentRowGroup.Background = originalBackground;
                 inputMethod.Background = originalBackground;

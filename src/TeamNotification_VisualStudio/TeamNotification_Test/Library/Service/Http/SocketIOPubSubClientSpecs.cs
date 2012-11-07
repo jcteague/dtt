@@ -14,8 +14,7 @@ namespace TeamNotification_Test.Library.Service.Http
     [Subject(typeof(SocketIOPubSubClient))]  
     public class SocketIOPubSubClientSpecs
     {
-        public abstract class Concern : Observes<ISubscribeToPubSub<Action<string, string>>,
-                                            SocketIOPubSubClient>
+        public abstract class Concern : Observes<ISubscribeToPubSub<Action<string, string>>, SocketIOPubSubClient>
         {
             Establish context = () =>
             {
@@ -38,11 +37,11 @@ namespace TeamNotification_Test.Library.Service.Http
                 socketIOClientFactory.Stub(x => x.GetInstance()).Return(client);
 
                 roomSocket = fake.an<IEndPointClient>();
-                client.Stub(x => x.Connect("/room/2/messages")).Return(roomSocket);
+                client.Stub(x => x.Connect("/room/2/messages",null)).Return(roomSocket);
             };
 
             Because of = () =>
-                sut.Subscribe(channel, callback);
+                sut.Subscribe(channel, callback,null);
 
             It should_listen_the_message_event_with_the_passed_callback = () =>
                 roomSocket.AssertWasCalled(x => x.On(Arg<string>.Is.Equal("message"), Arg<Action<IMessage>>.Is.Anything));

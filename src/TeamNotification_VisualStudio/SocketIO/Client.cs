@@ -238,7 +238,7 @@ namespace SocketIOClient
 			Action<IMessage> action)
 		{
 			
-			this.registrationManager.AddOnEvent(eventName, endPoint, action);
+			 this.registrationManager.AddOnEvent(eventName, endPoint, action);
 		}
 		/// <summary>
 		/// <para>Asynchronously sends payload using eventName</para>
@@ -256,7 +256,7 @@ namespace SocketIOClient
 			IMessage msg = null;
 			switch (lceventName)
 			{
-				case "message":
+				case "message": 
 					if (payload is string)
 						msg = new TextMessage() { MessageText = payload };
 					else

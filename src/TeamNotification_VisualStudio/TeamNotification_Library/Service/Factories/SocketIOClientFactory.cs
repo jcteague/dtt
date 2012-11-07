@@ -1,3 +1,4 @@
+using System;
 using SocketIOClient;
 using TeamNotification_Library.Service.Http;
 

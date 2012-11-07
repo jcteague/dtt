@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using SocketIOClient;
+using SocketIOClient.Messages;
 
 namespace TeamNotification_Library.Service.Http
 {
@@ -14,10 +15,10 @@ namespace TeamNotification_Library.Service.Http
             this.client = client;
         }
 
-        public void ListenOnChannel(string channel, MessageReceivedAction action)
+        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback)
         {
             SubscribeResponse = (c, payload) => action(c, payload);
-            client.Subscribe(channel, SubscribeResponse);
+            client.Subscribe(channel, SubscribeResponse, reconnectCallback);
         }
 
         public Action<string, string> SubscribeResponse { get; private set; }
