@@ -7,10 +7,7 @@ class UserCollection
     to_json: ->
         self = "/user/#{@data.user_id}"
         invitations = 
-        if @data? and @data.rooms?
-            rooms = (@get_room(room) for room in @data.rooms)
-        else
-            rooms = []
+        rooms = (@get_room(room) for room in @data.rooms)
         return {
             href: self
             user_id: @data.user_id

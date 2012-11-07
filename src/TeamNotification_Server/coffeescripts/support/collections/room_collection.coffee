@@ -3,10 +3,7 @@ class RoomCollection
     constructor: (@room) ->
     to_json: ->
 
-        if @room.room.users?
-            users = ({"name": user.first_name, "rel": "User", "href": "/user/#{user.id}"} for user in @room.room.users)
-        else
-            users = []
+        users = ({"name": user.first_name, "rel": "User", "href": "/user/#{user.id}"} for user in @room.room.users)
         self = {"name":"self", "rel": "Room", "href": "/room/#{@room.room.id}"}
 
         other_links = []

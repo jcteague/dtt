@@ -10,10 +10,7 @@ strategy = (user_id) ->
         }
         
 has_user = (room, user_id) ->
-    if room? and room.users?
-        members = (user.id for user in room.users)
-        return members.indexOf(user_id) isnt -1
-    else
-        false
+    members = (user.id for user in room.users)
+    members.indexOf(user_id) isnt -1
 
 module.exports = strategy
