@@ -32,8 +32,10 @@
             </TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="15,5,5,0" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" />
-            <ComboBox Height="auto" Name="comboRooms" Width="auto" Margin="15,0,0,0" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+
+                <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" />
+                <Label Content="Reconnecting..." Height="auto" HorizontalAlignment="Center" Name="lblReconnecting" VerticalAlignment="Center" Width="auto" Foreground="Red" />
+                <ComboBox Height="auto" Name="comboRooms" Width="auto" Margin="15,0,0,0" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>

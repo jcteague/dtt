@@ -1,4 +1,5 @@
 using System;
+using SocketIOClient.Messages;
 using TeamNotification_Library.Service.Providers;
 
 namespace TeamNotification_Library.Service.Http
@@ -13,7 +14,7 @@ namespace TeamNotification_Library.Service.Http
             this.conn = connectionProvider.Get();
         }
 
-        public void Subscribe(string channel,Action<string,byte[]> callback)
+        public void Subscribe(string channel, Action<string, byte[]> callback, Action reconnectCallback = null)
         {
             var sub = conn.GetOpenSubscriberChannel();
             sub.Subscribe(channel, callback);

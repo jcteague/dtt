@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -7,10 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using SocketIOClient.Messages;
 using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service;
@@ -267,12 +270,29 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             chatRoomControlService.ResetContainer(GetChatUIElements());
             AddMessages(newRoomId);
-
+            
             if (subscribedChannels.Contains(currentChannel)) return;
             
+            lblReconnecting.Visibility = Visibility.Hidden;
             btnReconnect.Visibility = Visibility.Hidden;
-            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived);
+            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,this.OnReconnectCallback);
             subscribedChannels.Add(currentChannel);
+        }
+
+        private void OnReconnectCallback()
+        {
+            Debug.WriteLine("Retrying reconnect");
+            subscribedChannels.Remove(currentChannel);
+            lblReconnecting.Dispatcher.Invoke(new Action(() =>{
+                var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)) };
+                animation.Completed += (o, s) =>
+                {
+                    Reconnect(null, null);
+                };
+                lblReconnecting.Visibility = Visibility.Visible;
+                lblReconnecting.Opacity = 1.0;
+                lblReconnecting.BeginAnimation(OpacityProperty, animation);
+            }));
         }
 
         private void AddMessages(string currentRoomId)

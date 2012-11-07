@@ -1,6 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
- using TeamNotification_Library.Service.Http;
+using SocketIOClient.Messages;
+using TeamNotification_Library.Service.Http;
  using developwithpassion.specifications.rhinomocks;
  using developwithpassion.specifications.extensions;
 using Rhino.Mocks;
@@ -34,10 +35,10 @@ namespace TeamNotification_Test.Library.Service.Http
             };
 
             Because of = () =>
-                sut.ListenOnChannel(channel, action);
+                sut.ListenOnChannel(channel, action,null);
 
             It should_subscribe_to_the_channel_with_the_subscribe_response = () =>
-                client.AssertWasCalled(x => x.Subscribe(channel, sut.SubscribeResponse));
+                client.AssertWasCalled(x => x.Subscribe(channel, sut.SubscribeResponse,null));
 
             It should_have_stored_the_action = () =>
             {

@@ -35,12 +35,12 @@ namespace TeamNotification_Test.Library.Service.Http
 
             private Because of = () =>
             {
-                sut.ListenOnChannel(channel, action);
+                sut.ListenOnChannel(channel, action, null);
                 subscribeResponse = sut.SubscribeResponse;
             };
 
             private It should_call_the_action_with_the_result_from_the_request = () =>
-                iConnectToRedis.AssertWasCalled(x => x.Subscribe(channel, subscribeResponse));
+                iConnectToRedis.AssertWasCalled(x => x.Subscribe(channel, subscribeResponse, null));
 
             private static ISubscribeToPubSub<Action<string, byte[]>> iConnectToRedis;
             private static MessageReceivedAction action;
