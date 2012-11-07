@@ -331,6 +331,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         
         private List<Collection.Link> FormatRooms(IEnumerable<Collection.Room> unformattedRoom)
         {
+            if (unformattedRoom == null)
+                return new List<Collection.Link>();
             return unformattedRoom.Select(room => new Collection.Link {name = Collection.getField(room.data, "name"), rel = Collection.getField(room.data,"id")}).ToList();
         }
         
