@@ -49,3 +49,7 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+span.chat_message_date {
+    white-space: nowrap;
+}
