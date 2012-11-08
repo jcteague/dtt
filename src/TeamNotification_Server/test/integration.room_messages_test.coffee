@@ -79,29 +79,6 @@ context.for.integration_test(browsers: 2) (browsers...) ->
                         expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
                         done()
 
-            describe 'When a user visits the #/room/:id/messages page and there are less than fifty messages', ->
-                beforeEach (done) ->
-                    messages =
-                        name: "room:#{room_id}:messages"
-                        entities: (generate_message(i) for i in [1..10])
-
-                    db.redis.save(messages)
-                    done()
-
-                describe 'and wants to see the messages', ->
-                    beforeEach (done) ->
-                        browser.visit("#{config.site.surl}/#/room/1/messages").
-                            then(done, done) 
-                        
-                    it 'should contain the messages in the container', (done) ->
-                        expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
-                        done()
-                        
-                    it 'should contain only ten messages if there are ten messages', (done) ->
-                        # TODO: Clear the redis database?
-                        #expect(browser.queryAll('#messages-container tr').length).to.equal(10)
-                        done()
-
             describe 'When a user visits the #/room/:id/messages page', ->
 
                 beforeEach (done) ->
@@ -130,3 +107,33 @@ context.for.integration_test(browsers: 2) (browsers...) ->
                     #    expect(browser2.html('#messages-container').indexOf(message_to_post)).to.not.equal(-1)
                     #    done()
                         
+
+        describe 'Set up with little messages', ->
+
+            beforeEach (done) ->
+                db.redis.clear ["room:#{room_id}:messages"]
+                handle_in_series server.start(), db.save(users, chat_rooms), done
+
+            describe 'When a user visits the #/room/:id/messages page and there are less than fifty messages', ->
+                beforeEach (done) ->
+                    messages =
+                        name: "room:#{room_id}:messages"
+                        entities: (generate_message(i) for i in [1..10])
+
+                    db.redis.save(messages)
+                    done()
+
+                describe 'and wants to see the messages', ->
+                    beforeEach (done) ->
+                        browser.visit("#{config.site.surl}/#/room/1/messages").
+                            then(done, done) 
+                        
+                    it 'should contain the messages in the container', (done) ->
+                        expect(browser.html('div[id="messages-container"]')).to.not.be.empty()
+                        done()
+                        
+                    it 'should contain only ten messages if there are ten messages', (done) ->
+                        # TODO: Clear the redis database?
+                        # expect(browser.queryAll('#messages-container tr').length).to.equal(10)
+                        done()
+
