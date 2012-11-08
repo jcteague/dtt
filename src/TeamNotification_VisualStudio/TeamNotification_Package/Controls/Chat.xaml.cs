@@ -88,9 +88,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
                                         {
-                                            OpeningMilliseconds = 250,
-                                            HidingMilliseconds = 250,
-                                            StayOpenMilliseconds = 500
+                                            OpeningMilliseconds = 500,
+                                            HidingMilliseconds = 500,
+                                            StayOpenMilliseconds = 1000
                                         };
             InitializeComponent();
             
