@@ -18,12 +18,12 @@ namespace TeamNotification_Library.Service.Http
             this.client = client;
         }
 
-        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback)
+        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback, Action onConnectCallback)
         {
             onMessageReceivedAction = action;
             onMessageReceivedActionExcecution = (c, bytes) => 
                 onMessageReceivedAction(c, new UTF8Encoding().GetString(bytes));
-            client.Subscribe(channel, SubscribeResponse, reconnectCallback);
+            client.Subscribe(channel, SubscribeResponse, reconnectCallback, onConnectCallback);
         }
 
         public Action<string, byte[]> SubscribeResponse

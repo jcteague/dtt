@@ -14,7 +14,7 @@ namespace TeamNotification_Library.Service.Http
             this.conn = connectionProvider.Get();
         }
 
-        public void Subscribe(string channel, Action<string, byte[]> callback, Action reconnectCallback = null)
+        public void Subscribe(string channel, Action<string, byte[]> callback, Action reconnectCallback = null, Action onConnectCallback = null)
         {
             var sub = conn.GetOpenSubscriberChannel();
             sub.Subscribe(channel, callback);
