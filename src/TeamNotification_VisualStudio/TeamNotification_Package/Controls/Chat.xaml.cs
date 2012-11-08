@@ -86,8 +86,12 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
 
-            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
-
+            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
+                                        {
+                                            OpeningMilliseconds = 250,
+                                            HidingMilliseconds = 250,
+                                            StayOpenMilliseconds = 500
+                                        };
             InitializeComponent();
             
             var mce = new ModalCodeEditor { RefControl = this.mainGrid };
@@ -167,12 +171,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
 
         [DllImport("user32.dll")]
-        private extern static IntPtr GetActiveWindow();
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-
+        private extern static IntPtr GetForegroundWindow();
+        
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
@@ -182,9 +182,12 @@ namespace AvenidaSoftware.TeamNotification_Package
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
 
-                    var activeWindow = GetActiveWindow();
+                    var activeWindow = GetForegroundWindow();//GetActiveWindow();
                     var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
-                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (activeWindow != mainWindowHandle))
+                    Debug.WriteLine("Imprimiendo");
+                    Debug.WriteLine(activeWindow);
+                    Debug.WriteLine(mainWindowHandle);
+                    if ((Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id) && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
                                                                                 var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
