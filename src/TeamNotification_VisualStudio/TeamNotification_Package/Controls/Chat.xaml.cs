@@ -284,10 +284,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (subscribedChannels.Contains(currentChannel))
                 subscribedChannels.Remove(currentChannel);
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
-                var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)), AutoReverse = true};
                 lblReconnecting.Visibility = Visibility.Visible;
                 lblReconnecting.Opacity = 1.0;
-                lblReconnecting.BeginAnimation(OpacityProperty, animation);
             }));
         }
         private void OnReconnectCallback()
@@ -300,11 +298,10 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void AddMessages(string currentRoomId)
         {
-            logger.TryOrLog(() =>
-                                {
-                                    this.roomId = currentRoomId;
-                                    chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);                                    
-                                });
+            logger.TryOrLog(() => {
+                this.roomId = currentRoomId;
+                chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);                                    
+            });
         }
 
         private ChatUIElements GetChatUIElements()
