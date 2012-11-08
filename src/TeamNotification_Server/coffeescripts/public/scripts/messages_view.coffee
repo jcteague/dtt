@@ -170,7 +170,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             escaped_message = @parsing_links parsedBody.message # $('<div/>').text(parsedBody.message).html()
             build_new_row = (name, message, time) ->
-                return "<tr class='new'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
+                return "<tr class='new_message'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
             
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
