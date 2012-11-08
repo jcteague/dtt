@@ -5,13 +5,13 @@
     <Setting Name="ApiSite" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api.dtt.local/</Value>
     </Setting>
-    <Setting Name="Site" Type="System.String" Scope="User">
+    <Setting Name="Site" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://dtt.local/</Value>
     </Setting>
-    <Setting Name="ApiSiteProduction" Type="System.String" Scope="User">
+    <Setting Name="ApiSiteProduction" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api.yacketyapp.com/</Value>
     </Setting>
-    <Setting Name="SiteProduction" Type="System.String" Scope="User">
+    <Setting Name="SiteProduction" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://yacketyapp.com/</Value>
     </Setting>
     <Setting Name="Redis" Type="System.String" Scope="Application">
