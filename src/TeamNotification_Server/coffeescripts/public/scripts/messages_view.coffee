@@ -43,6 +43,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 contentType: 'application/json'
                 dataType: 'json'
                 url: url
+                cache: false
                 headers:
                     authorization: $.cookie 'authtoken'
                 success: callback

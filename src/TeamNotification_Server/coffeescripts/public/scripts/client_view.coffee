@@ -48,18 +48,14 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             url = "#{config.api.url}/#{path}"
             parameters = {
                 type: 'GET'
-                #contentType: 'application/json'
                 dataType: 'json'
                 url: url
+                cache: false
+                headers:
+                    Authorization: $.cookie 'authtoken'
                 success: @load_json
                 error: (d) -> return
             }
-
-            if $.cookie('authtoken')?
-                parameters.beforeSend = (jqXHR) ->
-                    authToken = $.cookie 'authtoken'
-                    jqXHR.setRequestHeader('Authorization', authToken )
-                    jqXHR.withCredentials = true
 
             $.ajax parameters
 
