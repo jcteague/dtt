@@ -12,7 +12,7 @@ namespace TeamNotification_Library.Configuration
         
         public string Uri
         {
-            get { return Properties.Settings.Default.Site; }
+            get { return Properties.Settings.Default.ApiSite; }
             set { _uri = value; }
         }
     }

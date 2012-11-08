@@ -40,11 +40,9 @@ namespace TeamNotification_Library.Service.Http
                                                };
 
             if (reconnectCallback != null)
-                ConnectionRetryAttempt += (o, s) =>{
-                                                       reconnectCallback();
-                };
+                ConnectionRetryAttempt += (o, s) => reconnectCallback();
 
-            return base.Connect(socketNamespace);
+            return base.Connect("/api" + socketNamespace);
         }
     }
 }
