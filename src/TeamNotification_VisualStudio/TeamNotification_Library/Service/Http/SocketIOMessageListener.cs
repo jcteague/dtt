@@ -15,10 +15,10 @@ namespace TeamNotification_Library.Service.Http
             this.client = client;
         }
 
-        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback)
+        public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback, Action onConnectCallback)
         {
             SubscribeResponse = (c, payload) => action(c, payload);
-            client.Subscribe(channel, SubscribeResponse, reconnectCallback);
+            client.Subscribe(channel, SubscribeResponse, reconnectCallback, onConnectCallback);
         }
 
         public Action<string, string> SubscribeResponse { get; private set; }

@@ -35,7 +35,7 @@ namespace TeamNotification_Test.Library.Service.Http
 
             private Because of = () =>
             {
-                sut.ListenOnChannel(channel, action, null);
+                sut.ListenOnChannel(channel, action, null, null);
                 subscribeResponse = sut.SubscribeResponse;
             };
 

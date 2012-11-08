@@ -28,7 +28,7 @@ namespace TeamNotification_Library.Service.Http
             base.On(eventName, endPoint, action);
         }
 
-        public new IEndPointClient Connect(string socketNamespace, Action reconnectCallback = null)
+        public new IEndPointClient Connect(string socketNamespace, Action reconnectCallback = null, Action onConnectCallback=null )
         {
             SocketConnectionClosed += (s, e) =>
                                                {
@@ -39,10 +39,10 @@ namespace TeamNotification_Library.Service.Http
                                                    socketIOEvents.OnSocketWasDisconnected(this, new SocketWasDisconnected { RoomId = roomId });
                                                };
 
+            if (onConnectCallback != null)
+                On("connect", (im) => onConnectCallback());
             if (reconnectCallback != null)
-                ConnectionRetryAttempt += (o, s) =>{
-                                                       reconnectCallback();
-                };
+                ConnectionRetryAttempt += (o, s) => reconnectCallback();
 
             return base.Connect(socketNamespace);
         }

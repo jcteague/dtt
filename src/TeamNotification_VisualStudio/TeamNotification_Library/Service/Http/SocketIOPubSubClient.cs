@@ -19,22 +19,16 @@ namespace TeamNotification_Library.Service.Http
             socketsStorage = new Dictionary<string, IWrapSocketIOClient>();
         }
 
-        public void Subscribe(string channel, Action<string, string> messageCallback, Action reconnectCallback)
+        public void Subscribe(string channel, Action<string, string> messageCallback, Action reconnectCallback, Action onConnectCallback)
         {
             CloseSocketIfExists(channel);
             var socketNamespace = "/room/{0}/messages".FormatUsing(channel.Split(' ')[1]);
             var socket = socketIOClientFactory.GetInstance();
-            var roomSocket = socket.Connect(socketNamespace, reconnectCallback);
+            var roomSocket = socket.Connect(socketNamespace, reconnectCallback, onConnectCallback);
             roomSocket.On("message", (data) => messageCallback(channel, data.MessageText));
             //roomSocket.On("reconnect", reconnectCallback);
             //roomSocket.On("retry", this.someKewlMethod);
             StoreSocket(channel, socket);
-        }
-
-        private void someKewlMethod(object arg)
-        {
-            var x = 5;
-            Debug.WriteLine("Yay!");
         }
 
         private void CloseSocketIfExists(string channel)

@@ -275,24 +275,26 @@ namespace AvenidaSoftware.TeamNotification_Package
             
             lblReconnecting.Visibility = Visibility.Hidden;
             btnReconnect.Visibility = Visibility.Hidden;
-            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,this.OnReconnectCallback);
+            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived, this.OnReconnectAttemptCallback, this.OnReconnectCallback);
             subscribedChannels.Add(currentChannel);
         }
 
-        private void OnReconnectCallback()
+        private void OnReconnectAttemptCallback()
         {
-            
             if (subscribedChannels.Contains(currentChannel))
                 subscribedChannels.Remove(currentChannel);
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
-                var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)) };
-                animation.Completed += (o, s) =>
-                {
-                    Reconnect(null, null);
-                };
+                var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)), AutoReverse = true};
                 lblReconnecting.Visibility = Visibility.Visible;
                 lblReconnecting.Opacity = 1.0;
                 lblReconnecting.BeginAnimation(OpacityProperty, animation);
+            }));
+        }
+        private void OnReconnectCallback()
+        {
+            lblReconnecting.Dispatcher.Invoke(new Action(() =>{
+                lblReconnecting.Visibility = Visibility.Hidden;
+                Reconnect(null, null);
             }));
         }
 
