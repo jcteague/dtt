@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="ApiSite" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://api.dtt.local/</Value>
+      <Value Profile="(Default)">https://api.yacketyapp.com/</Value>
     </Setting>
     <Setting Name="Site" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://dtt.local/</Value>
+      <Value Profile="(Default)">https://yacketyapp.com/</Value>
     </Setting>
     <Setting Name="ApiSiteProduction" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api.yacketyapp.com/</Value>
