@@ -184,9 +184,6 @@ namespace AvenidaSoftware.TeamNotification_Package
 
                     var activeWindow = GetForegroundWindow();//GetActiveWindow();
                     var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
-                    Debug.WriteLine("Imprimiendo");
-                    Debug.WriteLine(activeWindow);
-                    Debug.WriteLine(mainWindowHandle);
                     if ((Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id) && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
@@ -284,8 +281,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void OnReconnectCallback()
         {
-            Debug.WriteLine("Retrying reconnect");
-            subscribedChannels.Remove(currentChannel);
+            
+            if (subscribedChannels.Contains(currentChannel))
+                subscribedChannels.Remove(currentChannel);
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
                 var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)) };
                 animation.Completed += (o, s) =>
