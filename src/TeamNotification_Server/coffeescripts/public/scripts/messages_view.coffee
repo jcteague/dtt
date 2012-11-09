@@ -93,7 +93,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
             if @model.has('messages')
-                #setInterval((() -> update_dates() ), 10000)
                 url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
                 socket.on 'message', @add_message
@@ -184,5 +183,5 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
                 return build_new_row($name_span.html(), add_links(parsedBody.message), date) #add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b></td></tr>")
-            return build_new_row($name_span.html(), parsedBody.message, date)
+            return build_new_row($name_span.html(), escaped_message, date)
             #("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")
