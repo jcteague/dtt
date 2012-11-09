@@ -21,7 +21,7 @@ namespace TeamNotification_Library.Service.Http
             get
             {
                 // TODO: Remove ServerCertificateValidationCallback after using the correct certificate. 
-                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
+//                ServicePointManager.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
                 return new HttpClient(httpClientHandlerGetter.GetHandler());
             }
         }
