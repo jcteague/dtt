@@ -11,7 +11,8 @@ namespace TeamNotification_Library.Models.UI
         public StatusBar StatusBar { get; set; }
         public RichTextBox Container { get; set; }
         public Table MessagesTable { get; set; }
-        public RichTextBox MessageInput { get; set; }
+//        public RichTextBox MessageInput { get; set; }
+        public TextBox MessageInput { get; set; }
         public Grid MessageTextBoxGrid { get; set; }
         public Border MessageContainerBorder { get; set; }
         public RowDefinition MessageGridRowDefinition1 { get; set; }
@@ -24,7 +25,8 @@ namespace TeamNotification_Library.Models.UI
         public string LastStamp { get; set; }
         public Dictionary<string, TableRowGroup> MessagesList { get; set; }
         public ComboBox ComboRooms { get; set; }
-        public RichTextBox InputBox { get; set; }
+//        public RichTextBox InputBox { get; set; }
+        public TextBox InputBox { get; set; }
         public IShowCode codeEditor { get; set; }
     }
 }

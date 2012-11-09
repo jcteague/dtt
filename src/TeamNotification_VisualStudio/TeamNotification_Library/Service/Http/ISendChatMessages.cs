@@ -8,5 +8,6 @@ namespace TeamNotification_Library.Service.Http
     {
         void SendMessage(ChatMessageBody editedMessage, string roomId);
         void SendMessages(IEnumerable<Block> blocks, string roomId);
+        void SendMessages(string blocks, string roomId);
     }
 }

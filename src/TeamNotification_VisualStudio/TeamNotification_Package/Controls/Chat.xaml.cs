@@ -103,7 +103,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
 
-            messageTextBox.Document.Blocks.Clear();
+//            messageTextBox.Document.Blocks.Clear();
+            messageTextBox.Clear();
 
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
 

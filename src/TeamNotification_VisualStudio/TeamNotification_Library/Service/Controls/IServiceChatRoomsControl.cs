@@ -9,8 +9,8 @@ namespace TeamNotification_Library.Service.Controls
     {
         Collection GetCollection();
         Collection GetMessagesCollection(string roomId);
-        void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs);
-        void SendMessage(RichTextBox textBox, string roomId);
+        void HandlePaste(TextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs);
+        void SendMessage(TextBox textBox, string roomId);
         void ResetContainer(ChatUIElements textBox);
         ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);
         void AddMessages(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string currentRoomId);

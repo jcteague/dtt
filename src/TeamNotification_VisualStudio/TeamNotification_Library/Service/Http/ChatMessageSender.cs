@@ -74,6 +74,13 @@ namespace TeamNotification_Library.Service.Http
             client.Post(messages);
         }
 
+        public void SendMessages(string blocks, string roomId)
+        {
+            var messages = new List<Tuple<string, HttpContent>>();
+            AppendPlainMessage(messages, blocks, roomId);
+            client.Post(messages);
+        }
+
         private void AppendPlainMessage(List<Tuple<string, HttpContent>> messages, string plainMessage, string roomId)
         {
             if (plainMessage.IsNullOrWhiteSpace()) return;

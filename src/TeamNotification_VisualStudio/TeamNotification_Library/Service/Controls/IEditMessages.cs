@@ -10,7 +10,7 @@ namespace TeamNotification_Library.Service.Controls
 {
     public interface IEditMessages
     {
-        RichTextBox inputMethod { get; set; }
+        TextBox inputMethod { get; set; }
         Brush originalBackground { get; set; }
         TableRowGroup currentRowGroup { get; set; }
         Collection.Messages editingMessage { get; set; }

@@ -79,7 +79,7 @@ namespace TeamNotification_Library.Service.Controls
             return c;
         }
 
-        public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
+        public void HandlePaste(TextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
             dataObjectPastingEventArgs.CancelCommand();
@@ -92,13 +92,16 @@ namespace TeamNotification_Library.Service.Controls
                     chatMessageModel.chatMessageBody.message = pastedCode;
                     var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
                     textBox.Dispatcher.Invoke(new Action( () =>{
-                        textBox.Document.Blocks.Clear();
-                        textBox.Document.Blocks.Add(block);
-                        textBox.CaretPosition = textBox.Document.ContentEnd;
+//                        textBox.Document.Blocks.Clear();
+//                        textBox.Document.Blocks.Add(block);
+//                        textBox.CaretPosition = textBox.Document.ContentEnd;
+                        textBox.Clear();
+                        textBox.Text = block.GetText();
                     }));
                 }else
                 {
-                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+//                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+                    textBox.Dispatcher.Invoke(new Action(() => textBox.Clear()));
                     dataObjectPastingEventArgs.CancelCommand();
                 }
             }
@@ -115,21 +118,12 @@ namespace TeamNotification_Library.Service.Controls
             userAccountEvents.OnLogout(sender, new UserHasLogout());
         }
 
-        public void SendMessage(RichTextBox textBox, string roomId)
+        public void SendMessage(TextBox textBox, string roomId)
         {
-            //messagesEditor.inputMethod = textBox;
-            //if (messagesEditor.editingMessage != null)
-            //{
-            //    var text = messagesEditor.inputMethod.Document.GetDocumentText();
-            //    messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
-            //    messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
-            //}
-            //else
-            //{
             messagesEditor.inputMethod = textBox;
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            //}
-            textBox.Document.Blocks.Clear();
+            messageSender.SendMessages(textBox.Text, roomId);
+
+            textBox.Clear();
             messagesEditor.ResetControls();
 
         }
