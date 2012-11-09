@@ -1,7 +1,7 @@
 nginx:
-  server_host: yacketyapp.com
+  host: yacketyapp.com
   api_server_name: api.yacketyapp.com
-  server_port: 3000
+  port: 3000
   certificates_path: /home/ubuntu/yacketyapp.com/certificates
   sites_available_path: /etc/nginx/sites-available/
   sites_enabled_path: /etc/nginx/sites-enabled/
