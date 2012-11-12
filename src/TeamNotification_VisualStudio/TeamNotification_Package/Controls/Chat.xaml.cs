@@ -103,12 +103,12 @@ namespace AvenidaSoftware.TeamNotification_Package
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
 
-            messageTextBox.Document.Blocks.Clear();
+//            messageTextBox.Document.Blocks.Clear();
 
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
 
-            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
-            DataObject.AddPastingHandler(messageTextBox, OnPaste);
+//            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
+//            DataObject.AddPastingHandler(messageTextBox, OnPaste);
             lastStamp = "";
 
             codePasteEvents.Clear();
@@ -132,7 +132,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
-            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, codeEditor, e))));
+//            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, codeEditor, e))));
         }
 
         private void OnToolWindowWasDocked(object sender, ToolWindowWasDocked toolWindowWasDocked)
@@ -224,7 +224,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void SendMessage()
         {
             applicationGlobalState.IsEditingCode = false;
-            chatRoomControlService.SendMessage(messageTextBox, roomId);
+//            chatRoomControlService.SendMessage(messageTextBox, roomId);
         }
 
         private void PasteCode(object sender, EventArgs args)
@@ -311,7 +311,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
-                MessageInput = messageTextBox,
+//                MessageInput = messageTextBox,
                 MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
                 MessageTextBoxGridSplitter = messageTextBoxGridSplitter,
@@ -321,7 +321,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 MessageGridColumnDefinition2 = messageGridColumnDefinition2,
                 SendMessageButton = btnSendMessageButton,
                 StatusBar = dteStore.dte.StatusBar,
-                InputBox = messageTextBox,
+//                InputBox = messageTextBox,
                 MessagesList = messagesList,
                 LastStamp = lastStamp,
                 ComboRooms = comboRooms,

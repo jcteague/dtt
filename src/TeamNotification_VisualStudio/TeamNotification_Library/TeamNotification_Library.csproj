@@ -241,6 +241,7 @@
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Highlighters\Avalon\MixedHighlightingColorizer.cs" />
     <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
     <Compile Include="Service\Highlighters\AurelianRibonSyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
@@ -344,7 +345,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service\Timing\" />
-    <Folder Include="Service\Wrappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
