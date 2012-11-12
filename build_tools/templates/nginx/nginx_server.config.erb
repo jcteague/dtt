@@ -17,6 +17,12 @@ server {
 
     server_name <%= host %>;
 
+    location ~ ^/(plugin/|robots.txt|humans.txt) {
+    root <%= public_path %>;
+      access_log off;
+      expires max;
+    }
+
     location / {
       proxy_redirect off;
       proxy_set_header   X-Real-IP            $remote_addr;

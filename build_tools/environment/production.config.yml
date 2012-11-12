@@ -3,6 +3,7 @@ nginx:
   api_server_name: api.yacketyapp.com
   port: 3000
   certificates_path: /home/ubuntu/yacketyapp.com/certificates
+  public_path: /home/ubuntu/dtt/src/TeamNotification_Server/public
   sites_available_path: /etc/nginx/sites-available/
   sites_enabled_path: /etc/nginx/sites-enabled/
 
