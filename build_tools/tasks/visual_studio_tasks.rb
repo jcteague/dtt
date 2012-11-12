@@ -26,7 +26,7 @@ namespace :visual_studio do
   end
 
   task :copy_in_destination do
-    copy File.join(VisualStudioReleaseFolder, 'TeamNotification_Package.vsix'), '.'
+    copy File.join(VisualStudioReleaseFolder, 'TeamNotification_Package.vsix'), File.join(RestServiceRoot, 'public', 'plugin')
   end
 
   task :create_extension_manifest do
