@@ -65,7 +65,7 @@ namespace TeamNotification_Library.Service.Http
                 }
                 else
                 {
-                    var text = ((Paragraph) block).GetText();
+                    var text = ((TextElement) block).GetText();
                     plainMessage = plainMessage.IsNullOrEmpty() ? text : plainMessage + "\r\n" + text;
                 }
             }
