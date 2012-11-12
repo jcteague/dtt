@@ -17,17 +17,16 @@ class Authentication
         passport.initialize()
 
     findByUserName: (username,password,done) ->
-        @repository.find(email: username, password: sha256(password)).then (users) ->
+        @repository.find(email: username, password: sha256(password), enabled: 1).then (users) ->
             if !users? or !users[0]?
                 return done(null, false)
             user = users[0]
-            done(null, id: user.id, email: user.email, name: user.first_name)
+            done(null, id: user.id, email: user.email, name: user.first_name, enabled:user.enabled)
 
 	authenticate: (request, response, next) ->
         if @is_whitelisted(request.path)
             next()
         else
-            #console.log 'AUTH', request.cookies, request.headers.authorization
             if typeof request.cookies != 'undefined' && typeof request.cookies.authtoken != 'undefined'
                 request.headers.authorization = request.cookies.authtoken
             passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)

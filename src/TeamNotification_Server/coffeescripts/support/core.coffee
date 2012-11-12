@@ -7,11 +7,14 @@ orm.then (db) ->
     _entity.ChatRoom = db.define 'chat_room',
         name : {type: 'string'}
         room_key : {type: 'string'}
+    
     _entity.User = db.define 'users',
         first_name : {type: 'string'},
         last_name : {type: 'string'},
         email : {type: 'string'},
+        enabled: {type: 'bit' },
         password : {type: 'string'}
+    
     _entity.ChatRoomMessage = db.define 'chat_room_messages'
         body : {type: 'string', length:1000}
         date : {type:'date', default:'now()'}
@@ -28,10 +31,16 @@ orm.then (db) ->
         accepted : {type:'bit', default:'0'}
         date : {type:'date', default:'now()'}
 
+    _entity.UserConfirmationKey = db.define 'user_confirmation_keys'
+        id : {type: 'int'}
+        user_id : {type: 'int'}
+        confirmation_key: {type: 'string'}
+        created : {type:'date', default:'now()'}
+        active : {type:'bit', default:1}
+        
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})
-    #_entity.ChatRoom.hasMany('messages', _entity.ChatRoomMessages, 'message', {autoFetch: true})
-
+   
     _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
     _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
     
@@ -41,6 +50,7 @@ orm.then (db) ->
     #_entity.ChatRoomMessage.sync()
     #_entity.ChatRoom.sync()
     #_entity.ChatRoomInvitation.sync()
+    #_entity.UserConfirmationKey.sync()
 
 module.exports =
     core:

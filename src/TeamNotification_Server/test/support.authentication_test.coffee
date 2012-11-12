@@ -87,13 +87,13 @@ describe 'Authentication', ->
 
                 beforeEach (done) ->
                     hash_mock.sha256.withArgs(password).returns(encrypted)
-                    sinon.stub(sut.repository, 'find').withArgs(email: username, password: encrypted).returns(promise)
+                    sinon.stub(sut.repository, 'find').withArgs(email: username, password: encrypted, enabled: 1).returns(promise)
                     express_done = sinon.spy()
                     sut.findByUserName(username, password, express_done)
                     done()
 
                 it 'should call the done with the user data', (done) ->
-                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email, name:user.first_name})
+                    sinon.assert.calledWith(express_done, null, {id: user.id, email: user.email, name:user.first_name, enabled:user.enabled})
                     done()
 
             describe 'and the password does not match the username', ->
@@ -105,7 +105,7 @@ describe 'Authentication', ->
                     hash_mock.sha256.withArgs(wrong_password).returns(wrong_encrypted)
                     express_done = sinon.spy()
                     sut.repository.find = sinon.stub()
-                    sut.repository.find.withArgs(email: username, password: wrong_encrypted).returns(promise)
+                    sut.repository.find.withArgs(email: username, password: wrong_encrypted, enabled: 1).returns(promise)
                     sut.findByUserName(username, wrong_password, express_done)
                     done()
 
@@ -124,7 +124,7 @@ describe 'Authentication', ->
                 promise = 
                     then: (callback) ->
                         callback(null)
-                sinon.stub(sut.repository, 'find').withArgs(email: username, password:encrypted ).returns(promise)
+                sinon.stub(sut.repository, 'find').withArgs(email: username, password:encrypted, enabled: 1 ).returns(promise)
 
                 sut.findByUserName(username, password, express_done)
                 done()
