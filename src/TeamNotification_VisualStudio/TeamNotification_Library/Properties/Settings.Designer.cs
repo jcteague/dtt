@@ -25,7 +25,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.yacketyapp.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.stagingdtt.local/")]
         public string ApiSite {
             get {
                 return ((string)(this["ApiSite"]));
@@ -34,7 +34,7 @@ namespace TeamNotification_Library.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://yacketyapp.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://stagingdtt.local/")]
         public string Site {
             get {
                 return ((string)(this["Site"]));
