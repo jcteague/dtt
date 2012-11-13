@@ -1,5 +1,7 @@
 node_hash = require('node_hash')
 registration_service = require('../registration_service')
+email_sender = require('../email/email_sender')
+email_template = require('../email/templates/email_template')
 
 get_for_success = (req, res) ->
     return () ->
@@ -8,8 +10,18 @@ get_for_success = (req, res) ->
             last_name: req.body.last_name.trim()
             email: req.body.email.trim()
             password: node_hash.sha256(req.body.password)
+            enabled: 0
 
         registration_service.create_user(user_data).then (user) ->
+            console.log 'New USer'
+            console.log user
+            template = email_template.for.confirmation.using
+                    email: user.email
+                    name: user.first_name + ' ' + user.last_name
+                    confirmation_key: user.confirmation_key
+            console.log template
+            email_sender.send template
+            console.log 'Email Sent'
             res.json {
                 success: true
                 messages: ['User created successfully']
@@ -18,6 +30,7 @@ get_for_success = (req, res) ->
                     email: user.email
                 link: "/user/#{user.id}/"
             }
+            
 
 get_for_failure = (req, res) ->
     return (errors) ->

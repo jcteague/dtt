@@ -46,6 +46,8 @@ orm.then (db) ->
     
     _entity.ChatRoomInvitation.hasOne('user',_entity.User,'user',{autoFetch:true})
     _entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
+    
+    _entity.UserConfirmationKey.hasOne('user', _entity.User, 'user', {autoFetch:true})
     #_entity.ChatRoomUser.sync()
     #_entity.ChatRoomMessage.sync()
     #_entity.ChatRoom.sync()

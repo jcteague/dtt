@@ -2,10 +2,13 @@ methods = {}
 build = require('../../../support/routes_service').build
 user_validator = require('../../../support/validation/user_validator')
 user_callback_factory = require('../../../support/factories/user_callback_factory')
+routes_service = require('../../../support/routes_service')
+get_server_response = routes_service.get_server_response
 
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
+Repository = require('../../../support/repository')
 
 methods.get_user = (req, res) ->
     get_user_collection(req, res, req.param('id'))
@@ -68,6 +71,32 @@ methods.login = (req, res) ->
             ]
     res.json(r)
 
+methods.confirm = (req, res) ->
+    confirmation_key = req.param('confirmation_key')
+    user_id = req.param('id')
+    user_confirmation_keys = new Repository('UserConfirmationKey')
+    user_confirmation_keys.find(confirmation_key:confirmation_key).then (user_confirmation_keys) ->
+        if(!user_confirmation_keys && !user_confirmation_keys[0])
+            res.json(get_server_response(false, ["Confirmation key is not correct"], "/user/login"))
+        user_confirmation_key = user_confirmation_keys[0]
+        user_confirmation_key.active = false;
+        user_confirmation_key.user.enabled = true;
+        
+        user_confirmation_key.user.save (err, saved_user) ->
+            if !err
+                res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
+            else
+                user_confirmation_key.save (err2, saved_uck) -> 
+                    if(!err2)
+                        res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
+                    else
+                        res.json(get_server_response(true, ["User has been confirmed"], "/user/login"))
+       
+    #callback = (collection) ->
+    #    res.json(collection.to_json())
+    
+    #build('user_confirm_collection').for(user_id, confirm_key).fetch_to callback
+
 methods.authenticate = (req, res, next) ->
     values = req.body
     email = values.username
@@ -90,6 +119,7 @@ module.exports =
         app.get('/users/query', methods.get_users)
         app.get('/user/login', methods.login)
         app.post('/user/login',express.bodyParser(), methods.authenticate)
+        app.get('/user/confirm/:confirmation_key', methods.confirm)
         app.get('/user', methods.get_logged_user)
         app.get('/user/:id', methods.get_user)
         app.get('/user/:id/edit', methods.get_user_edit)
