@@ -128,6 +128,20 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
 
+//            CommandBinding pasteCommand = new CommandBinding(ApplicationCommands.Paste, SetResourcesForPaste, CanPaste);
+//            messageTextBox.CommandBindings.Add(pasteCommand);
+//            messageTextBox.TextArea.CommandBindings.Add(pasteCommand);
+
+        }
+
+        private void CanPaste(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SetResourcesForPaste(object sender, ExecutedRoutedEventArgs e)
+        {
+            int a = 0;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)

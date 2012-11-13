@@ -8,7 +8,6 @@ namespace TeamNotification_Library.Service.Highlighters.Avalon
         public MixedHighlightingColorizer(HighlightingRuleSet ruleSet) : base(ruleSet)
         {
 
-
         }
 
         protected override void Colorize(ITextRunConstructionContext context)

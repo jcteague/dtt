@@ -154,10 +154,13 @@
     <Compile Include="Service\Async\IHandleDialogMessages.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
+    <Compile Include="Service\Async\IHandleMixedEditorEvents.cs" />
     <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
     <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
     <Compile Include="Service\Async\IRunInBackgroundWorker.cs" />
+    <Compile Include="Service\Async\MixedEditorEvents.cs" />
+    <Compile Include="Service\Async\Models\CodeWasAppended.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
     <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
@@ -241,6 +244,7 @@
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Highlighters\Avalon\MixedEditorTextAreaInputHandler.cs" />
     <Compile Include="Service\Highlighters\Avalon\MixedHighlightingColorizer.cs" />
     <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
     <Compile Include="Service\Highlighters\AurelianRibonSyntaxHighlighterProvider.cs" />

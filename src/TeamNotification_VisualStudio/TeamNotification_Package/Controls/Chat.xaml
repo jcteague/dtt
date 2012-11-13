@@ -71,7 +71,7 @@
                 <ColumnDefinition Name="messageGridColumnDefinition1" Width="*" />
                 <ColumnDefinition Name="messageGridColumnDefinition2" Width="0" />
             </Grid.ColumnDefinitions>
-                <Avalon:MixedTextEditor Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />
+                <Avalon:MixedTextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />
 <!--                <Avalon:MixedTextEditor Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" />-->
 <!--            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">-->
 <!--                <RichTextBox.Resources>-->
