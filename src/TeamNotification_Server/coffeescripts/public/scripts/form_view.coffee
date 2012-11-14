@@ -42,8 +42,8 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                     if res.redirect? && res.redirect
                         window.location = "##{res.link}"
                     if res.link?
-                        res.messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
-                    @trigger 'messages:display', res.messages 
+                        res.server_messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
+                    @trigger 'messages:display', res.server_messages 
 
             url = "#{config.api.url}#{@$('form').attr('action')}"
             parameters = {

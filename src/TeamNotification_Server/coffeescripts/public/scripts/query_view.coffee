@@ -34,7 +34,7 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
 
                 callback = (res) => 
                     @$('input').not(':submit').val('')
-                    @trigger 'messages:display', res.messages
+                    @trigger 'messages:display', res.server_messages
 
                 url = "#{config.api.url}#{@$('form').attr('action')}"
                 parameters = {
@@ -52,11 +52,5 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
                         jqXHR.withCredentials = true
 
                 $.ajax parameters
-
-                ###
-                $.post "#{config.api.url}#{@$('form').attr('action')}", data, (res) => 
-                    @$('input').not(':submit').val('')
-                    @trigger 'messages:display', res.messages
-                ###
 
             setTimeout func, 200

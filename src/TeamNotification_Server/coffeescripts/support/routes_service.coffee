@@ -51,7 +51,7 @@ is_user_in_room = (user_id, room_id) ->
     defer.promise
 
 get_server_response = (success, messages, link, redirect=false) ->
-    return {success:success, messages:messages, link:link, redirect:redirect}
+    return {success:success, server_messages:messages, link:link, redirect:redirect}
 
 
 module.exports =

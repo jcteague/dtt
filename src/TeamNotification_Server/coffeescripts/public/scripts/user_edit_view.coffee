@@ -14,7 +14,7 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view'], (GeneralVi
             if res.success is true
                 window.location.href = "/#/user/#{res.data.id}"
             else
-                @trigger 'messages:display', res.messages
+                @trigger 'messages:display', res.server_messages
 
         render: ->
             @$el.empty()

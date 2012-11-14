@@ -79,19 +79,19 @@ methods.confirm = (req, res) ->
         if(!user_confirmation_keys && !user_confirmation_keys[0])
             res.json(get_server_response(false, ["Confirmation key is not correct"], "/user/login"))
         user_confirmation_key = user_confirmation_keys[0]
-        user_confirmation_key.active = false;
-        user_confirmation_key.user.enabled = true;
+        user_confirmation_key.active = 0
+        user_confirmation_key.user.enabled = 1
         
         user_confirmation_key.user.save (err, saved_user) ->
             if !err
-                res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
-            else
                 user_confirmation_key.save (err2, saved_uck) -> 
                     if(!err2)
-                        res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
-                    else
                         res.json(get_server_response(true, ["User has been confirmed"], "/user/login"))
-       
+                    else
+                        res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
+            else
+                res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
+            
     #callback = (collection) ->
     #    res.json(collection.to_json())
     

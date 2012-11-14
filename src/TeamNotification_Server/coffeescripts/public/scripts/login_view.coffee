@@ -28,6 +28,8 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                         window.location.href = redirect
                     window.location.reload(true)
                 setTimeout getIn, 500
+            else
+                @trigger 'messages:display', res.server_messages
 
         render: ->
             @$el.empty()

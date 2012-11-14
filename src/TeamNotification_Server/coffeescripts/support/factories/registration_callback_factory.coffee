@@ -19,9 +19,7 @@ get_for_success = (req, res) ->
                     email: user.email
                     name: user.first_name + ' ' + user.last_name
                     confirmation_key: user.confirmation_key
-            console.log template
             email_sender.send template
-            console.log 'Email Sent'
             res.json {
                 success: true
                 messages: ['User created successfully']
