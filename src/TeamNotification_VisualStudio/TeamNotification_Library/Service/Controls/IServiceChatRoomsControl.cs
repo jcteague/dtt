@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using TeamNotification_Library.Service.Async.Models;
+using TeamNotification_Library.UI.Avalon;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -9,7 +11,8 @@ namespace TeamNotification_Library.Service.Controls
     {
         Collection GetCollection();
         Collection GetMessagesCollection(string roomId);
-        void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs);
+//        void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs pasteData);
+        void HandlePaste(MixedTextEditor textBox, IShowCode codeShower, DataWasPasted pasteData);
         void SendMessage(RichTextBox textBox, string roomId);
         void ResetContainer(ChatUIElements textBox);
         ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData);

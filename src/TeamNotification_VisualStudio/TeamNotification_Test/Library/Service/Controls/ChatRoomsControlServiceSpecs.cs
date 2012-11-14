@@ -172,8 +172,8 @@ namespace TeamNotification_Test.Library.Service.Controls
 
             };
 
-            Because of = () =>
-                sut.HandlePaste(textBox, codeShower, args);
+//            Because of = () =>
+//                sut.HandlePaste(textBox, codeShower, args);
 
             It should_set_the_textbox_with_a_syntax_highlight_block = () =>
                 textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);

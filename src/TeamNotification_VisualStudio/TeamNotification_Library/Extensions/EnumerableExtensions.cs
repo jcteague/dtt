@@ -25,5 +25,16 @@ namespace TeamNotification_Library.Extensions
             var stringsCollection = collection.Select(x => x.ToString());
             return string.Join(separator, stringsCollection);
         }
+
+        public static IEnumerable<Tuple<T, R>> Zip<T, R>(this IEnumerable<T> collection, IEnumerable<R> secondCollection)
+        {
+            return collection.Zip(secondCollection, (a, b) => new Tuple<T, R>(a, b));
+        }
+
+        public static IEnumerable<Tuple<T, int>> ZipWithIndex<T>(this IList<T> collection)
+        {
+            var indexes = Enumerable.Range(0, collection.Count - 1);
+            return Zip(collection, indexes);
+        }
     }
 }

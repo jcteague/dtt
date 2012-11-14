@@ -14,6 +14,7 @@ using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
+using TeamNotification_Library.UI.Avalon;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -30,12 +31,13 @@ namespace TeamNotification_Library.Service.Controls
         private IHandleChatMessages chatMessagesService;
         private readonly IStoreDataLocally localStorageService;
         private readonly IHandleUserAccountEvents userAccountEvents;
+        private IHandleMixedEditorEvents mixedEditorEvents;
 
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         private readonly ISendChatMessages messageSender;
         private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor, IHandleMixedEditorEvents mixedEditorEvents)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -44,6 +46,7 @@ namespace TeamNotification_Library.Service.Controls
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
             this.messagesEditor = messagesEditor;
+            this.mixedEditorEvents = mixedEditorEvents;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
@@ -68,7 +71,7 @@ namespace TeamNotification_Library.Service.Controls
         }
 
 
-        public void HandlePaste(RichTextBox textBox, IShowCode codeShower)
+        public void HandlePaste(MixedTextEditor textBox, IShowCode codeShower, DataWasPasted pasteData)
         {
             var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
 
@@ -78,16 +81,12 @@ namespace TeamNotification_Library.Service.Controls
                 if(pastedCode.Trim() != "")
                 {
                     chatMessageModel.chatMessageBody.message = pastedCode;
-                    var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
-                    textBox.Dispatcher.Invoke(new Action( () =>{
-                        textBox.Document.Blocks.Clear();
-                        textBox.Document.Blocks.Add(block);
-                        textBox.CaretPosition = textBox.Document.ContentEnd;
-                    }));
-                }else
-                {
-                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+                    mixedEditorEvents.OnCodeAppended(this, new CodeWasAppended(chatMessageModel));
                 }
+            }
+            else
+            {
+                mixedEditorEvents.OnTextAppended(this, new TextWasAppended(pasteData.Text));
             }
         }
 

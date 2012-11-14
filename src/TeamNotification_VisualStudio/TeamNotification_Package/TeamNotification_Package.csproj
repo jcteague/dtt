@@ -161,7 +161,6 @@
     <Compile Include="Controls\AskingPaste.xaml.cs">
       <DependentUpon>AskingPaste.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Avalon\MixedTextEditor.cs" />
     <Compile Include="Controls\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>

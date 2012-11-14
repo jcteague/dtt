@@ -165,6 +165,7 @@
     <Compile Include="Service\Async\Models\ControlRenderWasRequested.cs" />
     <Compile Include="Service\Async\Models\DataWasPasted.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
+    <Compile Include="Service\Async\Models\TextWasAppended.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
     <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
     <Compile Include="Service\Async\UserAccountEvents.cs" />
@@ -330,6 +331,7 @@
     <Compile Include="Service\Update\PackageUpdateVerifier.cs" />
     <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="UI\Avalon\MixedTextEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

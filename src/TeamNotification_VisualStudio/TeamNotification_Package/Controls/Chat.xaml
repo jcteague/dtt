@@ -7,8 +7,9 @@
              xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package"
              xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
              xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls"
-             xmlns:Avalon="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls.Avalon"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" mc:Ignorable="d" 
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:Avalon="clr-namespace:TeamNotification_Library.UI.Avalon;assembly=TeamNotification_Library"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="424"
              Name="ChatWindow">
             <UserControl.Resources>

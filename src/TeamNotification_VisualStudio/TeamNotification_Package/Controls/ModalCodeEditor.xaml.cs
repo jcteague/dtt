@@ -62,7 +62,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
-            mixedEditorEvents.OnCodeAppend(this, new CodeWasAppended());
+//            mixedEditorEvents.OnCodeAppended(this, new CodeWasAppended());
         }
     }
 }

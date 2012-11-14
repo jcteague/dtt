@@ -141,12 +141,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
         {
-            logger.TryOrLog(() =>
-                                {
-                                    var chatMessageModel = e.ExtraData as ChatMessageModel;
-                                    Action<object> action = x => ((ModalCodeEditor) x).Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
-                                    userInterfaceEvents.OnControlRenderWasRequested(this, new ControlRenderWasRequested(typeof(ModalCodeEditor), e.ExtraData, action));
-                                });
+            logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, codeEditor, e))));
         }
 
 
