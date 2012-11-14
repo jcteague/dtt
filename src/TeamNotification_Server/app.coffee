@@ -47,7 +47,9 @@ allowCrossDomain = (req, res, next) ->
 
 configure_server_for = (application) ->
     application.configure ->
-        application.use allowCrossDomain
+        #application.use allowCrossDomain
+	    application.use(express.cookieParser())
+	    application.use(express.session( secret:'somthing too secret to be true ;)' ))
 
     application.configure('development', ->
         application.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

@@ -35,7 +35,7 @@ orm.then (db) ->
         id : {type: 'int'}
         user_id : {type: 'int'}
         confirmation_key: {type: 'string'}
-        created : {type:'date', default:'now()'}
+        created : {type:'datetime', default:'now()'}
         active : {type:'bit', default:1}
         
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})

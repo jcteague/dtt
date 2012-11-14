@@ -48,7 +48,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             url = "#{config.api.url}/#{path}"
             parameters = {
                 type: 'GET'
-                #contentType: 'application/json'
                 dataType: 'json'
                 url: url
                 success: @load_json

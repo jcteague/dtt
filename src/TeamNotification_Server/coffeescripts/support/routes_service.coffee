@@ -6,6 +6,20 @@ email_template = require('./email/templates/email_template')
 
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
+    
+    
+get_messages_from_flash = (flash_data) ->
+    messages = []
+    console.log 'flash_data'
+    console.log flash_data
+    if(flash_data?)
+        if flash_data.info?
+            for info in flash_data.info
+                messages.push(info)
+        if flash_data.error?
+            for error in flash_data.error
+                messages.push(error)
+    messages
 
 add_user_to_chat_room = (current_user, email, room_id) ->
     # TODO: How can we make this instances live outside and created within require?
@@ -59,3 +73,4 @@ module.exports =
     get_server_response: get_server_response
     add_user_to_chat_room: add_user_to_chat_room
     is_user_in_room: is_user_in_room
+    get_messages_from_flash: get_messages_from_flash

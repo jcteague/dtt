@@ -14,7 +14,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
         render: ->
             @$el.empty()
             if @model.has('template')
-                #@$el.append('<h2>Form</h2>')
                 @$el.append(@form_template_renderer.render(@model.attributes))
             @delegateEvents(@events)
             @
@@ -34,8 +33,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
             $('select').each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
-
-
             callback = (res) => 
                 @trigger 'response:received', res
                 if res.messages?

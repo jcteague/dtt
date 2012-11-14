@@ -4,6 +4,7 @@ user_validator = require('../../../support/validation/user_validator')
 user_callback_factory = require('../../../support/factories/user_callback_factory')
 routes_service = require('../../../support/routes_service')
 get_server_response = routes_service.get_server_response
+get_messages_from_flash = routes_service.get_messages_from_flash
 
 express = require('express')
 sha256 = require('node_hash').sha256
@@ -69,6 +70,8 @@ methods.login = (req, res) ->
                 {'name':'username', 'label':'Username', 'type':'string'}
                 {'name':'password', 'label':'Password', 'type':'password'}
             ]
+        server_messages:
+            get_messages_from_flash req.flash()
     res.json(r)
 
 methods.confirm = (req, res) ->
@@ -81,21 +84,16 @@ methods.confirm = (req, res) ->
         user_confirmation_key = user_confirmation_keys[0]
         user_confirmation_key.active = 0
         user_confirmation_key.user.enabled = 1
-        
         user_confirmation_key.user.save (err, saved_user) ->
             if !err
                 user_confirmation_key.save (err2, saved_uck) -> 
                     if(!err2)
-                        res.json(get_server_response(true, ["User has been confirmed"], "/user/login"))
+                        req.flash('info', "User has been confirmed")
+                        methods.login(req,res)
                     else
-                        res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
+                        res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"], "/user/login"))
             else
-                res.json(get_server_response(false, ["User confirmation was unsuccessful correct"], "/user/login"))
-            
-    #callback = (collection) ->
-    #    res.json(collection.to_json())
-    
-    #build('user_confirm_collection').for(user_id, confirm_key).fetch_to callback
+                res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"], "/user/login"))
 
 methods.authenticate = (req, res, next) ->
     values = req.body
@@ -105,7 +103,6 @@ methods.authenticate = (req, res, next) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
             auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
-            #res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:req.headers.authorization}})
             res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send({})
