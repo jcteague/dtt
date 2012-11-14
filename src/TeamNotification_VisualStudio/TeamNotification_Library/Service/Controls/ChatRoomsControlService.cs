@@ -1,31 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using ICSharpCode.AvalonEdit;
-using NLog;
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
-using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
-using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
-using Logger = TeamNotification_Library.Service.Logging.Logger;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -77,6 +65,30 @@ namespace TeamNotification_Library.Service.Controls
             var uri = configuration.Get().Uri +"user/"+ user.id;
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
+        }
+
+
+        public void HandlePaste(RichTextBox textBox, IShowCode codeShower)
+        {
+            var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+
+            if (chatMessageModel.chatMessageBody.IsCode)
+            {
+                var pastedCode = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
+                if(pastedCode.Trim() != "")
+                {
+                    chatMessageModel.chatMessageBody.message = pastedCode;
+                    var block = syntaxBlockUIContainerFactory.Get(chatMessageModel);
+                    textBox.Dispatcher.Invoke(new Action( () =>{
+                        textBox.Document.Blocks.Clear();
+                        textBox.Document.Blocks.Add(block);
+                        textBox.CaretPosition = textBox.Document.ContentEnd;
+                    }));
+                }else
+                {
+                    textBox.Dispatcher.Invoke(new Action(() => textBox.Document.Blocks.Clear()));
+                }
+            }
         }
 
         public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)

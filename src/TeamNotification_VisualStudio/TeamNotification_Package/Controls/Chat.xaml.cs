@@ -56,6 +56,10 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
         private IHandleSocketIOEvents socketIOEvents;
+
+        private IHandleMixedEditorEvents mixedEditorEvents;
+        private IHandleUIEvents userInterfaceEvents;
+
         private Dictionary<string, TableRowGroup> messagesList;
         private IProvideUser userProvider;
         private string roomId { get; set; }
@@ -66,7 +70,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private IShowCode codeEditor;
 
-        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)
         {
             chatIsEnabled = true;
 
@@ -78,6 +82,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.clipboardHandler = clipboardHandler;
             this.socketIOEvents = socketIOEvents;
             this.logger = logger;
+            this.mixedEditorEvents = mixedEditorEvents;
+            this.userInterfaceEvents = userInterfaceEvents;
             this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
@@ -109,6 +115,10 @@ namespace AvenidaSoftware.TeamNotification_Package
 
 //            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
 //            DataObject.AddPastingHandler(messageTextBox, OnPaste);
+
+            mixedEditorEvents.DataWasPasted += MixedEditorDataWasPasted;
+
+
             lastStamp = "";
 
             codePasteEvents.Clear();
@@ -127,17 +137,18 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                             subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
-
-//            CommandBinding pasteCommand = new CommandBinding(ApplicationCommands.Paste, SetResourcesForPaste, CanPaste);
-//            messageTextBox.CommandBindings.Add(pasteCommand);
-//            messageTextBox.TextArea.CommandBindings.Add(pasteCommand);
-
         }
 
-        private void CanPaste(object sender, CanExecuteRoutedEventArgs e)
+        private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
         {
-            e.CanExecute = true;
+            logger.TryOrLog(() =>
+                                {
+                                    var chatMessageModel = e.ExtraData as ChatMessageModel;
+                                    Action<object> action = x => ((ModalCodeEditor) x).Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
+                                    userInterfaceEvents.OnControlRenderWasRequested(this, new ControlRenderWasRequested(typeof(ModalCodeEditor), e.ExtraData, action));
+                                });
         }
+
 
         private void SetResourcesForPaste(object sender, ExecutedRoutedEventArgs e)
         {

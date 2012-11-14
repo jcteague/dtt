@@ -7,7 +7,8 @@
              xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package"
              xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
              xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls"
-             xmlns:Avalon="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls.Avalon" mc:Ignorable="d" 
+             xmlns:Avalon="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls.Avalon"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="424"
              Name="ChatWindow">
             <UserControl.Resources>
@@ -72,6 +73,7 @@
                 <ColumnDefinition Name="messageGridColumnDefinition2" Width="0" />
             </Grid.ColumnDefinitions>
                 <Avalon:MixedTextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />
+<!--                <avalonedit:TextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />-->
 <!--                <Avalon:MixedTextEditor Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" />-->
 <!--            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">-->
 <!--                <RichTextBox.Resources>-->
