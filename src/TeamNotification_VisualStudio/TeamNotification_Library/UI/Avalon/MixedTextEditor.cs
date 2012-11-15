@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
 using TeamNotification_Library.Extensions;
+using TeamNotification_Library.Models;
 using TeamNotification_Library.Service;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
@@ -34,7 +35,18 @@ namespace TeamNotification_Library.UI.Avalon
             TextArea.ActiveInputHandler = new MixedEditorTextAreaInputHandler(TextArea);
         }
 
-        private void ClearEditor(object sender, SendMessageRequestedWasRequested e)
+        public IEnumerable<ChatMessageBody> TextEditorMessages
+        {
+            get
+            {
+                var messages = new List<ChatMessageBody>();
+                messages.Add(new ChatMessageBody {message = Text});
+                
+                return messages;
+            }
+        }
+
+        private void ClearEditor(object sender, SendMessageWasRequested e)
         {
             Text = "";
             Resources.Remove("content");

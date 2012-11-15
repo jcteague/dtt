@@ -22,7 +22,6 @@ using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Logging.Providers;
-using TeamNotification_Library.Service.Messaging;
 using TeamNotification_Library.Service.Update;
 
 namespace AvenidaSoftware.TeamNotification_Package

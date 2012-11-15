@@ -4,9 +4,9 @@ namespace TeamNotification_Library.Service.Async
 {
     public class ChatEvents : AbstractEventHandler, IHandleChatEvents
     {
-        public event CustomEventHandler<SendMessageRequestedWasRequested> SendMessageRequested;
+        public event CustomEventHandler<SendMessageWasRequested> SendMessageRequested;
 
-        public void OnSendMessageRequested(object source, SendMessageRequestedWasRequested eventArgs)
+        public void OnSendMessageRequested(object source, SendMessageWasRequested eventArgs)
         {
             Handle(source, SendMessageRequested, eventArgs);
         }

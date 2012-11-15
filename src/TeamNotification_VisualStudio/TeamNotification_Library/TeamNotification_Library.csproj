@@ -166,7 +166,7 @@
     <Compile Include="Service\Async\Models\CodeWasAppended.cs" />
     <Compile Include="Service\Async\Models\ControlRenderWasRequested.cs" />
     <Compile Include="Service\Async\Models\DataWasPasted.cs" />
-    <Compile Include="Service\Async\Models\SendMessageRequestedWasRequested.cs" />
+    <Compile Include="Service\Async\Models\SendMessageWasRequested.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\TextWasAppended.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
@@ -181,6 +181,7 @@
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
     <Compile Include="Service\Async\ToolWindowEvents.cs" />
     <Compile Include="Service\Async\UserInterfaceEvents.cs" />
+    <Compile Include="Service\Chat\ChatMessageSender.cs" />
     <Compile Include="Service\Chat\ChatMessagesService.cs" />
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Service\Chat\Formatters\IParseMessagesForLinks.cs" />
     <Compile Include="Service\Chat\Formatters\MessageLinksParser.cs" />
     <Compile Include="Service\Chat\Formatters\NotificationMessageFormatter.cs" />
+    <Compile Include="Service\Chat\ISendChatMessages.cs" />
     <Compile Include="Service\Controls\IEditMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
@@ -265,8 +267,6 @@
     <Compile Include="Service\Http\IConnectToRedis.cs" />
     <Compile Include="Service\Http\IRedisConnection.cs" />
     <Compile Include="Service\Http\ISendHttpRequests.cs" />
-    <Compile Include="Service\Http\ISendChatMessages.cs" />
-    <Compile Include="Service\Http\ChatMessageSender.cs" />
     <Compile Include="Service\Http\ISerializeJSON.cs" />
     <Compile Include="Service\Http\ISubscribeToPubSub.cs" />
     <Compile Include="Service\Http\IWrapSocketIOClient.cs" />
@@ -358,6 +358,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Service\Messaging\" />
     <Folder Include="Service\Timing\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

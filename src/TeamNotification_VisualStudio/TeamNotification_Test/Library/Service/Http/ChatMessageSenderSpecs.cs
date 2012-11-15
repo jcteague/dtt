@@ -7,6 +7,7 @@ using Machine.Specifications;
 using Rhino.Mocks;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
+using TeamNotification_Library.Service.Chat;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.Mappers;
 using developwithpassion.specifications.rhinomocks;

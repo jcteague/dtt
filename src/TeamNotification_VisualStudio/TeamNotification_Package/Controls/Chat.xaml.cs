@@ -246,7 +246,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             applicationGlobalState.IsEditingCode = false;
 //            chatRoomControlService.SendMessage(messageTextBox, roomId);
-            chatEvents.OnSendMessageRequested(this, new SendMessageRequestedWasRequested(messageTextBox.Text, (SortedList<int, object>) messageTextBox.Resources["content"]));
+            chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.Text, messageTextBox.Resources, roomId));
         }
 
         private void PasteCode(object sender, EventArgs args)

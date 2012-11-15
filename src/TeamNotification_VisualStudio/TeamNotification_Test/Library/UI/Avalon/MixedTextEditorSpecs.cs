@@ -6,6 +6,7 @@ using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Highlighters.Avalon;
 using TeamNotification_Library.UI.Avalon;
 using developwithpassion.specifications.rhinomocks;
+using System.Linq;
 
 namespace TeamNotification_Test.Library.UI.Avalon
 {
@@ -30,13 +31,52 @@ namespace TeamNotification_Test.Library.UI.Avalon
             protected static IHandleChatEvents chatEvents;
         }
 
+        public class when_getting_the_text_editor_messages : Concern
+        {
+            public class and_the_text_editor_only_has_text
+            {
+                Establish context = () =>
+                {
+                    text = "this is some message that we currently\nhave\nand it fills some lines";
+                };
+
+                Because of = () =>
+                {
+                    sut.Text = text;
+                    result = sut.TextEditorMessages;
+                };
+
+                It should_return_a_list_of_the_text_in_the_result = () =>
+                    result.First().message.ShouldEqual(text);
+
+                private static string text;
+            }
+
+            public class and_the_text_editor_has_code
+            {
+                Establish context = () =>
+                {
+
+                };
+
+                Because of = () =>
+                {
+                    sut.Resources.Add("content", );
+                    result = sut.TextEditorMessages;
+                };
+            }
+
+            private static IEnumerable<ChatMessageBody> result;
+            private static IEnumerable<ChatMessageBody> expectedResult;
+        }
+
         public class when_the_send_message_requested_is_triggered : Concern
         {
             Establish context = () =>
             {
                 editorText = "this is the message";
                 contentResource = new SortedList<int, object>() {{1, "anything"}};
-                eventArgs = new SendMessageRequestedWasRequested(editorText, null);
+                eventArgs = new SendMessageWasRequested(editorText, null, null);
             };
 
             Because of = () =>
@@ -52,7 +92,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
             It should_cleat_the_resources_in_the_editor = () =>
                 sut.Resources.Contains("content").ShouldBeFalse();
 
-            private static SendMessageRequestedWasRequested eventArgs;
+            private static SendMessageWasRequested eventArgs;
             private static string editorText;
             private static SortedList<int, object> contentResource;
         }
