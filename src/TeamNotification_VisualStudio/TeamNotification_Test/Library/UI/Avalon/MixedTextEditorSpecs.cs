@@ -56,14 +56,17 @@ namespace TeamNotification_Test.Library.UI.Avalon
             {
                 Establish context = () =>
                 {
-
+                    var 
+                    contentResource = new SortedList<int, object>() {{1, "anything"}};
                 };
 
                 Because of = () =>
                 {
-                    sut.Resources.Add("content", );
+//                    sut.Resources.Add("content", null);
                     result = sut.TextEditorMessages;
                 };
+
+                private static SortedList<int, object> contentResource;
             }
 
             private static IEnumerable<ChatMessageBody> result;
