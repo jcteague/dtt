@@ -79,7 +79,7 @@ methods.confirm = (req, res) ->
     user_id = req.param('id')
     user_confirmation_keys = new Repository('UserConfirmationKey')
     user_confirmation_keys.find(confirmation_key:confirmation_key).then (user_confirmation_keys) ->
-        if(!user_confirmation_keys && !user_confirmation_keys[0])
+        if(!user_confirmation_keys || !user_confirmation_keys[0])
             res.json(get_server_response(false, ["Confirmation key is not correct"], "/user/login"))
         user_confirmation_key = user_confirmation_keys[0]
         user_confirmation_key.active = 0

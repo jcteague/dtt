@@ -35,7 +35,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                 data[$current.attr('name')] = $current.val()
             callback = (res) => 
                 @trigger 'response:received', res
-                if res.messages?
+                if res.server_messages?
                     if res.redirect? && res.redirect
                         window.location = "##{res.link}"
                     if res.link?

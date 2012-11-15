@@ -13,8 +13,6 @@ get_for_success = (req, res) ->
             enabled: 0
 
         registration_service.create_user(user_data).then (user) ->
-            console.log 'New USer'
-            console.log user
             template = email_template.for.confirmation.using
                     email: user.email
                     name: user.first_name + ' ' + user.last_name
@@ -22,7 +20,7 @@ get_for_success = (req, res) ->
             email_sender.send template
             res.json {
                 success: true
-                messages: ['User created successfully']
+                server_messages: ['User created successfully','Make sure to check your email for a confirmation link to activate your account']
                 data:
                     id: user.id
                     email: user.email
@@ -34,7 +32,7 @@ get_for_failure = (req, res) ->
     return (errors) ->
         res.json
             success: false
-            messages: errors
+            server_messages: errors
 
 module.exports =
     get_for_success: get_for_success

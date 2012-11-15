@@ -34,7 +34,7 @@ orm.then (db) ->
     _entity.UserConfirmationKey = db.define 'user_confirmation_keys'
         id : {type: 'int'}
         user_id : {type: 'int'}
-        confirmation_key: {type: 'string'}
+        confirmation_key: {type: 'string', length:255}
         created : {type:'datetime', default:'now()'}
         active : {type:'bit', default:1}
         
