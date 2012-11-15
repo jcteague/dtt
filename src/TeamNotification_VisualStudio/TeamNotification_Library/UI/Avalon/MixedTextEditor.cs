@@ -27,28 +27,35 @@ namespace TeamNotification_Library.UI.Avalon
 
         private void AppendCode(object sender, CodeWasAppended e)
         {
-            if (!Resources.Contains("content"))
-            {
-                Resources.Add("content", new SortedList<int, object>());
-            }
-            var content = (SortedList<int, object>) Resources["content"];
-            e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x => content.Add(LineCount + x.Item2, new TypeAndContent(x.Item1, e.ChatMessageModel.chatMessageBody.programminglanguage)));
-
-            Resources["content"] = content;
+            var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
+            UpdateContentResource(e, x => x.ChatMessageModel.chatMessageBody.message, x => new TypeAndContent(x.ChatMessageModel.chatMessageBody.message, programmingLanguage));
 
             Text += e.ChatMessageModel.chatMessageBody.message;
         }
 
         private void AppendText(object sender, TextWasAppended e)
         {
+            UpdateContentResource(e, x => x.Text, x => x.Text);
+            Text += e.Text;
+        }
+
+        private void UpdateContentResource<T, R>(T value, Func<T, string> messageGetter, Func<T, R> valueAtPositionGetter)
+        {
             if (!Resources.Contains("content"))
             {
                 Resources.Add("content", new SortedList<int, object>());
             }
             var content = (SortedList<int, object>) Resources["content"];
-            e.Text.Split('\n').ZipWithIndex().Each(x => content.Add(LineCount + x.Item2, x.Item1));
+            messageGetter(value).Split('\n').ZipWithIndex().Each(x =>
+                                                                       {
+                                                                           var position = LineCount + x.Item2;
+                                                                           var valueAtPosition = valueAtPositionGetter(value);
+                                                                           if (content.ContainsKey(position))
+                                                                               content[position] = valueAtPosition;
+                                                                           else
+                                                                               content.Add(position, valueAtPosition);
+                                                                       });
             Resources["content"] = content;
-            Text += e.Text;
         }
 
         protected override IVisualLineTransformer CreateColorizer(IHighlightingDefinition highlightingDefinition)

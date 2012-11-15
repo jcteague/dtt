@@ -30,13 +30,6 @@ namespace TeamNotification_Library.Service.Highlighters.Avalon
                 return false;
 
             var codeLines = content.Where(x => !(x.Value is string)).Select(x => x.Key);
-//            var codeLines = new List<int>();
-//            foreach (KeyValuePair<int, object> entry in content)
-//            {
-//                if (!(entry.Value is string))
-//                    codeLines.Add(entry.Key);
-//            }
-
             var line = context.VisualLine.LastDocumentLine.LineNumber;
             if (codeLines.Contains(line))
                 return true;
