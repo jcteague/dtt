@@ -16,17 +16,28 @@ namespace TeamNotification_Library.UI.Avalon
     public class MixedTextEditor : TextEditor
     {
         private IHandleMixedEditorEvents mixedEditorEvents;
+        private IHandleChatEvents chatEvents;
 
-        public MixedTextEditor() : this(Container.GetInstance<IHandleMixedEditorEvents>())
+        public MixedTextEditor() : this(Container.GetInstance<IHandleMixedEditorEvents>(), Container.GetInstance<IHandleChatEvents>())
         {
         }
 
-        public MixedTextEditor(IHandleMixedEditorEvents mixedEditorEvents) : base()
+        public MixedTextEditor(IHandleMixedEditorEvents mixedEditorEvents, IHandleChatEvents chatEvents) : base()
         {
             this.mixedEditorEvents = mixedEditorEvents;
+            this.chatEvents = chatEvents;
+
+            chatEvents.SendMessageRequested += ClearEditor;
             mixedEditorEvents.CodeWasAppended += AppendCode;
             mixedEditorEvents.TextWasAppended += AppendText;
+
             TextArea.ActiveInputHandler = new MixedEditorTextAreaInputHandler(TextArea);
+        }
+
+        private void ClearEditor(object sender, SendMessageRequestedWasRequested e)
+        {
+            Text = "";
+            Resources.Remove("content");
         }
 
         private void AppendCode(object sender, CodeWasAppended e)

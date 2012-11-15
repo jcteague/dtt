@@ -17,13 +17,44 @@ namespace TeamNotification_Test.Library.UI.Avalon
             Establish context = () =>
             {
                 mixedEditorEvents = new MixedEditorEvents();
+                chatEvents = new ChatEvents();
+
                 depends.on(mixedEditorEvents);
+                depends.on(chatEvents);
             };
 
             It should_contain_the_correct_text_area_input_handler = () =>
                 sut.TextArea.ActiveInputHandler.ShouldBeOfType<MixedEditorTextAreaInputHandler>();
 
             protected static IHandleMixedEditorEvents mixedEditorEvents;
+            protected static IHandleChatEvents chatEvents;
+        }
+
+        public class when_the_send_message_requested_is_triggered : Concern
+        {
+            Establish context = () =>
+            {
+                editorText = "this is the message";
+                contentResource = new SortedList<int, object>() {{1, "anything"}};
+                eventArgs = new SendMessageRequestedWasRequested(editorText, null);
+            };
+
+            Because of = () =>
+             {
+                sut.Text = editorText;
+                sut.Resources.Add("content", contentResource);
+                chatEvents.OnSendMessageRequested(null, eventArgs);
+             };
+
+            It should_clear_the_text_in_the_editor = () =>
+                sut.Text.ShouldBeEmpty();
+
+            It should_cleat_the_resources_in_the_editor = () =>
+                sut.Resources.Contains("content").ShouldBeFalse();
+
+            private static SendMessageRequestedWasRequested eventArgs;
+            private static string editorText;
+            private static SortedList<int, object> contentResource;
         }
 
         public class when_the_append_code_is_triggered : Concern

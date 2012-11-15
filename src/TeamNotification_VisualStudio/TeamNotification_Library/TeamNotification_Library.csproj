@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
     <Compile Include="Service\Async\BackgroundRunner.cs" />
+    <Compile Include="Service\Async\ChatEvents.cs" />
     <Compile Include="Service\Async\DialogMessagesEvents.cs" />
     <Compile Include="Service\Async\AlertMessageWasRequested.cs" />
     <Compile Include="Service\Async\ClipboardEvents.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Service\Async\CustomEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\DialogMessageWasRequested.cs" />
+    <Compile Include="Service\Async\IHandleChatEvents.cs" />
     <Compile Include="Service\Async\IHandleDialogMessages.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="Service\Async\Models\CodeWasAppended.cs" />
     <Compile Include="Service\Async\Models\ControlRenderWasRequested.cs" />
     <Compile Include="Service\Async\Models\DataWasPasted.cs" />
+    <Compile Include="Service\Async\Models\SendMessageRequestedWasRequested.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
     <Compile Include="Service\Async\Models\TextWasAppended.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />

@@ -56,6 +56,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
         private IHandleSocketIOEvents socketIOEvents;
+        private IHandleChatEvents chatEvents;
 
         private IHandleMixedEditorEvents mixedEditorEvents;
         private IHandleUIEvents userInterfaceEvents;
@@ -245,6 +246,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             applicationGlobalState.IsEditingCode = false;
 //            chatRoomControlService.SendMessage(messageTextBox, roomId);
+            chatEvents.OnSendMessageRequested(this, new SendMessageRequestedWasRequested(messageTextBox.Text, (SortedList<int, object>) messageTextBox.Resources["content"]));
         }
 
         private void PasteCode(object sender, EventArgs args)
