@@ -17,9 +17,13 @@ namespace TeamNotification_Library.UI.Avalon
     {
         private IHandleMixedEditorEvents mixedEditorEvents;
 
-        public MixedTextEditor() : base()
+        public MixedTextEditor() : this(Container.GetInstance<IHandleMixedEditorEvents>())
         {
-            mixedEditorEvents = Container.GetInstance<IHandleMixedEditorEvents>();
+        }
+
+        public MixedTextEditor(IHandleMixedEditorEvents mixedEditorEvents) : base()
+        {
+            this.mixedEditorEvents = mixedEditorEvents;
             mixedEditorEvents.CodeWasAppended += AppendCode;
             mixedEditorEvents.TextWasAppended += AppendText;
             TextArea.ActiveInputHandler = new MixedEditorTextAreaInputHandler(TextArea);
@@ -28,18 +32,18 @@ namespace TeamNotification_Library.UI.Avalon
         private void AppendCode(object sender, CodeWasAppended e)
         {
             var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
-            UpdateContentResource(e, x => x.ChatMessageModel.chatMessageBody.message, x => new TypeAndContent(x.ChatMessageModel.chatMessageBody.message, programmingLanguage));
+            UpdateContentResource(e, x => x.ChatMessageModel.chatMessageBody.message, x => new MixedEditorMessageContentAndProgrammingLanguage(x, programmingLanguage));
 
             Text += e.ChatMessageModel.chatMessageBody.message;
         }
 
         private void AppendText(object sender, TextWasAppended e)
         {
-            UpdateContentResource(e, x => x.Text, x => x.Text);
+            UpdateContentResource(e, x => x.Text, x => x);
             Text += e.Text;
         }
 
-        private void UpdateContentResource<T, R>(T value, Func<T, string> messageGetter, Func<T, R> valueAtPositionGetter)
+        private void UpdateContentResource<T, R>(T value, Func<T, string> messageGetter, Func<string, R> valueAtPositionGetter)
         {
             if (!Resources.Contains("content"))
             {
@@ -49,7 +53,7 @@ namespace TeamNotification_Library.UI.Avalon
             messageGetter(value).Split('\n').ZipWithIndex().Each(x =>
                                                                        {
                                                                            var position = LineCount + x.Item2;
-                                                                           var valueAtPosition = valueAtPositionGetter(value);
+                                                                           var valueAtPosition = valueAtPositionGetter(x.Item1);
                                                                            if (content.ContainsKey(position))
                                                                                content[position] = valueAtPosition;
                                                                            else
@@ -64,17 +68,17 @@ namespace TeamNotification_Library.UI.Avalon
                 throw new ArgumentNullException("highlightingDefinition");
             return new MixedHighlightingColorizer(highlightingDefinition.MainRuleSet, this);
         }
+    }
 
-        private class TypeAndContent
+    public class MixedEditorMessageContentAndProgrammingLanguage
+    {
+        public int ProgrammingLanguage { get; private set; }
+        public string Message { get; private set; }
+
+        public MixedEditorMessageContentAndProgrammingLanguage(string message, int programmingLanguage)
         {
-            public int ProgrammingLanguage { get; private set; }
-            public string Message { get; private set; }
-
-            public TypeAndContent(string message, int programmingLanguage)
-            {
-                ProgrammingLanguage = programmingLanguage;
-                Message = message;
-            }
+            ProgrammingLanguage = programmingLanguage;
+            Message = message;
         }
     }
 

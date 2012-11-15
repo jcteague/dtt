@@ -132,6 +132,7 @@
     <Compile Include="Library\Service\Update\PackageUpdatesDownloaderSpecs.cs" />
     <Compile Include="Library\Service\Update\PackageUpdatesInstallerSpecs.cs" />
     <Compile Include="Library\Service\Update\PackageUpdateVerifierSpecs.cs" />
+    <Compile Include="Library\UI\Avalon\MixedTextEditorSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubDocument.cs" />
     <Compile Include="Stubs\StubProjectItem.cs" />
