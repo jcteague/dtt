@@ -33,7 +33,7 @@ namespace TeamNotification_Library.Extensions
 
         public static IEnumerable<Tuple<T, int>> ZipWithIndex<T>(this IList<T> collection)
         {
-            var indexes = Enumerable.Range(0, collection.Count - 1);
+            var indexes = Enumerable.Range(0, collection.Count);
             return Zip(collection, indexes);
         }
     }

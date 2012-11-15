@@ -27,26 +27,35 @@ namespace TeamNotification_Library.UI.Avalon
 
         private void AppendCode(object sender, CodeWasAppended e)
         {
-//            if (!Resources.Contains("content"))
-//            {
-//                Resources.Add("content", new OrderedDictionary<int, TypeAndContent>());
-//            }
-//
-//            var content = (OrderedDictionary) Resources["content"];
-//            var lines = e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex();
-////            content.Add(new KeyValuePair<int, TypeAndContent>(1, new TypeAndContent(e.ChatMessageModel.chatMessageBody.message, e.ChatMessageModel.chatMessageBody.programminglanguage)));
+            if (!Resources.Contains("content"))
+            {
+                Resources.Add("content", new SortedList<int, object>());
+            }
+            var content = (SortedList<int, object>) Resources["content"];
+            e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x => content.Add(LineCount + x.Item2, new TypeAndContent(x.Item1, e.ChatMessageModel.chatMessageBody.programminglanguage)));
+
+            Resources["content"] = content;
+
+            Text += e.ChatMessageModel.chatMessageBody.message;
         }
 
         private void AppendText(object sender, TextWasAppended e)
         {
-            int a = 0;
+            if (!Resources.Contains("content"))
+            {
+                Resources.Add("content", new SortedList<int, object>());
+            }
+            var content = (SortedList<int, object>) Resources["content"];
+            e.Text.Split('\n').ZipWithIndex().Each(x => content.Add(LineCount + x.Item2, x.Item1));
+            Resources["content"] = content;
+            Text += e.Text;
         }
 
         protected override IVisualLineTransformer CreateColorizer(IHighlightingDefinition highlightingDefinition)
         {
             if (highlightingDefinition.IsNull())
                 throw new ArgumentNullException("highlightingDefinition");
-            return new MixedHighlightingColorizer(highlightingDefinition.MainRuleSet);
+            return new MixedHighlightingColorizer(highlightingDefinition.MainRuleSet, this);
         }
 
         private class TypeAndContent
