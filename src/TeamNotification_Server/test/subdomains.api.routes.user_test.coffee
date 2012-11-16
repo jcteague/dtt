@@ -12,7 +12,7 @@ express_mock =
 
 routes_service_mock =
     build: sinon.stub()
-
+    get_messages_from_flash: sinon.stub()
 user_validator_mock =
     validate: sinon.stub()
 
@@ -168,10 +168,14 @@ describe 'User', ->
             links = null
             href = null
             beforeEach (done) ->
-                req = null
+                req = 
+                    flash: ()->
+                        return ""
                 res = 
                     json: (json) ->
                         json_data = json
+                routes_service_mock.get_messages_from_flash.withArgs("").returns([])
+                
                 user.methods.login(req, res)
                 template = json_data['template']
                 links = json_data['links']

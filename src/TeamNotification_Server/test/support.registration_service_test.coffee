@@ -18,27 +18,40 @@ chat_room_user_repository_mock =
     save: sinon.stub()
 repository_class_mock.withArgs('ChatRoomUser').returns(chat_room_user_repository_mock)
 
+user_confirmation_key_repository_mock =
+    save: sinon.stub()
+repository_class_mock.withArgs('UserConfirmationKey').returns(user_confirmation_key_repository_mock)
+
 invitation_status_updater_mock =
     update: sinon.stub()
+fake_node_hash = 
+    sha256: sinon.stub()
 
+fake_routes_service =
+    generate_confirmation_key: sinon.stub()
+    
 sut = module_loader.require('../support/registration_service', {
     requires:
         './repository': repository_class_mock
         './invitations/invitations_status_updater': invitation_status_updater_mock
+        'node_hash' : fake_node_hash
+        './routes_service' : fake_routes_service
 })
 
 describe 'Registration Service', ->
 
-    result = user_data = created_user = invitation1 = invitation2 = null
-    user_save_spy = null
+    result = user_data = created_user = invitation1 = invitation2 = fake_current_date = null
+    user_save_spy = clock_control = null
 
     make_promise_for = (return_value, spy = null, args_to_verify = null) ->
         spy(args_to_verify) if spy?
         Q.fcall () -> return_value
 
     describe 'create_user', ->
-
+        
         beforeEach (done) ->
+            fake_hash = 'A fake hash'            
+            
             user_data =
                 first_name: 'foo'
                 email: 'foo@bar.com'
@@ -47,7 +60,11 @@ describe 'Registration Service', ->
                 id: 2
                 first_name: 'foo'
                 email: 'foo@bar.com'
+                confirmation_key: fake_hash
+                enabled:0
 
+            fake_routes_service.generate_confirmation_key.withArgs(user_data.email).returns(fake_hash)
+           # clock_control.tick(fake_current_date)
             user_save_spy = sinon.spy()
             user_promise = make_promise_for created_user, user_save_spy, user_data
             user_repository_mock.save.returns(user_promise)

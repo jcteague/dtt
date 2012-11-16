@@ -91,7 +91,7 @@ describe 'Routes Service', ->
                         callback(users)
                 #sut.get_server_response = sinon.stub()
                 #sut.get_server_response.withArgs(true,["user added"],"/room/#{room_id}/invitations/").returns(expected_value)
-                expected_value = {success:true, messages:["user added"], link:"/room/#{room_id}/users/", redirect:false}
+                expected_value = {success:true, server_messages:["user added"], link:"/room/#{room_id}/users/", redirect:false}
                 users_repository.find.withArgs(email: user_email).returns(user_promise)
                 done()
 
@@ -133,7 +133,7 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the not sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"], link: "/user/#{user.id}/", redirect:false})
+                    sinon.assert.calledWith(deferred.resolve, {success: false, server_messages: ["user is already in the room"], link: "/user/#{user.id}/", redirect:false})
                     done()
 
             describe 'and the user is already in the room', ->
@@ -152,7 +152,7 @@ describe 'Routes Service', ->
                     done()
 
                 it 'should resolve the promise with the not sucessful message', (done) ->
-                    sinon.assert.calledWith(deferred.resolve, {success: false, messages: ["user is already in the room"], link: "/user/#{user.id}/", redirect:false})
+                    sinon.assert.calledWith(deferred.resolve, {success: false, server_messages: ["user is already in the room"], link: "/user/#{user.id}/", redirect:false})
                     done()
 
         describe 'and the user does not exist', ->
@@ -175,7 +175,7 @@ describe 'Routes Service', ->
 
                 invitation_email_template = 'blah invitation email'
                 email_template_mock.for.invitation.using.withArgs(email: inexistent_email, chat_room: chat_room).returns(invitation_email_template)
-                expected_response = {success: false, messages: ["An email invitation has been sent to #{inexistent_email}"], link: "/room/#{room_id}/invitations/", redirect:false}
+                expected_response = {success: false, server_messages: ["An email invitation has been sent to #{inexistent_email}"], link: "/room/#{room_id}/invitations/", redirect:false}
                 result = sut.add_user_to_chat_room(logged_in_user, inexistent_email, room_id)
                 done()
 

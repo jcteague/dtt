@@ -3,15 +3,18 @@ Repository = require('./repository')
 CollectionActionResolver = require('./collection_action_resolver')
 email_sender = require('./email/email_sender')
 email_template = require('./email/templates/email_template')
+sha256 = require('node_hash').sha256
 
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
-    
+
+generate_confirmation_key = (key) ->
+    d = new Date().getTime().toString()
+    console.log d
+    sha256(d+key)
     
 get_messages_from_flash = (flash_data) ->
     messages = []
-    console.log 'flash_data'
-    console.log flash_data
     if(flash_data?)
         if flash_data.info?
             for info in flash_data.info
@@ -74,3 +77,4 @@ module.exports =
     add_user_to_chat_room: add_user_to_chat_room
     is_user_in_room: is_user_in_room
     get_messages_from_flash: get_messages_from_flash
+    generate_confirmation_key: generate_confirmation_key
