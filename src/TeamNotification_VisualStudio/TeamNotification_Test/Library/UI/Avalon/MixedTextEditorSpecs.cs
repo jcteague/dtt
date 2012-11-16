@@ -106,6 +106,59 @@ namespace TeamNotification_Test.Library.UI.Avalon
                 private static SortedList<int, object> contentResource;
             }
 
+            public class and_the_text_editor_has_text_and_code
+            {
+                Establish context = () =>
+                {
+                    contentResource = new SortedList<int, object>();
+                    var codeLine1 = new MixedEditorLineData("class A {", 1, "solution", "project", "document", 3, 4);
+                    var codeLine2 = new MixedEditorLineData(" ", 1, "solution", "project", "document", 4, 4);
+                    var codeLine3 = new MixedEditorLineData("\tstatic string Hello() {", 1, "solution", "project", "document", 5, 4);
+                    contentResource.Add(1, codeLine1);
+                    contentResource.Add(2, codeLine2);
+                    contentResource.Add(3, codeLine3);
+
+                    editorTextAtTimeOfCall = "class AnotherClass {\n\n\tstatic string Hello() {";
+
+                    var chatMessageBody = new ChatMessageBody
+                                              {
+                                                  message = editorTextAtTimeOfCall,
+                                                  programminglanguage = codeLine1.ProgrammingLanguage,
+                                                  solution = codeLine1.Solution,
+                                                  project = codeLine1.Project,
+                                                  document = codeLine1.Document,
+                                                  line = codeLine1.Line,
+                                                  column = codeLine1.Column
+                                              };
+                    expectedResult.Add(chatMessageBody);
+                };
+
+                Because of = () =>
+                {
+                    sut.Text = editorTextAtTimeOfCall;
+                    sut.Resources.Add("content", contentResource);
+                    result = sut.GetTextEditorMessages();
+                };
+
+                It should_return_a_list_of_chat_message_bodies_containing_the_code_as_one_chat_message_body = () =>
+                    result.First().ShouldMatch(x => is_matching(x, expectedResult.First()));
+
+                private static bool is_matching(ChatMessageBody value, ChatMessageBody expectedValue)
+                {
+                    return value.message == expectedValue.message &&
+                           value.programminglanguage == expectedValue.programminglanguage &&
+                           value.solution == expectedValue.solution &&
+                           value.project == expectedValue.project &&
+                           value.document == expectedValue.document &&
+                           value.line == expectedValue.line &&
+                           value.column == expectedValue.column;
+
+                }
+
+                private static SortedList<int, object> contentResource;
+                private static string editorTextAtTimeOfCall;
+            }
+
             private static IEnumerable<ChatMessageBody> result;
             private static IList<ChatMessageBody> expectedResult;
         }

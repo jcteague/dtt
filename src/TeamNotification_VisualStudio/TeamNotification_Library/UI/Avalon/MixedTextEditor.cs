@@ -77,6 +77,36 @@ namespace TeamNotification_Library.UI.Avalon
             return result;
         }
 
+//        private SortedList<int, object> GetMergedContentResource(SortedList<int, object> contentResource, string text)
+//        {
+//            var result = CloneSortedList(contentResource);
+//            text.Split('\n').ZipWithIndex().Each(x =>
+//                                                     {
+//                                                         if (!x.Item1.IsNullOrWhiteSpace())
+//                                                         {
+//                                                            if (result.ContainsKey(x.Item2))
+//                                                            {
+//                                                                var currentValue = result[x.Item2];
+//                                                                if (!(currentValue is string))
+//                                                                {
+//                                                                    ((MixedEditorLineData) currentValue).Message = x.Item1;
+//                                                                    result[x.Item2] = currentValue;
+//                                                                }
+//                                                                else
+//                                                                {
+//                                                                    result[x.Item2] = x.Item1;
+//                                                                }
+//                                                            }
+//                                                            else
+//                                                            {
+//                                                                result.Add(x.Item2, x.Item1);
+//                                                            }
+//                                                             result.AddOrUpdate(x.Item2 + 1, x.Item1);
+//                                                         }
+//                                                     });
+//            return result;
+//        }
+
         private static SortedList<int, object> CloneSortedList(SortedList<int, object> contentResource)
         {
             if (contentResource.IsNull())
