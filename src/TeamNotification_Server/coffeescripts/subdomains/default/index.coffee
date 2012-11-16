@@ -1,28 +1,14 @@
 express = require('express')
-CORS = require('connect-xcors')
-cors_options = {}
-
 config = require('./../../config')()
 
 Authentication = require('./../../support/authentication')
 auth = new Authentication()
 
-app = module.exports = express.createServer(CORS(cors_options))
+app = module.exports = express.createServer()
 
 logger = require('./../../support/logging/logger')
 winston = require('winston')
 express_winston = require('express-winston')
-
-allowCrossDomain = (req, res, next) ->
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    res.header('Access-Control-Allow-Credentials', true)
-    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
-
-    if 'OPTIONS' is req.method
-        res.send 200
-    else
-        next()
 
 app.configure ->
     logger.info 'Starting the default module'
@@ -33,9 +19,10 @@ app.configure ->
     app.use(express.bodyParser())
     app.use(express.methodOverride())
 
+    app.use(auth.initializeAuth())
+
     app.use(express.static(__dirname + '/../../public'))
 
-    app.use allowCrossDomain
     app.use(app.router)
 
     log_errors = (err, req, res, next) ->
@@ -60,10 +47,7 @@ app.configure ->
         ]
     }))
 
-app.all '*', (req, res, next) ->
-    unless req.secure
-        res.redirect "#{config.site.surl}#{req.url}"
-    next()
+app.all '*', auth.authenticate
 
 app.configure('development', ->
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

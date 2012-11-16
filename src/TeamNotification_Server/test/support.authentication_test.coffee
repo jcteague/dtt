@@ -153,12 +153,12 @@ describe 'Authentication', ->
                 passport_mock.authenticate.reset()
                 sinon.stub(sut, 'is_whitelisted').withArgs(req.path).returns(false)
                 authentication_func = sinon.spy()
-                passport_mock.authenticate.withArgs('basic', session: false, failureRedirect: '/user/login').returns(authentication_func)
+                passport_mock.authenticate.withArgs('basic', session: false, failureRedirect: '/api/user/login').returns(authentication_func)
                 sut.authenticate(req, res, next)
                 done()
 
             it 'should authenticate with basic', (done) ->
-                sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false, failureRedirect: '/user/login')
+                sinon.assert.calledWith(passport_mock.authenticate, 'basic', session: false, failureRedirect: '/api/user/login')
                 done()
 
             it 'should call the authentication function with the request, response and next', (done) ->

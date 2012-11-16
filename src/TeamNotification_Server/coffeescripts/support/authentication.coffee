@@ -29,7 +29,8 @@ class Authentication
         else
             if typeof request.cookies != 'undefined' && typeof request.cookies.authtoken != 'undefined'
                 request.headers.authorization = request.cookies.authtoken
-            passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)
+            #passport.authenticate('basic', {session:false, failureRedirect: '/user/login' })(request, response, next)
+            passport.authenticate('basic', {session:false, failureRedirect: '/api/user/login' })(request, response, next)
 
     is_whitelisted: (path) ->
         for allowed_path in whitelisted_paths

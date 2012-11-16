@@ -6,7 +6,7 @@
 
         public string Uri
         {
-            get { return Properties.Settings.Default.Site + _href; }
+            get { return Properties.Settings.Default.ApiSite + _href; }
             set { _href = value; }
         }
     }

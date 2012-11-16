@@ -1,0 +1,164 @@
+#
+# An example Varnish configuration.
+#
+# This is not suitable for production use - or at least not without some
+# thought about everything else you'd want Varnish to do. Don't just plug
+# in a Varnish configuration found online without looking through it 
+# carefully and understanding what you are trying to achieve.
+#
+# Important note: this configuration disables all Varnish caching! It
+# only illustrates how to use Varnish to proxy websocket and non-websocket
+# traffic arriving at a single port.
+#
+# For more comprehensive Varnish configurations that handle additional
+# functionality unrelated to Node.js and websockets, but which is
+# nonetheless absolutely vital for any serious use of Varnish in a 
+# production environment, you might look at:
+#
+# https://github.com/mattiasgeniar/varnish-3.0-configuration-templates/
+#
+ 
+# -----------------------------------
+# Backend definitions.
+# -----------------------------------
+ 
+# Nginx.
+backend default {
+  .host = "127.0.0.1";
+  .port = "81";
+  .connect_timeout = 5s;
+  .first_byte_timeout = 15s;
+  .between_bytes_timeout = 15s;
+  .max_connections = 400;
+}
+# Node.js.
+backend node {
+  .host = "127.0.0.1";
+  .port = "3000";
+  .connect_timeout = 1s;
+  .first_byte_timeout = 2s;
+  .between_bytes_timeout = 15s;
+  .max_connections = 400;
+}
+ 
+# -----------------------------------
+# Varnish Functions
+# -----------------------------------
+ 
+# Set a local ACL.
+acl localhost {
+  "localhost";
+}
+ 
+sub vcl_recv {
+  # Before anything else, redirect all HTTP traffic arriving from the outside
+  # world to port 80 to port 443.
+  #
+  # This works because we are using Stunnel to terminate HTTPS connections and
+  # pass them as HTTP to Varnish. These will arrive with client.ip = localhost
+  # and with an X-Forward-For header - you will only see both of those 
+  # conditions for traffic passed through Stunnel. 
+  #
+  # We want to allow local traffic to access port 80 directly, however - so 
+  # check client.ip against the local ACL and the existence of 
+  # req.http.X-Forward-For.
+  #
+  # See vcl_error() for the actual redirecting.
+  if (!req.http.X-Forward-For && client.ip !~ localhost) {
+    set req.http.x-Redir-Url = "https://" + req.http.host + req.url;
+    error 750 req.http.x-Redir-Url;
+  }
+   
+  set req.backend = default;
+  set req.grace = 30s;
+   
+  # Pass the correct originating IP address for the backends
+  if (req.restarts == 0) {
+    if (req.http.X-Forwarded-For) {
+      set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
+    } else {
+      set req.http.X-Forwarded-For = client.ip;
+    }
+  }
+   
+  # Remove any port that might be stuck in the hostname.
+  set req.http.Host = regsub(req.http.Host, ":[0-9]+", "");
+   
+  # Pipe websocket connections directly to Node.js.
+  if (req.http.Upgrade ~ "(?i)websocket") {
+    set req.backend = node;
+    return (pipe);
+  }
+  # Requests made to these paths relate to websockets - pass does not seem to
+  # work.
+  if (req.url ~ "^/socket.io") {
+    set req.backend = node;
+    return (pipe);
+  }
+   
+  # Send everything else known to be served by Node.js to the Node.js
+  # backend.
+  if (req.url ~ "^/served/by/express/") {
+    set req.backend = node;
+  }
+ 
+  # Only deal with "normal" request types.
+  if (req.request != "GET" &&
+    req.request != "HEAD" &&
+    req.request != "PUT" &&
+    req.request != "POST" &&
+    req.request != "TRACE" &&
+    req.request != "OPTIONS" &&
+    req.request != "DELETE") {
+    /* Non-RFC2616 or CONNECT which is weird. */
+    return (pipe);
+  }
+  # And only deal with GET and HEAD by default.
+  if (req.request != "GET" && req.request != "HEAD") {
+    return (pass);
+  }
+ 
+  # Normalize Accept-Encoding header. This is straight from the manual: 
+  # https://www.varnish-cache.org/docs/3.0/tutorial/vary.html
+  if (req.http.Accept-Encoding) {
+    if (req.url ~ "\.(jpg|png|gif|gz|tgz|bz2|tbz|mp3|ogg)$") {
+      # No point in compressing these.
+      remove req.http.Accept-Encoding;
+    } elseif (req.http.Accept-Encoding ~ "gzip") {
+      set req.http.Accept-Encoding = "gzip";
+    } elseif (req.http.Accept-Encoding ~ "deflate") {
+      set req.http.Accept-Encoding = "deflate";
+    } else {
+      # Unkown algorithm.
+      remove req.http.Accept-Encoding;
+    }
+  }
+   
+  if (req.http.Authorization || req.http.Cookie) {
+    # Not cacheable by default.
+    return (pass);
+  }
+   
+  # If we were caching at all, then this next line would return lookup rather
+  # than pass. Return pass disables all caching for all backends.
+  # return (lookup);
+  return (pass);
+}
+ 
+sub vcl_error {
+  # For redirecting traffic from HTTP to HTTPS - see where error 750 is set in
+  # vcl_recv().
+  if (obj.status == 750) {
+    set obj.http.Location = obj.response;
+    set obj.status = 302;
+    return (deliver);
+  }
+}
+ 
+sub vcl_pipe {
+  # To keep websocket traffic happy we need to copy the upgrade header.
+  if (req.http.upgrade) {
+    set bereq.http.upgrade = req.http.upgrade;
+  }
+  return (pipe);
+}

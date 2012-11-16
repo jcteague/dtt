@@ -1,0 +1,13 @@
+default:
+  adapter: postgresql
+  database: dtt_main
+  username: postgres
+  password: 1234
+  host: localhost
+
+test:
+  adapter: postgresql
+  database: dtt_test
+  username: postgres
+  password: 1234
+  host: localhost

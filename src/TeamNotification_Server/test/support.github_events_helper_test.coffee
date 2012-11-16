@@ -35,7 +35,7 @@ describe 'Github Events Helper', ->
                 events: events
                 config:
                     content_type: "json"
-                    url:"#{config.site.url}/github/events/#{room_key}"
+                    url:"#{config.site.surl}/github/events/#{room_key}"
 
             promised_http_requester_mock.request.withArgs(JSON.stringify(post_data), sinon.match.object).returns(Q.resolve('promise'))
 

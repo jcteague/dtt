@@ -15,6 +15,9 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
+            @form_view.on 'messages:display', (messages) =>
+                @trigger 'messages:display', messages
+
         
         check_login: (response) ->
             res = $.parseJSON response

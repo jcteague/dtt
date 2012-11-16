@@ -9,6 +9,10 @@ a {
 
 label { vertical-align: top;}
 
+label.error {
+    color: #FF0000;
+}
+
 /*textarea { vertical-align: bottom;}*/
 
 /*input { vertical-align: top; }*/
@@ -44,4 +48,8 @@ pre {
     margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+span.chat_message_date {
+    white-space: nowrap;
 }

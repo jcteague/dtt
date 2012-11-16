@@ -1,0 +1,18 @@
+nginx:
+  host: dtt.local
+  api_server_name: api.dtt.local
+  port: 3000
+  certificates_path: /home/eatskolnikov/yacketyapp.com/certificates
+  public_path: /home/eatskolnikov/workspace/dtt/src/TeamNotification_Server/public
+  sites_available_path: /etc/nginx/sites-available/
+  sites_enabled_path: /etc/nginx/sites-enabled/
+
+stunnel:
+  config_path: /etc/stunnel
+  certificates_path: /home/eatskolnikov/yacketyapp.com/certificates
+  default: /etc/default/stunnel4
+
+varnish:
+  node_port: 3000
+  config_path: /etc/varnish
+  default: /etc/default/varnish

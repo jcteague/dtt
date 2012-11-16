@@ -50,7 +50,7 @@ namespace TeamNotification_Test.Library.Service.Update
                 Version versionOnServer = new Version(2, 0);
                 repositoryPackageHeader.Stub(x => x.Version).Return(versionOnServer);
 
-                repositoryManager.Stub(x => x.Download(Arg<IRepositoryEntry>.Matches(y => y.DownloadUrl == GlobalConstants.PackageDownloadUrl))).Return(repositoryUpdatedPackage);
+                repositoryManager.Stub(x => x.Download(Arg<IRepositoryEntry>.Matches(y => y.DownloadUrl.Contains(GlobalConstants.PackageDownloadUrl)))).Return(repositoryUpdatedPackage);
             };
 
             Because of = () =>
@@ -73,7 +73,7 @@ namespace TeamNotification_Test.Library.Service.Update
                 Version versionOnServer = new Version(1, 0);
                 repositoryPackageHeader.Stub(x => x.Version).Return(versionOnServer);
 
-                repositoryManager.Stub(x => x.Download(Arg<IRepositoryEntry>.Matches(y => y.DownloadUrl == GlobalConstants.PackageDownloadUrl))).Return(repositoryUpdatedPackage);
+                repositoryManager.Stub(x => x.Download(Arg<IRepositoryEntry>.Matches(y => y.DownloadUrl.Contains(GlobalConstants.PackageDownloadUrl)))).Return(repositoryUpdatedPackage);
             };
 
             Because of = () =>

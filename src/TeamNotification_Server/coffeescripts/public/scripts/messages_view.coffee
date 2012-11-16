@@ -3,7 +3,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
     class MessagesView extends GeneralView
         id: 'messages-container'
         added_code: false
-        
+
         initialize: ->
             @authToken = $.cookie 'authtoken'
             @messages_table = $("<table/>")
@@ -22,9 +22,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             path = "#{config.api.url}#{@model.get('href')}/since/#{last_timestamp}"
             @get_cross_domain_json path, (data) => 
                 @add_message(@serialize_message(message)) for message in data.messages.slice(1)
-        
-        
-        
+
         parsing_links: (message) ->
             message_words =  message.split ' '
             final_message = ''
@@ -45,6 +43,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 contentType: 'application/json'
                 dataType: 'json'
                 url: url
+                cache: false
                 headers:
                     authorization: $.cookie 'authtoken'
                 success: callback
@@ -89,15 +88,11 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 newDate = new Date()
                 me.$el.empty()
                 for message in me.model.attributes.messages
-                
                     me.messages_table.append me.render_message message, newDate
-                
-                #    me.$el.append me.render_message message, newDate
                 me.$el.append me.messages_table
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
             if @model.has('messages')
-                #setInterval((() -> update_dates() ), 10000)
                 url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
                 socket.on 'message', @add_message
@@ -175,7 +170,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             escaped_message = @parsing_links parsedBody.message # $('<div/>').text(parsedBody.message).html()
             build_new_row = (name, message, time) ->
-                return "<tr class='new'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
+                return "<tr class='new_message'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
             
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
@@ -188,5 +183,5 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
                 return build_new_row($name_span.html(), add_links(parsedBody.message), date) #add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b></td></tr>")
-            return build_new_row($name_span.html(), parsedBody.message, date)
+            return build_new_row($name_span.html(), escaped_message, date)
             #("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")

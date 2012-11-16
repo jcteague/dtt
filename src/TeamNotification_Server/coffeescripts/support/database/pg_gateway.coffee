@@ -11,5 +11,17 @@ open_normal_connection = (callback) ->
 
         callback(client)
 
+open_promise = ->
+    deferred = q.defer()
+    pg.connect db_config.connection_string, (err, client) ->
+        if err
+            logger.error "Could not connect to POSTGRES database using #{db_config.connection_string}.", {error: err}
+            return
+
+        deferred.resolve client
+
+    deferred.promise
+
 module.exports =
     open: open_normal_connection
+    open_promise: open_promise

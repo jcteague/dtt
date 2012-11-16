@@ -1,9 +1,8 @@
 expect = require('expect.js')
 sinon = require('sinon')
-{db: db, entities: entities, server: server, handle_in_series: handle_in_series} = require('./helpers/specs_helper')
+context = require('./helpers/context')
 
-module_loader = require('sandboxed-module')
-Browser = require('zombie').Browser
+{db: db, entities: entities, server: server, handle_in_series: handle_in_series, config: config} = require('./helpers/specs_helper')
 
 users =
     name: 'users'
@@ -14,6 +13,7 @@ users =
             last_name: "'bar'"
             email: "'foo@bar.com'"
             password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
+            enabled:1
         },
         {
             id: 2
@@ -21,6 +21,7 @@ users =
             last_name: "'ed 3'"
             email: "'ed@es.com'"
             password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
+            enabled:1
         }
     ]
 
@@ -48,30 +49,24 @@ chat_room_users =
         }
     ]
 
-describe 'Client Room', ->
+context.for.integration_test() (browser) ->
 
-    describe 'Set Up', ->
-
-        browser = null
+    describe 'Client Room', ->
 
         beforeEach (done) ->
-            browser = new Browser()
-            browser.authenticate().basic('foo@bar.com', '1234')
-            handle_in_series server.start(), db.clear('users', 'chat_room', 'chat_room_users'), db.create(entities.users, entities.chat_rooms, entities.chat_room_users), db.save(users, chat_rooms, chat_room_users), done
+            handle_in_series server.start(), db.save(users, chat_rooms, chat_room_users), done
 
         describe 'When a user visits the #/room page and he is the owner of the room', ->
-
             beforeEach (done) ->
                 browser.
-                    visit('https://dtt.local:3001/#/room/1').
+                    visit("#{config.site.surl}/#/room/1").
                     then(done, done)
 
-            xit 'should contain an anchor to the room manage members', (done) ->
-                console.log browser.html()
+            it 'should contain an anchor to the room manage members', (done) ->
                 expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
                 done()
 
-            xit 'should contain a anchor to the room messages', (done) ->
+            it 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/1/messages"]')).to.not.be.empty()
                 done()
 
@@ -79,13 +74,13 @@ describe 'Client Room', ->
 
             beforeEach (done) ->
                 browser.
-                    visit('https://dtt.local:3001/#/room/2').
+                    visit("#{config.site.surl}/#/room/2").
                     then(done, done)
 
-            xit 'should not contain an anchor to the room manage members', (done) ->
+            it 'should not contain an anchor to the room manage members', (done) ->
                 expect(browser.html('a[href="#/room/2/users"]')).to.be.empty()
                 done()
 
-            xit 'should contain a anchor to the room messages', (done) ->
+            it 'should contain a anchor to the room messages', (done) ->
                 expect(browser.html('a[href="#/room/2/messages"]')).to.not.be.empty()
                 done()

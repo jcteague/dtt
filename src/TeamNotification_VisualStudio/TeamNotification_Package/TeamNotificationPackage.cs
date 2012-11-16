@@ -162,13 +162,18 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             ObjectFactory.GetInstance<IConfigureLogging>().Initialize();
 
-            ObjectFactory.GetInstance<ILog>().TryOrLog(() =>
+            // The user must be allowed to use VS even if it's not possible to check for updates or use the plugin
+            try
             {
-                var updateManager = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
-                var repoManager = Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
+                var updateManager = Package.GetGlobalService(typeof (SVsExtensionManager)) as IVsExtensionManager;
+                var repoManager = Package.GetGlobalService(typeof (SVsExtensionRepository)) as IVsExtensionRepository;
 
                 ObjectFactory.GetInstance<ICheckForUpdates>().CheckForUpdates(updateManager, repoManager);
-            });
+            } 
+            catch
+            {
+                
+            }
         }
 
         #endregion

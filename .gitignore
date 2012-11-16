@@ -15,6 +15,7 @@ src/**/test/**/*.js
 src/**/helper/*.js
 
 src/TeamNotification_Server/support/
+build_tools/database.yml
 
 *.suo
 *.TMP

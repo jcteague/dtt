@@ -35,7 +35,7 @@ namespace TeamNotification_Test.Library.Service.Http
             };
 
             Because of = () =>
-                sut.ListenOnChannel(channel, action,null);
+                sut.ListenOnChannel(channel, action,null, null);
 
             It should_subscribe_to_the_channel_with_the_subscribe_response = () =>
                 client.AssertWasCalled(x => x.Subscribe(channel, sut.SubscribeResponse,null));

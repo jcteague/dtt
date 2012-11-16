@@ -11,7 +11,7 @@ set_github_repository_events = (repositories, owner, room_key, access_token) ->
         events: events
         config:
             content_type: "json"
-            url:"#{config.site.url}/github/events/#{room_key}"
+            url:"#{config.site.surl}/github/events/#{room_key}"
 
     post_data = JSON.stringify(post_fields)
     repositories_hooks_request = (build_promise_for(repository, owner, access_token, post_data) for repository in repositories)

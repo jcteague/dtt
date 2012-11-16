@@ -95,10 +95,41 @@ describe 'Github', ->
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
+            sinon.assert.calledWith(app.get,'/api/github/repositories/:access_token', sut.methods.github_repositories)
+            sinon.assert.calledWith(app.post,'/api/github/repositories/:access_token', body_parser_result, sut.methods.associate_github_repositories)
             sinon.assert.calledWith(app.get,'/github/oauth', sut.methods.github_redirect)
             sinon.assert.calledWith(app.get,'/github/auth/callback', sut.methods.github_authentication_callback)
             sinon.assert.calledWith(app.post,'/github/events/:room_key', body_parser_result, sut.methods.receive_github_event)
             done()
+
+    describe 'associate_github_repositories', ->
+        req = res = random_token = null
+        beforeEach (done) ->
+            repos = ["First"]
+            owner = "someone"
+            room_key = "random room key"
+            random_token = "random access token"
+            res =
+                json: sinon.spy()
+            req =
+                body:
+                    repositories: repos
+                    owner: owner
+                    room_key: room_key
+                param:sinon.stub()
+            
+            req.param.withArgs('access_token').returns random_token
+            
+            github_helper_mock.set_github_repository_events.withArgs(repos,owner,room_key,random_token).returns "result"
+            routes_service_mock.get_server_response.withArgs(true, ["The webhooks were successfully created"]).returns "server response"
+            
+            sut.methods.associate_github_repositories(req,res) 
+            done()
+
+        it "should create the webhook", (done) ->
+            expect(res.json.calledWith("server response")).to.equal(true)
+            done()
+
             
     describe 'github_redirect', ->
         res = req = null

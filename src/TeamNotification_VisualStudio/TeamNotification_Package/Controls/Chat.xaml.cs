@@ -86,8 +86,12 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
 
-            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte);
-
+            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
+                                        {
+                                            OpeningMilliseconds = 500,
+                                            HidingMilliseconds = 500,
+                                            StayOpenMilliseconds = 1000
+                                        };
             InitializeComponent();
             
             var mce = new ModalCodeEditor { RefControl = this.mainGrid };
@@ -167,12 +171,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         }
 
         [DllImport("user32.dll")]
-        private extern static IntPtr GetActiveWindow();
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-
+        private extern static IntPtr GetForegroundWindow();
+        
         #region Events
         public void ChatMessageArrived(string channel, string payload)
         {
@@ -182,9 +182,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
 
-                    var activeWindow = GetActiveWindow();
+                    var activeWindow = GetForegroundWindow();//GetActiveWindow();
                     var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
-                    if (Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id && (activeWindow != mainWindowHandle))
+                    if ((Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id) && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
                                                                                 var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
@@ -275,33 +275,33 @@ namespace AvenidaSoftware.TeamNotification_Package
             
             lblReconnecting.Visibility = Visibility.Hidden;
             btnReconnect.Visibility = Visibility.Hidden;
-            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,this.OnReconnectCallback);
+            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived, this.OnReconnectAttemptCallback, this.OnReconnectCallback);
             subscribedChannels.Add(currentChannel);
         }
 
-        private void OnReconnectCallback()
+        private void OnReconnectAttemptCallback()
         {
-            Debug.WriteLine("Retrying reconnect");
-            subscribedChannels.Remove(currentChannel);
+            if (subscribedChannels.Contains(currentChannel))
+                subscribedChannels.Remove(currentChannel);
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
-                var animation = new DoubleAnimation { From = 1.0, To = 0.0, Duration = new Duration(TimeSpan.FromSeconds(5)) };
-                animation.Completed += (o, s) =>
-                {
-                    Reconnect(null, null);
-                };
                 lblReconnecting.Visibility = Visibility.Visible;
                 lblReconnecting.Opacity = 1.0;
-                lblReconnecting.BeginAnimation(OpacityProperty, animation);
+            }));
+        }
+        private void OnReconnectCallback()
+        {
+            lblReconnecting.Dispatcher.Invoke(new Action(() =>{
+                lblReconnecting.Visibility = Visibility.Hidden;
+                Reconnect(null, null);
             }));
         }
 
         private void AddMessages(string currentRoomId)
         {
-            logger.TryOrLog(() =>
-                                {
-                                    this.roomId = currentRoomId;
-                                    chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);                                    
-                                });
+            logger.TryOrLog(() => {
+                this.roomId = currentRoomId;
+                chatRoomControlService.AddMessages(GetChatUIElements(), messageScroll, currentRoomId);                                    
+            });
         }
 
         private ChatUIElements GetChatUIElements()
