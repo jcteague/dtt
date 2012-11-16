@@ -33,6 +33,11 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
         public class when_getting_the_text_editor_messages : Concern
         {
+            Establish context = () =>
+            {
+                expectedResult = new List<ChatMessageBody>();
+            };
+
             public class and_the_text_editor_only_has_text
             {
                 Establish context = () =>
@@ -56,21 +61,53 @@ namespace TeamNotification_Test.Library.UI.Avalon
             {
                 Establish context = () =>
                 {
-                    var 
-                    contentResource = new SortedList<int, object>() {{1, "anything"}};
+                    var contentResource = new SortedList<int, object>();
+                    var codeLine1 = new MixedEditorLineData("class A {", 1, "solution", "project", "document", 3, 4);
+                    var codeLine2 = new MixedEditorLineData(" ", 1, "solution", "project", "document", 4, 4);
+                    var codeLine3 = new MixedEditorLineData("\tstatic string Hello() {", 1, "solution", "project", "document", 5, 4);
+                    contentResource.Add(1, codeLine1);
+                    contentResource.Add(2, codeLine2);
+                    contentResource.Add(3, codeLine3);
+
+                    var chatMessageBody = new ChatMessageBody
+                                              {
+                                                  message = "class A {\n \n\tstatic string Hello() {",
+                                                  programminglanguage = codeLine1.ProgrammingLanguage,
+                                                  solution = codeLine1.Solution,
+                                                  project = codeLine1.Project,
+                                                  document = codeLine1.Document,
+                                                  line = codeLine1.Line,
+                                                  column = codeLine1.Column
+                                              };
+                    expectedResult.Add(chatMessageBody);
                 };
 
                 Because of = () =>
                 {
-//                    sut.Resources.Add("content", null);
+                    sut.Resources.Add("content", contentResource);
                     result = sut.TextEditorMessages;
                 };
+
+                It should_return_a_list_of_chat_message_bodies_containing_the_code_as_one_chat_message_body = () =>
+                    result.First().ShouldMatch(x => is_matching(x, expectedResult.First()));
+
+                private static bool is_matching(ChatMessageBody value, ChatMessageBody expectedValue)
+                {
+                    return value.message == expectedValue.message &&
+                           value.programminglanguage == expectedValue.programminglanguage &&
+                           value.solution == expectedValue.solution &&
+                           value.project == expectedValue.project &&
+                           value.document == expectedValue.document &&
+                           value.line == expectedValue.line &&
+                           value.column == expectedValue.column;
+
+                }
 
                 private static SortedList<int, object> contentResource;
             }
 
             private static IEnumerable<ChatMessageBody> result;
-            private static IEnumerable<ChatMessageBody> expectedResult;
+            private static IList<ChatMessageBody> expectedResult;
         }
 
         public class when_the_send_message_requested_is_triggered : Concern
@@ -106,13 +143,23 @@ namespace TeamNotification_Test.Library.UI.Avalon
             {
                 messageText = "message text\nhello there.";
                 var programmingLanguage = 2;
-                var chatMessageModel = new ChatMessageModel {chatMessageBody = new ChatMessageBody {message = messageText, programminglanguage = programmingLanguage}};
+                var chatMessageBody = new ChatMessageBody
+                                          {
+                                              message = messageText, 
+                                              programminglanguage = programmingLanguage,
+                                              column = 0,
+                                              line = 2,
+                                              document = "blah document",
+                                              project = "blah project",
+                                              solution = "blah solution",
+                                          };
+                var chatMessageModel = new ChatMessageModel {chatMessageBody = chatMessageBody};
                 eventArgs = new CodeWasAppended(chatMessageModel);
 
                 var splittedMessage = messageText.Split('\n');
                 expectedContent = new SortedList<int, object>();
-                expectedContent.Add(1, new MixedEditorMessageContentAndProgrammingLanguage(splittedMessage[0], programmingLanguage));
-                expectedContent.Add(2, new MixedEditorMessageContentAndProgrammingLanguage(splittedMessage[1], programmingLanguage));
+                expectedContent.Add(1, new MixedEditorLineData(splittedMessage[0], programmingLanguage, chatMessageBody.solution, chatMessageBody.project, chatMessageBody.document, chatMessageBody.line, chatMessageBody.column));
+                expectedContent.Add(2, new MixedEditorLineData(splittedMessage[1], programmingLanguage, chatMessageBody.solution, chatMessageBody.project, chatMessageBody.document, chatMessageBody.line + 1, chatMessageBody.column));
             };
 
             Because of = () =>
@@ -133,9 +180,15 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
             private static bool does_content_match(object value, object expectedValue)
             {
-                var castedValue = (MixedEditorMessageContentAndProgrammingLanguage) value;
-                var castedExpectedValue = (MixedEditorMessageContentAndProgrammingLanguage) expectedValue;
-                return castedValue.Message == castedExpectedValue.Message && castedValue.ProgrammingLanguage == castedExpectedValue.ProgrammingLanguage;
+                var castedValue = (MixedEditorLineData) value;
+                var castedExpectedValue = (MixedEditorLineData) expectedValue;
+                return 
+                    castedValue.Message == castedExpectedValue.Message && 
+                    castedValue.ProgrammingLanguage == castedExpectedValue.ProgrammingLanguage &&
+                    castedValue.Solution == castedExpectedValue.Solution &&
+                    castedValue.Project == castedExpectedValue.Project &&
+                    castedValue.Document == castedExpectedValue.Document &&
+                    castedValue.Line == castedExpectedValue.Line;
             }
         }
 

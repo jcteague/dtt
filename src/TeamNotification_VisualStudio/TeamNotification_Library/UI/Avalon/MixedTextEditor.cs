@@ -40,10 +40,51 @@ namespace TeamNotification_Library.UI.Avalon
             get
             {
                 var messages = new List<ChatMessageBody>();
-                messages.Add(new ChatMessageBody {message = Text});
+                var content = GetMergedContentResource(ContentResource, Text);
+
+                ChatMessageBody message;
+                if (content.First().Value is string)
+                {
+                    message = new ChatMessageBody {message = string.Join("\n", content.Values)};
+                }
+                else
+                {
+                    var textMessage = string.Join("\n", content.Select(x => (x.Value as MixedEditorLineData).Message));
+                    var representationalLine = content.First().Value as MixedEditorLineData;
+                    message = new ChatMessageBody
+                                  {
+                                      message = textMessage,
+                                      programminglanguage = representationalLine.ProgrammingLanguage,
+                                      solution = representationalLine.Solution,
+                                      project = representationalLine.Project,
+                                      document = representationalLine.Document,
+                                      line = representationalLine.Line,
+                                      column = representationalLine.Column
+                                  };
+                }
+
+                messages.Add(message);
                 
                 return messages;
             }
+        }
+
+        private SortedList<int, object> GetMergedContentResource(SortedList<int, object> contentResource, string text)
+        {
+            var result = CloneSortedList(contentResource);
+            var r = Resources["content"];
+            text.Split('\n').ZipWithIndex().Each(x => result.AddOrUpdate(x.Item2, x.Item1));
+            return result;
+        }
+
+        private static SortedList<int, object> CloneSortedList(SortedList<int, object> contentResource)
+        {
+            if (contentResource.IsNull())
+                return new SortedList<int, object>();
+
+            var result = new SortedList<int, object>();
+            contentResource.Each(x => result.Add(x.Key, x.Value));
+            return result;
         }
 
         private void ClearEditor(object sender, SendMessageWasRequested e)
@@ -55,7 +96,28 @@ namespace TeamNotification_Library.UI.Avalon
         private void AppendCode(object sender, CodeWasAppended e)
         {
             var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
-            UpdateContentResource(e, x => x.ChatMessageModel.chatMessageBody.message, x => new MixedEditorMessageContentAndProgrammingLanguage(x, programmingLanguage));
+
+            if (!Resources.Contains("content"))
+            {
+                Resources.Add("content", new SortedList<int, object>());
+            }
+            var content = ContentResource;
+            e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x =>
+                                                                       {
+                                                                           var position = LineCount + x.Item2;
+                                                                           var valueAtPosition = new MixedEditorLineData(
+                                                                               x.Item1, 
+                                                                               programmingLanguage, 
+                                                                               e.ChatMessageModel.chatMessageBody.solution,
+                                                                               e.ChatMessageModel.chatMessageBody.project,
+                                                                               e.ChatMessageModel.chatMessageBody.document,
+                                                                               x.Item2 + e.ChatMessageModel.chatMessageBody.line, 
+                                                                               e.ChatMessageModel.chatMessageBody.column);
+                                                                           if (content.ContainsKey(position))
+                                                                               content[position] = valueAtPosition;
+                                                                           else
+                                                                               content.Add(position, valueAtPosition);
+                                                                       });
 
             Text += e.ChatMessageModel.chatMessageBody.message;
         }
@@ -72,7 +134,7 @@ namespace TeamNotification_Library.UI.Avalon
             {
                 Resources.Add("content", new SortedList<int, object>());
             }
-            var content = (SortedList<int, object>) Resources["content"];
+            var content = ContentResource;
             messageGetter(value).Split('\n').ZipWithIndex().Each(x =>
                                                                        {
                                                                            var position = LineCount + x.Item2;
@@ -91,16 +153,31 @@ namespace TeamNotification_Library.UI.Avalon
                 throw new ArgumentNullException("highlightingDefinition");
             return new MixedHighlightingColorizer(highlightingDefinition.MainRuleSet, this);
         }
+
+        private SortedList<int, object> ContentResource
+        {
+            get { return (SortedList<int, object>) Resources["content"]; }
+        }
     }
 
-    public class MixedEditorMessageContentAndProgrammingLanguage
+    public class MixedEditorLineData
     {
         public int ProgrammingLanguage { get; private set; }
+        public string Project { get; private set; }
+        public string Solution { get; private set; }
+        public string Document { get; private set; }
+        public int Line { get; private set; }
+        public int Column { get; set; }
         public string Message { get; private set; }
 
-        public MixedEditorMessageContentAndProgrammingLanguage(string message, int programmingLanguage)
+        public MixedEditorLineData(string message, int programmingLanguage, string solution, string project, string document, int line, int column)
         {
             ProgrammingLanguage = programmingLanguage;
+            Project = project;
+            Solution = solution;
+            Document = document;
+            Line = line;
+            Column = column;
             Message = message;
         }
     }

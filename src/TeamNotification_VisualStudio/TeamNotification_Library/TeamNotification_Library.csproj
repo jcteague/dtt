@@ -121,6 +121,7 @@
     <Compile Include="Extensions\FunctionalExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
     <Compile Include="Functional\Just.cs" />
