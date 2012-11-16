@@ -48,7 +48,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
                 Because of = () =>
                 {
                     sut.Text = text;
-                    result = sut.TextEditorMessages;
+                    result = sut.GetTextEditorMessages();
                 };
 
                 It should_return_a_list_of_the_text_in_the_result = () =>
@@ -61,7 +61,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
             {
                 Establish context = () =>
                 {
-                    var contentResource = new SortedList<int, object>();
+                    contentResource = new SortedList<int, object>();
                     var codeLine1 = new MixedEditorLineData("class A {", 1, "solution", "project", "document", 3, 4);
                     var codeLine2 = new MixedEditorLineData(" ", 1, "solution", "project", "document", 4, 4);
                     var codeLine3 = new MixedEditorLineData("\tstatic string Hello() {", 1, "solution", "project", "document", 5, 4);
@@ -85,7 +85,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
                 Because of = () =>
                 {
                     sut.Resources.Add("content", contentResource);
-                    result = sut.TextEditorMessages;
+                    result = sut.GetTextEditorMessages();
                 };
 
                 It should_return_a_list_of_chat_message_bodies_containing_the_code_as_one_chat_message_body = () =>

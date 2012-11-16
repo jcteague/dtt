@@ -35,45 +35,45 @@ namespace TeamNotification_Library.UI.Avalon
             TextArea.ActiveInputHandler = new MixedEditorTextAreaInputHandler(TextArea);
         }
 
-        public IEnumerable<ChatMessageBody> TextEditorMessages
+        public IEnumerable<ChatMessageBody> GetTextEditorMessages()
         {
-            get
+            var messages = new List<ChatMessageBody>();
+            var content = GetMergedContentResource(ContentResource, Text);
+
+            ChatMessageBody message;
+            if (content.First().Value is string)
             {
-                var messages = new List<ChatMessageBody>();
-                var content = GetMergedContentResource(ContentResource, Text);
-
-                ChatMessageBody message;
-                if (content.First().Value is string)
-                {
-                    message = new ChatMessageBody {message = string.Join("\n", content.Values)};
-                }
-                else
-                {
-                    var textMessage = string.Join("\n", content.Select(x => (x.Value as MixedEditorLineData).Message));
-                    var representationalLine = content.First().Value as MixedEditorLineData;
-                    message = new ChatMessageBody
-                                  {
-                                      message = textMessage,
-                                      programminglanguage = representationalLine.ProgrammingLanguage,
-                                      solution = representationalLine.Solution,
-                                      project = representationalLine.Project,
-                                      document = representationalLine.Document,
-                                      line = representationalLine.Line,
-                                      column = representationalLine.Column
-                                  };
-                }
-
-                messages.Add(message);
-                
-                return messages;
+                message = new ChatMessageBody {message = string.Join("\n", content.Values)};
             }
+            else
+            {
+                var textMessage = string.Join("\n", content.Select(x => (x.Value as MixedEditorLineData).Message));
+                var representationalLine = content.First().Value as MixedEditorLineData;
+                message = new ChatMessageBody
+                              {
+                                  message = textMessage,
+                                  programminglanguage = representationalLine.ProgrammingLanguage,
+                                  solution = representationalLine.Solution,
+                                  project = representationalLine.Project,
+                                  document = representationalLine.Document,
+                                  line = representationalLine.Line,
+                                  column = representationalLine.Column
+                              };
+            }
+
+            messages.Add(message);
+
+            return messages;
         }
 
         private SortedList<int, object> GetMergedContentResource(SortedList<int, object> contentResource, string text)
         {
             var result = CloneSortedList(contentResource);
-            var r = Resources["content"];
-            text.Split('\n').ZipWithIndex().Each(x => result.AddOrUpdate(x.Item2, x.Item1));
+            text.Split('\n').ZipWithIndex().Each(x =>
+                                                     {
+                                                         if (!x.Item1.IsNullOrWhiteSpace())
+                                                             result.AddOrUpdate(x.Item2 + 1, x.Item1);
+                                                     });
             return result;
         }
 
