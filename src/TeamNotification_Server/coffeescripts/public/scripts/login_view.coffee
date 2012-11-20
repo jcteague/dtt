@@ -16,10 +16,12 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
             @form_view.on 'messages:display', (messages) =>
+                console.log messages
                 @trigger 'messages:display', messages
 
         
         check_login: (response) ->
+            console.log response
             res = $.parseJSON response
             res = response unless res?
 
@@ -32,6 +34,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
                     window.location.reload(true)
                 setTimeout getIn, 500
             else
+                console.log res.server_messages
                 @trigger 'messages:display', res.server_messages
 
         render: ->

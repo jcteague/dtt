@@ -3,6 +3,7 @@ build = require('../../../support/routes_service').build
 user_validator = require('../../../support/validation/user_validator')
 user_callback_factory = require('../../../support/factories/user_callback_factory')
 get_messages_from_flash = require('../../../support/routes_service').get_messages_from_flash
+get_server_response = require('../../../support/routes_service').get_server_response
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
@@ -88,9 +89,9 @@ methods.confirm = (req, res) ->
                         req.flash('info', "User has been confirmed")
                         methods.login(req,res)
                     else
-                        res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"], "/user/login"))
+                        res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"]))
             else
-                res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"], "/user/login"))
+                res.json(get_server_response(false, [JSON.stringify(err),"User confirmation was unsuccessful"]))
 
 methods.authenticate = (req, res, next) ->
     values = req.body
@@ -102,7 +103,7 @@ methods.authenticate = (req, res, next) ->
             auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
             res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
-            res.send(success: false, server_messages: ['Email and/or password is incorrect'])
+            res.send( get_server_response(false,['Email and/or password is incorrect']))
           
     build('user_login_collection').for(email:email, password:pass).fetch_to callback
     

@@ -1,4 +1,5 @@
 _ = require('underscore')
+get_server_response = require('./routes_service').get_server_response
 passport = require('passport')
 sha256 = require('node_hash').sha256
 BasicStrategy = require('passport-http').BasicStrategy
@@ -17,10 +18,15 @@ class Authentication
         passport.initialize()
 
     findByUserName: (username,password,done) ->
-        @repository.find(email: username, password: sha256(password), enabled: 1).then (users) ->
+        @repository.find(email: username, password: sha256(password)).then (users) ->
             if !users? or !users[0]?
+                message = "Incorrect username or password"
                 return done(null, false)
             user = users[0]
+            if(user.enabled == 0)
+                message = "The user has not been confirmed yet"
+                return done(null, false)
+            
             done(null, id: user.id, email: user.email, name: user.first_name, enabled:user.enabled)
 
 	authenticate: (request, response, next) ->
