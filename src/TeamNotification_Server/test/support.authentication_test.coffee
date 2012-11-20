@@ -77,7 +77,7 @@ describe 'Authentication', ->
             express_done = promise = null
 
             beforeEach (done) ->
-                user = {id: 1, email: username, password: encrypted, name:name}
+                user = {id: 1, email: username, password: encrypted, name:name, enabled: 1}
                 promise = 
                     then: (callback) ->
                         callback([user])
@@ -87,7 +87,7 @@ describe 'Authentication', ->
 
                 beforeEach (done) ->
                     hash_mock.sha256.withArgs(password).returns(encrypted)
-                    sinon.stub(sut.repository, 'find').withArgs(email: username, password: encrypted, enabled: 1).returns(promise)
+                    sinon.stub(sut.repository, 'find').withArgs(email: username, password: encrypted).returns(promise)
                     express_done = sinon.spy()
                     sut.findByUserName(username, password, express_done)
                     done()
@@ -105,7 +105,7 @@ describe 'Authentication', ->
                     hash_mock.sha256.withArgs(wrong_password).returns(wrong_encrypted)
                     express_done = sinon.spy()
                     sut.repository.find = sinon.stub()
-                    sut.repository.find.withArgs(email: username, password: wrong_encrypted, enabled: 1).returns(promise)
+                    sut.repository.find.withArgs(email: username, password: wrong_encrypted).returns(promise)
                     sut.findByUserName(username, wrong_password, express_done)
                     done()
 
@@ -124,7 +124,7 @@ describe 'Authentication', ->
                 promise = 
                     then: (callback) ->
                         callback(null)
-                sinon.stub(sut.repository, 'find').withArgs(email: username, password:encrypted, enabled: 1 ).returns(promise)
+                sinon.stub(sut.repository, 'find').withArgs(email: username, password:encrypted ).returns(promise)
 
                 sut.findByUserName(username, password, express_done)
                 done()

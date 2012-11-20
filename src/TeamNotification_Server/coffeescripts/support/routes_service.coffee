@@ -40,7 +40,7 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                         defer.resolve(response)
                     )
                 else
-                    response = get_server_response(false, ["User #{user.email} is already in the room"], "/user/#{user.id}/")
+                    response = get_server_response(false, ["User is already in the room"], "/user/#{user.id}/")
                     defer.resolve(response)
         else
             chat_room_repository.get_by_id(room_id).then (chat_room) ->

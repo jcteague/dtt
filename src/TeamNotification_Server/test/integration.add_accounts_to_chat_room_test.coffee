@@ -76,7 +76,7 @@ context.for.integration_test() (browser) ->
                         then(done, done)
 
                 it 'should display the user added message', (done) ->
-                    expect(browser.html('#server-response-container p')).to.equal "<p>user added</p>"
+                    expect(browser.html('#server-response-container p')).to.equal "<p>User added</p>"
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
