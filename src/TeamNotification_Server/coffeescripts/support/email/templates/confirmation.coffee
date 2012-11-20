@@ -1,7 +1,7 @@
 config = require('../../../config')()
 
 get_template = (name, confirmation_key) ->
-    confirmation_link = "#{config.site.url}/#/user/confirm/#{confirmation_key}"
+    confirmation_link = "#{config.site.surl}/#/user/confirm/#{confirmation_key}"
     return """
         <div>
             <p>Hi #{name},</p>
