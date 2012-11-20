@@ -6,6 +6,7 @@ get_messages_from_flash = require('../../../support/routes_service').get_message
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
+Repository = require('../../../support/repository')
 
 methods.get_user = (req, res) ->
     get_user_collection(req, res, req.param('id'))
