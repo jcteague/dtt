@@ -13,6 +13,9 @@ methods.get_user = (req, res) ->
     get_user_collection(req, res, req.param('id'))
 
 methods.get_logged_user = (req, res) ->
+    console.log req.user
+    if(req.user == false)
+        methods.login(req, res)
     get_user_collection(req, res, req.user.id)
 
 get_user_collection = (req, res, user_id) ->

@@ -25,7 +25,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
             res = $.parseJSON response
             res = response unless res?
 
-            if res.success is true
+            if typeof(res.success)!='undefined' && res.success is true
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
                     redirect = "#/user"
