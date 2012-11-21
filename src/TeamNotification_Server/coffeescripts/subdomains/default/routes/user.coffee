@@ -103,8 +103,11 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
-            auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
-            res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
+            if user_data.enabled = 0
+                res.send( get_server_response(false,['The user is not activated']))
+            else
+                auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
+                res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send( get_server_response(false,['Email and/or password is incorrect']))
           
