@@ -52,7 +52,7 @@ context.for.integration_test() (browser) ->
                     then(done, done)
 
             it 'should receive a success message', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>Make sure to check your email for a confirmation link to activate your account</p><p>You can view the new resource <a href=\"#/user/1/\">here</a></p>"
+                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>Make sure to check your email for a confirmation link to activate your account</p>"
                 done()
 
         describe 'When a user visits the #/registration page and submits an email that is already registered', ->

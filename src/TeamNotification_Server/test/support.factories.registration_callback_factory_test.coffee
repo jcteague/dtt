@@ -91,7 +91,7 @@ describe 'Registration Callback Factory', ->
 
         it 'should send a success json response', (done) ->
             json =
-                link: "/user/#{user.id}/"
+                link:"" #"/user/#{user.id}/"
                 success: true
                 server_messages: ['User created successfully','Make sure to check your email for a confirmation link to activate your account']
                 data: 
