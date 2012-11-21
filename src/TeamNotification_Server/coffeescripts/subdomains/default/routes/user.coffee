@@ -103,7 +103,7 @@ methods.authenticate = (req, res, next) ->
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
-            if user_data.enabled = 0
+            if user_data.enabled == 0
                 res.send( get_server_response(false,['The user is not activated']))
             else
                 auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
