@@ -23,7 +23,7 @@ default_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://stagingdtt.local'
+        url: 'https://stagingdtt.local'
         surl: 'https://stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     api:
@@ -66,7 +66,7 @@ test_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://stagingdtt.local'
+        url: 'https://stagingdtt.local'
         surl: 'https://stagingdtt.local'
         whitelisted_paths: whitelisted_paths
     api:

@@ -23,7 +23,7 @@ default_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://yacketyapp.com'
+        url: 'https://yacketyapp.com'
         surl: 'https://yacketyapp.com'
         whitelisted_paths: whitelisted_paths
     api:
@@ -66,7 +66,7 @@ test_settings =
         port: 3000
         client_ID: '1234'
         client_secret: 'secret'
-        url: 'http://dtt.local'
+        url: 'https://dtt.local'
         surl: 'https://dtt.local'
         whitelisted_paths: whitelisted_paths
     api:
