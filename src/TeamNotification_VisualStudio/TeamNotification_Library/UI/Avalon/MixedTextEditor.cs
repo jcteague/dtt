@@ -14,7 +14,7 @@ using TeamNotification_Library.Service.Highlighters.Avalon;
 
 namespace TeamNotification_Library.UI.Avalon
 {
-    public class MixedTextEditor : TextEditor
+    public class MixedTextEditor : TextEditor, IAppendCode
     {
         private IHandleMixedEditorEvents mixedEditorEvents;
         private IHandleChatEvents chatEvents;
@@ -104,33 +104,63 @@ namespace TeamNotification_Library.UI.Avalon
             Resources.Remove("content");
         }
 
-        private void AppendCode(object sender, CodeWasAppended e)
+        public void AppendCode(ChatMessageModel chatMessageModel)
         {
-            var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
+
+            var programmingLanguage = chatMessageModel.chatMessageBody.programminglanguage;
 
             if (!Resources.Contains("content"))
             {
                 Resources.Add("content", new SortedList<int, object>());
             }
             var content = ContentResource;
-            e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x =>
-                                                                       {
-                                                                           var position = LineCount + x.Item2;
-                                                                           var valueAtPosition = new MixedEditorLineData(
-                                                                               x.Item1, 
-                                                                               programmingLanguage, 
-                                                                               e.ChatMessageModel.chatMessageBody.solution,
-                                                                               e.ChatMessageModel.chatMessageBody.project,
-                                                                               e.ChatMessageModel.chatMessageBody.document,
-                                                                               x.Item2 + e.ChatMessageModel.chatMessageBody.line, 
-                                                                               e.ChatMessageModel.chatMessageBody.column);
-                                                                           if (content.ContainsKey(position))
-                                                                               content[position] = valueAtPosition;
-                                                                           else
-                                                                               content.Add(position, valueAtPosition);
-                                                                       });
+            chatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x =>
+            {
+                var position = LineCount + x.Item2;
+                var valueAtPosition = new MixedEditorLineData(
+                    x.Item1,
+                    programmingLanguage,
+                    chatMessageModel.chatMessageBody.solution,
+                    chatMessageModel.chatMessageBody.project,
+                    chatMessageModel.chatMessageBody.document,
+                    x.Item2 + chatMessageModel.chatMessageBody.line,
+                    chatMessageModel.chatMessageBody.column);
+                if (content.ContainsKey(position))
+                    content[position] = valueAtPosition;
+                else
+                    content.Add(position, valueAtPosition);
+            });
 
-            Text += e.ChatMessageModel.chatMessageBody.message;
+            Text += chatMessageModel.chatMessageBody.message;
+        }
+        private void AppendCode(object sender, CodeWasAppended e)
+        {
+            AppendCode(e.ChatMessageModel);
+            //var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
+
+            //if (!Resources.Contains("content"))
+            //{
+            //    Resources.Add("content", new SortedList<int, object>());
+            //}
+            //var content = ContentResource;
+            //e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x =>
+            //                                                           {
+            //                                                               var position = LineCount + x.Item2;
+            //                                                               var valueAtPosition = new MixedEditorLineData(
+            //                                                                   x.Item1, 
+            //                                                                   programmingLanguage, 
+            //                                                                   e.ChatMessageModel.chatMessageBody.solution,
+            //                                                                   e.ChatMessageModel.chatMessageBody.project,
+            //                                                                   e.ChatMessageModel.chatMessageBody.document,
+            //                                                                   x.Item2 + e.ChatMessageModel.chatMessageBody.line, 
+            //                                                                   e.ChatMessageModel.chatMessageBody.column);
+            //                                                               if (content.ContainsKey(position))
+            //                                                                   content[position] = valueAtPosition;
+            //                                                               else
+            //                                                                   content.Add(position, valueAtPosition);
+            //                                                           });
+
+            //Text += e.ChatMessageModel.chatMessageBody.message;
         }
 
         private void AppendText(object sender, TextWasAppended e)

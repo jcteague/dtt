@@ -72,10 +72,10 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IShowCode codeEditor;
         private string lastStamp;
 
-        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents, IHandleChatEvents chatEventsHandler)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
         {
             chatIsEnabled = true;
-            chatEvents = chatEventsHandler;
+            //chatEvents = chatEventsHandler;
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
@@ -94,7 +94,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
 
-            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
+            this.taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
                                         {
                                             OpeningMilliseconds = 500,
                                             HidingMilliseconds = 500,
@@ -113,24 +113,21 @@ namespace AvenidaSoftware.TeamNotification_Package
             
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
 
-//            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
-//            DataObject.AddPastingHandler(messageTextBox, OnPaste);
-
-            mixedEditorEvents.DataWasPasted += MixedEditorDataWasPasted;
+            this.mixedEditorEvents.DataWasPasted += MixedEditorDataWasPasted;
 
             lastStamp = "";
 
-            codePasteEvents.Clear();
-            codePasteEvents.CodePasteWasClicked += PasteCode;
+            this.codePasteEvents.Clear();
+            this.codePasteEvents.CodePasteWasClicked += PasteCode;
 
-            toolWindowEvents.Clear();
-            toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+            this.toolWindowEvents.Clear();
+            this.toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
 
-            userAccountEvents.Clear();
-            userAccountEvents.UserHasLogout += OnUserLogout;
+            this.userAccountEvents.Clear();
+            this.userAccountEvents.UserHasLogout += OnUserLogout;
 
-            socketIOEvents.Clear();
-            socketIOEvents.SocketWasDisconnected += (s, e) =>
+            this.socketIOEvents.Clear();
+            this.socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
                                                             var room = "chat " + e.RoomId;
                                                             subscribedChannels.Remove(room);
@@ -322,6 +319,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
+                InputBox = messageTextBox,
                 MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
                 MessageTextBoxGridSplitter = messageTextBoxGridSplitter,

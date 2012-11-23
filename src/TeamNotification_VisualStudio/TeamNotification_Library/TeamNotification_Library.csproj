@@ -335,6 +335,7 @@
     <Compile Include="Service\Update\PackageUpdateVerifier.cs" />
     <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="UI\Avalon\IAppendCode.cs" />
     <Compile Include="UI\Avalon\MixedTextEditor.cs" />
   </ItemGroup>
   <ItemGroup>
