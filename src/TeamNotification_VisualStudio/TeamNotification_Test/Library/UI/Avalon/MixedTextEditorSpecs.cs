@@ -111,14 +111,14 @@ namespace TeamNotification_Test.Library.UI.Avalon
                 Establish context = () =>
                 {
                     contentResource = new SortedList<int, object>();
-                    var codeLine1 = new MixedEditorLineData("class A {", 1, "solution", "project", "document", 3, 4);
+                    var codeLine1 = new MixedEditorLineData("class AnotherClass {", 1, "solution", "project", "document", 3, 4);
                     var codeLine2 = new MixedEditorLineData(" ", 1, "solution", "project", "document", 4, 4);
                     var codeLine3 = new MixedEditorLineData("\tstatic string Hello() {", 1, "solution", "project", "document", 5, 4);
                     contentResource.Add(1, codeLine1);
                     contentResource.Add(2, codeLine2);
                     contentResource.Add(3, codeLine3);
 
-                    editorTextAtTimeOfCall = "class AnotherClass {\n\n\tstatic string Hello() {";
+                    editorTextAtTimeOfCall = "class A {\n \n\tstatic string Hello() {";
 
                     var chatMessageBody = new ChatMessageBody
                                               {
@@ -168,15 +168,15 @@ namespace TeamNotification_Test.Library.UI.Avalon
             Establish context = () =>
             {
                 editorText = "this is the message";
-                contentResource = new SortedList<int, object>() {{1, "anything"}};
-                eventArgs = new SendMessageWasRequested(editorText, null, null);
+                contentResource = new SortedList<int, object>() { { 1, "anything" } };
+                eventArgs = new SendMessageWasRequested(editorText,"1");
             };
 
             Because of = () =>
              {
-                sut.Text = editorText;
-                sut.Resources.Add("content", contentResource);
-                chatEvents.OnSendMessageRequested(null, eventArgs);
+                 sut.Text = editorText;
+                 sut.Resources.Add("content", contentResource);
+                 chatEvents.OnSendMessageRequested(null, eventArgs);
              };
 
             It should_clear_the_text_in_the_editor = () =>
@@ -198,7 +198,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
                 var programmingLanguage = 2;
                 var chatMessageBody = new ChatMessageBody
                                           {
-                                              message = messageText, 
+                                              message = messageText,
                                               programminglanguage = programmingLanguage,
                                               column = 0,
                                               line = 2,
@@ -206,7 +206,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
                                               project = "blah project",
                                               solution = "blah solution",
                                           };
-                var chatMessageModel = new ChatMessageModel {chatMessageBody = chatMessageBody};
+                var chatMessageModel = new ChatMessageModel { chatMessageBody = chatMessageBody };
                 eventArgs = new CodeWasAppended(chatMessageModel);
 
                 var splittedMessage = messageText.Split('\n');
@@ -223,8 +223,8 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
             It should_add_message_to_the_resources_of_the_editor = () =>
             {
-               ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => does_content_match(x[1], expectedContent[1]));
-               ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => does_content_match(x[2], expectedContent[2]));
+                ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => does_content_match(x[1], expectedContent[1]));
+                ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => does_content_match(x[2], expectedContent[2]));
             };
 
             private static CodeWasAppended eventArgs;
@@ -233,10 +233,10 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
             private static bool does_content_match(object value, object expectedValue)
             {
-                var castedValue = (MixedEditorLineData) value;
-                var castedExpectedValue = (MixedEditorLineData) expectedValue;
-                return 
-                    castedValue.Message == castedExpectedValue.Message && 
+                var castedValue = (MixedEditorLineData)value;
+                var castedExpectedValue = (MixedEditorLineData)expectedValue;
+                return
+                    castedValue.Message == castedExpectedValue.Message &&
                     castedValue.ProgrammingLanguage == castedExpectedValue.ProgrammingLanguage &&
                     castedValue.Solution == castedExpectedValue.Solution &&
                     castedValue.Project == castedExpectedValue.Project &&
@@ -266,14 +266,14 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
             It should_add_message_to_the_resources_of_the_editor = () =>
             {
-               ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => (string) x[1] == (string) expectedContent[1]);
-               ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => (string) x[2] == (string) expectedContent[2]);
+                ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => (string)x[1] == (string)expectedContent[1]);
+                ((SortedList<int, object>)sut.Resources["content"]).ShouldMatch(x => (string)x[2] == (string)expectedContent[2]);
             };
 
             private static TextWasAppended eventArgs;
             private static string messageText;
             private static SortedList<int, object> expectedContent;
         }
-         
+
     }
 }

@@ -71,10 +71,10 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private IShowCode codeEditor;
 
-        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents, IHandleChatEvents chatEventsHandler)
         {
             chatIsEnabled = true;
-
+            chatEvents = chatEventsHandler;
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
@@ -245,8 +245,10 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void SendMessage()
         {
             applicationGlobalState.IsEditingCode = false;
-//            chatRoomControlService.SendMessage(messageTextBox, roomId);
-            chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.Text, messageTextBox.Resources, roomId));
+            chatRoomControlService.SendMessages(messageTextBox.GetTextEditorMessages(), roomId);
+            messageTextBox.Resources.Clear();
+            messageTextBox.Clear();
+            //chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.GetTextEditorMessages(), roomId));
         }
 
         private void PasteCode(object sender, EventArgs args)

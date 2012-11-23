@@ -126,23 +126,9 @@ namespace TeamNotification_Library.Service.Controls
             userAccountEvents.OnLogout(sender, new UserHasLogout());
         }
 
-        public void SendMessage(RichTextBox textBox, string roomId)
+        public void SendMessages(IEnumerable<ChatMessageBody> messages, string roomId)
         {
-            //messagesEditor.inputMethod = textBox;
-            //if (messagesEditor.editingMessage != null)
-            //{
-            //    var text = messagesEditor.inputMethod.Document.GetDocumentText();
-            //    messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
-            //    messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
-            //}
-            //else
-            //{
-            messagesEditor.inputMethod = textBox;
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            //}
-            textBox.Document.Blocks.Clear();
-            messagesEditor.ResetControls();
-
+            this.messageSender.SendMessages(messages,roomId);
         }
 
         public void ResetContainer(ChatUIElements messagesContainer)

@@ -28,18 +28,20 @@ namespace TeamNotification_Test.Library.Service.Chat.Formatters
             Establish context = () =>
             {
                 dateTime = DateTime.Now;
-                chatMessage = new ChatMessageModel { chatMessageBody = new ChatMessageBody { date = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 11, 01, 0).ToString() } };
+                expectedTime = dateTime.ToString("hh:mm tt");
+                chatMessage = new ChatMessageModel { chatMessageBody = new ChatMessageBody { date = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second).ToString() } };
             };
 
             Because of = () =>
                 result = sut.GetFormattedElement(chatMessage);
 
             It should_return_a_string_with_the_time = () =>
-                result.GetText().ShouldEqual("11:01 AM");
+                result.GetText().ShouldEqual(expectedTime);
 
             private static Paragraph result;
             private static ChatMessageModel chatMessage;
             private static DateTime dateTime;
+            private static string expectedTime;
         }
 
         public class when_getting_the_formatted_element_and_the_date_is_older_than_today : when_getting_the_formatted_element

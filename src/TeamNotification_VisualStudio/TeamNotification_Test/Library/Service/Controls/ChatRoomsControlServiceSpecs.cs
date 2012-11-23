@@ -84,8 +84,8 @@ namespace TeamNotification_Test.Library.Service.Controls
                 string siteUrl = "MyUrl/";
                 roomId = "1";
 
-                collectionMessage1 = new Collection.Messages {data = new Collection<CollectionData>{new CollectionData{name = "foo message"}}};
-                collectionMessage2 = new Collection.Messages {data = new Collection<CollectionData> { new CollectionData { name = "bar message" } } };
+                collectionMessage1 = new Collection.Messages { data = new Collection<CollectionData> { new CollectionData { name = "foo message" } } };
+                collectionMessage2 = new Collection.Messages { data = new Collection<CollectionData> { new CollectionData { name = "bar message" } } };
 
                 var serverConfiguration = fake.an<IStoreConfiguration>();
                 collection = new Collection { href = "asd" };
@@ -172,11 +172,11 @@ namespace TeamNotification_Test.Library.Service.Controls
 
             };
 
-//            Because of = () =>
-//                sut.HandlePaste(textBox, codeShower, args);
+            //            Because of = () =>
+            //                sut.HandlePaste(textBox, codeShower, args);
 
-            It should_set_the_textbox_with_a_syntax_highlight_block = () =>
-                textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
+            //It should_set_the_textbox_with_a_syntax_highlight_block = () => 
+                //textBox.Document.Blocks.ShouldContain(syntaxHighlightBox);
 
             private static BlockUIContainer syntaxHighlightBox;
             private static IShowCode codeShower;
@@ -186,26 +186,22 @@ namespace TeamNotification_Test.Library.Service.Controls
         {
             Establish context = () =>
             {
-                textBox = new RichTextBox();
-                block1 = new Paragraph(new Run("Hello"));
-                textBox.Document.Blocks.Add(block1);
-                block2 = new BlockUIContainer(new UIElement());
-                textBox.Document.Blocks.Add(block2);
+                messageBodies = new List<ChatMessageBody>
+                                    {
+                                        new ChatMessageBody{message = "Hello"}
+
+                                    };
                 roomId = "1";
-                blocks = new List<Block> {block1, block2};
             };
 
             Because of = () =>
-                sut.SendMessage(textBox, roomId);
+                sut.SendMessages(messageBodies, roomId);
 
-            It should_send_the_messages_in_the_text_box = () => 
-                chatMessageSender.AssertWasCalled(x => x.SendMessages(textBox.Document.Blocks, roomId));
+            It should_send_the_messages_in_the_text_box = () =>
+                chatMessageSender.AssertWasCalled(x => x.SendMessages(messageBodies, roomId));
 
-            protected static RichTextBox textBox;
             protected static string roomId;
-            private static Paragraph block1;
-            private static BlockUIContainer block2;
-            private static IEnumerable<Block> blocks;
+            private static IEnumerable<ChatMessageBody> messageBodies;
         }
 
         public class when_adding_the_messages : when_getting_a_collection_context
@@ -222,8 +218,8 @@ namespace TeamNotification_Test.Library.Service.Controls
 
                 chatMessage1 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "foo" } };
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage1)).Return(chatMessage1);
-                
-                chatMessage2 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "bar"}};
+
+                chatMessage2 = new ChatMessageModel { chatMessageBody = new ChatMessageBody { message = "bar" } };
                 collectionMessagesToChatMessageModelMapper.Stub(x => x.MapFrom(collectionMessage2)).Return(chatMessage2);
             };
 
@@ -252,10 +248,10 @@ namespace TeamNotification_Test.Library.Service.Controls
                     Container = messageList,
                     MessagesTable = new Table()
                 };
-                var user = new User {email = "foo@bar.com", id = 2};
+                var user = new User { email = "foo@bar.com", id = 2 };
                 scrollviewer = new ScrollViewer();
                 messageData = "foo message data";
-                chatMessage = new ChatMessageModel { user_id = "1", chatMessageBody = new ChatMessageBody { message = "foo message", date = "sometime soon", stamp = "23582375"}};
+                chatMessage = new ChatMessageModel { user_id = "1", chatMessageBody = new ChatMessageBody { message = "foo message", date = "sometime soon", stamp = "23582375" } };
                 jsonSerializer.Stub(x => x.Deserialize<ChatMessageModel>(messageData)).Return(chatMessage);
                 userProvider.Stub(x => x.GetUser()).Return(user);
             };
@@ -309,57 +305,57 @@ namespace TeamNotification_Test.Library.Service.Controls
         }
 
         // TODO: Find a way to mock DTE to test implementation
-//        public class when_updating_the_clipboard : Concern
-//        {
-//            Establish context = () =>
-//            {
-//                // Cannot mock DTE
-//                dte = fake.an<DTE>();
-//                chat = "blah chat";
-//
-//                var solutionObj = fake.an<Solution>();
-//                dte.Stub(x => x.Solution).Return(solutionObj);
-//
-//                var solution = "blah solution";
-//                solutionObj.Stub(x => x.FullName).Return(solution);
-//                
-//                var activeDocument = fake.an<Document>();
-//                dte.Stub(x => x.ActiveDocument).Return(activeDocument);
-//
-//                var document = "foo document";
-//                activeDocument.Stub(x => x.FullName).Return(document);
-//
-//                var textDocument = fake.an<TextDocument>();
-//                activeDocument.Stub(x => x.Object()).Return(textDocument);
-//
-//                var selection = fake.an<TextSelection>();
-//                textDocument.Stub(x => x.Selection).Return(selection);
-//
-//                var text = "foo bar text";
-//                selection.Stub(x => x.Text).Return(text);
-//
-//                var line = 10;
-//                selection.Stub(x => x.CurrentLine).Return(line);
-//
-//                args = new ClipboardHasChanged
-//                           {
-//                               Solution = solution,
-//                               Document = document,
-//                               Line = line,
-//                               Text = text
-//                           };
-//                clipboardArgsFactory.Stub(x => x.Get(solution, document, text, line)).Return(args);
-//            };
-//
-//            Because of = () =>
-//                sut.UpdateClipboard(chat, dte);
-//
-//            It should_trigger_the_clipboard_changed_event = () =>
-//                clipboardEvents.AssertWasCalled(x => x.OnClipboardChanged(chat, args));
-//
-//            private static ClipboardHasChanged args;
-//            private static object chat;
-//            private static DTE dte;
-//        }
+        //        public class when_updating_the_clipboard : Concern
+        //        {
+        //            Establish context = () =>
+        //            {
+        //                // Cannot mock DTE
+        //                dte = fake.an<DTE>();
+        //                chat = "blah chat";
+        //
+        //                var solutionObj = fake.an<Solution>();
+        //                dte.Stub(x => x.Solution).Return(solutionObj);
+        //
+        //                var solution = "blah solution";
+        //                solutionObj.Stub(x => x.FullName).Return(solution);
+        //                
+        //                var activeDocument = fake.an<Document>();
+        //                dte.Stub(x => x.ActiveDocument).Return(activeDocument);
+        //
+        //                var document = "foo document";
+        //                activeDocument.Stub(x => x.FullName).Return(document);
+        //
+        //                var textDocument = fake.an<TextDocument>();
+        //                activeDocument.Stub(x => x.Object()).Return(textDocument);
+        //
+        //                var selection = fake.an<TextSelection>();
+        //                textDocument.Stub(x => x.Selection).Return(selection);
+        //
+        //                var text = "foo bar text";
+        //                selection.Stub(x => x.Text).Return(text);
+        //
+        //                var line = 10;
+        //                selection.Stub(x => x.CurrentLine).Return(line);
+        //
+        //                args = new ClipboardHasChanged
+        //                           {
+        //                               Solution = solution,
+        //                               Document = document,
+        //                               Line = line,
+        //                               Text = text
+        //                           };
+        //                clipboardArgsFactory.Stub(x => x.Get(solution, document, text, line)).Return(args);
+        //            };
+        //
+        //            Because of = () =>
+        //                sut.UpdateClipboard(chat, dte);
+        //
+        //            It should_trigger_the_clipboard_changed_event = () =>
+        //                clipboardEvents.AssertWasCalled(x => x.OnClipboardChanged(chat, args));
+        //
+        //            private static ClipboardHasChanged args;
+        //            private static object chat;
+        //            private static DTE dte;
+        //        }
     }
 }

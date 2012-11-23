@@ -40,29 +40,41 @@ namespace TeamNotification_Library.UI.Avalon
             var messages = new List<ChatMessageBody>();
             var content = GetMergedContentResource(ContentResource, Text);
 
-            ChatMessageBody message;
-            if (content.First().Value is string)
+            var newTextMessageContent = "";
+            var limit = content.Values.Count;
+            for (var i = 0; i < limit;)
             {
-                message = new ChatMessageBody {message = string.Join("\n", content.Values)};
+                while (i < limit && content.Values.ElementAt(i) is string)
+                {
+                    newTextMessageContent += content.Values.ElementAt(i); ++i;
+                    if (i < limit && (content.Values.ElementAt(i) is string)) newTextMessageContent += "\n";
+                }
+                if(!string.IsNullOrEmpty(newTextMessageContent))
+                {
+                    messages.Add(new ChatMessageBody {message=newTextMessageContent} );
+                    newTextMessageContent = string.Empty;
+                }
+                var codestart = i;
+                while (i < limit && content.Values.ElementAt(i) is MixedEditorLineData)
+                {
+                    newTextMessageContent += (content.Values.ElementAt(i) as MixedEditorLineData).Message; ++i;
+                    if(i<limit && (content.Values.ElementAt(i) is MixedEditorLineData)) newTextMessageContent += "\n";
+                }
+                if (!string.IsNullOrEmpty(newTextMessageContent))
+                {
+                    messages.Add( new ChatMessageBody
+                    {
+                        message = newTextMessageContent,
+                        programminglanguage = (content.Values.ElementAt(codestart) as MixedEditorLineData).ProgrammingLanguage,
+                        solution = (content.Values.ElementAt(codestart) as MixedEditorLineData).Solution,
+                        project = (content.Values.ElementAt(codestart) as MixedEditorLineData).Project,
+                        document = (content.Values.ElementAt(codestart) as MixedEditorLineData).Document,
+                        line = (content.Values.ElementAt(codestart) as MixedEditorLineData).Line,
+                        column = (content.Values.ElementAt(codestart) as MixedEditorLineData).Column
+                    });
+                    newTextMessageContent = string.Empty;
+                }
             }
-            else
-            {
-                var textMessage = string.Join("\n", content.Select(x => (x.Value as MixedEditorLineData).Message));
-                var representationalLine = content.First().Value as MixedEditorLineData;
-                message = new ChatMessageBody
-                              {
-                                  message = textMessage,
-                                  programminglanguage = representationalLine.ProgrammingLanguage,
-                                  solution = representationalLine.Solution,
-                                  project = representationalLine.Project,
-                                  document = representationalLine.Document,
-                                  line = representationalLine.Line,
-                                  column = representationalLine.Column
-                              };
-            }
-
-            messages.Add(message);
-
             return messages;
         }
 
@@ -198,7 +210,7 @@ namespace TeamNotification_Library.UI.Avalon
         public string Document { get; private set; }
         public int Line { get; private set; }
         public int Column { get; set; }
-        public string Message { get; private set; }
+        public string Message { get; set; }
 
         public MixedEditorLineData(string message, int programmingLanguage, string solution, string project, string document, int line, int column)
         {

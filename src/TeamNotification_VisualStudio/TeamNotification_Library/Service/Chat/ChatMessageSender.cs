@@ -35,53 +35,66 @@ namespace TeamNotification_Library.Service.Chat
         private void SendMessage(object sender, SendMessageWasRequested e)
         {
             var url = "{0}room/{1}/messages".FormatUsing(serverConfiguration.Get().Uri, e.RoomId);
-//            client.Post();
+            foreach(var message in e.Messages)
+            {
+                var messages = new List<Tuple<string, HttpContent>>();
+
+                messages.Add(GetMessage(message, e.RoomId));
+                client.Post(messages);
+            }
         }
 
         public void SendMessage(ChatMessageBody editedMessage, string roomId)
         {
             var messages = new List<Tuple<string, HttpContent>> {GetMessage(editedMessage, roomId)};
-
             AppendPlainMessage(messages, "", roomId);
             client.Post(messages);
         }
 
-        public void SendMessages(IEnumerable<Block> blocks, string roomId)
+        public void SendMessages(IEnumerable<ChatMessageBody> messages, string roomId)
         {
-            var plainMessage = "";
-            var messages = new List<Tuple<string, HttpContent>>();
-            foreach (var block in blocks)
-            {
-                if (block.GetType() == typeof(BlockUIContainer))
-                {
-                    AppendPlainMessage(messages, plainMessage, roomId);
-
-                    var resources = block.Resources;
-                    var chatMessageBody = new ChatMessageBody
-                    {
-                        project = resources["project"].Cast<string>(),
-                        message = resources["message"].Cast<string>(),
-                        solution = resources["solution"].Cast<string>(),
-                        document = resources["document"].Cast<string>(),
-                        line = resources["line"].Cast<int>(),
-                        column = resources["column"].Cast<int>(),
-                        programminglanguage = resources["programminglanguage"].Cast<int>(),
-                        date = resources["date"].Cast<string>(),
-                        notification = resources["notification"].Cast<string>()
-                    };
-                    messages.Add(GetMessage(chatMessageBody, roomId));
-                    plainMessage = "";
-                }
-                else
-                {
-                    var text = ((TextElement) block).GetText();
-                    plainMessage = plainMessage.IsNullOrEmpty() ? text : plainMessage + "\r\n" + text;
-                }
-            }
-
-            AppendPlainMessage(messages, plainMessage, roomId);
-            client.Post(messages);
+            var messageBodies = new List<Tuple<string, HttpContent>>();
+            foreach (var message in messages)
+                messageBodies.Add(GetMessage(message,roomId));
+            client.Post(messageBodies);
         }
+
+        //public void SendMessages(IEnumerable<Block> blocks, string roomId)
+        //{
+        //    var plainMessage = "";
+        //    var messages = new List<Tuple<string, HttpContent>>();
+        //    foreach (var block in blocks)
+        //    {
+        //        if (block.GetType() == typeof(BlockUIContainer))
+        //        {
+        //            AppendPlainMessage(messages, plainMessage, roomId);
+
+        //            var resources = block.Resources;
+        //            var chatMessageBody = new ChatMessageBody
+        //            {
+        //                project = resources["project"].Cast<string>(),
+        //                message = resources["message"].Cast<string>(),
+        //                solution = resources["solution"].Cast<string>(),
+        //                document = resources["document"].Cast<string>(),
+        //                line = resources["line"].Cast<int>(),
+        //                column = resources["column"].Cast<int>(),
+        //                programminglanguage = resources["programminglanguage"].Cast<int>(),
+        //                date = resources["date"].Cast<string>(),
+        //                notification = resources["notification"].Cast<string>()
+        //            };
+        //            messages.Add(GetMessage(chatMessageBody, roomId));
+        //            plainMessage = "";
+        //        }
+        //        else
+        //        {
+        //            var text = ((TextElement) block).GetText();
+        //            plainMessage = plainMessage.IsNullOrEmpty() ? text : plainMessage + "\r\n" + text;
+        //        }
+        //    }
+
+        //    AppendPlainMessage(messages, plainMessage, roomId);
+        //    client.Post(messages);
+        //}
 
         private void AppendPlainMessage(List<Tuple<string, HttpContent>> messages, string plainMessage, string roomId)
         {
