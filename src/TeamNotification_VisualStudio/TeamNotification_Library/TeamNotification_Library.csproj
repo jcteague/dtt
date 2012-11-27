@@ -121,6 +121,7 @@
     <Compile Include="Extensions\FunctionalExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\SortedListExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
     <Compile Include="Functional\Just.cs" />
@@ -144,6 +145,7 @@
     </Compile>
     <Compile Include="Service\Async\AbstractEventHandler.cs" />
     <Compile Include="Service\Async\BackgroundRunner.cs" />
+    <Compile Include="Service\Async\ChatEvents.cs" />
     <Compile Include="Service\Async\DialogMessagesEvents.cs" />
     <Compile Include="Service\Async\AlertMessageWasRequested.cs" />
     <Compile Include="Service\Async\ClipboardEvents.cs" />
@@ -151,14 +153,23 @@
     <Compile Include="Service\Async\CustomEventHandler.cs" />
     <Compile Include="Service\Async\CustomEventArgs.cs" />
     <Compile Include="Service\Async\DialogMessageWasRequested.cs" />
+    <Compile Include="Service\Async\IHandleChatEvents.cs" />
     <Compile Include="Service\Async\IHandleDialogMessages.cs" />
     <Compile Include="Service\Async\IHandleClipboardEvents.cs" />
     <Compile Include="Service\Async\IHandleCodePaste.cs" />
+    <Compile Include="Service\Async\IHandleMixedEditorEvents.cs" />
     <Compile Include="Service\Async\IHandleSocketIOEvents.cs" />
+    <Compile Include="Service\Async\IHandleUIEvents.cs" />
     <Compile Include="Service\Async\IHandleUserAccountEvents.cs" />
     <Compile Include="Service\Async\IHandleToolWindowEvents.cs" />
     <Compile Include="Service\Async\IRunInBackgroundWorker.cs" />
+    <Compile Include="Service\Async\MixedEditorEvents.cs" />
+    <Compile Include="Service\Async\Models\CodeWasAppended.cs" />
+    <Compile Include="Service\Async\Models\ControlRenderWasRequested.cs" />
+    <Compile Include="Service\Async\Models\DataWasPasted.cs" />
+    <Compile Include="Service\Async\Models\SendMessageWasRequested.cs" />
     <Compile Include="Service\Async\Models\SocketWasDisconnected.cs" />
+    <Compile Include="Service\Async\Models\TextWasAppended.cs" />
     <Compile Include="Service\Async\Models\UserHasLogout.cs" />
     <Compile Include="Service\Async\SocketIOEventsHandler.cs" />
     <Compile Include="Service\Async\UserAccountEvents.cs" />
@@ -170,6 +181,8 @@
     <Compile Include="Service\Async\Models\UserCouldNotLogIn.cs" />
     <Compile Include="Service\Async\Models\UserHasLogged.cs" />
     <Compile Include="Service\Async\ToolWindowEvents.cs" />
+    <Compile Include="Service\Async\UserInterfaceEvents.cs" />
+    <Compile Include="Service\Chat\ChatMessageSender.cs" />
     <Compile Include="Service\Chat\ChatMessagesService.cs" />
     <Compile Include="Service\Chat\Formatters\CodeMessagesFormatter.cs" />
     <Compile Include="Service\Chat\Formatters\DateTimeFormatter.cs" />
@@ -177,11 +190,13 @@
     <Compile Include="Service\Chat\Formatters\IParseMessagesForLinks.cs" />
     <Compile Include="Service\Chat\Formatters\MessageLinksParser.cs" />
     <Compile Include="Service\Chat\Formatters\NotificationMessageFormatter.cs" />
+    <Compile Include="Service\Chat\ISendChatMessages.cs" />
     <Compile Include="Service\Controls\IEditMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatCodeMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatDateTime.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatPlainMessages.cs" />
     <Compile Include="Service\Chat\Formatters\IFormatUserIndicator.cs" />
+    <Compile Include="Service\Controls\IRenderOnDemand.cs" />
     <Compile Include="Service\Controls\IShowCode.cs" />
     <Compile Include="Service\Controls\MessagesEditor.cs" />
     <Compile Include="Service\Chat\Formatters\PlainMessagesFormatter.cs" />
@@ -241,6 +256,8 @@
     <Compile Include="Service\FileSystem\IHandleEncoding.cs" />
     <Compile Include="Service\FileSystem\IHandleFiles.cs" />
     <Compile Include="Service\Highlighters\AvalonSyntaxHighlighterProvider.cs" />
+    <Compile Include="Service\Highlighters\Avalon\MixedEditorTextAreaInputHandler.cs" />
+    <Compile Include="Service\Highlighters\Avalon\MixedHighlightingColorizer.cs" />
     <Compile Include="Service\Highlighters\IProvideSyntaxHighlighter.cs" />
     <Compile Include="Service\Highlighters\AurelianRibonSyntaxHighlighterProvider.cs" />
     <Compile Include="Service\Http\ChatMessagesFormatter.cs" />
@@ -251,8 +268,6 @@
     <Compile Include="Service\Http\IConnectToRedis.cs" />
     <Compile Include="Service\Http\IRedisConnection.cs" />
     <Compile Include="Service\Http\ISendHttpRequests.cs" />
-    <Compile Include="Service\Http\ISendChatMessages.cs" />
-    <Compile Include="Service\Http\ChatMessageSender.cs" />
     <Compile Include="Service\Http\ISerializeJSON.cs" />
     <Compile Include="Service\Http\ISubscribeToPubSub.cs" />
     <Compile Include="Service\Http\IWrapSocketIOClient.cs" />
@@ -320,6 +335,8 @@
     <Compile Include="Service\Update\PackageUpdateVerifier.cs" />
     <Compile Include="Service\Update\RepositoryEntry.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="UI\Avalon\IAppendCode.cs" />
+    <Compile Include="UI\Avalon\MixedTextEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -343,8 +360,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Service\Messaging\" />
     <Folder Include="Service\Timing\" />
-    <Folder Include="Service\Wrappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

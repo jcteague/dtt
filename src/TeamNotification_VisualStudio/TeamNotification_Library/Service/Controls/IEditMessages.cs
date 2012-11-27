@@ -5,12 +5,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
+using ICSharpCode.AvalonEdit;
+using TeamNotification_Library.UI.Avalon;
 
 namespace TeamNotification_Library.Service.Controls
 {
     public interface IEditMessages
     {
-        RichTextBox inputMethod { get; set; }
+        MixedTextEditor inputMethod { get; set; }
         Brush originalBackground { get; set; }
         TableRowGroup currentRowGroup { get; set; }
         Collection.Messages editingMessage { get; set; }

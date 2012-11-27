@@ -27,6 +27,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             var logger = Container.GetInstance<ILog>();
             try
             {
+                Container.GetInstance<IHandleUI>().Initialize();
                 // Set the window title reading it from the resources.
                 this.Caption = Resources.ToolWindowTitle;
                 // Set the image that will appear on the tab of the window frame

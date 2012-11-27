@@ -6,7 +6,10 @@
              xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
              xmlns:TeamNotification_Package="clr-namespace:AvenidaSoftware.TeamNotification_Package"
              xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
-             xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls" mc:Ignorable="d" 
+             xmlns:Controls="clr-namespace:AvenidaSoftware.TeamNotification_Package.Controls"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:Avalon="clr-namespace:TeamNotification_Library.UI.Avalon;assembly=TeamNotification_Library"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="424"
              Name="ChatWindow">
             <UserControl.Resources>
@@ -59,7 +62,7 @@
                     </FlowDocument>
                 </RichTextBox>
             </ScrollViewer>
-        </Border>
+            </Border>
             <GridSplitter Name="messageTextBoxGridSplitter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeBehavior="PreviousAndNext" />
             <Grid Name="messageTextBoxGrid" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Height="auto" Margin="5,0,5,2">
             <Grid.RowDefinitions>
@@ -70,13 +73,19 @@
                 <ColumnDefinition Name="messageGridColumnDefinition1" Width="*" />
                 <ColumnDefinition Name="messageGridColumnDefinition2" Width="0" />
             </Grid.ColumnDefinitions>
-            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </RichTextBox.Resources>
-            </RichTextBox>
+                <Border Name="messageEditorBorder" Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0" Padding="5,5,5,5">
+                    <Avalon:MixedTextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" 
+                                         PreviewKeyDown="CheckKeyboard"  VerticalAlignment="Stretch" SyntaxHighlighting="C#" BorderBrush="Black" />
+                </Border>
+                <!--                <avalonedit:TextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />-->
+<!--                <Avalon:MixedTextEditor Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" />-->
+<!--            <RichTextBox Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" GotFocus="ClearStatusBar" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="CheckKeyboard">-->
+<!--                <RichTextBox.Resources>-->
+<!--                    <Style TargetType="{x:Type Paragraph}">-->
+<!--                        <Setter Property="Margin" Value="0"/>-->
+<!--                    </Style>-->
+<!--                </RichTextBox.Resources>-->
+<!--            </RichTextBox>-->
             <Button Grid.Row="1" Grid.Column="0"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
         </Grid>
         </Grid>

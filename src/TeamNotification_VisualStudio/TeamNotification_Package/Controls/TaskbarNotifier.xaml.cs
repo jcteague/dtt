@@ -88,7 +88,7 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             if(notifyObject != null)
             {
                 dte.MainWindow.Activate();
-                //MessageBox.Show("\"" + notifyObject.Message + "\"" + " clicked!");
+                //MessageBox.ShowModalCodeEditor("\"" + notifyObject.Message + "\"" + " clicked!");
             }
         }
 

@@ -80,7 +80,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             //                throw new NotSupportedException(Resources.CanNotCreateWindow);
             //            }
             //            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            //            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            //            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.ShowModalCodeEditor());
 
             //            IVsSolution solution = (IVsSolution) Package.GetGlobalService(typeof(SVsSolution));
             //            string solutionDir;
@@ -190,7 +190,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void Alert(string message)
         {
-            // Show a Message Box to prove we were here
+            // ShowModalCodeEditor a Message Box to prove we were here
             IVsUIShell uiShell = (IVsUIShell) GetService(typeof (SVsUIShell));
             Guid clsid = Guid.Empty;
             int result;

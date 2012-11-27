@@ -56,6 +56,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IHandleToolWindowEvents toolWindowEvents;
         private IHandleUserAccountEvents userAccountEvents;
         private IHandleSocketIOEvents socketIOEvents;
+        private IHandleChatEvents chatEvents;
+
+        private IHandleMixedEditorEvents mixedEditorEvents;
+        private IHandleUIEvents userInterfaceEvents;
+
         private Dictionary<string, TableRowGroup> messagesList;
         private IProvideUser userProvider;
         private string roomId { get; set; }
@@ -65,11 +70,12 @@ namespace AvenidaSoftware.TeamNotification_Package
         private List<string> subscribedChannels;
 
         private IShowCode codeEditor;
+        private string lastStamp;
 
-        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
         {
             chatIsEnabled = true;
-
+            //chatEvents = chatEventsHandler;
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
             this.codePasteEvents = codePasteEvents;
@@ -78,6 +84,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.clipboardHandler = clipboardHandler;
             this.socketIOEvents = socketIOEvents;
             this.logger = logger;
+            this.mixedEditorEvents = mixedEditorEvents;
+            this.userInterfaceEvents = userInterfaceEvents;
             this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
@@ -86,7 +94,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
 
-            taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
+            this.taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
                                         {
                                             OpeningMilliseconds = 500,
                                             HidingMilliseconds = 500,
@@ -102,35 +110,32 @@ namespace AvenidaSoftware.TeamNotification_Package
             Resources.Add("rooms", roomLinks);
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
-
-            messageTextBox.Document.Blocks.Clear();
-
+            
             Loaded += (s, e) => chatRoomControlService.HandleDock(GetChatUIElements());
 
-            DataObject.RemovePastingHandler(messageTextBox, OnPaste);
-            DataObject.AddPastingHandler(messageTextBox, OnPaste);
+            this.mixedEditorEvents.DataWasPasted += MixedEditorDataWasPasted;
+
             lastStamp = "";
 
-            codePasteEvents.Clear();
-            codePasteEvents.CodePasteWasClicked += PasteCode;
+            this.codePasteEvents.Clear();
+            this.codePasteEvents.CodePasteWasClicked += PasteCode;
 
-            toolWindowEvents.Clear();
-            toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
+            this.toolWindowEvents.Clear();
+            this.toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
 
-            userAccountEvents.Clear();
-            userAccountEvents.UserHasLogout += OnUserLogout;
+            this.userAccountEvents.Clear();
+            this.userAccountEvents.UserHasLogout += OnUserLogout;
 
-            socketIOEvents.Clear();
-            socketIOEvents.SocketWasDisconnected += (s, e) =>
+            this.socketIOEvents.Clear();
+            this.socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
                                                             var room = "chat " + e.RoomId;
                                                             subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
-
         }
 
-        private void OnPaste(object sender, DataObjectPastingEventArgs e)
+        private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
         {
             logger.TryOrLog(() => Dispatcher.BeginInvoke(new Action(() => chatRoomControlService.HandlePaste(messageTextBox, codeEditor, e))));
         }
@@ -182,7 +187,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
 
-                    var activeWindow = GetForegroundWindow();//GetActiveWindow();
+                    var activeWindow = GetForegroundWindow();
                     var mainWindowHandle = (IntPtr)dteStore.dte.MainWindow.HWnd;
                     if ((Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id) && (activeWindow != mainWindowHandle))
                     {
@@ -204,7 +209,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void CheckKeyboard(object sender, KeyEventArgs e)
         {
-            if (!applicationGlobalState.IsEditingCode && e.Key == Key.Enter && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+            if (!applicationGlobalState.IsEditingCode && Keyboard.IsKeyDown(Key.Enter) && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             {
                 logger.TryOrLog(() =>
                                     {
@@ -224,7 +229,10 @@ namespace AvenidaSoftware.TeamNotification_Package
         private void SendMessage()
         {
             applicationGlobalState.IsEditingCode = false;
-            chatRoomControlService.SendMessage(messageTextBox, roomId);
+            chatRoomControlService.SendMessages(messageTextBox.GetTextEditorMessages(), roomId);
+            messageTextBox.Clear();
+            messageTextBox.Resources.Clear();
+            //chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.GetTextEditorMessages(), roomId));
         }
 
         private void PasteCode(object sender, EventArgs args)
@@ -311,7 +319,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                 OuterGridRowDefinition3 = outerGridRowDefinition3,
                 Container = messagesContainer,
                 MessagesTable = messagesTable,
-                MessageInput = messageTextBox,
+                InputBox = messageTextBox,
                 MessageTextBoxGrid = messageTextBoxGrid,
                 MessageContainerBorder = messageContainerBorder,
                 MessageTextBoxGridSplitter = messageTextBoxGridSplitter,
@@ -321,7 +329,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 MessageGridColumnDefinition2 = messageGridColumnDefinition2,
                 SendMessageButton = btnSendMessageButton,
                 StatusBar = dteStore.dte.StatusBar,
-                InputBox = messageTextBox,
                 MessagesList = messagesList,
                 LastStamp = lastStamp,
                 ComboRooms = comboRooms,
@@ -353,13 +360,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 this.ChangeRoom(value.rel);    
             }
         }
-
-        private void ClearStatusBar(object sender, RoutedEventArgs e)
-        {
-            dteStore.dte.StatusBar.Text = "";
-        }
-        
-        private string lastStamp;
 
         private void feedback_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {

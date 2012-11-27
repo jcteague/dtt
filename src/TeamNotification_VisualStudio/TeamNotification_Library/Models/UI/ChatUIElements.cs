@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using EnvDTE;
 using TeamNotification_Library.Service.Controls;
+using TeamNotification_Library.UI.Avalon;
+using ICSharpCode.AvalonEdit;
 
 namespace TeamNotification_Library.Models.UI
 {
@@ -24,7 +26,7 @@ namespace TeamNotification_Library.Models.UI
         public string LastStamp { get; set; }
         public Dictionary<string, TableRowGroup> MessagesList { get; set; }
         public ComboBox ComboRooms { get; set; }
-        public RichTextBox InputBox { get; set; }
+        public MixedTextEditor InputBox { get; set; }
         public IShowCode codeEditor { get; set; }
     }
 }

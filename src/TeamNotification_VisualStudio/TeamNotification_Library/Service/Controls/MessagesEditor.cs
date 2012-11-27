@@ -11,12 +11,13 @@ using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
 using TeamNotification_Library.Service.LocalSystem;
 using TeamNotification_Library.Service.Providers;
+using TeamNotification_Library.UI.Avalon;
 
 namespace TeamNotification_Library.Service.Controls
 {
     public class MessagesEditor : IEditMessages
     {
-        public RichTextBox inputMethod { get; set; }
+        public MixedTextEditor inputMethod { get; set; }
         public Brush originalBackground { get; set; }
         public TableRowGroup currentRowGroup { get; set; }
         public Collection.Messages editingMessage { get; set; }
@@ -94,15 +95,14 @@ namespace TeamNotification_Library.Service.Controls
             {
                 chatMessageBody.stamp = "";
                 editingMessageModel.chatMessageBody = chatMessageBody;
-                inputMethod.Document.Blocks.Clear();
+                inputMethod.Clear();
                 var editedCode = codeEditor.Show(editingMessageModel.chatMessageBody.message,
                                                  editingMessageModel.chatMessageBody.programminglanguage);
 
                 if(editedCode.Trim()!= ""){
-                    var editor = textEditorCreator.Get(editedCode, editingMessageModel.chatMessageBody.programminglanguage);
                     editingMessageModel.chatMessageBody.message = editedCode;
-                    var blockUIContainer = new BlockUIContainer(editor) {Resources = editingMessageModel.AsResources()};
-                    inputMethod.Document.Blocks.Add(blockUIContainer);
+                    inputMethod.AppendCode(editingMessageModel);
+                    //inputMethod.Text = editingMessageModel.chatMessageBody.message;
                 }
             }else{
                 SetControls(row);
@@ -118,8 +118,9 @@ namespace TeamNotification_Library.Service.Controls
             inputMethod.Background = editingColor;
             comboRooms.IsEnabled = false;
 
-            inputMethod.Document.Blocks.Clear();
-            inputMethod.Document.Blocks.Add(new Paragraph(new Run(editingMessageModel.chatMessageBody.message)));
+            inputMethod.Clear();
+            inputMethod.Resources["content"] = editingMessageModel.chatMessageBody; 
+            inputMethod.Text = editingMessageModel.chatMessageBody.message;
             inputMethod.Focus();
             inputMethod.PreviewKeyDown += CancelEditMessage;
             inputMethod.TextChanged += OnInputMethodTextChanged;
@@ -146,7 +147,7 @@ namespace TeamNotification_Library.Service.Controls
         {
             if (editingMessage == null) return;
             if (inputMethod == null) return;
-            inputMethod.Document.Blocks.Clear();
+            inputMethod.Clear();
             if (!editingMessageModel.chatMessageBody.IsCode){
                 currentRowGroup.Background = originalBackground;
                 inputMethod.Background = originalBackground;

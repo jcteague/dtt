@@ -20,6 +20,9 @@ namespace TeamNotification_Library.Extensions
 
                  case "js":
                      return GlobalConstants.ProgrammingLanguages.JavaScript;
+                 case "cpp":
+                 case "h":
+                     return GlobalConstants.ProgrammingLanguages.Cpp;
 
                  default:
                      return GlobalConstants.ProgrammingLanguages.Unknown;

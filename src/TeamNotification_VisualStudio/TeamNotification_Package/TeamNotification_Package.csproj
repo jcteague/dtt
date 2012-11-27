@@ -164,6 +164,7 @@
     <Compile Include="Controls\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IHandleUI.cs" />
     <Compile Include="Controls\ModalCodeEditor.xaml.cs">
       <DependentUpon>ModalCodeEditor.xaml</DependentUpon>
     </Compile>
@@ -176,6 +177,7 @@
     <Compile Include="Controls\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UserInterfaceHandler.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

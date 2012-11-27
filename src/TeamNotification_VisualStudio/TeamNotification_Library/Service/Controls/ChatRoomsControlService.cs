@@ -1,31 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using ICSharpCode.AvalonEdit;
-using NLog;
 using TeamNotification_Library.Configuration;
-using TeamNotification_Library.Extensions;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
 using TeamNotification_Library.Service.Async;
 using TeamNotification_Library.Service.Async.Models;
 using TeamNotification_Library.Service.Chat;
-using TeamNotification_Library.Service.Chat.Formatters;
 using TeamNotification_Library.Service.Clipboard;
-using TeamNotification_Library.Service.Factories.UI;
 using TeamNotification_Library.Service.Factories.UI.Highlighters;
 using TeamNotification_Library.Service.Http;
-using TeamNotification_Library.Service.Logging;
 using TeamNotification_Library.Service.Mappers;
 using TeamNotification_Library.Service.Providers;
 using TeamNotification_Library.Service.ToolWindow;
-using Logger = TeamNotification_Library.Service.Logging.Logger;
+using TeamNotification_Library.UI.Avalon;
 
 namespace TeamNotification_Library.Service.Controls
 {
@@ -42,12 +31,13 @@ namespace TeamNotification_Library.Service.Controls
         private IHandleChatMessages chatMessagesService;
         private readonly IStoreDataLocally localStorageService;
         private readonly IHandleUserAccountEvents userAccountEvents;
+        private IHandleMixedEditorEvents mixedEditorEvents;
 
         readonly ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory;
         private readonly ISendChatMessages messageSender;
         private IEditMessages messagesEditor;
 
-        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor)
+        public ChatRoomsControlService(IProvideUser userProvider, ISendHttpRequests httpClient, IProvideConfiguration<ServerConfiguration> configuration, IStoreClipboardData clipboardStorage, ISendChatMessages messageSender, ICreateSyntaxBlockUIInstances syntaxBlockUIContainerFactory, ISerializeJSON jsonSerializer, IHandleChatMessages chatMessagesService, IMapEntities<Collection.Messages, ChatMessageModel> collectionMessagesToChatMessageModelMapper, IGetToolWindowAction toolWindowActionGetter, IStoreDataLocally localStorageService, IHandleUserAccountEvents userAccountEvents, IEditMessages messagesEditor, IHandleMixedEditorEvents mixedEditorEvents)
         {
             this.userProvider = userProvider;
             this.httpClient = httpClient;
@@ -56,6 +46,7 @@ namespace TeamNotification_Library.Service.Controls
             this.syntaxBlockUIContainerFactory = syntaxBlockUIContainerFactory;
             this.jsonSerializer = jsonSerializer;
             this.messagesEditor = messagesEditor;
+            this.mixedEditorEvents = mixedEditorEvents;
             this.chatMessagesService = chatMessagesService;
             this.collectionMessagesToChatMessageModelMapper = collectionMessagesToChatMessageModelMapper;
             this.toolWindowActionGetter = toolWindowActionGetter;
@@ -77,6 +68,26 @@ namespace TeamNotification_Library.Service.Controls
             var uri = configuration.Get().Uri +"user/"+ user.id;
             var c = httpClient.Get<Collection>(uri).Result;
             return c;
+        }
+
+
+        public void HandlePaste(MixedTextEditor textBox, IShowCode codeShower, DataWasPasted pasteData)
+        {
+            var chatMessageModel = clipboardStorage.Get<ChatMessageModel>();
+
+            if (chatMessageModel.chatMessageBody.IsCode)
+            {
+                var pastedCode = codeShower.Show(chatMessageModel.chatMessageBody.message, chatMessageModel.chatMessageBody.programminglanguage);
+                if(pastedCode.Trim() != "")
+                {
+                    chatMessageModel.chatMessageBody.message = pastedCode;
+                    mixedEditorEvents.OnCodeAppended(this, new CodeWasAppended(chatMessageModel));
+                }
+            }
+            else
+            {
+                mixedEditorEvents.OnTextAppended(this, new TextWasAppended(pasteData.Text));
+            }
         }
 
         public void HandlePaste(RichTextBox textBox, IShowCode codeShower, DataObjectPastingEventArgs dataObjectPastingEventArgs)
@@ -115,23 +126,9 @@ namespace TeamNotification_Library.Service.Controls
             userAccountEvents.OnLogout(sender, new UserHasLogout());
         }
 
-        public void SendMessage(RichTextBox textBox, string roomId)
+        public void SendMessages(IEnumerable<ChatMessageBody> messages, string roomId)
         {
-            //messagesEditor.inputMethod = textBox;
-            //if (messagesEditor.editingMessage != null)
-            //{
-            //    var text = messagesEditor.inputMethod.Document.GetDocumentText();
-            //    messagesEditor.editingMessageModel.chatMessageBody.message = text.Substring(0, text.Length - 2);
-            //    messageSender.SendMessage(messagesEditor.editingMessageModel.chatMessageBody, roomId);
-            //}
-            //else
-            //{
-            messagesEditor.inputMethod = textBox;
-            messageSender.SendMessages(textBox.Document.Blocks, roomId);
-            //}
-            textBox.Document.Blocks.Clear();
-            messagesEditor.ResetControls();
-
+            this.messageSender.SendMessages(messages,roomId);
         }
 
         public void ResetContainer(ChatUIElements messagesContainer)
