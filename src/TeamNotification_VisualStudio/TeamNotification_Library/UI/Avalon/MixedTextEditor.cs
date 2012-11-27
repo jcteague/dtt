@@ -55,7 +55,8 @@ namespace TeamNotification_Library.UI.Avalon
                     newTextMessageContent += content.Values.ElementAt(i); ++i;
                     if (i < limit && (content.Values.ElementAt(i) is string)) newTextMessageContent += "\n";
                 }
-                if(!string.IsNullOrEmpty(newTextMessageContent))
+                newTextMessageContent = newTextMessageContent.Trim();
+                if(!newTextMessageContent.IsNullOrWhiteSpace())
                 {
                     messages.Add(new ChatMessageBody {message=newTextMessageContent} );
                     newTextMessageContent = string.Empty;
