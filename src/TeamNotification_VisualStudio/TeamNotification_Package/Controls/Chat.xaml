@@ -15,6 +15,7 @@
             <UserControl.Resources>
                 <ResourceDictionary Source="Themes/BureauBlue.xaml"/>
             </UserControl.Resources>
+           
     <Grid Name="mainGrid">
         <Grid Height="auto" >
             <Grid.RowDefinitions>
@@ -74,8 +75,21 @@
                 <ColumnDefinition Name="messageGridColumnDefinition2" Width="0" />
             </Grid.ColumnDefinitions>
                 <Border Name="messageEditorBorder" Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5,0,5,0" Padding="5,5,5,5">
-                    <Avalon:MixedTextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" 
-                                         PreviewKeyDown="CheckKeyboard"  VerticalAlignment="Stretch" SyntaxHighlighting="C#" BorderBrush="Black" />
+                    <Avalon:MixedTextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto"
+                                         PreviewKeyDown="CheckKeyboard"  VerticalAlignment="Stretch" SyntaxHighlighting="C#" BorderBrush="Black">
+                        <Avalon:MixedTextEditor.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Cut">
+                                </MenuItem>
+                                <MenuItem Command="Copy">
+                                </MenuItem>
+                                <MenuItem Command="Paste">
+                                </MenuItem>
+                            </ContextMenu>
+                        </Avalon:MixedTextEditor.ContextMenu>
+
+                    </Avalon:MixedTextEditor>
+                    
                 </Border>
                 <!--                <avalonedit:TextEditor x:Name="messageTextBox"  Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" VerticalAlignment="Stretch" SyntaxHighlighting="C#" />-->
 <!--                <Avalon:MixedTextEditor Grid.Row="0" Grid.Column="0" Width="auto" HorizontalAlignment="Stretch" Height="auto" Name="messageTextBox" VerticalAlignment="Stretch" />-->

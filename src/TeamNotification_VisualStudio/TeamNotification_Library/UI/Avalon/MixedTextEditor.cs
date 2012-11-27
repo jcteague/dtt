@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
@@ -18,7 +20,7 @@ namespace TeamNotification_Library.UI.Avalon
     {
         private IHandleMixedEditorEvents mixedEditorEvents;
         private IHandleChatEvents chatEvents;
-
+        static DependencyProperty ContextMenu;
         public MixedTextEditor() : this(Container.GetInstance<IHandleMixedEditorEvents>(), Container.GetInstance<IHandleChatEvents>())
         {
         }
