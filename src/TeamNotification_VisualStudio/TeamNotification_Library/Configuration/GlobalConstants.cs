@@ -22,6 +22,7 @@
             public const int Unknown = -1;
             public const int CSharp = 1;
             public const int JavaScript = 2;
+            public const int Cpp = 1;
             public const int VisualBasic = 3;
         }
 

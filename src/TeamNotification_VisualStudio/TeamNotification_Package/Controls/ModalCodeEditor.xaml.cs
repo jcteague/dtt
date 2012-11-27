@@ -45,11 +45,10 @@ namespace AvenidaSoftware.TeamNotification_Package.Controls
             var mce = new ModalCodeEditor
                           {
                               RefControl = RefControl,
-                              tbxInsertedText =
-                                  {SyntaxHighlighting = syntaxHighlighter.GetFor(programmingLanguageIdentifier)},
-                              rectShadowingArea = {Height = RefControl.Height*0.8, Width = RefControl.Width*0.8}
+                              rectShadowingArea = {Height = RefControl.Height*0.8, Width = RefControl.Width*0.8},
+                              Visibility = Visibility.Visible
                           };
-            mce.Visibility = Visibility.Visible;
+            mce.tbxInsertedText.SyntaxHighlighting = syntaxHighlighter.GetFor(programmingLanguageIdentifier);
             mce.tbxInsertedText.Text = code;
             return mce.ShowDialog() == true ? mce.tbxInsertedText.Text : "";
         }

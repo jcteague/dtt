@@ -9,7 +9,9 @@ namespace TeamNotification_Library.Extensions
         {
             if (list.ContainsKey(key))
                 if(list[key] is MixedEditorLineData)
+                {
                     (list[key] as MixedEditorLineData).Message = value as string;
+                }
                 else
                     list[key] = value;
             else

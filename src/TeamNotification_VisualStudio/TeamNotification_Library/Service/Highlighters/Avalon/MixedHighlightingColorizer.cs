@@ -19,7 +19,7 @@ namespace TeamNotification_Library.Service.Highlighters.Avalon
 
         protected override void Colorize(ITextRunConstructionContext context)
         {
-            var content = (SortedList<int, object>) textEditor.Resources["content"];
+            var content = textEditor.Resources["content"].Cast<SortedList<int, object>>();
             if (LineIsCode(context, content))
                 base.Colorize(context);
         }

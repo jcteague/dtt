@@ -230,8 +230,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             applicationGlobalState.IsEditingCode = false;
             chatRoomControlService.SendMessages(messageTextBox.GetTextEditorMessages(), roomId);
-            messageTextBox.Resources.Clear();
             messageTextBox.Clear();
+            messageTextBox.Resources.Clear();
             //chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.GetTextEditorMessages(), roomId));
         }
 

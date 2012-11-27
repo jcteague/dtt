@@ -32,7 +32,13 @@ namespace TeamNotification_Library.UI.Avalon
             mixedEditorEvents.CodeWasAppended += AppendCode;
             mixedEditorEvents.TextWasAppended += AppendText;
 
+            this.TextChanged += UpdateContentResources;
             TextArea.ActiveInputHandler = new MixedEditorTextAreaInputHandler(TextArea);
+        }
+
+        private void UpdateContentResources(object sender, EventArgs e)
+        {
+            GetMergedContentResource(ContentResource, Text);
         }
 
         public IEnumerable<ChatMessageBody> GetTextEditorMessages()
@@ -81,12 +87,45 @@ namespace TeamNotification_Library.UI.Avalon
         private SortedList<int, object> GetMergedContentResource(SortedList<int, object> contentResource, string text)
         {
             var result = CloneSortedList(contentResource);
+            var textLines = text.Split('\n');
+            if(result.Count > 0)
+            {
+                var counter = result.Last().Key - textLines.Length;
+                while (counter > 0) { text += '\n'; --counter; }
+            }
+
             text.Split('\n').ZipWithIndex().Each(x => {
-                                                         if (!x.Item1.IsNullOrWhiteSpace())
-                                                             result.AddOrUpdate(x.Item2 + 1, x.Item1);
-                                                     });
+                if (!x.Item1.IsNull())
+                    result.AddOrUpdate(x.Item2 + 1, x.Item1);
+            });
+            result = ClearResult(result);
             return result;
         }
+
+        private SortedList<int, object> ClearResult(SortedList<int, object> contentResource)
+        {
+            while (contentResource.Count > 0 && contentResource.Last().Value is MixedEditorLineData)
+            {
+                if ((contentResource.Last().Value as MixedEditorLineData).Message.IsNullOrWhiteSpace())
+                {
+                    ContentResource.Remove(contentResource.Last().Key);
+                    contentResource.Remove(contentResource.Last().Key);
+                }else break;
+            }
+
+            while (contentResource.Count > 0 && contentResource.First().Value is MixedEditorLineData)
+            {
+                if ((contentResource.First().Value as MixedEditorLineData).Message.IsNullOrWhiteSpace())
+                {
+                    ContentResource.Remove(contentResource.First().Key);
+                    contentResource.Remove(contentResource.First().Key);
+                }else break;
+            }
+
+            return contentResource;
+        }
+
+
 
         private static SortedList<int, object> CloneSortedList(SortedList<int, object> contentResource)
         {
@@ -106,7 +145,6 @@ namespace TeamNotification_Library.UI.Avalon
 
         public void AppendCode(ChatMessageModel chatMessageModel)
         {
-
             var programmingLanguage = chatMessageModel.chatMessageBody.programminglanguage;
 
             if (!Resources.Contains("content"))
@@ -136,31 +174,6 @@ namespace TeamNotification_Library.UI.Avalon
         private void AppendCode(object sender, CodeWasAppended e)
         {
             AppendCode(e.ChatMessageModel);
-            //var programmingLanguage = e.ChatMessageModel.chatMessageBody.programminglanguage;
-
-            //if (!Resources.Contains("content"))
-            //{
-            //    Resources.Add("content", new SortedList<int, object>());
-            //}
-            //var content = ContentResource;
-            //e.ChatMessageModel.chatMessageBody.message.Split('\n').ZipWithIndex().Each(x =>
-            //                                                           {
-            //                                                               var position = LineCount + x.Item2;
-            //                                                               var valueAtPosition = new MixedEditorLineData(
-            //                                                                   x.Item1, 
-            //                                                                   programmingLanguage, 
-            //                                                                   e.ChatMessageModel.chatMessageBody.solution,
-            //                                                                   e.ChatMessageModel.chatMessageBody.project,
-            //                                                                   e.ChatMessageModel.chatMessageBody.document,
-            //                                                                   x.Item2 + e.ChatMessageModel.chatMessageBody.line, 
-            //                                                                   e.ChatMessageModel.chatMessageBody.column);
-            //                                                               if (content.ContainsKey(position))
-            //                                                                   content[position] = valueAtPosition;
-            //                                                               else
-            //                                                                   content.Add(position, valueAtPosition);
-            //                                                           });
-
-            //Text += e.ChatMessageModel.chatMessageBody.message;
         }
 
         private void AppendText(object sender, TextWasAppended e)
