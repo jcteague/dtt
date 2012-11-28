@@ -4,7 +4,6 @@ require.config
         'jquery': 'jquery-1.7.2.min'
         'base64': 'base64'
         'cookie': 'jquery.cookie'
-        'session_mng': 'session_mng'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'moment': 'moment.min'
@@ -38,6 +37,7 @@ require.config
         'lang-proto': 'prettify/lang-proto'
         'lang-scala': 'prettify/lang-scala'
         'lang-vhdl': 'prettify/lang-vhdl'
+        'session_mng': 'session_mng'
 
     shim:
         'prettify-languages':

@@ -10,7 +10,6 @@
       'base64': 'base64',
       'cookie': 'jquery.cookie',
       'underscore': 'underscore-min',
-      'session_mng': 'session_mng',
       'backbone': 'backbone-min',
       'moment': 'moment.min',
       'jquery.autocomplete': 'jquery.autocomplete',
@@ -43,22 +42,24 @@
       'lang-ml': 'prettify/lang-ml',
       'lang-proto': 'prettify/lang-proto',
       'lang-scala': 'prettify/lang-scala',
-      'lang-vhdl': 'prettify/lang-vhdl'
+      'lang-vhdl': 'prettify/lang-vhdl',
+      'session_mng': 'session_mng'
     },
     shim: {
       'prettify-languages': {
         deps: ['prettify']
       },
+      'cookie': {
+        deps: ['jquery']
+      },
       'session_mng':{
         deps: ['cookie','config', 'jquery']
-      },'backbone': {
-        deps: ['underscore', 'jquery'],
+      },
+      'backbone': {
+        deps: ['underscore', 'jquery','session_mng'],
         exports: 'Backbone'
       },
       'jquery.autocomplete': {
-        deps: ['jquery']
-      },
-      'cookie': {
         deps: ['jquery']
       },
       'base64': {
