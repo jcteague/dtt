@@ -42,7 +42,8 @@ require.config
     shim:
         'prettify-languages':
             deps: ['prettify']
-
+        'cookie':
+            deps: ['jquery']
         'session_mng':
             deps: ['cookie','config', 'jquery']
             
@@ -51,8 +52,6 @@ require.config
             exports: 'Backbone'
 
         'jquery.autocomplete':
-            deps: ['jquery']
-        'cookie':
             deps: ['jquery']
         'base64':
             deps: ['jquery']
