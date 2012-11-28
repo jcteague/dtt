@@ -4,7 +4,7 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
         parts = path.split('/#')
         if(parts.length > 1)
             relevant = parts[1]
-            return (Config.whitelist.indexOf(relevant) > -1)
+            return (Config?) && (Config.whitelist.indexOf(relevant) > -1)
         return true
 
     check_cookie = () ->

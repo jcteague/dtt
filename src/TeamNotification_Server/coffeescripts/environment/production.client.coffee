@@ -1,6 +1,7 @@
 define 'config', [], ->
 
     settings =
+        whitelist: ['/', '/user/login','/user/login/', '/registration','/registration/']
         site:
             host: 'yacketyapp.com'
             port: 443

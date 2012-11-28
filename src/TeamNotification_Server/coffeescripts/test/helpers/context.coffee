@@ -42,7 +42,7 @@ integration_test = (options) ->
         browsers: 1
 
     opt = _.extend(default_options, options)
-
+    console.log opt
     return (block) ->
         browsers = (new Browser() for i in [0...opt.browsers])
 

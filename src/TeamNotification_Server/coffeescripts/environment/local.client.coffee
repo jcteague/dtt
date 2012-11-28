@@ -1,6 +1,7 @@
 define 'config', [], ->
 
     settings =
+        whitelist: ['/', '/user/login','/user/login/', '/registration','/registration/']
         site:
             host: 'dtt.local'
             port: 443
