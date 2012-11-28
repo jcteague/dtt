@@ -10,6 +10,7 @@
       'base64': 'base64',
       'cookie': 'jquery.cookie',
       'underscore': 'underscore-min',
+      'session_mng': 'session_mng',
       'backbone': 'backbone-min',
       'moment': 'moment.min',
       'jquery.autocomplete': 'jquery.autocomplete',
@@ -48,7 +49,9 @@
       'prettify-languages': {
         deps: ['prettify']
       },
-      'backbone': {
+      'session_mng':{
+        deps: ['cookie','config', 'jquery']
+      },'backbone': {
         deps: ['underscore', 'jquery'],
         exports: 'Backbone'
       },
