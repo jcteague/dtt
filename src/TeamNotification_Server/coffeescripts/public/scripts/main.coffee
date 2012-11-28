@@ -4,6 +4,7 @@ require.config
         'jquery': 'jquery-1.7.2.min'
         'base64': 'base64'
         'cookie': 'jquery.cookie'
+        'session_mng': 'session_mng'
         'underscore': 'underscore-min'
         'backbone': 'backbone-min'
         'moment': 'moment.min'
@@ -42,8 +43,11 @@ require.config
         'prettify-languages':
             deps: ['prettify']
 
+        'session_mng':
+            deps: ['cookie','config', 'jquery']
+            
         'backbone':
-            deps: ['underscore', 'jquery']
+            deps: ['underscore','jquery', 'session_mng']
             exports: 'Backbone'
 
         'jquery.autocomplete':
