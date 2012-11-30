@@ -37,7 +37,13 @@ orm.then (db) ->
         confirmation_key: {type: 'string', length:255}
         created : {type:'datetime', default:'now()'}
         active : {type:'bit', default:1}
-        
+         
+    _entity.UserPasswordResetRequest = db.define 'user_password_reset_request'
+            user_id: {type: 'int'}
+            reset_key: {type:'string', length:140}
+            created : {type:'datetime', default:'now()'}
+            active : {type:'bit', default:1}
+
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})
    
@@ -48,11 +54,13 @@ orm.then (db) ->
     _entity.ChatRoomInvitation.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
     
     _entity.UserConfirmationKey.hasOne('user', _entity.User, 'user', {autoFetch:true})
+    _entity.UserPasswordResetRequest.hasOne('user', _entity.User, 'user', {autoFetch:true})
     #_entity.ChatRoomUser.sync()
     #_entity.ChatRoomMessage.sync()
     #_entity.ChatRoom.sync()
     #_entity.ChatRoomInvitation.sync()
     #_entity.UserConfirmationKey.sync()
+    #_entity.UserPasswordResetRequest.sync()
 
 module.exports =
     core:

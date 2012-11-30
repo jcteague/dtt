@@ -10,7 +10,6 @@ build = (collection_type) ->
 
 generate_confirmation_key = (key) ->
     d = new Date().getTime().toString()
-    console.log d
     sha256(d+key)
     
 get_messages_from_flash = (flash_data) ->
