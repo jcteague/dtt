@@ -106,3 +106,13 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
                         minlength: 'Password must contain at least 6 characters'
                         equalTo: 'Password and confirmation must match'
                 }
+            if template_type in ['change_password']
+                return {
+                    password:
+                        required: 'Password must contain at least 6 characters'
+                        minlength: 'Password must contain at least 6 characters'
+                    confirm_password:
+                        required: 'Password must contain at least 6 characters'
+                        minlength: 'Password must contain at least 6 characters'
+                        equalTo: 'Password and confirmation must match'
+                }

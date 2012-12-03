@@ -13,7 +13,6 @@ methods.get_user = (req, res) ->
     get_user_collection(req, res, req.param('id'))
 
 methods.get_logged_user = (req, res) ->
-    console.log req.user
     if(req.user == false)
         methods.login(req, res)
     get_user_collection(req, res, req.user.id)
@@ -65,6 +64,7 @@ methods.login = (req, res) ->
         'href': '/user/login'
         'links' : [
           {"name": "self", "rel": "login", 'href':'/user/login'}
+          {"name": "forgot password", "rel": "forgot_password", 'href':'/forgot_password'}
         ]
         'template':
             'data':[

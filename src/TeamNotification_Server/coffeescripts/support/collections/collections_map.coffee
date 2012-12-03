@@ -13,5 +13,6 @@ mapping =
     room_invitations_collection: 'room_invitations_collection'
     github_repositories_collection: 'github_repositories_collection'
     plugin_collection: 'plugin_collection'
+    change_password_collection: 'change_password_collection'
 
 module.exports = mapping
