@@ -72,7 +72,7 @@ context.for.integration_test(authenticate:false) (browser) ->
                 expect(browser.html('#server-response-container p')).to.equal "<p>There's no user with the provided email.</p>"
                 done()
         describe 'Changing the user password', ->
-            describe 'when changing the password and the key is valid'
+            describe 'when changing the password and the key is valid', ->
                 beforeEach (done) ->
                     browser.
                         visit("#{config.site.surl}/#/reset_password/someresetkey").

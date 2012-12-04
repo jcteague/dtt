@@ -26,8 +26,9 @@ node_hash_mock =
     sha256: sinon.stub()
 
 config_mock = () ->
-    site:
+    return site =
         surl: 'someurl'
+ 
 repository_mock = sinon.stub()
 
 email_sender_mock =
@@ -37,7 +38,7 @@ email_template_mock =
         password_reset:
             using: sinon.stub()
 
-password_request = module_loader.require('../subdomains/default/routes/user', {
+sut = module_loader.require('../subdomains/default/routes/forgot_password', {
     requires:
         'node_hash': node_hash_mock
         '../../../config': config_mock
@@ -57,12 +58,12 @@ describe 'Reset password', ->
             app = { get:sinon.spy(), post:sinon.spy() }
             body_parser_result = 'blah'
             express_mock.bodyParser.returns(body_parser_result)
-            password_request.build_routes(app)
+            sut.build_routes(app)
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
-            sinon.assert.calledWith app.get, '/api/forgot_password', password_request.methods.forgot_password_form
-            sinon.assert.calledWith app.post,'/api/forgot_password', body_parser_result, password_request.methods.send_reset_email
-            sinon.assert.calledWith app.get, '/api/reset_password/:reset_key', password_request.methods.reset_form
-            sinon.assert.calledWith app.post, '/api/reset_password/:reset_key', body_parser_result, methods.reset_password
+            sinon.assert.calledWith(app.get, '/api/forgot_password', sut.methods.forgot_password_form)
+            sinon.assert.calledWith(app.post, '/api/forgot_password', body_parser_result, sut.methods.send_reset_email)
+            sinon.assert.calledWith(app.get, '/api/reset_password/:reset_key', sut.methods.reset_form)
+            sinon.assert.calledWith(app.post, '/api/reset_password/:reset_key', body_parser_result, sut.methods.reset_password)
             done()
