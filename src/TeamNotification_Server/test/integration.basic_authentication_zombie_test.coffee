@@ -26,14 +26,15 @@ context.for.integration_test(authenticate: false) (browser) ->
         describe 'When an unauthenticated request is received', ->
 
             response = null
-            login_div_id = 'login-container'
+            login_link = '<a href="#/user/login">Login</a>'
             beforeEach (done) ->
+                browser.cookies().clear()
                 browser.visit "#{config.site.surl}/#/user/1", (e, browser, status) ->
                     response = status
                     done()
 
-            it 'should redirect to the login page', (done) ->
-                expect(browser.html()).to.contain login_div_id
+            it 'should redirect to the main page', (done) ->
+                expect(browser.html()).to.contain login_link
                 done()
 
         describe 'When an authenticated header is found', ->

@@ -16,11 +16,12 @@ users =
         }
     ]
 
-context.for.integration_test() (browser) ->
+context.for.integration_test(authenticate:false) (browser) ->
 
     describe 'User Account Registration', ->
 
         beforeEach (done) ->
+            browser.cookies().clear()
             handle_in_series server.start(), db.save(users), done
 
         describe 'When a user visits the #/registration page', ->
@@ -40,6 +41,7 @@ context.for.integration_test() (browser) ->
         describe 'When a user visits the #/registration page and fills the form with valid user data', ->
 
             beforeEach (done) ->
+                browser.cookies().clear()
                 browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
@@ -58,6 +60,7 @@ context.for.integration_test() (browser) ->
         describe 'When a user visits the #/registration page and submits an email that is already registered', ->
 
             beforeEach (done) ->
+                browser.cookies().clear()
                 browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
@@ -76,6 +79,7 @@ context.for.integration_test() (browser) ->
         describe 'When a user visits the #/registration page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
+                browser.cookies().clear()
                 browser.visit("#{config.site.surl}/#/registration").
                     then(-> 
                         browser.
