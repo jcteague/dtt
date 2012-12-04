@@ -14,7 +14,7 @@ namespace TeamNotification_Library.Service.Update
             var entry = new RepositoryEntry
                             {
                                 Name = GlobalConstants.PackageName,
-                                DownloadUrl = Properties.Settings.Default.Site + GlobalConstants.PackageDownloadUrl,
+                                DownloadUrl = Properties.Settings.Default.HttpSite + GlobalConstants.PackageDownloadUrl,
                                 VsixReferences = GlobalConstants.PackageName
                             };
             
