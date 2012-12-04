@@ -67,3 +67,15 @@ describe 'Reset password', ->
             sinon.assert.calledWith(app.get, '/api/reset_password/:reset_key', sut.methods.reset_form)
             sinon.assert.calledWith(app.post, '/api/reset_password/:reset_key', body_parser_result, sut.methods.reset_password)
             done()
+            
+    describe 'forgot_password_form', ->
+        res = req = json_data = null
+        beforeEach (done) ->
+            res =
+                json: (json) ->
+                    json_data = json
+            sut.methods.forgot_password_form(req, res)
+            done()
+        it "should contain a field to put the user's email", (done) ->
+            expect(json_data['template']['data'][0]).to.eql({'name':'email', 'label':'Email', 'type':'string'})
+            done()

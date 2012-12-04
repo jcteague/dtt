@@ -186,6 +186,10 @@ describe 'User', ->
                 expect(links[0]).to.eql {"name": "self", "rel": "login", 'href':'/user/login'}
                 done()
                 
+            it 'should contain a link to the forgot password option', (done) -> 
+                expect(links[1]).to.eql {"name": "forgot password", "rel": "forgot_password", 'href':'/forgot_password'}
+                done()
+                
             it 'should contain the login form', (done) ->
                 expect(template.data[0]).to.eql {'name':'username', 'label':'Email', 'type':'string'}
                 expect(template.data[1]).to.eql {'name':'password', 'label':'Password', 'type':'password'}
