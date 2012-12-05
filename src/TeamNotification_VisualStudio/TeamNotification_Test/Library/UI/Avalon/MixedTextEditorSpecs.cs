@@ -68,7 +68,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
                     contentResource.Add(1, codeLine1);
                     contentResource.Add(2, codeLine2);
                     contentResource.Add(3, codeLine3);
-
+                    
                     var chatMessageBody = new ChatMessageBody
                                               {
                                                   message = "class A {\n \n\tstatic string Hello() {",
@@ -84,6 +84,7 @@ namespace TeamNotification_Test.Library.UI.Avalon
 
                 Because of = () =>
                 {
+                    sut.Text = "class A {\n \n\tstatic string Hello() {";
                     sut.Resources.Add("content", contentResource);
                     result = sut.GetTextEditorMessages();
                 };
