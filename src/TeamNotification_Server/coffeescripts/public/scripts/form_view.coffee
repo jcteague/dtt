@@ -34,7 +34,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
             callback = (res) => 
-                console.log res
                 @trigger 'response:received', res
                 if res.server_messages?
                     if res.redirect? && res.redirect
@@ -44,7 +43,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                     @trigger 'messages:display', res.server_messages 
 
             url = "#{config.api.url}#{@$('form').attr('action')}"
-            console.log url
             parameters = {
                 type: 'POST'
                 data: data

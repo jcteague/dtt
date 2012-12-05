@@ -55,7 +55,6 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                         type:'GET' 
                         url:u
                         success: () ->
-                            console.log 'Error request'
                             me.get_cross_domain_json(u,callback)
                             
                     return

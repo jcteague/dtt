@@ -5,7 +5,6 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
         if(parts.length > 1)
             relevant = parts[1]
             found = false
-            console.log relevant
             for white_path in Config.whitelist
                 if( relevant.indexOf(white_path) == 0 )
                     return true
