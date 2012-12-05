@@ -21,5 +21,5 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
                 window.location = '#/user'
                 
     $( ()->
-        setInterval( check_cookie, 1500)
+        window.setInterval( check_cookie, 1500)
         check_cookie() ) 
