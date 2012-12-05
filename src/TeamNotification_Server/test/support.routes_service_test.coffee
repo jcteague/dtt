@@ -97,7 +97,7 @@ describe 'Routes Service', ->
                     server_messages:["User added"]
                     link:"/room/#{room_id}/users/"
                     redirect:false 
-                    invitation: 
+                    chat_room_invitation: 
                         chat_room_name: chat_room.name
                         chat_room_id: chat_room.id
                         user:
