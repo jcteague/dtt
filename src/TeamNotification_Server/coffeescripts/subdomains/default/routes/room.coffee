@@ -45,19 +45,19 @@ methods.get_room_invitations = (req, res) ->
 
     build('room_invitations_collection').for(req.param("id") ).fetch_to callback
 
-methods.set_up_message_transmission = (io, room_id, listener_name) ->
+methods.set_up_message_transmission = (io, listener_name) ->
     namespace_io = io.of(listener_name)
-    room_channel = "chat #{room_id}"
+    room_channel = listener_name #"chat #{room_id}"
     redis_subscriber.subscribe(room_channel)
     redis_subscriber.on "message", (channel, message) ->
-        if(channel == "chat #{room_id}")
+        if(channel == listener_name)#"chat #{room_id}")
             namespace_io.send(message)
 
-methods.set_socket_events = (io, room_id) ->
-    listener_name = "/api/room/#{room_id}/messages"
+methods.set_socket_events = (io, listener_name) ->
+    #listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
-        methods.set_up_message_transmission(io, room_id, listener_name)
+        methods.set_up_message_transmission(io, listener_name)
 
 methods.is_listener_registered = (listener_name) ->
     list_of_listeners[listener_name]?
@@ -83,7 +83,12 @@ methods.get_room_by_id = (req, res) ->
 methods.post_room_user = (req, res, next) ->
     routes_service.add_user_to_chat_room(req.user, req.body.email, req.param('id')).then (response) ->
         if(response.success == true)
-            redis_invitation_publisher.publish("user:#{response.invitation.invited_user_id}:invitations", JSON.stringify(response.invitation))
+            #redis_invitation_publisher.publish("response.chat_room_invitation.invited_user_id}:invitations", JSON.stringify(response.chat_room_invitation))
+            #methods.set_socket_events(req.socket_io, "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations")
+            #listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
+            #namespace_io = io.of(listener_name)
+            #namespace_io.send(message)
+            redis_publisher.publish("/api/user/#{response.chat_room_invitation.invited_user_id}/invitations", JSON.stringify(response.chat_room_invitation))
         res.send(response)
 
 methods.manage_room_members = (req, res) ->
@@ -118,7 +123,7 @@ methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
 
-    methods.set_socket_events(req.socket_io, room_id)
+    methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages")
     callback = (collection) ->
         res.json collection.to_json()
 
@@ -153,7 +158,7 @@ methods.post_room_message = (req, res, next) ->
         message_body = JSON.stringify(values)
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp}
         m = JSON.stringify newMessage
-        redis_publisher.publish("chat #{room_id}", m)
+        redis_publisher.publish("/api/room/#{room_id}/messages",m)#("chat #{room_id}", m)
         redis_queryer.zadd(setname,message_stamp, m)
         room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
         room_message.save (err,saved_message) ->
@@ -175,5 +180,5 @@ module.exports =
         app.get('/api/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/api/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/api/room',express.bodyParser(), methods.post_room)
-        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_user)
+        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(),socket_middleware(io), methods.post_room_user)
         app.post('/api/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)

@@ -69,6 +69,8 @@ describe 'Routes Service', ->
                 addUsers: (any, callback) ->
                     callback()
                 save: sinon.spy()
+                name:'some name'
+                id:'some id'
 
             sinon.spy(chat_room, 'addUsers')
             chat_room_promise =
