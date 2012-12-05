@@ -40,8 +40,9 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                             chat_room_name: chat_room.name
                             chat_room_id: chat_room.id
                             user:
-                                id:current_user.id
-                                name:current_user.first_name + ' ' + current_user.last_name 
+                                id: current_user.id
+                                first_name: current_user.first_name
+                                last_name: current_user.last_name 
                                 email: current_user.email 
                             invited_user_id: user.id
                         defer.resolve(response)

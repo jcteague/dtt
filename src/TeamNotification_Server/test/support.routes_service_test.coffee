@@ -102,7 +102,8 @@ describe 'Routes Service', ->
                         chat_room_id: chat_room.id
                         user:
                             id:logged_in_user.id
-                            name:logged_in_user.first_name + ' ' + logged_in_user.last_name 
+                            first_name: logged_in_user.first_name
+                            last_name: logged_in_user.last_name 
                             email: logged_in_user.email 
                         invited_user_id: user_id
                     }
