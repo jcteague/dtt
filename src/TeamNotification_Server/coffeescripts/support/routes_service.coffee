@@ -36,6 +36,14 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                 if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
                         response = get_server_response(true, ["User added"], "/room/#{room_id}/users/")
+                        response.invitation = 
+                            chat_room_name: chat_room.name
+                            chat_room_id: chat_room.id
+                            user:
+                                id:current_user.id
+                                name:current_user.first_name + ' ' + current_user.last_name 
+                                email: current_user.email 
+                            invited_user_id: user.id
                         defer.resolve(response)
                     )
                 else

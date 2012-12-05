@@ -45,6 +45,9 @@ describe 'Routes Service', ->
         beforeEach (done) ->
             logged_in_user =
                 id: 19
+                first_name: 'foo'
+                last_name: 'bar'
+                email: 'bar@foo.com'
             user_id = 8
             user_email = 'foo@bar.com'
             room_id = 2
@@ -89,9 +92,20 @@ describe 'Routes Service', ->
                 user_promise =
                     then: (callback) ->
                         callback(users)
-                #sut.get_server_response = sinon.stub()
-                #sut.get_server_response.withArgs(true,["user added"],"/room/#{room_id}/invitations/").returns(expected_value)
-                expected_value = {success:true, server_messages:["User added"], link:"/room/#{room_id}/users/", redirect:false}
+                expected_value = {
+                    success:true 
+                    server_messages:["User added"]
+                    link:"/room/#{room_id}/users/"
+                    redirect:false 
+                    invitation: 
+                        chat_room_name: chat_room.name
+                        chat_room_id: chat_room.id
+                        user:
+                            id:logged_in_user.id
+                            name:logged_in_user.first_name + ' ' + logged_in_user.last_name 
+                            email: logged_in_user.email 
+                        invited_user_id: user_id
+                    }
                 users_repository.find.withArgs(email: user_email).returns(user_promise)
                 done()
 

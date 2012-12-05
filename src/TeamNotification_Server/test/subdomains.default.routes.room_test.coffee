@@ -57,7 +57,7 @@ describe 'Room', ->
     describe 'when required', ->
 
         it 'should have created the clients for redis', (done) ->
-            sinon.assert.callCount(redis_mock.open, 3)
+            sinon.assert.callCount(redis_mock.open, 4)
             done()
 
     describe 'build_routes', ->
