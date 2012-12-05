@@ -88,6 +88,8 @@ methods.post_room_user = (req, res, next) ->
             #listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
             #namespace_io = io.of(listener_name)
             #namespace_io.send(message)
+            console.log response.chat_room_invitation
+            console.log response.chat_room_invitation.invited_user_id
             redis_publisher.publish("/api/user/#{response.chat_room_invitation.invited_user_id}/invitations", JSON.stringify(response.chat_room_invitation))
         res.send(response)
 
