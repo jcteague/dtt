@@ -48,7 +48,7 @@ require.config
             deps: ['cookie','config', 'jquery']
             
         'backbone':
-            deps: ['underscore','jquery', 'session_mng']
+            deps: ['underscore','session_mng', 'jquery']
             exports: 'Backbone'
 
         'jquery.autocomplete':
