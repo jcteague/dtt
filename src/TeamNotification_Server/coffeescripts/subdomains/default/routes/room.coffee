@@ -85,6 +85,7 @@ methods.post_room_user = (req, res, next) ->
         if(response.success == true)
             io = req.socket_io
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
+            invitation = JSON.stringify(response.chat_room_invitation)
             console.log listener_name
             console.log 'Sending'
             methods.set_up_message_transmission(io, listener_name, redis_invitation_subscriber)
