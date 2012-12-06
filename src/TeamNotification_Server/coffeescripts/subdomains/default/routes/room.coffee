@@ -10,7 +10,7 @@ socket_middleware = require('../../../support/middlewares').socket_io
 get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
-redis_invitation_publisher = redis_connector.open()
+redis_invitation_subscriber = redis_connector.open()
 redis_queryer = redis_connector.open()
 logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
@@ -45,11 +45,11 @@ methods.get_room_invitations = (req, res) ->
 
     build('room_invitations_collection').for(req.param("id") ).fetch_to callback
 
-methods.set_up_message_transmission = (io, listener_name) ->
+methods.set_up_message_transmission = (io, listener_name, subscriber) ->
     namespace_io = io.of(listener_name)
     room_channel = listener_name #"chat #{room_id}"
-    redis_subscriber.subscribe(room_channel)
-    redis_subscriber.on "message", (channel, message) ->
+    subscriber.subscribe(room_channel)
+    subscriber.on "message", (channel, message) ->
         if(channel == listener_name)#"chat #{room_id}")
             namespace_io.send(message)
 
@@ -57,7 +57,7 @@ methods.set_socket_events = (io, listener_name) ->
     #listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
-        methods.set_up_message_transmission(io, listener_name)
+        methods.set_up_message_transmission(io, listener_name, redis_subscriber)
 
 methods.is_listener_registered = (listener_name) ->
     list_of_listeners[listener_name]?
@@ -86,13 +86,10 @@ methods.post_room_user = (req, res, next) ->
             io = req.socket_io
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
             console.log listener_name
-            console.log io
-            io.of(listener_name).on 'connect', (socket) ->
-                invitation = JSON.stringify(response.chat_room_invitation)
-                console.log invitation
-                console.log namespace_io            
-                socket.send(invitation)
-                redis_publisher.publish(listener_name, invitation)
+            console.log 'Sending'
+            methods.set_up_message_transmission(io, listener_name, redis_invitation_subscriber)
+            console.log 'sent'
+            redis_publisher.publish(listener_name, invitation)
         res.send(response)
 
 methods.manage_room_members = (req, res) ->
