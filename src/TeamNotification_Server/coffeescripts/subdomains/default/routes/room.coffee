@@ -85,6 +85,7 @@ methods.post_room_user = (req, res, next) ->
         if(response.success == true)
             #redis_invitation_publisher.publish("response.chat_room_invitation.invited_user_id}:invitations", JSON.stringify(response.chat_room_invitation))
             #methods.set_socket_events(req.socket_io, "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations")
+            io = req.socket_io
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
             namespace_io = io.of(listener_name)
             namespace_io.send(message)
