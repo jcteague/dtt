@@ -85,7 +85,7 @@ methods.post_room_user = (req, res, next) ->
         if(response.success == true)
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
             invitation = JSON.stringify(response.chat_room_invitation)
-            methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages", redis_invitation_subscriber)
+            methods.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
             methods.set_up_message_transmission(io, listener_name, redis_invitation_subscriber)
             redis_publisher.publish(listener_name, invitation)
         res.send(response)
