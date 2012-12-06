@@ -53,11 +53,11 @@ methods.set_up_message_transmission = (io, listener_name, subscriber) ->
         if(channel == listener_name)#"chat #{room_id}")
             namespace_io.send(message)
 
-methods.set_socket_events = (io, listener_name) ->
+methods.set_socket_events = (io, listener_name, subscriber) ->
     #listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
-        methods.set_up_message_transmission(io, listener_name, redis_subscriber)
+        methods.set_up_message_transmission(io, listener_name, subscriber)
 
 methods.is_listener_registered = (listener_name) ->
     list_of_listeners[listener_name]?
@@ -83,13 +83,10 @@ methods.get_room_by_id = (req, res) ->
 methods.post_room_user = (req, res, next) ->
     routes_service.add_user_to_chat_room(req.user, req.body.email, req.param('id')).then (response) ->
         if(response.success == true)
-            io = req.socket_io
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
             invitation = JSON.stringify(response.chat_room_invitation)
-            console.log listener_name
-            console.log 'Sending'
+            methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages", redis_invitation_subscriber)
             methods.set_up_message_transmission(io, listener_name, redis_invitation_subscriber)
-            console.log 'sent'
             redis_publisher.publish(listener_name, invitation)
         res.send(response)
 
@@ -125,7 +122,7 @@ methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
 
-    methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages")
+    methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages", redis_subscriber)
     callback = (collection) ->
         res.json collection.to_json()
 
