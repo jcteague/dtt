@@ -85,12 +85,14 @@ methods.post_room_user = (req, res, next) ->
         if(response.success == true)
             io = req.socket_io
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
-            namespace_io = io.of(listener_name)
-            invitation = JSON.stringify(response.chat_room_invitation)
-            console.log invitation
-            console.log namespace_io            
-            namespace_io.send(invitation)
-            redis_publisher.publish(listener_name, invitation)
+            console.log listener_name
+            console.log io
+            io.of(listener_name).on 'connect', (socket) ->
+                invitation = JSON.stringify(response.chat_room_invitation)
+                console.log invitation
+                console.log namespace_io            
+                socket.send(invitation)
+                redis_publisher.publish(listener_name, invitation)
         res.send(response)
 
 methods.manage_room_members = (req, res) ->
