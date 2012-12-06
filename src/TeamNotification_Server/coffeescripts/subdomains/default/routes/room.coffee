@@ -83,6 +83,7 @@ methods.get_room_by_id = (req, res) ->
 methods.post_room_user = (req, res, next) ->
     routes_service.add_user_to_chat_room(req.user, req.body.email, req.param('id')).then (response) ->
         if(response.success == true)
+            console.log req
             #redis_invitation_publisher.publish("response.chat_room_invitation.invited_user_id}:invitations", JSON.stringify(response.chat_room_invitation))
             #methods.set_socket_events(req.socket_io, "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations")
             io = req.socket_io
