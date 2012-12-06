@@ -36,6 +36,7 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                 if (member for member in chat_room.users when member.id is user.id).length is 0 and chat_room.owner_id isnt user.id
                     chat_room.addUsers(user, () ->
                         response = get_server_response(true, ["User added"], "/room/#{room_id}/users/")
+                        console.log current_user
                         response.chat_room_invitation = 
                             chat_room_name: chat_room.name
                             chat_room_id: chat_room.id
