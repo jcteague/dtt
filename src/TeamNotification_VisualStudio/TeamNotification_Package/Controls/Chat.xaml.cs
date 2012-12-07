@@ -43,6 +43,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private readonly IHandleVisualStudioClipboard clipboardHandler;
         readonly ICreateDteHandler dteHandlerCreator;
         readonly IListenToMessages<Action<string, string>> messageListener;
+        readonly IListenToMessages<Action<string, string>> roomInvitationsListener;
         private IStoreDTE dteStore;
         private ILog logger;
 
@@ -71,8 +72,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private IShowCode codeEditor;
         private string lastStamp;
+        private string roomInvitationChannel;
 
-        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
+        public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> roomInvitationsListener, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
         {
             chatIsEnabled = true;
             //chatEvents = chatEventsHandler;
@@ -89,6 +91,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.applicationGlobalState = applicationGlobalState;
             this.chatRoomControlService = chatRoomControlService;
             this.messageListener = messageListener;
+            this.roomInvitationsListener = roomInvitationsListener;
             this.userProvider = userProvider;
             this.dteHandlerCreator = dteHandlerCreator;
             this.subscribedChannels = new List<string>();
@@ -129,10 +132,13 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.socketIOEvents.Clear();
             this.socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
-                                                            var room = "chat " + e.RoomId;
+                                                            var room = "/room/{0}/messages".FormatUsing(e.RoomId);// "chat " + e.RoomId;
                                                             subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
+            roomInvitationChannel = "/user/" + userProvider.GetUser().id.ToString() + "/invitations";
+            roomInvitationsListener.ListenOnChannel(roomInvitationChannel,RoomInvitationMessage,
+                                                    () => { }, () => { });
         }
 
         private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
@@ -179,6 +185,25 @@ namespace AvenidaSoftware.TeamNotification_Package
         private extern static IntPtr GetForegroundWindow();
         
         #region Events
+
+
+        private void RoomInvitationMessage(string channel, string payload)
+        {
+            if (channel == roomInvitationChannel)
+            {
+                logger.TryOrLog(() =>{
+                    var invitedRoom = chatRoomControlService.AddInvitedRoom(GetChatUIElements(),  payload); 
+                    taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
+                        var msg = invitedRoom.user.first_name + " added you to room " + invitedRoom.chat_room_name;
+                        taskbarNotifierWindow.NotifyContent.Clear();
+                        taskbarNotifierWindow.Show();
+                        taskbarNotifierWindow.NotifyContent.Add(new NotifyObject("", msg));
+                        taskbarNotifierWindow.Notify();
+                    }));
+                });
+            }
+        }
+
         public void ChatMessageArrived(string channel, string payload)
         {
             if (channel == currentChannel)
@@ -274,7 +299,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
-            currentChannel = "chat " + newRoomId;
+            currentChannel = "/room/{0}/messages".FormatUsing(newRoomId);//"chat " + newRoomId);
 
             chatRoomControlService.ResetContainer(GetChatUIElements());
             AddMessages(newRoomId);
@@ -335,7 +360,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                 codeEditor = codeEditor
             };
         }
-        
         private List<Collection.Link> FormatRooms(IEnumerable<Collection.Room> unformattedRoom)
         {
             if (unformattedRoom == null)

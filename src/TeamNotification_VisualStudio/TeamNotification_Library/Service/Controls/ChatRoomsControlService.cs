@@ -169,7 +169,12 @@ namespace TeamNotification_Library.Service.Controls
             return chatMessageModel;
         }
 
-
+        public ChatRoomInvitation AddInvitedRoom(ChatUIElements messagesContainer, string invitationData)
+        {
+            var chatRoomInvitation = jsonSerializer.Deserialize<ChatRoomInvitation>(invitationData);
+            messagesContainer.ComboRooms.Dispatcher.Invoke(new Action(()=> ((List<Collection.Link>)messagesContainer.ComboRooms.ItemsSource).Add(new Collection.Link {name = chatRoomInvitation.chat_room_name, rel = chatRoomInvitation.chat_room_id})));
+            return chatRoomInvitation;
+        }
         private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)
         {
             return new Collection.Messages
