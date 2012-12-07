@@ -2,7 +2,7 @@
     xmlns:tn="clr-namespace:WPFTaskbarNotifier;assembly=WPFTaskbarNotifier"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Taskbar Notifier" Height="140"  Width="300"
+    Title="Taskbar Notifier" Height="167"  Width="300"
     x:Name="ThisControl"
     >
   <tn:TaskbarNotifier.Resources>
@@ -10,19 +10,20 @@
     <DataTemplate x:Key="ItemsTemplate">
       <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
           <ColumnDefinition Width="100" />
           <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="0,5,0,0" VerticalAlignment="Top" Orientation="Horizontal">
-          <TextBlock  Text="{Binding Path=Title}" />
-          <TextBlock Text=": " />
+        </Grid.ColumnDefinitions>-->
+        <StackPanel Grid.Row="0" Margin="0,5,0,0" VerticalAlignment="Top" Orientation="Horizontal">
+          <TextBlock Text="{Binding Path=Title}" TextWrapping="WrapWithOverflow" />
+          <!--<TextBlock Text=": " />-->
         </StackPanel>
-        <Label Grid.Column="1" Margin="0,-1,0,0" HorizontalAlignment="Left" ToolTip="Click to open">
+        <Label Grid.Row="1" Margin="0,-1,0,0" HorizontalAlignment="Left" ToolTip="Click to open">
           <Hyperlink Click="Item_Click" Tag="{Binding}">
-            <TextBlock Text="{Binding Path=Message}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Path=Message}" TextWrapping="WrapWithOverflow" />
           </Hyperlink>
         </Label>
       </Grid>
@@ -88,7 +89,7 @@
           <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <ItemsControl Name="ItemsList"  BorderThickness="0"
                        ItemsSource="{Binding ElementName=ThisControl, Path=NotifyContent}"
-                       ItemTemplate="{StaticResource ItemsTemplate}" >
+                       ItemTemplate="{StaticResource ItemsTemplate}" Height="60">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Orientation="Vertical" Width="Auto"/>

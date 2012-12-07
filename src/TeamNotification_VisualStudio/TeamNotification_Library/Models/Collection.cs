@@ -27,7 +27,6 @@ namespace TeamNotification_Library.Models
                 d.value = value;
         }
 
-
         public class RedisConfig
         {
             public string host { get; set; }

@@ -22,15 +22,12 @@ namespace TeamNotification_Library.Service.Http
         public void Subscribe(string channel, Action<string, string> messageCallback, Action reconnectCallback, Action onConnectCallback)
         {
             CloseSocketIfExists(channel);
-            var socketNamespace = "/room/{0}/messages".FormatUsing(channel.Split(' ')[1]);
+            var socketNamespace = channel;// channel.Split(' ').Length <= 1 ? channel : "/room/{0}/messages".FormatUsing(channel.Split(' ')[1]);
             var socket = socketIOClientFactory.GetInstance();
             var roomSocket = socket.Connect(socketNamespace, reconnectCallback, onConnectCallback);
             roomSocket.On("message", (data) => messageCallback(channel, data.MessageText));
-            //roomSocket.On("reconnect", reconnectCallback);
-            //roomSocket.On("retry", this.someKewlMethod);
             StoreSocket(channel, socket);
         }
-
         private void CloseSocketIfExists(string channel)
         {
             if (socketsStorage.ContainsKey(channel))

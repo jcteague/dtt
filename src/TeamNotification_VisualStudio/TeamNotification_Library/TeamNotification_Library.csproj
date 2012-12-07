@@ -129,6 +129,7 @@
     <Compile Include="Functional\Nothing.cs" />
     <Compile Include="Models\ChatMessageBody.cs" />
     <Compile Include="Models\ChatMessageModel.cs" />
+    <Compile Include="Models\ChatRoomInvitation.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\CollectionData.cs" />
     <Compile Include="Models\ICanBeMappedAsResources.cs" />
