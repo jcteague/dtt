@@ -47,14 +47,13 @@ methods.get_room_invitations = (req, res) ->
 
 methods.set_up_message_transmission = (io, listener_name, subscriber) ->
     namespace_io = io.of(listener_name)
-    room_channel = listener_name #"chat #{room_id}"
+    room_channel = listener_name
     subscriber.subscribe(room_channel)
     subscriber.on "message", (channel, message) ->
-        if(channel == listener_name)#"chat #{room_id}")
+        if(channel == listener_name)
             namespace_io.send(message)
 
 methods.set_socket_events = (io, listener_name, subscriber) ->
-    #listener_name = "/api/room/#{room_id}/messages"
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
         methods.set_up_message_transmission(io, listener_name, subscriber)
@@ -88,7 +87,6 @@ methods.post_room_user = (req, res, next) ->
             invitation = JSON.stringify(response.chat_room_invitation)
             console.log invitation
             methods.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
-            #methods.set_up_message_transmission(io, listener_name, redis_invitation_subscriber)
             redis_publisher.publish(listener_name, invitation)
         res.send(response)
 

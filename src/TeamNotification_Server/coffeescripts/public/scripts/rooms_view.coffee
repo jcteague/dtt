@@ -33,7 +33,7 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
                     del = confirm("Are you sure you want to leave room '#{room_name}'?")
                     if(del)
                         $.post "#{config.api.url}/room/#{room_id}/unsubscribe", (data) ->
-                            $("#server-response-container").html(data.messages[0])
+                            $("#server-response-container").html(data.server_messages[0])
                             container.hide()
                     return false
                 anchor
