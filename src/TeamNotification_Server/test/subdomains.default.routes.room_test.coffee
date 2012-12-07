@@ -83,7 +83,7 @@ describe 'Room', ->
             sinon.assert.calledWith(app.get,'/api/room/:id/users', sut.methods.user_authorized_in_room, sut.methods.manage_room_members)
             sinon.assert.calledWith(app.get, '/api/room/:id/accept-invitation', sut.methods.get_accept_invitation)
             sinon.assert.calledWith(app.post,'/api/room', body_parser_result, sut.methods.post_room)
-            sinon.assert.calledWith(app.post,'/api/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_user)
+            sinon.assert.calledWith(app.post,'/api/room/:id/users', sut.methods.user_authorized_in_room, body_parser_result, socket_middleware_result, sut.methods.post_room_user)
             sinon.assert.calledWith(app.post,'/api/room/:id/messages', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.post_room_message)
             sinon.assert.calledWith(app.post,'/api/room/:id/unsubscribe', sut.methods.user_authorized_in_room, body_parser_result, sut.methods.unsubscribe)
             done()
@@ -150,11 +150,11 @@ describe 'Room', ->
                 io.of.withArgs(listener_name).returns(namespace_io)
 
                 room_channel = "chat #{room_id}"
-                sut.methods.set_up_message_transmission(io, room_id, listener_name)
+                sut.methods.set_up_message_transmission(io, listener_name, client_mock)
                 done()
 
             it 'should subscribe to the room channel', (done) ->
-                sinon.assert.calledWith(client_mock.subscribe, room_channel)
+                sinon.assert.calledWith(client_mock.subscribe, listener_name)
                 done()
 
             it 'should set up the message event', (done) ->
@@ -181,11 +181,11 @@ describe 'Room', ->
 
                 beforeEach (done) ->
                     sinon.stub(sut.methods, 'is_listener_registered').returns false
-                    sut.methods.set_socket_events(io, room_id)
+                    sut.methods.set_socket_events(io, listener_name, client_mock)
                     done()
 
                 it 'should set up the message transmission for that listener', (done) ->
-                    sinon.assert.calledWith(sut.methods.set_up_message_transmission, io, room_id, listener_name)
+                    sinon.assert.calledWith(sut.methods.set_up_message_transmission, io, listener_name, client_mock)
                     done()
 
             describe 'and there is a listener for that room', ->
@@ -325,7 +325,7 @@ describe 'Room', ->
                     done()
 
                 it 'should set the socket events with the room and the socket_io in the request', (done) ->
-                    sinon.assert.calledWith(sut.methods.set_socket_events, req.socket_io, room_id)
+                    sinon.assert.calledWith(sut.methods.set_socket_events, req.socket_io, listener_name, client_mock)
                     done()
 
             describe 'get_room_messages_since_timestamp', ->
@@ -411,7 +411,7 @@ describe 'Room', ->
                     done()
 
                 it 'should publish the message in the chat room', (done) ->
-                    sinon.assert.calledWith(client_mock.publish, "chat #{room_id}", sinon.match.string)
+                    sinon.assert.calledWith(client_mock.publish, "/api/room/#{room_id}/messages", sinon.match.string)
                     done()
 
                 it 'should add the message in redis with the corresponding key', (done) ->

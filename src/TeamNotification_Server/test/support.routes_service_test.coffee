@@ -45,8 +45,9 @@ describe 'Routes Service', ->
         beforeEach (done) ->
             logged_in_user =
                 id: 19
+                name: 'foo'
                 first_name: 'foo'
-                last_name: 'bar'
+                last_name: ''
                 email: 'bar@foo.com'
             user_id = 8
             user_email = 'foo@bar.com'
