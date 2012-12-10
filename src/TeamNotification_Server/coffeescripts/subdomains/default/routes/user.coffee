@@ -14,6 +14,8 @@ config = require('../../../config')()
 Repository = require('../../../support/repository')
 
 methods.get_user = (req, res) ->
+    listener_name =  "/api/user/#{collection.data.id}/invitations"
+    socket_manager.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
     get_user_collection(req, res, req.param('id'))
 
 methods.get_logged_user = (req, res) ->
@@ -110,8 +112,6 @@ methods.authenticate = (req, res, next) ->
             if user_data.enabled == 0
                 res.send( get_server_response(false,['The user is not activated']))
             else
-                listener_name =  "/api/user/#{collection.data.id}/invitations"
-                socket_manager.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
                 auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
                 res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
