@@ -37,6 +37,8 @@ redis_mock.open.returns(client_mock)
 
 middleware_mock =
     socket_io: sinon.stub()
+    valid_user: sinon.stub()
+
 
 user = module_loader.require('../subdomains/default/routes/user', {
     requires:
@@ -55,24 +57,27 @@ describe 'User', ->
         app = null
         body_parser_result = null
         socket_middleware_result = null
+        valid_user_result = null
         beforeEach (done) ->
             app = { get:sinon.spy(), post:sinon.spy() }
             io = sinon.stub()
             body_parser_result = 'blah'
             express_mock.bodyParser.returns(body_parser_result)
             socket_middleware_result = 'Awesome!'
+            valid_user_result = 'valid user mock'
             middleware_mock.socket_io.withArgs(io).returns(socket_middleware_result)
+            middleware_mock.valid_user.returns(valid_user_result)
             user.build_routes(app, io)
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
             sinon.assert.calledWith(app.get,'/api/users/query',user.methods.get_users)
             sinon.assert.calledWith(app.get,'/api/user/login',user.methods.login)
-            sinon.assert.calledWith(app.post,'/api/user/login',body_parser_result,socket_middleware_result,user.methods.authenticate)
-            sinon.assert.calledWith(app.get,'/api/user/:id',user.methods.get_user)
-            sinon.assert.calledWith(app.get,'/api/user/:id/edit',user.methods.get_user_edit)
-            sinon.assert.calledWith(app.post,'/api/user/:id/edit',user.methods.post_user_edit)
-            sinon.assert.calledWith(app.get,'/api/user/:id/rooms',user.methods.get_user_rooms)
+            sinon.assert.calledWith(app.post,'/api/user/login',body_parser_result, user.methods.authenticate)
+            sinon.assert.calledWith(app.get,'/api/user/:id', socket_middleware_result, valid_user_result, user.methods.get_user)
+            sinon.assert.calledWith(app.get,'/api/user/:id/edit',valid_user_result, user.methods.get_user_edit)
+            sinon.assert.calledWith(app.post,'/api/user/:id/edit',valid_user_result, user.methods.post_user_edit)
+            sinon.assert.calledWith(app.get,'/api/user/:id/rooms',valid_user_result, user.methods.get_user_rooms)
             sinon.assert.calledWith(app.get,'/api/users',user.methods.redir_user)
             done()
 
@@ -90,6 +95,8 @@ describe 'User', ->
                 for: sinon.stub()
             req =
                 param: sinon.stub()
+                socket_io: 
+                    of: sinon.stub()
             user_id = 10
             req.param.withArgs('id').returns(user_id)
             res = 

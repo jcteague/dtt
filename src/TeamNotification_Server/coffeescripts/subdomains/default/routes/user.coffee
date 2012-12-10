@@ -12,13 +12,7 @@ express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
 Repository = require('../../../support/repository')
-
-
-methods.user_middleware = (req,res,next) ->
-    user_id = parseInt(req.param('id'), 10)
-    if( typeof(user_id)!='undefined' && req.user.id = user_id)
-        return next(req, res)
-    redirect('#/user/login')
+valid_user_middleware = require('../../../support/middlewares').valid_user
 
 methods.get_user = (req, res) ->
     user_id = req.param('id')
@@ -133,11 +127,11 @@ module.exports =
         app.get('/api/user/invitations', methods.get_user_invitations)
         app.get('/api/users/query', methods.get_users)
         app.get('/api/user/login', methods.login)
-        app.post('/api/user/login',express.bodyParser(), socket_middleware(io), methods.authenticate)
+        app.post('/api/user/login',express.bodyParser(), methods.authenticate)
         app.get('/api/user', methods.get_logged_user)
         app.get('/api/user/confirm/:confirmation_key', methods.confirm)
-        app.get('/api/user/:id',methods.user_middleware, methods.get_user)
-        app.get('/api/user/:id/edit', methods.user_middleware, methods.get_user_edit)
-        app.post('/api/user/:id/edit', methods.user_middleware, methods.post_user_edit)
-        app.get('/api/user/:id/rooms', methods.user_middleware, methods.get_user_rooms)
+        app.get('/api/user/:id', socket_middleware(io), valid_user_middleware(), methods.get_user)
+        app.get('/api/user/:id/edit', valid_user_middleware(), methods.get_user_edit)
+        app.post('/api/user/:id/edit', valid_user_middleware(), methods.post_user_edit)
+        app.get('/api/user/:id/rooms', valid_user_middleware(), methods.get_user_rooms)
         app.get('/api/users', methods.redir_user)
