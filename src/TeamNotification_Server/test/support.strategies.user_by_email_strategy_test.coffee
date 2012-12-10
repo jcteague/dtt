@@ -25,11 +25,7 @@ describe 'User By Email Strategy', ->
             promise =
                 then: (callback) ->
                     callback(users)
-            #promise2 =
-            #    then: (callback) ->
-            #        callback([users[0], users[2], users[3]])
             repository.find.returns(promise)
-            #repository.find.withArgs({'email ilike':'bl%'}, 5).returns(promise2)
             done()
 
         describe 'and the argument is defined', ->
