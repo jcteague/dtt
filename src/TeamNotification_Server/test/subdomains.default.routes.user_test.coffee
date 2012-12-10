@@ -22,6 +22,18 @@ user_callback_factory_mock =
     
 socket_manager_mock = 
     set_socket_events: sinon.stub()
+    
+redis_mock =
+    open: sinon.stub()
+
+client_mock =
+    auth: sinon.stub()
+    publish: sinon.stub()
+    subscribe: sinon.stub()
+    on: sinon.stub()
+    zadd: sinon.stub()
+
+redis_mock.open.returns(client_mock)
 
 middleware_mock =
     socket_io: sinon.stub()
@@ -33,6 +45,7 @@ user = module_loader.require('../subdomains/default/routes/user', {
         '../../../support/routes_service': routes_service_mock
         '../../../support/socket/socket_manager': socket_manager_mock
         '../../../support/middlewares': middleware_mock
+        '../../../support/redis/redis_gateway': redis_mock
         'express': express_mock
 })
 

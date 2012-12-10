@@ -6,6 +6,8 @@ get_messages_from_flash = require('../../../support/routes_service').get_message
 get_server_response = require('../../../support/routes_service').get_server_response
 socket_middleware = require('../../../support/middlewares').socket_io
 socket_manager= require('../../../support/socket/sockets_manager')
+redis_connector = require('../../../support/redis/redis_gateway')
+redis_invitation_subscriber = redis_connector.open()
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
@@ -109,7 +111,7 @@ methods.authenticate = (req, res, next) ->
                 res.send( get_server_response(false,['The user is not activated']))
             else
                 listener_name =  "/api/user/#{collection.data.id}/invitations"
-                socket_manager.set_socket_events(req.socket_io, listener_name)
+                socket_manager.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
                 auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
                 res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
