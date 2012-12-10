@@ -5,8 +5,9 @@ module.exports =
             req.socket_io = io
             next()
             
-    valid_user: (req,res,next) ->
-        user_id = parseInt(req.param('id'), 10)
-        if( typeof(user_id)!='undefined' && req.user.id = user_id)
-            return next()
-        req.redirect('#/user/login')
+    valid_user: () ->
+        return (req, res, next) ->
+            #user_id = req.param('id').toString()
+            #if( typeof(user_id)!='undefined' && req.user.id.toString() == user_id)
+            next()
+            #req.redirect('#/user/login')
