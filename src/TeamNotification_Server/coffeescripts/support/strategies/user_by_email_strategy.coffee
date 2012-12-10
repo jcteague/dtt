@@ -1,9 +1,9 @@
 Repository = require('../repository')
 strategy = (email) ->
-     new Repository('User').find(email:email).then (users) ->
+    #TODO: Use the build in ilike function
+     new Repository('User').find().then (users) ->#{'email ilike':email+'%'}, 5).then (users) ->
         if email?
-            users[0]
-           #(user for user in users when user.email.toLowerCase().indexOf(email.toLowerCase())==0)
+            (user for user in users when user.email.toLowerCase().indexOf(email.toLowerCase())==0)
         else
             users
         

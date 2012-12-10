@@ -50,11 +50,6 @@ describe 'sockets manager tests', ->
             sinon.stub(sut, 'setup_message_transmission')
             done()
 
-        #afterEach (done) ->
-            #sut.methods.is_listener_registered.restore()
-            #sut.methods.setup_message_transmission.restore()
-            #done()
-
         describe 'and there is not a listener for that room', ->
 
             beforeEach (done) ->
