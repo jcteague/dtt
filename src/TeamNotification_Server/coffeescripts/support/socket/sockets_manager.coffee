@@ -7,9 +7,13 @@ methods.setup_message_transmission = (io, listener_name, redis_subscriber) ->
     if (redis_subscriber?)
         redis_subscriber.subscribe(room_channel)
         redis_subscriber.on "message", (channel, message) ->
+            console.log 'Message Received'
+            console.log channel
             if(channel == listener_name)
                 namespace_io.send(message)
         redis_subscriber.on "disconnect", (channel, message) ->
+            console.log 'Disconnected'
+            console.log channel
             delete list_of_listeners[channel]
             console.log "Disconnected from listener #{channel}"
 
