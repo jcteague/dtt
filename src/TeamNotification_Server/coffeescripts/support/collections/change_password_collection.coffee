@@ -13,6 +13,7 @@ class ChangePasswordCollection
             href: self
             links: [
                 {rel: 'Change password', name: 'self', href: self}
+                {"name": "Login", "rel": "login", 'href':'/user/login'}
             ]
             template:
                 type: 'change_password'

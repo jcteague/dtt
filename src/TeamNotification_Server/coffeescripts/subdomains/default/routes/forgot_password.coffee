@@ -13,7 +13,6 @@ methods.forgot_password_form = (req, res) ->
     r =
         'href': '/forgot_password'
         'links' : [
-          {"name": "self", "rel": "login", 'href':'/forgot_password'}
           {"name": "Login", "rel": "login", 'href':'/user/login'}
         ]
         'template':
