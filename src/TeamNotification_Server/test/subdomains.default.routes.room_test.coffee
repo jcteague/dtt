@@ -36,6 +36,9 @@ node_hash_mock =
 config = require('../config')()
 redis_mock.open.returns(client_mock)
 
+socket_manager_mock =
+    set_socket_events: sinon.spy()
+
 sut = module_loader.require('../subdomains/default/routes/room', {
     requires:
         '../../../support/core': support_mock
@@ -45,6 +48,7 @@ sut = module_loader.require('../subdomains/default/routes/room', {
         '../../../support/repository': repository_class_mock
         '../../../support/middlewares': middleware_mock
         'node_hash' : node_hash_mock
+        '../../../support/socket/sockets_manager': socket_manager_mock
 })
 
 
@@ -134,69 +138,6 @@ describe 'Room', ->
 
                 it 'should call the next function', (done) ->
                     sinon.assert.calledWith(res.json, "server_messages":["You're not subscribed to this room"])
-                    done()
-
-        describe 'set_up_message_transmission', ->
-            io = room_id = listener_name = room_channel = null
-
-            beforeEach (done) ->
-                io =
-                    of: sinon.stub()
-                room_id = 1
-                listener_name = 'blah listener'
-
-                namespace_io =
-                    send: sinon.stub()
-                io.of.withArgs(listener_name).returns(namespace_io)
-
-                room_channel = "chat #{room_id}"
-                sut.methods.set_up_message_transmission(io, listener_name, client_mock)
-                done()
-
-            it 'should subscribe to the room channel', (done) ->
-                sinon.assert.calledWith(client_mock.subscribe, listener_name)
-                done()
-
-            it 'should set up the message event', (done) ->
-                sinon.assert.calledWith(client_mock.on, 'message', sinon.match.func)
-                done()
-
-        describe 'set_socket_events', ->
-
-            io = room_id = listener_name = null
-
-            beforeEach (done) ->
-                io = 'socket io'
-                room_id = 9
-                listener_name = "/api/room/#{room_id}/messages"
-                sinon.stub(sut.methods, 'set_up_message_transmission')
-                done()
-
-            afterEach (done) ->
-                sut.methods.is_listener_registered.restore()
-                sut.methods.set_up_message_transmission.restore()
-                done()
-
-            describe 'and there is not a listener for that room', ->
-
-                beforeEach (done) ->
-                    sinon.stub(sut.methods, 'is_listener_registered').returns false
-                    sut.methods.set_socket_events(io, listener_name, client_mock)
-                    done()
-
-                it 'should set up the message transmission for that listener', (done) ->
-                    sinon.assert.calledWith(sut.methods.set_up_message_transmission, io, listener_name, client_mock)
-                    done()
-
-            describe 'and there is a listener for that room', ->
-
-                beforeEach (done) ->
-                    sinon.stub(sut.methods, 'is_listener_registered').returns true
-                    sut.methods.set_socket_events(io, room_id)
-                    done()
-
-                it 'should not set up the message transmission for that listener', (done) ->
-                    sinon.assert.notCalled(sut.methods.set_up_message_transmission)
                     done()
 
         describe 'for a room with id', ->
@@ -310,14 +251,8 @@ describe 'Room', ->
                     req.socket_io = {of: sinon.stub() }
                     req.socket_io.of.withArgs(listener_name).returns(socket_mock)
 
-                    sinon.stub(sut.methods, 'set_socket_events')
-
                     collection_factory.for.withArgs(room_id: room_id, user: req.user).returns(room_messages_collection)
                     sut.methods.get_room_messages(req, res)
-                    done()
-
-                afterEach (done) ->
-                    sut.methods.set_socket_events.restore()
                     done()
 
                 it 'should return the built collection for the room model', (done) ->
@@ -325,7 +260,7 @@ describe 'Room', ->
                     done()
 
                 it 'should set the socket events with the room and the socket_io in the request', (done) ->
-                    sinon.assert.calledWith(sut.methods.set_socket_events, req.socket_io, listener_name, client_mock)
+                    sinon.assert.calledWith(socket_manager_mock.set_socket_events, req.socket_io, listener_name, client_mock)
                     done()
 
             describe 'get_room_messages_since_timestamp', ->
@@ -350,14 +285,8 @@ describe 'Room', ->
                     req.socket_io = {of: sinon.stub() }
                     req.socket_io.of.withArgs(listener_name).returns(socket_mock)
 
-                    sinon.stub(sut.methods, 'set_socket_events')
-
                     collection_factory.for.withArgs(room_id: room_id, user: req.user, timestamp: timestamp).returns(room_messages_collection)
                     sut.methods.get_room_messages_since_timestamp(req, res)
-                    done()
-
-                afterEach (done) ->
-                    sut.methods.set_socket_events.restore()
                     done()
 
                 it 'should return the built collection for the room model', (done) ->
@@ -468,7 +397,6 @@ describe 'Room', ->
 
                 it 'should notify the user the room was created', (done) ->
                     sinon.assert.calledWith(res.json, expected_parameters)
-                    #sinon.assert.calledWith(res.send,"room #{chat_room_id} created")
                     done()
 
                 it 'should create the user on the database', (done) ->
@@ -612,8 +540,6 @@ describe 'Room', ->
                 it 'should return an unsuccessful response', (done) ->
                     sinon.assert.calledWith(res.json, expected_response)
                     done()
-            
-            
             
             
             

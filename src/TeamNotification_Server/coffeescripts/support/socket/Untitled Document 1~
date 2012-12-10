@@ -1,0 +1,16 @@
+methods = {}
+
+methods.setup_message_transmission = (io, listener_name, subscriber) ->
+    namespace_io = io.of(listener_name)
+    room_channel = listener_name
+    subscriber.subscribe(room_channel)
+    subscriber.on "message", (channel, message) ->
+        if(channel == listener_name)
+            namespace_io.send(message)
+    subscriber.on "disconnect", (channel, message) ->
+        list_of_listeners.splice(list_of_listeners.indexOf(listener_name))
+        console.log 'Socket Disconnected: Listener removed'
+        
+        
+exports:
+    setup_message_transmission: methods.setup_message_transmission

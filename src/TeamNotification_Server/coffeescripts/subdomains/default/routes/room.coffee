@@ -6,7 +6,6 @@ routes_service = require('../../../support/routes_service')
 config = require('../../../config')()
 build = routes_service.build
 redis_connector = require('../../../support/redis/redis_gateway')
-socket_middleware = require('../../../support/middlewares').socket_io
 get_server_response = routes_service.get_server_response
 redis_subscriber = redis_connector.open()
 redis_publisher = redis_connector.open()
@@ -14,6 +13,8 @@ redis_invitation_subscriber = redis_connector.open()
 redis_queryer = redis_connector.open()
 logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
+socket_middleware = require('../../../support/middlewares').socket_io
+socket_manager= require('../../../support/socket/sockets_manager')
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -23,7 +24,7 @@ methods.user_authorized_in_room = (req, res, next) ->
 
         res.json {"server_messages":["You're not subscribed to this room"]}
 
-list_of_listeners = {}
+#list_of_listeners = {}
 
 
 methods.unsubscribe = (req,res) ->
@@ -45,21 +46,24 @@ methods.get_room_invitations = (req, res) ->
 
     build('room_invitations_collection').for(req.param("id") ).fetch_to callback
 
-methods.set_up_message_transmission = (io, listener_name, subscriber) ->
-    namespace_io = io.of(listener_name)
-    room_channel = listener_name
-    subscriber.subscribe(room_channel)
-    subscriber.on "message", (channel, message) ->
-        if(channel == listener_name)
-            namespace_io.send(message)
+#methods.set_up_message_transmission = (io, listener_name, subscriber) ->
+#    namespace_io = io.of(listener_name)
+#    room_channel = listener_name
+#    subscriber.subscribe(room_channel)
+#    subscriber.on "message", (channel, message) ->
+#        if(channel == listener_name)
+#            namespace_io.send(message)
+#    subscriber.on "disconnect", (channel, message) ->
+#        list_of_listeners.splice(list_of_listeners.indexOf(listener_name))
+#        console.log 'Socket Disconnected: Listener removed'
 
-methods.set_socket_events = (io, listener_name, subscriber) ->
-    unless methods.is_listener_registered(listener_name)
-        list_of_listeners[listener_name] = true
-        methods.set_up_message_transmission(io, listener_name, subscriber)
+#methods.set_socket_events = (io, listener_name, subscriber) ->
+#    unless methods.is_listener_registered(listener_name)
+#        list_of_listeners[listener_name] = true
+#        methods.set_up_message_transmission(io, listener_name, subscriber)
 
-methods.is_listener_registered = (listener_name) ->
-    list_of_listeners[listener_name]?
+#methods.is_listener_registered = (listener_name) ->
+#    list_of_listeners[listener_name]?
 
 methods.post_room = (req, res, next) ->
     values = req.body
@@ -83,10 +87,8 @@ methods.post_room_user = (req, res, next) ->
     routes_service.add_user_to_chat_room(req.user, req.body.email, req.param('id')).then (response) ->
         if(response.success == true)
             listener_name =  "/api/user/#{response.chat_room_invitation.invited_user_id}/invitations"
-            console.log listener_name
             invitation = JSON.stringify(response.chat_room_invitation)
-            console.log invitation
-            methods.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
+        #    methods.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
             redis_publisher.publish(listener_name, invitation)
         res.send(response)
 
@@ -122,7 +124,7 @@ methods.get_room_messages = (req,res) ->
     room_id = req.param('id')
     user_id = req.user.id
 
-    methods.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages", redis_subscriber)
+    socket_manager.set_socket_events(req.socket_io, "/api/room/#{room_id}/messages", redis_subscriber)
     callback = (collection) ->
         res.json collection.to_json()
 

@@ -19,12 +19,20 @@ user_validator_mock =
 user_callback_factory_mock =
     get_for_success: sinon.stub()
     get_for_failure: sinon.stub()
+    
+socket_manager_mock = 
+    set_socket_events: sinon.stub()
+
+middleware_mock =
+    socket_io: sinon.stub()
 
 user = module_loader.require('../subdomains/default/routes/user', {
     requires:
         '../../../support/validation/user_validator': user_validator_mock
         '../../../support/factories/user_callback_factory': user_callback_factory_mock
         '../../../support/routes_service': routes_service_mock
+        '../../../support/socket/socket_manager': socket_manager_mock
+        '../../../support/middlewares': middleware_mock
         'express': express_mock
 })
 
@@ -33,17 +41,21 @@ describe 'User', ->
     describe 'build_routes', ->
         app = null
         body_parser_result = null
+        socket_middleware_result = null
         beforeEach (done) ->
             app = { get:sinon.spy(), post:sinon.spy() }
+            io = sinon.stub()
             body_parser_result = 'blah'
             express_mock.bodyParser.returns(body_parser_result)
-            user.build_routes(app)
+            socket_middleware_result = 'Awesome!'
+            middleware_mock.socket_io.withArgs(io).returns(socket_middleware_result)
+            user.build_routes(app, io)
             done()
 
         it 'should configure the routes with its corresponding callback', (done) ->
             sinon.assert.calledWith(app.get,'/api/users/query',user.methods.get_users)
             sinon.assert.calledWith(app.get,'/api/user/login',user.methods.login)
-            sinon.assert.calledWith(app.post,'/api/user/login',body_parser_result,user.methods.authenticate)
+            sinon.assert.calledWith(app.post,'/api/user/login',body_parser_result,socket_middleware_result,user.methods.authenticate)
             sinon.assert.calledWith(app.get,'/api/user/:id',user.methods.get_user)
             sinon.assert.calledWith(app.get,'/api/user/:id/edit',user.methods.get_user_edit)
             sinon.assert.calledWith(app.post,'/api/user/:id/edit',user.methods.post_user_edit)

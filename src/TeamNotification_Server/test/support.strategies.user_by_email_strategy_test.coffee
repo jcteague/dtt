@@ -19,22 +19,27 @@ describe 'User By Email Strategy', ->
         beforeEach (done) ->
             repository =
                 find: sinon.stub()
+             
             repository_class_mock.withArgs('User').returns(repository)
             users = [{email: 'foo@hello.com'}, {email: 'blah@hello.com'}, {email: 'Blah@hello.com'}, {email: 'bL@hello.com'}, {email: 'bar@hello.com'}]
             promise =
                 then: (callback) ->
                     callback(users)
+            promise2 =
+                then: (callback) ->
+                    callback(users[0])
             repository.find.returns(promise)
+            repository.find.withArgs('bl').returns(promise2)
             done()
 
         describe 'and the argument is defined', ->
 
             beforeEach (done) ->
-                expected_result = [users[1], users[2], users[3]]
+                expected_result = users[0] #, users[2], users[3]]
                 result = sut('bl')
                 done()
 
-            it 'should return the users that start with that username', (done) ->
+            it 'should return the user with the specified email', (done) ->
                 expect(result).to.eql expected_result
                 done()
 

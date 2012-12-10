@@ -4,6 +4,8 @@ user_validator = require('../../../support/validation/user_validator')
 user_callback_factory = require('../../../support/factories/user_callback_factory')
 get_messages_from_flash = require('../../../support/routes_service').get_messages_from_flash
 get_server_response = require('../../../support/routes_service').get_server_response
+socket_middleware = require('../../../support/middlewares').socket_io
+socket_manager= require('../../../support/socket/sockets_manager')
 express = require('express')
 sha256 = require('node_hash').sha256
 config = require('../../../config')()
@@ -106,20 +108,22 @@ methods.authenticate = (req, res, next) ->
             if user_data.enabled == 0
                 res.send( get_server_response(false,['The user is not activated']))
             else
+                listener_name =  "/api/user/#{collection.data.id}/invitations"
+                socket_manager.set_socket_events(req.socket_io, listener_name)
                 auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
                 res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
-            res.send( get_server_response(false,['Email and/or password is incorrect']))
+            res.send( get_server_response(false,['Email or password is incorrect']))
           
     build('user_login_collection').for(email:email, password:pass).fetch_to callback
     
 module.exports = 
     methods: methods
-    build_routes: (app) ->
+    build_routes: (app, io) ->
         app.get('/api/user/invitations', methods.get_user_invitations)
         app.get('/api/users/query', methods.get_users)
         app.get('/api/user/login', methods.login)
-        app.post('/api/user/login',express.bodyParser(), methods.authenticate)
+        app.post('/api/user/login',express.bodyParser(), socket_middleware(io), methods.authenticate)
         app.get('/api/user', methods.get_logged_user)
         app.get('/api/user/confirm/:confirmation_key', methods.confirm)
         app.get('/api/user/:id', methods.get_user)
