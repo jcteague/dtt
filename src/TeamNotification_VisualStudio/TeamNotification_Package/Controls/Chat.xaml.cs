@@ -101,7 +101,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                                         {
                                             OpeningMilliseconds = 500,
                                             HidingMilliseconds = 500,
-                                            StayOpenMilliseconds = 1000
+                                            StayOpenMilliseconds = 2000
                                         };
             InitializeComponent();
             
