@@ -23,9 +23,11 @@ class RoomMembersCollection
           "submit": self
           "data" :[{"name" : "email", "value" : ""}]
         }]
+        members = (get_data_for(user, @room) for user in @room.users)
+        console.log members
         return {
             href: self
-            members: (get_data_for(user, @room) for user in @room.users)
+            members: members
             links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"},{"name":"Room", "rel": "Room", "href": "/room/#{@room.id}"}]
             queries: queries
         }
