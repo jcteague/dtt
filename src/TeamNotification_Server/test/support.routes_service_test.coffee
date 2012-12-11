@@ -12,6 +12,8 @@ email_template_mock =
     for:
         invitation:
             using: sinon.stub()
+        added_to_room:
+            using: sinon.stub()
 
 sut = module_loader.require('../support/routes_service', {
     requires:
