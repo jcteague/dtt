@@ -23,6 +23,14 @@ users =
             email: "'#{email_not_in_room}'"
             password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
             enabled: 1
+        },
+        {
+            id: 3
+            first_name: "'ea'"
+            last_name: "''"
+            email: "'some@somewhere.com'"
+            password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
+            enabled: 1
         }
     ]
 
@@ -40,13 +48,28 @@ chat_rooms =
             owner_id: 1
         }
     ]
+chat_room_users =
+    name: 'chat_room_users'
+    entities: [
+        {
+            id: 1
+            user_id: 3
+            chat_room_id: 1
+        },
+        {
+            id: 2
+            user_id: 1
+            chat_room_id: 2
+        }
+    
+    ] 
 
 context.for.integration_test() (browser) ->
 
     describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
-            handle_in_series server.start(), db.save(users, chat_rooms), done
+            handle_in_series server.start(), db.save(users, chat_rooms,chat_room_users), done
 
         describe 'When a user visits the client#/room/:id/users page', ->
 
@@ -80,9 +103,7 @@ context.for.integration_test() (browser) ->
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
-
                 nonexistent_email = null
-
                 beforeEach (done) ->
                     nonexistent_email = 'nonexistent@bar.com'
                     user_id = 100
@@ -97,3 +118,13 @@ context.for.integration_test() (browser) ->
                 it 'should display the user does not exist message', (done) ->
                     expect(browser.html('#server-response-container p')).to.equal "<p>An email invitation has been sent to #{nonexistent_email}</p>"
                     done()
+                    
+            describe 'and there are users in room', ->
+                beforeEach (done) ->
+                    browser.visit("#{config.site.surl}/#/room/1/users").then(done, done)
+                    done()
+                    
+                it 'should show the users in room', (done) ->
+                    expect(browser.html('#room-members-container p')).to.not.equal ""
+                    done()
+                    

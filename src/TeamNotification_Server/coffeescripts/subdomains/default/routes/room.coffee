@@ -45,7 +45,7 @@ methods.unsubscribe_user = (req, res) ->
             chat_room_user.find(user_id: user_id, chat_room_id: room_id).then (room_user)->
                 if(room_user? && room_user[0]?)
                     callback = () ->
-                        res.json get_server_response(true, ["Unsubscribed successfully"], "" )
+                        res.json get_server_response(true, ["User unsubscribed successfully"], "" )
                     room_user[0].remove callback
                 else
                     res.json get_server_response(true, ["User is not in room."], "" )

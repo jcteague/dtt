@@ -45,7 +45,6 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
                 p.append " - "
                 unsubscribe_room_link = generate_unsubscribe_link get_field(room.data,'id'),link.name, p
                 p.append unsubscribe_room_link
-                #@$el.append("""<p><a href="##{link.href}">#{link.name}</a> - #{unsubscribe_room_link} </p>""")
                 @$el.append p
             else
                 @$el.append("""<p><a href="##{link.href}">#{link.name}</a><small> Room key: #{room_key}</small></p>""")

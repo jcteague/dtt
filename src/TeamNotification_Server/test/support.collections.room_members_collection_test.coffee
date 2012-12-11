@@ -34,8 +34,8 @@ describe 'Room Members Collection', ->
         it 'should return the chat room members in the data members field', (done) ->
             members = result['members']
             users = chat_room.users
-            expect(members[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].first_name}]}
-            expect(members[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].first_name}]}
+            expect(members[0]).to.eql {"href": "/user/#{users[0].id}", "data": [{"name": "id", "value": users[0].id}, {"name": "name", "value": users[0].first_name}, {"name": "room_id", "value": chat_room.id}, {"name": "room_name", "value": chat_room.name} ]}
+            expect(members[1]).to.eql {"href": "/user/#{users[1].id}", "data": [{"name": "id", "value": users[1].id}, {"name": "name", "value": users[1].first_name}, {"name": "room_id", "value": chat_room.id}, {"name": "room_name", "value": chat_room.name}]}
             done()
 
         it 'should return a self link in the collection links', (done) ->
