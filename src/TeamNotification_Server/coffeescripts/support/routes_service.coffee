@@ -45,6 +45,15 @@ add_user_to_chat_room = (current_user, email, room_id) ->
                                 last_name: '' #current_user.last_name 
                                 email: current_user.email 
                             invited_user_id: user.id
+                            
+                        template = email_template.for.added_to_room.using
+                            email: email
+                            name: user.first_name+' '+user.last_name
+                            room_id: chat_room.id
+                            room_name:chat_room.name
+                            inviters_name: current_user.name
+                        email_sender.send template
+                        
                         defer.resolve(response)
                     )
                 else
