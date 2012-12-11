@@ -1,4 +1,4 @@
-define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView) ->
+define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view','room_members_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView, RoomMembersView) ->
     class ViewsFactory
         registry:
             messages: MessagesView
@@ -6,6 +6,7 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
             template: FormView
             queries: QueryView
             links: LinksView
+            members: RoomMembersView
         pages:
             login: {pattern:/user\/login/g, view: LoginView}
             user_edit: {pattern:/user\/\d+\/edit/g, view: UserEditView}

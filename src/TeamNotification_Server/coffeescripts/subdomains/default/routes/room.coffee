@@ -35,6 +35,23 @@ methods.unsubscribe = (req,res) ->
             room_user = chat_room_users[0]
             room_user.remove callback
 
+methods.unsubscribe_user = (req, res) ->
+    room_id = req.param("id")
+    user_id = req.param("user_id")
+    chat_room = new Repository('ChatRoom')
+    chat_room.find(owner_id: req.user.id, id:room_id).then (chat_room) ->
+        if(chat_room? && chat_room[0]?)
+            chat_room_user = new Repository('ChatRoomUser')
+            chat_room_user.find(user_id: user_id, chat_room_id: room_id).then (room_user)->
+                if(room_user? && room_user[0]?)
+                    callback = () ->
+                        res.json get_server_response(true, ["Unsubscribed successfully"], "" )
+                    room_user[0].remove callback
+                else
+                    res.json get_server_response(true, ["User is not in room."], "" )
+         else
+            res.json get_server_response(false, ["You need to be the room's owner to unsubscribe a user."], "" )
+            
 methods.get_room_invitations = (req, res) ->
 
     callback = (collection) ->
@@ -159,3 +176,4 @@ module.exports =
         app.post('/api/room',express.bodyParser(), methods.post_room)
         app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(),socket_middleware(io), methods.post_room_user)
         app.post('/api/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
+        app.post('/api/room/:id/unsubscribe/:user_id', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe_user)
