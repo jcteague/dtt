@@ -307,6 +307,7 @@ describe 'Routes Service', ->
                 done()
             it 'should resolve the promise with false', ->
                 sinon.assert.calledWith(deferred.resolve, false)
+                done()
 
             it 'should return a promise', (done) ->
                 expect(result).to.eql expected_result
