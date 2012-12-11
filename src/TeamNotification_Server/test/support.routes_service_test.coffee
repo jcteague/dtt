@@ -12,6 +12,8 @@ email_template_mock =
     for:
         invitation:
             using: sinon.stub()
+        added_to_room:
+            using: sinon.stub()
 
 sut = module_loader.require('../support/routes_service', {
     requires:
@@ -305,6 +307,7 @@ describe 'Routes Service', ->
                 done()
             it 'should resolve the promise with false', ->
                 sinon.assert.calledWith(deferred.resolve, false)
+                done()
 
             it 'should return a promise', (done) ->
                 expect(result).to.eql expected_result
