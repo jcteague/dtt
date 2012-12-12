@@ -284,9 +284,10 @@ describe 'Routes Service', ->
                 result = sut.is_user_in_room user_id, room_id
                 done()
 
-            it 'should resolve the promise with true', ->
+            it 'should resolve the promise with true', (done)->
                 sinon.assert.calledWith(deferred.resolve, true)
-
+                done()
+                
             it 'should return a promise', (done) ->
                 expect(result).to.eql expected_result
                 done()
@@ -305,7 +306,7 @@ describe 'Routes Service', ->
                 chat_room_repository.get_by_id.withArgs(room_id).returns(room_promise)
                 result = sut.is_user_in_room user_id, room_id
                 done()
-            it 'should resolve the promise with false', ->
+            it 'should resolve the promise with false', (done) ->
                 sinon.assert.calledWith(deferred.resolve, false)
                 done()
 
