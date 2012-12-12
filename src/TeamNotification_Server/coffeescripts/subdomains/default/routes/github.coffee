@@ -19,7 +19,7 @@ methods.associate_github_repositories = (req, res, next) ->
         owner = req.body.owner
         room_key = req.body.room_key
         response = github_helper.set_github_repository_events(repositories, owner, room_key, req.param("access_token"))
-        res.json routes_service.get_server_response(true, ["The webhooks were successfully created"]) # "/room/#{saved_chat_room.id}/" )
+        res.json routes_service.get_server_response(true, ["The webhooks were successfully created"])
     else
         res.json routes_service.get_server_response(false, ["There was an error setting up the webhook"] )
 
