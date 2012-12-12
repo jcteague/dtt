@@ -12,7 +12,7 @@ class GithubRepositoriesCollection
         
         return {
             href: "/github/repositories/#{@github_repositories.access_token}"
-            links: [ {"name":"self", "rel": "self", "href": "/github/repositories/#{@github_repositories.access_token}"} ]
+            links: [ {"name":"self", "rel": "self", "href": "/github/repositories/#{@github_repositories.access_token}"}, {"name":"home", "rel": "home", "href": "/"} ]
             github_repositories: @github_repositories.repositories
             #rooms:@github_repositories.rooms
             template: 
