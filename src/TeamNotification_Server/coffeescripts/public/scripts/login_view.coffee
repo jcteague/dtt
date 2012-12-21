@@ -36,7 +36,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
 
         render: ->
             @$el.empty()
-            @links_view.render().append_to @$el
+            #@links_view.render().append_to @$el
             @form_view.render().append_to @$el
             @
             

@@ -1,11 +1,12 @@
-define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view','room_members_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView, RoomMembersView) ->
+define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view','room_members_view','root_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView, RoomMembersView, RootView) ->
     class ViewsFactory
         registry:
+            root: RootView
             messages: MessagesView
             rooms: RoomsView
             template: FormView
             queries: QueryView
-            links: LinksView
+            #links: LinksView
             members: RoomMembersView
         pages:
             login: {pattern:/user\/login/g, view: LoginView}

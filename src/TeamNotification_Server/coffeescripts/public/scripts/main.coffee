@@ -38,7 +38,9 @@ require.config
         'lang-scala': 'prettify/lang-scala'
         'lang-vhdl': 'prettify/lang-vhdl'
         'session_mng': 'session_mng'
-
+        'navbar_view': 'navbar_view'
+        'root_view': 'root_view'
+        'breadcrumb_view':'breadcrumb_view'
     shim:
         'prettify-languages':
             deps: ['prettify']
