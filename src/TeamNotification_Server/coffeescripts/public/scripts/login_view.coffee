@@ -6,7 +6,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
         
         initialize : ->
             @form_view = new FormView(model: @model)
-            @links_view = new LinksView(model: @model)
+            #@links_view = new LinksView(model: @model)
             $.ajaxSetup
                 beforeSend: (jqXHR) ->
                     email = $('input[name=username]').val()
@@ -36,7 +36,11 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
 
         render: ->
             @$el.empty()
-            #@links_view.render().append_to @$el
+            links = @model.get('links')
+            forgot_password_link = """<a href='##{links[1].href}' style='display:inline;'> #{links[1].name}?</a>"""
+            
             @form_view.render().append_to @$el
+            console.log $(@form_view.$el[0])
+            $(@form_view.$el[0]).find('form').append forgot_password_link
             @
             
