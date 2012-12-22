@@ -1,4 +1,4 @@
-define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view','room_members_view','root_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView, RoomMembersView, RootView) ->
+define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view', 'query_view', 'chat_room_view', 'login_view', 'user_edit_view', 'user_invitations_view','room_members_view','root_view', 'user_panel_view'], (MessagesView, LinksView, RoomsView, FormView, QueryView, ChatRoomView, LoginView, UserEditView, UserInvitationsView, RoomMembersView, RootView, UserPanelView) ->
     class ViewsFactory
         registry:
             root: RootView
@@ -14,6 +14,7 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
             chat_room: { pattern:/room\/\d+\/messages/g, view: ChatRoomView }
             user_invitations: { pattern:/user\/\d+\/invitations/g, view: UserInvitationsView }
             room_invitations: { pattern:/room\/\d+\/invitations/g, view: UserInvitationsView }
+            user_panel: {pattern:/user\/\d+/g, view: UserPanelView}
         get_for: (collection_model) ->
             collection_data = collection_model.attributes
             for page, props of @pages

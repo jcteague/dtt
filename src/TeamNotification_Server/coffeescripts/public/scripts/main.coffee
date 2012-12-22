@@ -41,6 +41,7 @@ require.config
         'navbar_view': 'navbar_view'
         'root_view': 'root_view'
         'breadcrumb_view':'breadcrumb_view'
+        'user_panel_view':'user_panel_view'
     shim:
         'prettify-languages':
             deps: ['prettify']

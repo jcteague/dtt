@@ -23,7 +23,23 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
             @$el.append @inner_nav
             @items.append '<li><a class="brand" href="#">Yackety</a></li>'
             if @model.has('user')
-                @container_nav.append '<ul class="nav pull-right"><li><a href="#/user"><b>Username here</b></a></li></ul>'
+                get_field = (field, collection)->
+                    for obj in collection
+                        if(obj.name = field)
+                            return obj.value
+                user = @model.get('user')
+                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{get_field('name',user.data)}</b></a>""")
+                dropdownmenu = $("""<ul class="dropdown-menu"><li><a href="##{user.links[1].href}">#{user.links[1].name}</a></li><li><a href="##{user.links[2].href}">#{user.links[2].name}</a></li></ul>""")
+                nav = $("""<ul class="nav pull-right"></ul>""")
+                lidropdown = $("""<li class="dropdown"></li>""")
+                
+                nav.append lidropdown
+                lidropdown.append link
+                lidropdown.append dropdownmenu
+                @container_nav.append nav
+                
+                link.bind 'click', ()->
+                    $(dropdownmenu).toggle()
                 @container_nav.append @items
             else
                 login_form = $("<li></li>")

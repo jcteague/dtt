@@ -13,7 +13,7 @@ sha256 = require('node_hash').sha256
 config = require('../../../config')()
 Repository = require('../../../support/repository')
 valid_user_middleware = require('../../../support/middlewares').valid_user
-
+add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 methods.get_user = (req, res) ->
     user_id = req.param('id')
     listener_name =  "/api/user/#{user_id}/invitations"
@@ -27,7 +27,8 @@ methods.get_logged_user = (req, res) ->
 
 get_user_collection = (req, res, user_id) ->
     callback = (collection) ->
-        res.json(collection.to_json())
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
 
     build('user_collection').for(user_id).fetch_to callback
 
