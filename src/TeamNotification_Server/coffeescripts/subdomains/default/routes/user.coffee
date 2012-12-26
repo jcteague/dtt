@@ -15,10 +15,10 @@ Repository = require('../../../support/repository')
 valid_user_middleware = require('../../../support/middlewares').valid_user
 add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 methods.get_user = (req, res) ->
-    user_id = req.param('id')
+    user_id = parseInt(req.param('id'),10)
     listener_name =  "/api/user/#{user_id}/invitations"
     socket_manager.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
-    get_user_collection(req, res, req.param('id'))
+    get_user_collection(req, res, user_id)
 
 methods.get_logged_user = (req, res) ->
     if(req.user == false)

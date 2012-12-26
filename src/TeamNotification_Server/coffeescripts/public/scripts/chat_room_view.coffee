@@ -15,6 +15,7 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
 
         render: ->
             @$el.empty()
+            $("#client-content").attr('class','')
             @$el.attr('class', 'row-fluid')
             div1 = $('<div class="row-fluid">')
             @user_rooms.render().append_to div1
