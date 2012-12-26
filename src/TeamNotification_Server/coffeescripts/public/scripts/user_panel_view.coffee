@@ -18,7 +18,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
             rooms_row = $("<div class='row'></div>")
-            rooms_row.append '<h1>Your rooms</h1>'
+            rooms_row.append '<h1 class="span12" >Your rooms</h1>'
             if @model.has('rooms')
                 rooms = @model.get('rooms')
                 for room in rooms
@@ -26,8 +26,8 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             else
                 rooms_row.append """No rooms available at this moment"""
             @$el.append rooms_row
-            invitations_row = $("""<div class='row'></div>""")
-            invitations_row.append """<h1>Pending Invitations</h1>"""
+            invitations_row = $("""<div class='row' class="span12"></div>""")
+            invitations_row.append """<h1 class="span12">Pending Invitations</h1>"""
             @invitations.render().append_to invitations_row
             @$el.append invitations_row
             @

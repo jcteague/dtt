@@ -5,12 +5,13 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
         id: 'root-container'
         registerview: $("""<div class='span2'></div>""")
         left_form: $("""<div class='span6'></div>""")
-        row: $("""<div class='row-fluid well container'></div>""")
+        row: $("""<div class='row well'></div>""")
         initialize: ->
             @navbar = new NavbarView(model:@model)
             @breadcrumb = new BreadcrumbView(model:@model)
         render: ->
             @$el.empty()
+            @$el.attr('class', 'row')
             @registerview.empty()
             @left_form.empty()
             @row.empty()
@@ -24,6 +25,15 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
                 @formview = new FormView(model:@model)
                 @formview.on 'messages:display', (messages) =>
                     $('#server-response-container').html("""<div class="alert alert-info" id='#notification'><button type="button" class="close" data-dismiss="alert">x</button>"""+messages[0]+"""</div>""" )
+                @$el.append """<div class="row hero-unit">
+  <h1>Welcome to Yackety</h1>
+  <p>Some awesome placeholder tagline ;D</p>
+  <p>
+    <a class="btn btn-primary btn-large">
+      Learn more
+    </a>
+  </p>
+</div>"""
                 @$el.append @row
                 @row.append @left_form
                 @registerview.append "<h3>Sing up</h1>"
