@@ -14,6 +14,7 @@ config = require('../../../config')()
 Repository = require('../../../support/repository')
 valid_user_middleware = require('../../../support/middlewares').valid_user
 add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
+
 methods.get_user = (req, res) ->
     user_id = parseInt(req.param('id'),10)
     listener_name =  "/api/user/#{user_id}/invitations"
@@ -35,7 +36,9 @@ get_user_collection = (req, res, user_id) ->
 methods.get_user_edit = (req, res) ->
     user_id = req.param('id')
     callback = (collection) ->
-        res.json(collection.to_json())
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
+        #res.json(collection.to_json())
 
     build('user_edit_collection').for(user_id).fetch_to callback
 

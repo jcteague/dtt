@@ -24,7 +24,7 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
             userRoomsList = $("<ul>",{"class":"dropdown-menu"})
             
             for room in @data.user_rooms
-                userRoomsList.append "<li><a href='/#/room/#{room.room_id}/messages'><b>#{room.name}</b></a></li>"
+                userRoomsList.append "<li><a href='/#/room/#{room.room_id}/messages'>#{room.name}</a></li>"
             
             userRooms.append userRoomsList
             ul.append userRooms

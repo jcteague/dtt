@@ -7,14 +7,13 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             @navbar = new NavbarView(model:@model)
             @breadcrumb = new BreadcrumbView(model:@model)
             @invitations = new UserInvitationsView(model:@model)
-            console.log @model
         render: ->
             get_field = (field_name, data)->
                 for field in data
                     if(field.name == field_name)
                         return field.value
-
             @$el.empty()
+            $("#client-content").attr("class", "container")
             @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
             rooms_row = $("<div class='row'></div>")

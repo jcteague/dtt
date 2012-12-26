@@ -17,3 +17,13 @@ define 'general_view', ['backbone'], (Backbone) ->
 
         append_to: (parent) ->
             @$el.appendTo parent
+            
+        get_link: (rel, links_collection)->
+            for link in links_collection
+                if(link.rel == rel)
+                    return """<a href="##{link.href}">#{link.name}</a>"""
+                    
+        get_field: (field, collection)->
+            for obj in collection
+                if(obj.name = field)
+                    return obj.value
