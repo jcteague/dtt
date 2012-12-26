@@ -110,8 +110,11 @@ methods.confirm = (req, res) ->
 
 methods.authenticate = (req, res, next) ->
     values = req.body
+    console.log values
     email = values.username
+    console.log values.password
     pass = sha256(values.password)
+    console.log pass
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'

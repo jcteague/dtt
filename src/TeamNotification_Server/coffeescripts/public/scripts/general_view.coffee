@@ -22,8 +22,10 @@ define 'general_view', ['backbone'], (Backbone) ->
             for link in links_collection
                 if(link.rel == rel)
                     return """<a href="##{link.href}">#{link.name}</a>"""
-                    
+            return ""
+
         get_field: (field, collection)->
             for obj in collection
-                if(obj.name = field)
+                if(obj.name == field)
                     return obj.value
+            return ""

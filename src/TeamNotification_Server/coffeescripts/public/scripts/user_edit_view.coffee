@@ -25,7 +25,5 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_vie
             @$el.empty()
             @navbar_view.render().append_to @$el
             @breadcrumb.render().append_to @$el
-            
-            #@links_view.render().append_to @$el
             @form_view.render().append_to @$el
             @

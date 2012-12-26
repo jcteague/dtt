@@ -1,10 +1,11 @@
-define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
+define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view'], (GeneralView, config, BreadcrumbView, NavbarView) ->
 
     class RoomsView extends GeneralView
 
         id: 'rooms-container'
 
         initialize: ->
+            @navbar_view = new NavbarView(model:@model)
             @model.on 'change:rooms', @render, @
             authToken = $.cookie("authtoken")
             $.ajaxSetup
@@ -14,10 +15,16 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
 
         render: ->
             @$el.empty()
-            @$el.attr('class','hero-unit')
+            @navbar_view.render().append_to @$el
             if @model.has('rooms') and @model.get('rooms').length > 0
                 @rooms = @model.get('rooms')
-                @$el.append('<h2>User Rooms</h2>')
+                breadcrumb_links = [
+                    {name:'Home', href:'#/user', rel:'BreadcrumbLink'}
+                    {name:@get_field('name',@rooms[0].data), href:@rooms[0].href, rel:'active'}
+                ]
+                @model.set('breadcrumb', breadcrumb_links)
+                @breadcrumb_view = new BreadcrumbView(model:@model)
+                @breadcrumb_view.render().append_to @$el
                 @render_room(room) for room in @rooms
             @
 
@@ -41,13 +48,11 @@ define 'rooms_view', ['general_view','config'], (GeneralView, config) ->
             room_key = get_field(room.data, 'room_key')
             if( room_key == '')
                 p = $("<p/>")
-                p.append """<a href="##{link.href}">#{link.name}</a>"""
-                p.append " - "
                 unsubscribe_room_link = generate_unsubscribe_link get_field(room.data,'id'),link.name, p
                 p.append unsubscribe_room_link
                 @$el.append p
             else
-                @$el.append("""<p><a href="##{link.href}">#{link.name}</a><small> Room key: #{room_key}</small></p>""")
+                @$el.append("""<p><small> Room key: #{room_key}</small></p>""")
                 
 
         append_to: (parent) ->

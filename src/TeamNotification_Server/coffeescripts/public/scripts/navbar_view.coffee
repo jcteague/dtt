@@ -6,13 +6,15 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
         container_nav: $('<div class="container"></div>')
         
         initialize: ->
-            m = 
-                get: @model.get
-                has: @model.has
-                on: @model.on
-                attributes: @model.get('login')
-                
-            @loginview = new LoginView(model:m)
+            @loginview = null
+            if @model.has('login')
+                m = 
+                    get: @model.get
+                    has: @model.has
+                    on: @model.on
+                    attributes: @model.get('login')
+                    
+                @loginview = new LoginView(model:m)
         render: ->
             @$el.empty()
             @items.empty()
@@ -23,7 +25,6 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
             @$el.append @inner_nav
             @items.append '<li><a class="brand" href="#">Yackety</a></li>'
             if @model.has('user')
-                console.log user
                 user = @model.get('user')
                 link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{@get_field('name',user.data)}</b></a>""")
                 dropdownmenu = $("""<ul class="dropdown-menu"><li>#{@get_link('UserEdit', user.links)}</li></ul>""")
@@ -52,7 +53,8 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
                 dd.append link
                 dd.append ddm
                 login_ul.append dd
-                @loginview.render().append_to login_form
+                if @loginview?
+                    @loginview.render().append_to login_form
                 @container_nav.append login_ul
                 link.bind 'click', ()->
                     $(ddm).toggle()

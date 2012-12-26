@@ -1,3 +1,5 @@
+RoomMembersQueryBuilder = require('./room_members_query_builder')
+
 class RoomCollection
 
     constructor: (@room) ->
@@ -12,14 +14,12 @@ class RoomCollection
             other_links.push {"name": "Manage Members", "rel": "RoomMembers", "href": "/room/#{@room.room.id}/users"}
             other_links.push {"name":"Associate Repository", "rel": "Repository", "href": "/github/oauth", "external": true}
         other_links.push {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{@room.room.id}/messages"}
-
+        room_href = "/room/#{@room.room.id}/users"
         return {
             href: self
-            #members: [
-            #    {"href": "/room/#{@room.room.id}/users", "data": users}
-            #]
             links: [self].concat(other_links)
-            rooms : [@room_data(@room.room)]
+            rooms: [@room_data(@room.room)]
+            queries: new RoomMembersQueryBuilder(room_href).get()
         }
     room_data: (room) ->
         links:[{ name:room.name, rel:"self", href: "/room/#{room.id}/"}]

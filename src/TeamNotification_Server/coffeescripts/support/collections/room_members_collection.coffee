@@ -1,6 +1,8 @@
+RoomMembersQueryBuilder = require('./room_members_query_builder')
+
 class RoomMembersCollection
 
-    constructor: (room) ->
+    constructor: (room)->
         @room = room
 
     to_json: ->
@@ -15,21 +17,14 @@ class RoomMembersCollection
                 ]
             }
         self = "/room/#{@room.id}/users"
-        queries = [{
-          "href" : "/users/query"
-          "rel" : "users"
-          "prompt" : "Enter search string"
-          "type" : "autocomplete"
-          "submit": self
-          "data" :[{"name" : "email", "value" : ""}]
-        }]
+        queries = new RoomMembersQueryBuilder(self).get()
         members = (get_data_for(user, @room) for user in @room.users)
-        console.log members
         return {
             href: self
             members: members
             links: [{"name":"self", "rel": "RoomMembers", "href": "/room/#{@room.id}/users"},{"name":"Room", "rel": "Room", "href": "/room/#{@room.id}"}]
             queries: queries
         }
-
+        
+        
 module.exports = RoomMembersCollection

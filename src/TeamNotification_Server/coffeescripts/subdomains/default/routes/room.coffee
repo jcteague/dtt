@@ -14,6 +14,7 @@ logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
 socket_middleware = require('../../../support/middlewares').socket_io
 socket_manager= require('../../../support/socket/sockets_manager')
+add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -72,8 +73,8 @@ methods.post_room = (req, res, next) ->
 methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        json = collection.to_json()
-        res.json(json)
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
 
     build('room_collection').for(room_id: room_id, user_id: req.user.id).fetch_to callback
 

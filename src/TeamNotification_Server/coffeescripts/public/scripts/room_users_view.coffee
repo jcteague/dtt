@@ -11,8 +11,6 @@ define 'room_users_view', ['general_view'] , (GeneralView) ->
                         return field.value
             @$el.empty()
             @$el.attr 'class', 'span4 scroll-box'
-            #@$el.attr("style","height:500px;")
-            #@$el.append "<ul class='nav nav-list'>"
             nav = $('<ul>').attr({'class':'nav nav-tabs nav-stacked'})
             nav.append "<li class='nav-header'>Room users</li>"
             for member in @data.members

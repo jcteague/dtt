@@ -56,7 +56,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
                 autoFill: true
                 minChars: 1
             })
-            query_class = "well form-horizontal"
+            query_class = "form-horizontal"
             if typeof template.query_class != 'undefined'
                 query_class = template.query_class
                 
