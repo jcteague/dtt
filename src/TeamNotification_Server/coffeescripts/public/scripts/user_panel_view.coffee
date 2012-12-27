@@ -5,6 +5,10 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
         id: 'user-panel-container'
         initialize: ->
             @navbar = new NavbarView(model:@model)
+            breadcrumb_links = [
+                {name:'Home', href:'/user', rel:'active'}
+            ]
+            @model.set('breadcrumb', breadcrumb_links)
             @breadcrumb = new BreadcrumbView(model:@model)
             @invitations = new UserInvitationsView(model:@model)
         render: ->
@@ -21,7 +25,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             if @model.has('rooms')
                 rooms = @model.get('rooms')
                 for room in rooms
-                    rooms_row.append """<div class='span4 hero-unit'><h2>#{get_field('name', room.data)}</h2><a href='#/room/#{get_field('id', room.data)}'>Manage</a><br/><a href='#/room/#{get_field('id', room.data)}/messages'>Go to room</a></div>"""
+                    rooms_row.append """<div class='span4 hero-unit'><a href='#/room/#{get_field('id', room.data)}'><h2>#{get_field('name', room.data)}</h2></a><br/><a href='#/room/#{get_field('id', room.data)}/messages'>Go to room</a></div>"""
             else
                 rooms_row.append """No rooms available at this moment"""
             @$el.append rooms_row

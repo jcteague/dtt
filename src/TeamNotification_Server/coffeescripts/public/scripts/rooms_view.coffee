@@ -21,7 +21,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
             if @model.has('rooms') and @model.get('rooms').length > 0
                 @rooms = @model.get('rooms')
                 breadcrumb_links = [
-                    {name:'Home', href:'#/user', rel:'BreadcrumbLink'}
+                    {name:'Home', href:'/user', rel:'BreadcrumbLink'}
                     {name:@get_field('name',@rooms[0].data), href:@rooms[0].href, rel:'active'}
                 ]
                 @model.set('breadcrumb', breadcrumb_links)
