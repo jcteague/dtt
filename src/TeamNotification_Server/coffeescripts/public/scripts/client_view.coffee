@@ -37,8 +37,9 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
                     view.on 'messages:display', @display_messages, @
 
         can_display_messages: (view) ->
+            #console.log view
             (view instanceof QueryView) or (view instanceof UserEditView) or (view instanceof FormView) or (view instanceof LoginView)
-
+            
         propagate_event: (event, values) ->
             @trigger event, values
 

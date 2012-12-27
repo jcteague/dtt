@@ -16,7 +16,7 @@ class RoomCollection
         other_links.push {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{@room.room.id}/messages"}
         room_href = "/room/#{@room.room.id}/users"
         return {
-            href: self
+            href:  room_href #self
             links: [self].concat(other_links)
             rooms: [@room_data(@room.room)]
             queries: new RoomMembersQueryBuilder(room_href).get()

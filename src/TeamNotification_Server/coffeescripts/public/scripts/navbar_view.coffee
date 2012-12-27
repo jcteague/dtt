@@ -23,7 +23,7 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
             @$el.attr('class', 'navbar navbar-fixed-top')
             @inner_nav.append @container_nav
             @$el.append @inner_nav
-            @items.append '<li><a class="brand" href="#">Yackety</a></li>'
+            @items.append '<li><a class="brand" href="/#/">Yackety</a></li>'
             if @model.has('user')
                 user = @model.get('user')
                 link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{@get_field('name',user.data)}</b></a>""")

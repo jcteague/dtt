@@ -3,7 +3,7 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
         registry:
             root: RootView
             messages: MessagesView
-            rooms: RoomsView
+            #rooms: RoomsView
             template: FormView
             queries: QueryView
             #links: LinksView
@@ -12,6 +12,7 @@ define 'views_factory', ['messages_view', 'links_view', 'rooms_view', 'form_view
             login: {pattern:/user\/login/g, view: LoginView}
             user_edit: {pattern:/user\/\d+\/edit/g, view: UserEditView}
             chat_room: { pattern:/room\/\d+\/messages/g, view: ChatRoomView }
+            room: {pattern:/room\/\d+/g, view: RoomsView}
             user_invitations: { pattern:/user\/\d+\/invitations/g, view: UserInvitationsView }
             room_invitations: { pattern:/room\/\d+\/invitations/g, view: UserInvitationsView }
             user_panel: {pattern:/user\/\d+/g, view: UserPanelView}

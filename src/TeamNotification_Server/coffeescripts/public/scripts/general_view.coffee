@@ -18,6 +18,9 @@ define 'general_view', ['backbone'], (Backbone) ->
         append_to: (parent) ->
             @$el.appendTo parent
             
+        propagate_event: (event, values) ->
+            @trigger event, values
+            
         get_link: (rel, links_collection)->
             for link in links_collection
                 if(link.rel == rel)
