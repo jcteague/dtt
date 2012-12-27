@@ -17,7 +17,7 @@ define 'breadcrumb_view', ['backbone', 'config','general_view'], (Backbone, conf
                 current=null
                 for breadcrumb in breadcrumb_links  
                     if breadcrumb.rel != 'active'
-                        @ul.append """<li><a href="##{breadcrumb.href}">#{breadcrumb.name}</a> / </li>"""
+                        @ul.append """<li><a href="##{breadcrumb.href}">#{breadcrumb.name}</a> <span class="divider">/</span> </li>"""
                     else
                         current = breadcrumb
                 if current?

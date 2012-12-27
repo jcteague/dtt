@@ -33,7 +33,9 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
                     data[$current.attr('name')] = $current.val()
 
                 callback = (res) => 
-                    @$('input').not(':submit').val('')
+                    @$el.find('input').not(':submit').val('')
+                    console.log 'here'
+                    #@$('input').not(':submit').val('')
                     @trigger 'messages:display', res.server_messages
 
                 url = "#{config.api.url}#{@$('form').attr('action')}"
