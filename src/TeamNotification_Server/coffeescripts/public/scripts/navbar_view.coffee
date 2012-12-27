@@ -1,4 +1,4 @@
-define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, LoginView) ->
+define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (GeneralView, $, LoginView,cookie) ->
     class NavbarView  extends GeneralView
         id: 'navbar-container'
         items: $('<ul class="nav"></ul>')
@@ -26,11 +26,12 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
             @items.append '<li><a class="brand" href="/#/">Yackety</a></li>'
             if @model.has('user')
                 user = @model.get('user')
-                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{@get_field('name',user.data)}</b></a>""")
+                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{@get_field('name',user.data)}</b><b class="caret"></b></a>""")
                 dropdownmenu = $("""<ul class="dropdown-menu"><li>#{@get_link('UserEdit', user.links)}</li></ul>""")
                 nav = $("""<ul class="nav pull-right"></ul>""")
                 lidropdown = $("""<li class="dropdown"></li>""")
-                
+                logout_dropdownmenu = $("""<li></li>""")
+                dropdownmenu.append logout_dropdownmenu
                 nav.append lidropdown
                 lidropdown.append link
                 lidropdown.append dropdownmenu
@@ -38,6 +39,11 @@ define 'navbar_view', ['general_view','jquery','login_view'], (GeneralView, $, L
                 
                 link.bind 'click', ()->
                     $(dropdownmenu).toggle()
+                logout_link = $("""<a href="#/">Logout</a>""")
+                logout_link.bind 'click', ()->                    
+                    $.cookie("authtoken", "", { expires: -1, path: '/' })
+                logout_dropdownmenu.append logout_link
+                
                 @container_nav.append @items
             else
                 login_form = $("<li></li>")
