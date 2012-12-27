@@ -22,6 +22,7 @@ methods.get_user = (req, res) ->
     get_user_collection(req, res, user_id)
 
 methods.get_logged_user = (req, res) ->
+    console.log req.user
     if(req.user == false)
         methods.login(req, res)
     get_user_collection(req, res, req.user.id)
@@ -81,7 +82,7 @@ methods.login = (req, res) ->
         'template':
             'data':[
                 {'name':'username', 'label':'Email', 'type':'string'}
-                {'name':'password', 'label':'Password', 'type':'password'}
+                {'name':'login_password', 'label':'Password', 'type':'password'}
             ]
         server_messages:
             get_messages_from_flash req.flash()
@@ -110,18 +111,15 @@ methods.confirm = (req, res) ->
 
 methods.authenticate = (req, res, next) ->
     values = req.body
-    console.log values
     email = values.username
-    console.log values.password
-    pass = sha256(values.password)
-    console.log pass
+    pass = sha256(values.login_password)
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
             if user_data.enabled == 0
                 res.send( get_server_response(false,['The user is not activated']))
             else
-                auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
+                auth_token = "Basic " + (new Buffer(email + ":" + values.login_password).toString('base64'))
                 res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send( get_server_response(false,['Email or password is incorrect']))

@@ -12,7 +12,7 @@ class LoginFormCollection
             'template':
                 'data':[
                     {'name':'username', 'label':'Email', 'type':'string'}
-                    {'name':'password', 'label':'Password', 'type':'password'}
+                    {'name':'login_password', 'label':'Password', 'type':'password'}
                 ]
         }
 
