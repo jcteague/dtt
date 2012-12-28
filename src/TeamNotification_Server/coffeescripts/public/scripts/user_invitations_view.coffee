@@ -1,4 +1,4 @@
-define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, LinksView) ->
+define 'user_invitations_view', ['general_view', 'links_view','config'], (GeneralView, LinksView,config) ->
     class UserInvitationsView extends GeneralView
 
         id: 'invitations-container'
@@ -9,13 +9,13 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
                     return field.value
 
         initialize: ->
-            @links_view = new LinksView(model: @model)
+#            @links_view = new LinksView(model: @model)
 
         render: ->
 
             me = @
             @$el.empty()
-            @links_view.render().append_to @$el
+  #          @links_view.render().append_to @$el
             @$el.attr('class','row-fluid')
             table = $('<table id="invitations-table" class="table table-hover table-condensed">')
             table.append "<tr><th>Email</th><th>Room</th><th>Invitation date</th><th></th></tr>"
@@ -34,14 +34,15 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
                             b = $(@)
                             args = JSON.parse(b.attr('value'))
                             b.attr("disabled", "disabled")
-                            $.ajaxSetup
-                                beforeSend: (jqXHR) ->
-                                    authToken = $.cookie("authtoken")
-                                    jqXHR.setRequestHeader('Authorization', authToken )
+                            #$.ajaxSetup
+                            #    beforeSend: (jqXHR) ->
+                             #       authToken = $.cookie("authtoken")
+                             #       jqXHR.setRequestHeader('Authorization', authToken )
 
-                            $.post "room/#{args.room}/users", args, (data) ->
+                            $.post "#{config.api.url}/room/#{args.room}/users", args, (data) ->
                                 b.removeAttr("disabled")
-                                $("#server-response-container").append data.messages[0]
+                                me.trigger 'messages:display', data.server_messages
+                                #$("#server-response-container").append data.messages[0]
 
                         row = $('<tr>')
                         col = $('<td>')

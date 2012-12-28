@@ -7,7 +7,9 @@ define 'server_response_view', ['backbone'], (Backbone) ->
         render: ->
             @$el.empty()
             if @model?
-                @$el.append "<p>#{message}</p>" for message in @model
+                console.log @model
+                @$el.append("""<div class="alert alert-info" id='#notification'><button type="button" class="close" data-dismiss="alert">x</button>"""+message+"""</div>""") for message in @model
+                #@$el.append "<p>#{message}</p>" for message in @model
             @
 
         update: (messages) ->

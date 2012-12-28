@@ -33,7 +33,7 @@ describe 'Room Collection', ->
                 done()
 
             it 'should return an href property pointing to the current url', (done) ->
-                expect(result['href']).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                expect(result['href']).to.eql "/room/#{room_id}/users"#{"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
                 done()
 
             it 'should return the manage members link along with the self link', (done) ->
@@ -59,7 +59,7 @@ describe 'Room Collection', ->
                 done()
 
             it 'should return an href property pointing to the current url', (done) ->
-                expect(result['href']).to.eql {"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
+                expect(result['href']).to.eql "/room/#{room_id}/users" #{"name":"self", "rel": "Room", "href": "/room/#{room_id}"}
                 done()
 
             it 'should return the messages link along with the self link', (done) ->

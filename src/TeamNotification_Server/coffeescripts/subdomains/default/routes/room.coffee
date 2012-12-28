@@ -14,6 +14,7 @@ logger = require('../../../support/logging/logger')
 Repository = require('../../../support/repository')
 socket_middleware = require('../../../support/middlewares').socket_io
 socket_manager= require('../../../support/socket/sockets_manager')
+add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 
 methods.user_authorized_in_room = (req, res, next) ->
     room_id = req.param('id')
@@ -72,8 +73,8 @@ methods.post_room = (req, res, next) ->
 methods.get_room_by_id = (req, res) ->
     room_id = req.param('id')
     callback = (collection) ->
-        json = collection.to_json()
-        res.json(json)
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
 
     build('room_collection').for(room_id: room_id, user_id: req.user.id).fetch_to callback
 
@@ -174,6 +175,6 @@ module.exports =
         app.get('/api/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/api/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/api/room',express.bodyParser(), methods.post_room)
-        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(),socket_middleware(io), methods.post_room_user)
+        app.post('/api/room/:id/users', methods.user_authorized_in_room,express.bodyParser(),socket_middleware(io), methods.post_room_user)
         app.post('/api/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
         app.post('/api/room/:id/unsubscribe/:user_id', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe_user)

@@ -4,7 +4,8 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
         parts = path.split('/#')
         if(parts.length > 1)
             relevant = parts[1]
-            found = false
+            if( relevant == '/' || relevant =='')
+                return true
             for white_path in Config.whitelist
                 if( relevant.indexOf(white_path) == 0 )
                     return true

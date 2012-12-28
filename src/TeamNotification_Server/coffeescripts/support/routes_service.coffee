@@ -8,6 +8,19 @@ sha256 = require('node_hash').sha256
 build = (collection_type) ->
     new CollectionActionResolver(collection_type)
 
+add_user_data_to_collection = (user, collection_json) ->
+    defer = Q.defer()
+    callback = (user_collection)->
+        json = user_collection.to_json()
+        json.data = [
+            {name:'name', value:user.name}
+            {name:'id', value:user.id}
+        ]
+        collection_json.user = json
+        defer.resolve(collection_json)
+    new CollectionActionResolver('user_collection').for(user.id).fetch_to callback
+    defer.promise
+
 generate_confirmation_key = (key) ->
     d = new Date().getTime().toString()
     sha256(d+key)
@@ -95,3 +108,4 @@ module.exports =
     is_user_in_room: is_user_in_room
     get_messages_from_flash: get_messages_from_flash
     generate_confirmation_key: generate_confirmation_key
+    add_user_data_to_collection: add_user_data_to_collection

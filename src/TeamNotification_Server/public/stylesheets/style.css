@@ -53,3 +53,18 @@ pre {
 span.chat_message_date {
     white-space: nowrap;
 }
+
+.btn-huge{
+    width:140px; 
+    height:140px;
+    line-height: 90px !important;
+    1vertical-align:middle;
+}
+.centered-pills { text-align:center; }
+.centered-pills ul.nav-pills { display:inline-block; }
+.centered-pills li { display:inline; }
+.centered-pills a { float:left; }
+* html .centered-pills ul.nav-pills { display:inline; } /* IE6 */
+*+html .centered-pills ul.nav-pills { display:inline; } /* IE7 */
+
+

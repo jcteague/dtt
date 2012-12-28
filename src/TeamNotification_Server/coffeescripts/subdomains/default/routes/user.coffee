@@ -13,28 +13,33 @@ sha256 = require('node_hash').sha256
 config = require('../../../config')()
 Repository = require('../../../support/repository')
 valid_user_middleware = require('../../../support/middlewares').valid_user
+add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 
 methods.get_user = (req, res) ->
-    user_id = req.param('id')
+    user_id = parseInt(req.param('id'),10)
     listener_name =  "/api/user/#{user_id}/invitations"
     socket_manager.set_socket_events(req.socket_io, listener_name, redis_invitation_subscriber)
-    get_user_collection(req, res, req.param('id'))
+    get_user_collection(req, res, user_id)
 
 methods.get_logged_user = (req, res) ->
+    console.log req.user
     if(req.user == false)
         methods.login(req, res)
     get_user_collection(req, res, req.user.id)
 
 get_user_collection = (req, res, user_id) ->
     callback = (collection) ->
-        res.json(collection.to_json())
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
 
     build('user_collection').for(user_id).fetch_to callback
 
 methods.get_user_edit = (req, res) ->
     user_id = req.param('id')
     callback = (collection) ->
-        res.json(collection.to_json())
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
+        #res.json(collection.to_json())
 
     build('user_edit_collection').for(user_id).fetch_to callback
 
@@ -77,7 +82,7 @@ methods.login = (req, res) ->
         'template':
             'data':[
                 {'name':'username', 'label':'Email', 'type':'string'}
-                {'name':'password', 'label':'Password', 'type':'password'}
+                {'name':'login_password', 'label':'Password', 'type':'password'}
             ]
         server_messages:
             get_messages_from_flash req.flash()
@@ -107,14 +112,14 @@ methods.confirm = (req, res) ->
 methods.authenticate = (req, res, next) ->
     values = req.body
     email = values.username
-    pass = sha256(values.password)
+    pass = sha256(values.login_password)
     callback = (collection) ->
         user_data = collection.to_json()
         if JSON.stringify( user_data ) != '{}'
             if user_data.enabled == 0
                 res.send( get_server_response(false,['The user is not activated']))
             else
-                auth_token = "Basic " + (new Buffer(email + ":" + values.password).toString('base64'))
+                auth_token = "Basic " + (new Buffer(email + ":" + values.login_password).toString('base64'))
                 res.send({success: true, redis:config.redis, user:{id: user_data.id, email:user_data.email, authtoken:auth_token}})
         else
             res.send( get_server_response(false,['Email or password is incorrect']))

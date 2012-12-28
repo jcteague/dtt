@@ -55,7 +55,7 @@ context.for.integration_test(authenticate:false) (browser) ->
                         then(done, done)
 
             it 'should show a message telling the reset password email was sent', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal '<p>An email has been sent with a link to reset your password.</p>'
+                expect(browser.html('#server-response-container')).to.contain 'An email has been sent with a link to reset your password'
                 done()
         
         describe 'when using an unexisting email', ->
@@ -69,7 +69,7 @@ context.for.integration_test(authenticate:false) (browser) ->
                         then(done, done)
             
             it 'should show a message telling a user with that email doesnt exists', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>There's no user with the provided email.</p>"
+                expect(browser.html('#server-response-container')).to.contain "There's no user with the provided email"
                 done()
         describe 'Changing the user password', ->
             describe 'when changing the password and the key is valid', ->
@@ -83,5 +83,5 @@ context.for.integration_test(authenticate:false) (browser) ->
                         then(-> browser.pressButton('input[type=submit]')).
                             then(done, done)
                 it 'should show a success message', (done) ->
-                    expect(browser.html('#server-response-container p')).to.equal "<p>User password has been updated successfully</p>"
+                    expect(browser.html('#server-response-container')).to.contain "User password has been updated successfully"
                     done()

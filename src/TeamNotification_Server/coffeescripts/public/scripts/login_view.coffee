@@ -6,23 +6,20 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
         
         initialize : ->
             @form_view = new FormView(model: @model)
-            @links_view = new LinksView(model: @model)
             $.ajaxSetup
                 beforeSend: (jqXHR) ->
                     email = $('input[name=username]').val()
-                    password = $('input[name=password]').val()
+                    password = $('input[name=login_password]').val()
                     authToken = "Basic " + encodeBase64(email + ":" + password)
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true
             @form_view.on 'response:received', @check_login
             @form_view.on 'messages:display', (messages) =>
                 @trigger 'messages:display', messages
-
         
         check_login: (response) ->
             res = $.parseJSON response
             res = response unless res?
-
             if typeof(res.success)!='undefined' && res.success is true
                 getIn = () ->
                     $.cookie("authtoken", res.user.authtoken, { expires: 1, path: '/' })
@@ -36,7 +33,10 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
 
         render: ->
             @$el.empty()
-            @links_view.render().append_to @$el
-            @form_view.render().append_to @$el
+            if @model.has('links')
+                links = @model.get('links')
+                forgot_password_link = @get_link "forgotPassword", links #"""<a href='##{links[1].href}' style='display:inline;'> #{links[1].name}?</a>"""
+                @form_view.render().append_to @$el
+                $(@form_view.$el[0]).find('form').append forgot_password_link
             @
             

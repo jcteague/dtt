@@ -69,20 +69,20 @@ context.for.integration_test() (browser) ->
     describe 'Add Account To Chat Room', ->
 
         beforeEach (done) ->
-            handle_in_series server.start(), db.save(users, chat_rooms,chat_room_users), done
+            handle_in_series server.start(), db.save(users, chat_rooms, chat_room_users), done
 
-        describe 'When a user visits the client#/room/:id/users page', ->
+        describe 'When a user visits the client#/room/:id page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit("#{config.site.surl}/#/room/1/users").
+                    visit("#{config.site.surl}/#/room/1").
                     then(done, done)
 
             it 'should contain an autocomplete input', (done) ->
                 expect(browser.html('input.acInput')).to.not.be.empty()
                 done()
 
-        describe 'When a user visits the client#/room/:id/users page', ->
+        describe 'When a user visits the client#/room/:id page', ->
 
             user_id = null
 
@@ -91,7 +91,7 @@ context.for.integration_test() (browser) ->
                 beforeEach (done) ->
                     user_id = 2
                     browser.
-                        visit("#{config.site.surl}/#/room/1/users").
+                        visit("#{config.site.surl}/#/room/1"). #/users").
                         then(-> 
                             browser.fill('email', email_not_in_room)
                         ).
@@ -99,7 +99,7 @@ context.for.integration_test() (browser) ->
                         then(done, done)
 
                 it 'should display the user added message', (done) ->
-                    expect(browser.html('#server-response-container p')).to.equal "<p>User added</p>"
+                    expect(browser.html('#server-response-container')).to.contain "User added"
                     done()
 
             describe 'and submits in a user that does not exist in the system', ->
@@ -108,7 +108,7 @@ context.for.integration_test() (browser) ->
                     nonexistent_email = 'nonexistent@bar.com'
                     user_id = 100
                     browser.
-                        visit("#{config.site.surl}/#/room/1/users").
+                        visit("#{config.site.surl}/#/room/1").
                         then(-> 
                             browser.fill('email', nonexistent_email)
                         ).
@@ -116,15 +116,15 @@ context.for.integration_test() (browser) ->
                         then(done, done)
 
                 it 'should display the user does not exist message', (done) ->
-                    expect(browser.html('#server-response-container p')).to.equal "<p>An email invitation has been sent to #{nonexistent_email}</p>"
+                    expect(browser.html('#server-response-container')).to.contain "An email invitation has been sent to #{nonexistent_email}"
                     done()
                     
             describe 'and there are users in room', ->
                 beforeEach (done) ->
-                    browser.visit("#{config.site.surl}/#/room/1/users").then(done, done)
+                    browser.visit("#{config.site.surl}/#/room/1").then(done, done)
                     done()
                     
                 it 'should show the users in room', (done) ->
-                    expect(browser.html('#room-members-container p')).to.not.equal ""
+                    expect(browser.html('#room-members-container')).to.not.equal ""
                     done()
                     
