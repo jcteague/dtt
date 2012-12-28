@@ -1,4 +1,4 @@
-define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 'query_view', 'room_members_view'], (GeneralView, config, BreadcrumbView, NavbarView, QueryView, RoomMembersView) ->
+define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 'query_view', 'room_members_view', 'links_view'], (GeneralView, config, BreadcrumbView, NavbarView, QueryView, RoomMembersView, LinksView) ->
 
     class RoomsView extends GeneralView
 
@@ -8,6 +8,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
             @navbar_view = new NavbarView(model:@model)
             @query_view = new QueryView(model:@model)
             @room_users_view = new RoomMembersView(model:@model)
+            #@links_view = new LinksView(model:@model)
             @model.on 'change:rooms', @render, @
             @query_view.on 'all', @propagate_event, @
             authToken = $.cookie("authtoken")
@@ -28,7 +29,9 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
                 @model.set('breadcrumb', breadcrumb_links)
                 @breadcrumb_view = new BreadcrumbView(model:@model)
                 @breadcrumb_view.render().append_to @$el
+                @$el.append @get_link('RoomMessages',@model.attributes.links)
                 @render_room(room) for room in @rooms
+                
                 @$el.append "<h1>Add members</h1>"
                 @query_view.render().append_to @$el
                 @room_users_view.render().append_to @$el

@@ -62,11 +62,12 @@ context.for.integration_test() (browser) ->
                     visit("#{config.site.surl}/#/room/1").
                     then(done, done)
 
-            it 'should contain an anchor to the room manage members', (done) ->
-                expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
-                done()
+            #it 'should contain an anchor to the room manage members', (done) ->
+            #    expect(browser.html('a[href="#/room/1/users"]')).to.not.be.empty()
+            #    done()
 
             it 'should contain a anchor to the room messages', (done) ->
+                console.log browser.html
                 expect(browser.html('a[href="#/room/1/messages"]')).to.not.be.empty()
                 done()
 

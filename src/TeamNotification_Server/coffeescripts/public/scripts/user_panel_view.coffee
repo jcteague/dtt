@@ -12,6 +12,12 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             @formview = new FormView(model:@get_model_for('add_room'))
             @breadcrumb = new BreadcrumbView(model:@model)
             @invitations = new UserInvitationsView(model:@model)
+            @invitations.on 'all', @propagate_event, @
+            authToken = $.cookie("authtoken")
+            $.ajaxSetup
+                beforeSend: (jqXHR) ->
+                    jqXHR.setRequestHeader('Authorization', authToken )
+                    jqXHR.withCredentials = true
         render: ->
             get_field = (field_name, data)->
                 for field in data

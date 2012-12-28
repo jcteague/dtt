@@ -18,6 +18,7 @@ routes_service_mock =
     add_user_to_chat_room: sinon.stub()
     is_user_in_room: sinon.stub()
     get_server_response: sinon.stub()
+    add_user_data_to_collection: sinon.stub()
 
 redis_mock =
     open: sinon.stub()
@@ -177,10 +178,16 @@ describe 'Room', ->
                     req.user =
                         id: user_id
                     routes_service_mock.build.withArgs('room_collection').returns(collection_factory)
+                        
                     room_collection =
                         fetch_to: (callback) ->
                             callback(collection)
 
+                    add_user_data_to_collection_callback = 
+                        then: (callback)->
+                            callback( collection_value)
+                    routes_service_mock.add_user_data_to_collection.returns(add_user_data_to_collection_callback)
+                    
                     collection_factory.for.withArgs(room_id: room_id, user_id: user_id).returns(room_collection)
                     sut.methods.get_room_by_id(req, res)
                     done()
@@ -208,18 +215,19 @@ describe 'Room', ->
 
             describe 'get_accept_invitation', ->
 
-                filled_collection_value = null
+                filled_collection_value = add_user_data_to_collection_callback = null
 
                 beforeEach (done) ->
                     registration_collection =
                         fetch_to: (callback) ->
                             callback(collection)
                     routes_service_mock.build.withArgs('registration_collection').returns(registration_collection)
-
+                            
                     email = 'foo@bar.com'
                     req.param.withArgs('email').returns(email)
 
                     filled_collection_value = 'blah filled collection value'
+                    
                     filled_collection =
                         to_json: -> filled_collection_value
                     collection.fill.withArgs(email: email).returns(filled_collection)

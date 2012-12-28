@@ -13,10 +13,19 @@ describe 'User Collection', ->
         room =
             id: 1
             name: 'blah room'
+        invitation =
+            email: "some email"
+            accepted: 0
+            chat_room:
+                name: 'Some room'
+            chat_room_id: 1
+            date: 'Some date'
+        invitations = [invitation]
         rooms = [room]
         data =
             user_id: user_id
             rooms: rooms
+            invitations: invitations
         sut = new UserCollection(data)
         done()
 

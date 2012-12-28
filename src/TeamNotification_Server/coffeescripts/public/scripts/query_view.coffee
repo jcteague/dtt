@@ -34,7 +34,6 @@ define 'query_view', ['general_view', 'query_renderer', 'config'], (GeneralView,
 
                 callback = (res) => 
                     @$el.find('input').not(':submit').val('')
-                    console.log 'here'
                     #@$('input').not(':submit').val('')
                     @trigger 'messages:display', res.server_messages
 

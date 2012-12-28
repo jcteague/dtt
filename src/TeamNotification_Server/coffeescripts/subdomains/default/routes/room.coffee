@@ -175,6 +175,6 @@ module.exports =
         app.get('/api/room/:id/accept-invitation', methods.get_accept_invitation)
         app.post('/api/room/:id/messages', methods.user_authorized_in_room, express.bodyParser(), methods.post_room_message)
         app.post('/api/room',express.bodyParser(), methods.post_room)
-        app.post('/api/room/:id/users', methods.user_authorized_in_room, express.bodyParser(),socket_middleware(io), methods.post_room_user)
+        app.post('/api/room/:id/users', methods.user_authorized_in_room,express.bodyParser(),socket_middleware(io), methods.post_room_user)
         app.post('/api/room/:id/unsubscribe', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe)
         app.post('/api/room/:id/unsubscribe/:user_id', methods.user_authorized_in_room,  express.bodyParser(), methods.unsubscribe_user)

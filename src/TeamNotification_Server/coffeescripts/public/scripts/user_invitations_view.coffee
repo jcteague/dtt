@@ -1,4 +1,4 @@
-define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, LinksView) ->
+define 'user_invitations_view', ['general_view', 'links_view','config'], (GeneralView, LinksView,config) ->
     class UserInvitationsView extends GeneralView
 
         id: 'invitations-container'
@@ -34,14 +34,15 @@ define 'user_invitations_view', ['general_view', 'links_view'], (GeneralView, Li
                             b = $(@)
                             args = JSON.parse(b.attr('value'))
                             b.attr("disabled", "disabled")
-                            $.ajaxSetup
-                                beforeSend: (jqXHR) ->
-                                    authToken = $.cookie("authtoken")
-                                    jqXHR.setRequestHeader('Authorization', authToken )
+                            #$.ajaxSetup
+                            #    beforeSend: (jqXHR) ->
+                             #       authToken = $.cookie("authtoken")
+                             #       jqXHR.setRequestHeader('Authorization', authToken )
 
-                            $.post "room/#{args.room}/users", args, (data) ->
+                            $.post "#{config.api.url}/room/#{args.room}/users", args, (data) ->
                                 b.removeAttr("disabled")
-                                $("#server-response-container").append data.messages[0]
+                                me.trigger 'messages:display', data.server_messages
+                                #$("#server-response-container").append data.messages[0]
 
                         row = $('<tr>')
                         col = $('<td>')
