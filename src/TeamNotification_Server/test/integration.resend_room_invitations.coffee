@@ -66,11 +66,11 @@ context.for.integration_test() (browser) ->
         beforeEach (done) ->
             handle_in_series server.start(), db.save(users, chat_rooms), db.save(chat_room_invitations) , done
 
-        describe 'When a user visits the #/room/:id/invitations page', ->
+        describe 'When a user visits the #/user', ->#room/:id/invitations page', ->
 
             beforeEach (done) ->
                 browser.
-                    visit("#{config.site.surl}/#/room/1/invitations").
+                    visit("#{config.site.surl}/#/user"). #room/1/invitations").
                     then(done, done)
 
             it 'should contain an autocomplete input', (done) ->
@@ -80,8 +80,8 @@ context.for.integration_test() (browser) ->
         describe 'When a user clicks to resend an invitation', ->
             beforeEach (done) ->
                 browser.
-                    visit("#{config.site.surl}/#/room/1/invitations").
-                    then(-> browser.pressButton('button[type=submit]')).
+                    visit("#{config.site.surl}/#/room/1").#invitations").
+                    then(-> browser.pressButton('input[type=submit]')).
                     then(done, done)
             
             it 'should show a message explaining the invitation has been sent', (done)->
