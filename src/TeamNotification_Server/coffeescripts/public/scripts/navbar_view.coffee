@@ -8,11 +8,11 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
         initialize: ->
             @loginview = null
             if @model.has('login')
-                m = 
-                    get: @model.get
-                    has: @model.has
-                    on: @model.on
-                    attributes: @model.get('login')
+                m = @get_model_for('login')
+                  #  get: @model.get
+                  #  has: @model.has
+                  #  on: @model.on
+                  #  attributes: @model.get('login')
                     
                 @loginview = new LoginView(model:m)
         render: ->

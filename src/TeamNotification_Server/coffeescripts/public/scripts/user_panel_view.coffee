@@ -1,4 +1,4 @@
-define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_view','user_invitations_view'], (GeneralView, config, NavbarView,BreadcrumbView,UserInvitationsView) ->
+define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_view','user_invitations_view','form_view'], (GeneralView, config, NavbarView, BreadcrumbView, UserInvitationsView, FormView) ->
 
     class UserPanelView extends GeneralView
 
@@ -9,6 +9,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
                 {name:'Home', href:'/user', rel:'active'}
             ]
             @model.set('breadcrumb', breadcrumb_links)
+            @formview = new FormView(model:@get_model_for('add_room'))
             @breadcrumb = new BreadcrumbView(model:@model)
             @invitations = new UserInvitationsView(model:@model)
         render: ->
@@ -20,6 +21,10 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             $("#client-content").attr("class", "container")
             @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
+            add_room_form_row = $("<div class='row'></div>")
+            add_room_form_row.append "<h1>New Room</h1>"
+            @formview.render().append_to add_room_form_row
+            @$el.append add_room_form_row
             rooms_row = $("<div class='row'></div>")
             rooms_row.append '<h1 class="span12" >Your rooms</h1>'
             if @model.has('rooms')

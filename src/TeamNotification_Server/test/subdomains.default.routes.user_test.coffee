@@ -13,6 +13,8 @@ express_mock =
 routes_service_mock =
     build: sinon.stub()
     get_messages_from_flash: sinon.stub()
+    add_user_data_to_collection: sinon.stub()
+    
 user_validator_mock =
     validate: sinon.stub()
 
@@ -90,7 +92,10 @@ describe 'User', ->
             collection =
                 to_json: ->
                     collection_value
-
+            add_user_data_to_collection_callback =
+                then: (callback)->
+                    callback(collection_value)
+                
             collection_factory =
                 for: sinon.stub()
             req =
@@ -99,6 +104,8 @@ describe 'User', ->
                     of: sinon.stub()
             user_id = 10
             req.param.withArgs('id').returns(user_id)
+            
+            routes_service_mock.add_user_data_to_collection.returns(add_user_data_to_collection_callback)
             res = 
                 json: sinon.spy()
             done()
@@ -224,6 +231,6 @@ describe 'User', ->
                 
             it 'should contain the login form', (done) ->
                 expect(template.data[0]).to.eql {'name':'username', 'label':'Email', 'type':'string'}
-                expect(template.data[1]).to.eql {'name':'password', 'label':'Password', 'type':'password'}
+                expect(template.data[1]).to.eql {'name':'login_password', 'label':'Password', 'type':'password'}
                 done()
 

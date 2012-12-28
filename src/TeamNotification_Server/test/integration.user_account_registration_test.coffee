@@ -54,7 +54,8 @@ context.for.integration_test(authenticate:false) (browser) ->
                     then(done, done)
 
             it 'should receive a success message', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>User created successfully</p><p>Make sure to check your email for a confirmation link to activate your account</p>"
+                expect(browser.html('#server-response-container')).to.contain "User created successfully"
+                expect(browser.html('#server-response-container')).to.contain "Make sure to check your email for a confirmation link to activate your account"
                 done()
 
         describe 'When a user visits the #/registration page and submits an email that is already registered', ->
@@ -73,7 +74,7 @@ context.for.integration_test(authenticate:false) (browser) ->
                     then(done, done)
 
             it 'should receive a success message', (done) ->
-                expect(browser.html('#server-response-container p')).to.equal "<p>Email is already registered</p>"
+                expect(browser.html('#server-response-container')).to.contain "Email is already registered"
                 done()
 
         describe 'When a user visits the #/registration page and fills the form with invalid user data', ->

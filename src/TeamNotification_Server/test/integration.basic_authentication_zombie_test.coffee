@@ -34,7 +34,7 @@ context.for.integration_test(authenticate: false) (browser) ->
                     done()
 
             it 'should redirect to the main page', (done) ->
-                expect(browser.html()).to.contain login_link
+                expect(browser.url).to.eql config.site.surl+'/#/'
                 done()
 
         describe 'When an authenticated header is found', ->

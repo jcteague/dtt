@@ -9,7 +9,7 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
             $.ajaxSetup
                 beforeSend: (jqXHR) ->
                     email = $('input[name=username]').val()
-                    password = $('input[name=password]').val()
+                    password = $('input[name=login_password]').val()
                     authToken = "Basic " + encodeBase64(email + ":" + password)
                     jqXHR.setRequestHeader('Authorization', authToken )
                     jqXHR.withCredentials = true

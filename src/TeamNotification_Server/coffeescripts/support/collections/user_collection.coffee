@@ -14,6 +14,17 @@ class UserCollection
             redis: config.redis
             invitations: invitations
             rooms: rooms
+            add_room: 
+                'href': '/room'
+                'links' : [
+                  {"name": "self", "rel": "Room", 'href':'/room'}
+                ]
+                'template':
+                    'data':[
+                        {'name':'name', 'label':'Chatroom Name', 'type':'string'}
+                        {'name':'owner_id', 'label':'Owner Id', 'type':'hidden'}
+                    ]
+            
             links: [
                 {"rel":"User", "name": "self", "href": self}
                 {"rel":"UserEdit", "name": "edit", "href": "/user/#{@data.user_id}/edit"}

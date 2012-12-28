@@ -21,6 +21,14 @@ define 'general_view', ['backbone'], (Backbone) ->
         propagate_event: (event, values) ->
             @trigger event, values
             
+        get_model_for:(attribute_name)->
+            obj =
+                get: @model.get
+                has: @model.has
+                on: @model.on
+                attributes: @model.get(attribute_name)
+            return obj
+            
         get_link: (rel, links_collection)->
             for link in links_collection
                 if(link.rel == rel)
