@@ -26,7 +26,7 @@ class RoomCollection
         other_links.push {"name": "Room Messages", "rel": "RoomMessages", "href": "/room/#{@room.room.id}/messages"}
         
         return {
-            href:  room_href #self
+            href:  room_href
             links: [self].concat(other_links)
             rooms: [@room_data(@room.room)]
             members: members

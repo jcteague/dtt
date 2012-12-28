@@ -3,7 +3,6 @@ define 'room_users_view', ['general_view'] , (GeneralView) ->
     class RoomUsersView extends GeneralView
         id: 'room-users-container'
         initialize: ->
-            console.log @model
             @data = @model.attributes
         render: ->
             get_user_field = (user, field_name) ->

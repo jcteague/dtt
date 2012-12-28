@@ -1,4 +1,4 @@
-define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 'query_view', 'room_users_view'], (GeneralView, config, BreadcrumbView, NavbarView, QueryView, RoomUsersView) ->
+define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 'query_view', 'room_members_view'], (GeneralView, config, BreadcrumbView, NavbarView, QueryView, RoomMembersView) ->
 
     class RoomsView extends GeneralView
 
@@ -7,7 +7,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
         initialize: ->
             @navbar_view = new NavbarView(model:@model)
             @query_view = new QueryView(model:@model)
-            @room_users_view = new RoomUsersView(model:@model)
+            @room_users_view = new RoomMembersView(model:@model)
             @model.on 'change:rooms', @render, @
             @query_view.on 'all', @propagate_event, @
             authToken = $.cookie("authtoken")
