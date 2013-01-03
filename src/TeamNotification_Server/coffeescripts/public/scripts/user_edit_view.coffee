@@ -14,6 +14,7 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_vie
             @breadcrumb = new BreadcrumbView(model:@model)
             @navbar_view = new NavbarView(model: @model)
             @form_view.on 'response:received', @check_user_edit
+            @content = $('<div class="span2"></div>')
 
         check_user_edit: (res) =>
             if res.success is true
@@ -25,5 +26,7 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_vie
             @$el.empty()
             @navbar_view.render().append_to @$el
             @breadcrumb.render().append_to @$el
-            @form_view.render().append_to @$el
+            @form_view.render().append_to @content
+            
+            @$el.append @content
             @

@@ -7,8 +7,7 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
             #if typeof template.form_class != 'undefined'
             #    form_class = template.form_class
             form = $('<form>', {action:template.href})
-            form.attr('class','span5')
-            #form.attr('style','width:280px')
+           # form.attr('class','span5')
             form_templates = template.data
             form_templates.forEach (field) =>
                 fieldGenerator = @get_builder_for(field.type)
