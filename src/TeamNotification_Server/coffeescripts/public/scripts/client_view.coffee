@@ -16,14 +16,14 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         display_messages: (messages) ->
             @server_response_view.update(messages)
-            @server_response_view.render().append_to @$el
+            @server_response_view.render().append_to $('#server-messages') #@$el
             
         render: ->
             @$el.empty()
             if( typeof(@model.attributes.server_messages) != 'undefined')
                 @display_messages @model.attributes.server_messages 
             else
-                @server_response_view.render().append_to @$el
+                @server_response_view.render().append_to $('#server-messages')#@$el
             view.render().append_to(@$el) for view in @views
             if $('.prettyprint')?
                 prettyPrint()
@@ -39,7 +39,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
                 view.on 'messages:display', @display_messages, @
 
         can_display_messages: (view) ->
-            #console.log view
+            
             (view instanceof QueryView) or (view instanceof UserEditView) or (view instanceof FormView) or (view instanceof LoginView)
             
         propagate_event: (event, values) ->
