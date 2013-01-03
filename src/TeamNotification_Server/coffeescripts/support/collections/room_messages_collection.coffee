@@ -39,7 +39,8 @@ class RoomMessagesCollection
                 {"name": "User", "rel": "User", 'href':"/user/#{@data.user_id}"}
             ]
             template:
-                'data':[
+                href: "/room/#{room_id}/messages"
+                data:[
                     {'name':'message', 'label':'Send Message', 'type':'string-big'}
                 ]
             messages: m

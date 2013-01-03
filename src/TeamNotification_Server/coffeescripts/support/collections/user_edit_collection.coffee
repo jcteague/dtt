@@ -11,6 +11,7 @@ class UserEditCollection
                 {rel: 'UserEdit', name: 'self', href: self}
             ]
             template:
+                href: self
                 type: 'user_edit'
                 data: [
                     {name: 'id', value: @data.id, type: 'hidden', rules: {required: true}}

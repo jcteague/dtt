@@ -15,6 +15,7 @@ class RegistrationCollection
                 {rel: 'Registration', name: 'self', href: self}
             ]
             template:
+                href: self
                 type: 'registration'
                 data: [
                     {name: 'first_name', label: 'First Name', type: 'string', value: get_or_empty('first_name'), rules: {required: true}}

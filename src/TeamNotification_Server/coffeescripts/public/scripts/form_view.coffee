@@ -14,7 +14,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
         render: ->
             @$el.empty()
             if @model.has('template')
-                @$el.append(@form_template_renderer.render(@model.attributes))
+                @$el.append(@form_template_renderer.render(@model.get('template')))
             @delegateEvents(@events)
             @
 
@@ -34,16 +34,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
             $(@$el.find('select')).each () ->
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
-            
-            #$('input').not(':submit').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
-            #$('textarea').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
-            #$('select').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
             
             callback = (res) => 
                 @trigger 'response:received', res

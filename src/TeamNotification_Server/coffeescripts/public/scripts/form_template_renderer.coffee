@@ -2,18 +2,20 @@ define 'form_template_renderer', ['jquery', 'jquery.validate'], ($, jquery_valid
 
     class FormTemplateRenderer
 
-        render: (collection) ->
+        render: (template) ->
             #form_class = 'well'
-            if typeof collection.form_class != 'undefined'
-                form_class = collection.form_class
-            form = $('<form>', {action:collection.href})
-            form_templates = collection.template.data
-            form_templates.forEach (template) =>
-                fieldGenerator = @get_builder_for(template.type)
-                fieldElements = fieldGenerator(template)
+            #if typeof template.form_class != 'undefined'
+            #    form_class = template.form_class
+            form = $('<form>', {action:template.href})
+            form.attr('class','span5')
+            #form.attr('style','width:280px')
+            form_templates = template.data
+            form_templates.forEach (field) =>
+                fieldGenerator = @get_builder_for(field.type)
+                fieldElements = fieldGenerator(field)
                 fieldElements.forEach((f) -> form.append(f))
 
-            @set_up_validation(form, collection.template)
+            @set_up_validation(form, template)
             #form.attr('class', form_class)
             form.append($('<input>', {"type":"submit","class":"btn btn-primary"}))
             form

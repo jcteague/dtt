@@ -9,7 +9,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
                 {name:'Home', href:'/user', rel:'active'}
             ]
             @model.set('breadcrumb', breadcrumb_links)
-            @formview = new FormView(model:@get_model_for('add_room'))
+            @formview = new FormView(model:@model)
             @breadcrumb = new BreadcrumbView(model:@model)
             @invitations = new UserInvitationsView(model:@model)
             @invitations.on 'all', @propagate_event, @
@@ -24,7 +24,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
             add_room_form_row = $("<div class='row span'></div>")
-            add_room_form_row.append "<h1>Create Room</h1>"
+            @formview.$el.attr('class', 'form-inline')
             @formview.render().append_to add_room_form_row
             @$el.append add_room_form_row
             rooms_row = $("<div class='row'></div>")

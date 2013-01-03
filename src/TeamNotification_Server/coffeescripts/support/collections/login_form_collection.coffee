@@ -10,6 +10,7 @@ class LoginFormCollection
               {"name": "forgot password", "rel": "forgot_password", 'href':'/forgot_password'}
             ]
             'template':
+                'href': '/user/login'
                 'data':[
                     {'name':'username', 'label':'Email', 'type':'string'}
                     {'name':'login_password', 'label':'Password', 'type':'password'}
