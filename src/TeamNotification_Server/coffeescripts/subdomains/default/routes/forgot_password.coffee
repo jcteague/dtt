@@ -16,6 +16,7 @@ methods.forgot_password_form = (req, res) ->
           {"name": "Login", "rel": "login", 'href':'/user/login'}
         ]
         'template':
+            'href': '/forgot_password'
             'data':[
                 {'name':'email', 'label':'Email', 'type':'string'}
             ]
