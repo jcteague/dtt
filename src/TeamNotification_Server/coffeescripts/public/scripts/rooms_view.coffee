@@ -8,9 +8,9 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
             @navbar_view = new NavbarView(model:@model)
             @query_view = new QueryView(model:@model)
             @room_users_view = new RoomMembersView(model:@model)
-            #@links_view = new LinksView(model:@model)
             @model.on 'change:rooms', @render, @
             @query_view.on 'all', @propagate_event, @
+            @room_users_view.on 'all', @propagate_event, @
             authToken = $.cookie("authtoken")
             $.ajaxSetup
                 beforeSend: (jqXHR) ->
@@ -38,6 +38,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
             @
 
         render_room: (room) ->
+            me = @
             get_field = (data, name) ->
                 for field in data
                     if(field.name == name)
@@ -49,7 +50,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
                     del = confirm("Are you sure you want to leave room '#{room_name}'?")
                     if(del)
                         $.post "#{config.api.url}/room/#{room_id}/unsubscribe", (data) ->
-                            $("#server-response-container").html(data.server_messages[0])
+                            me.trigger 'messages:display', data.server_messages
                             container.hide()
                     return false
                 anchor
@@ -62,7 +63,6 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
                 @$el.append p
             else
                 @$el.append("""<p><small> Room key: #{room_key}</small></p>""")
-                
 
         append_to: (parent) ->
             @$el.appendTo parent
