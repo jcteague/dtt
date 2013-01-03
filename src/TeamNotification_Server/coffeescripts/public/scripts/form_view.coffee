@@ -44,7 +44,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                         res.server_messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
                     @trigger 'messages:display', res.server_messages 
 
-            url = "#{config.api.url}#{$(@$el.find('form').get(0)).attr('action')}" #@$('form').attr('action')}"
+            url = "#{config.api.url}#{$(@$el.find('form').get(0)).attr('action')}"
             parameters = {
                 type: 'POST'
                 data: data
