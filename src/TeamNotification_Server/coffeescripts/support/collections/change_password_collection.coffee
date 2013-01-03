@@ -16,6 +16,7 @@ class ChangePasswordCollection
                 {"name": "Login", "rel": "login", 'href':'/user/login'}
             ]
             template:
+                href: self
                 type: 'change_password'
                 data: [
                     {name: 'password', label: 'New password', type: 'password', value: get_or_empty('password'), rules: {required: true, minlength: 6}}

@@ -14,7 +14,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
         render: ->
             @$el.empty()
             if @model.has('template')
-                @$el.append(@form_template_renderer.render(@model.attributes))
+                @$el.append(@form_template_renderer.render(@model.get('template')))
             @delegateEvents(@events)
             @
 
@@ -35,16 +35,6 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                 $current = $(this)
                 data[$current.attr('name')] = $current.val()
             
-            #$('input').not(':submit').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
-            #$('textarea').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
-            #$('select').each () ->
-            #    $current = $(this)
-            #    data[$current.attr('name')] = $current.val()
-            
             callback = (res) => 
                 @trigger 'response:received', res
                 if res.server_messages?
@@ -54,7 +44,7 @@ define 'form_view', ['general_view', 'form_template_renderer','base64', 'config'
                         res.server_messages.push "You can view the new resource <a href='##{res.link}'>here</a>"
                     @trigger 'messages:display', res.server_messages 
 
-            url = "#{config.api.url}#{$(@$el.find('form').get(0)).attr('action')}" #@$('form').attr('action')}"
+            url = "#{config.api.url}#{$(@$el.find('form').get(0)).attr('action')}"
             parameters = {
                 type: 'POST'
                 data: data

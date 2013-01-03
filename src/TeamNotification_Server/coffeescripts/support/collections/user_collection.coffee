@@ -8,23 +8,19 @@ class UserCollection
         invitations = (@get_data_for(invitation) for invitation in @data.invitations)
         rooms = (@get_room(room) for room in @data.rooms)
         
+        template = 
+            href: '/room'
+            data:[
+                {'name':'name', 'label':'New chatroom Name', 'type':'string'}
+                {'name':'owner_id', 'label':'Owner Id', 'type':'hidden'}
+            ]
         return {
             href: self
             user_id: @data.user_id
             redis: config.redis
             invitations: invitations
             rooms: rooms
-            add_room: 
-                'href': '/room'
-                'links' : [
-                  {"name": "self", "rel": "Room", 'href':'/room'}
-                ]
-                'template':
-                    'data':[
-                        {'name':'name', 'label':'Chatroom Name', 'type':'string'}
-                        {'name':'owner_id', 'label':'Owner Id', 'type':'hidden'}
-                    ]
-            
+            template: template
             links: [
                 {"rel":"User", "name": "self", "href": self}
                 {"rel":"UserEdit", "name": "edit", "href": "/user/#{@data.user_id}/edit"}

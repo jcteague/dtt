@@ -39,7 +39,6 @@ methods.get_user_edit = (req, res) ->
     callback = (collection) ->
         add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
             res.json(json)
-        #res.json(collection.to_json())
 
     build('user_edit_collection').for(user_id).fetch_to callback
 
@@ -80,6 +79,7 @@ methods.login = (req, res) ->
           {"name": "forgot password", "rel": "forgot_password", 'href':'/forgot_password'}
         ]
         'template':
+            'href': '/user/login'
             'data':[
                 {'name':'username', 'label':'Email', 'type':'string'}
                 {'name':'login_password', 'label':'Password', 'type':'password'}

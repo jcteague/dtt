@@ -16,6 +16,7 @@ class GithubRepositoriesCollection
             github_repositories: @github_repositories.repositories
             #rooms:@github_repositories.rooms
             template: 
+                href: "/github/repositories/#{@github_repositories.access_token}"
                 type: 'repository_selection'
                 data: [
                     {name: 'room_key', label: 'Rooms', value: formated_rooms, type: 'dropdownlist'}

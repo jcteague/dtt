@@ -12,10 +12,8 @@ define 'room_users_view', ['general_view'] , (GeneralView) ->
             @$el.empty()
             @$el.attr 'class', 'span4 scroll-box'
             nav = $('<ul>').attr({'class':'nav nav-tabs nav-stacked'})
-            nav.append "<li class='nav-header'>Room users</li>"
             if @model.has('members') and @data.members.length > 0
                 for member in @data.members
-                    #user_id = get_user_field(member,'id')
                     user_name = get_user_field(member,'name')
                     nav.append "<li><a >#{user_name}</a></li>"
             else

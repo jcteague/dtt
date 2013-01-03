@@ -25,8 +25,6 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
                 @formview = new FormView(model:@model)
                 @formview.on 'all', @propagate_event, @
                 
-                #@formview.on 'messages:display', (messages) =>
-                #    $('#server-response-container').html("""<div class="alert alert-info" id='#notification'><button type="button" class="close" data-dismiss="alert">x</button>"""+messages[0]+"""</div>""" )
                 @$el.append """<div class="row hero-unit">
   <h1>Welcome to Yackety</h1>
   <p>Some awesome placeholder tagline ;D</p>
