@@ -41,22 +41,25 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
                 
                 @container_nav.append @items
             else
-                login_form = $("<li></li>")
+                login_form_li = $("<li></li>")
                 login_ul = $("""<ul class="nav pull-right"></ul>""")
-                dd = $("""<li id="ddToToggle" class="dropdown"></li>""")
-                ddm = $("""<ul class="dropdown-menu"></ul>""")
-                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#">Sign in <b class="caret"></b></a>""")
-                @items.append '<li><a href="#">Features</a></li>'
-                @items.append '<li><a href="#">Contact us</a></li>'
+                login_ul.append login_form_li
+                
                 @container_nav.append @items
                 
-                ddm.append login_form
-                dd.append link
-                dd.append ddm
-                login_ul.append dd
                 if @loginview?
-                    @loginview.render().append_to login_form
-                @container_nav.append login_ul
-                link.bind 'click', ()->
-                    $(ddm).toggle()
+                    login_form = @loginview.render()
+                    
+                    login_form.$el.attr('class', 'nav pull-right')
+                    login_form.$el.find('form').attr('class','navbar-form')
+                    login_form.$el.find('input[type=text]').attr('class','span2')
+                    login_form.$el.find('input[type=text]').attr('style','margin-top:0px; margin-right:3px')
+                    login_form.$el.find('input[type=password]').attr('class','span2')
+                    login_form.$el.find('input[type=password]').attr('style','margin-top:0px;')
+                    #@container_nav.append login_form.$el.find('form')
+                    login_form.append_to login_form_li
+                    @container_nav.append login_ul
+                #@container_nav.append login_ul
+                #link.bind 'click', ()->
+                 #   $(ddm).toggle()
             @
