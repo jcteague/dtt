@@ -20,9 +20,7 @@ define 'user_rooms_view', ['general_view','messages_view','form_view','form_temp
             ul.append "<li class='divider-vertical'></li>"
             userRooms = $("<li>",{'class':'dropdown'})
             userRooms.append "<a href='#' id='DropDownInfuncional' class='dropdown-toggle' data-toggle='dropdown'>Rooms <b class='caret'></b></a>"
-            
             userRoomsList = $("<ul>",{"class":"dropdown-menu"})
-            
             for room in @data.user_rooms
                 userRoomsList.append "<li><a href='/#/room/#{room.room_id}/messages'>#{room.name}</a></li>"
             
