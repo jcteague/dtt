@@ -3,9 +3,10 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
     class RootView extends GeneralView
 
         id: 'root-container'
-        registerview: $("""<div class='span2'></div>""")
-        left_form: $("""<div class='span6'></div>""")
-        row: $("""<div class='row well'></div>""")
+        registerview: $("""<div class='span4'></div>""")
+        left_form: $("""<div class='span4'></div>""")
+        middle: $("""<div class='span4'></div>""")
+        row: $("""<div class='row'></div>""")
         initialize: ->
             @navbar = new NavbarView(model:@model)
             @breadcrumb = new BreadcrumbView(model:@model)
@@ -36,12 +37,20 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
 </div>"""
                 @$el.append @row
                 @row.append @left_form
-                @registerview.append "<h3>Sing up</h1>"
-                @formview.render().append_to @registerview
+                @row.append @middle
                 @row.append @registerview
-                @left_form.append """<h1>Welcome to Yackety</h1> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. 
-
-Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit."""
+                @registerview.append "<h3>Sing up</h3>"
+                @formview.render().append_to @registerview
+                @middle.append """<h3>Contact us</h3>
+                    <p>We just met you and this is crazy but here's or email so... contact us, maybe?<br/> You can emai us your inquiries to info[at]yakett.com <br/>You can call our talfree service at some phone number 1-200-YAK-ETTY</p>
+                """
+                @left_form.append """<h3>Features</h3>
+                <ul>
+                    <li>Boost your team communication</li>
+                    <li>Create rooms and organize your teams</li>
+                </ul>
+                 
+                """
             @
         anchor_click_handler:(obj)->
             $('.active').attr('class','');

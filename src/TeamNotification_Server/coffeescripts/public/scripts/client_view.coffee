@@ -16,14 +16,14 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
 
         display_messages: (messages) ->
             @server_response_view.update(messages)
-            @server_response_view.render().append_to $('#server-messages') #@$el
+            @server_response_view.render().append_to $('#server-messages')
             
         render: ->
             @$el.empty()
             if( typeof(@model.attributes.server_messages) != 'undefined')
                 @display_messages @model.attributes.server_messages 
             else
-                @server_response_view.render().append_to $('#server-messages')#@$el
+                @server_response_view.render().append_to $('#server-messages')
             view.render().append_to(@$el) for view in @views
             if $('.prettyprint')?
                 prettyPrint()
