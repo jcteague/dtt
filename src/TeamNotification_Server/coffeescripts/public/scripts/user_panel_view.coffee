@@ -34,10 +34,12 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
             @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
             $("#client-content").attr("class", "container")
-            add_room_form_row = $("<div class='row span'></div>")
-            @formview.$el.attr('class', 'form-inline')
+            add_room_form_row = $("<div class='row span12' style='margin-left:0px;'></div>")
+            @formview.$el.attr('class', 'span6 form-inline')
+            @formview.$el.attr('style', 'margin-left:0px')
             @formview.render().append_to add_room_form_row
             @$el.append add_room_form_row
+            add_room_form_row.append """<a href='https://s3.amazonaws.com/yackety-vs-plugin/TeamNotification_Package.vsix' class='btn inline pull-right' >Download our vs plugin</a>"""
             rooms_row = $("<div class='row'></div>")
             rooms_table = $("""<table/>""", {"class":"table table-striped"})
             rooms_table.append "<tr><th style='width:75%'>Rooms</th><th style='width:25%'></th</tr>"
@@ -71,7 +73,7 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
                 rooms_table.append "<tr><td colspan='2'><p>No rooms available</p></td></tr>"
                  #       owned_rooms_table.append """<h3><a href='#/room/#{room_id}/messages'>#{@get_field('name', room.data)}</a>&nbsp;<small><a href='#/room/#{room_id}/'>Manage room</a></small></h3><h4><small>Room Key: #{@get_field('room_key', room.data)}</small></h4>"""
             @$el.append rooms_table
-            invitations_row = $("""<div class='row' class="span12"></div>""")
+            invitations_row = $("""<div></div>""")
             @invitations.render().append_to invitations_row
             @$el.append invitations_row
             @

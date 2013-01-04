@@ -16,7 +16,7 @@ define 'user_invitations_view', ['general_view', 'links_view','config'], (Genera
             me = @
             @$el.empty()
   #          @links_view.render().append_to @$el
-            @$el.attr('class','row-fluid')
+           # @$el.attr('class','row')
             table = $('<table id="invitations-table" class="table table-hover table-condensed">')
             table.append "<tr><th colspan='4'>Pending Invitations</th></tr> <tr><th>Email</th><th>Room</th><th>Invitation date</th><th></th></tr>"
             if @model.has("invitations") &&  @model.attributes.invitations.length > 0
