@@ -1,4 +1,4 @@
-define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','form_view','login_view'], (GeneralView, config, NavbarView, BreadcrumbView, FormView, LoginView) ->
+define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','form_view'], (GeneralView, config, NavbarView, BreadcrumbView, FormView) ->
 
     class RootView extends GeneralView
 
@@ -8,20 +8,20 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
         middle: $("""<div class='span4'></div>""")
         row: $("""<div class='row'></div>""")
         initialize: ->
-            @navbar = new NavbarView(model:@model)
+            @navbar_view = new NavbarView(model:@model)
             @breadcrumb = new BreadcrumbView(model:@model)
         render: ->
             @$el.empty()
             @$el.attr('class', 'row')
             @registerview.empty()
             @left_form.empty()
+            @middle.empty()
             @row.empty()
             if @model.has('root') 
-                @navbar.render().append_to @$el
                 links = @model.get('root').links
                 reg = @model.get('registration')
                 login = @model.get('login')
-                
+                @navbar_view.render().append_to @$el
                 @model.attributes = reg
                 @formview = new FormView(model:@model)
                 @formview.on 'all', @propagate_event, @

@@ -1,4 +1,4 @@
-define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_view', 'breadcrumb_view'], (GeneralView, FormView, LinksView, NavbarView, BreadcrumbView) ->
+define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'breadcrumb_view'], (GeneralView, FormView, LinksView, BreadcrumbView) ->
 
     class UserEditView extends GeneralView
 
@@ -12,7 +12,6 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_vie
             ]
             @model.set('breadcrumb', breadcrumb_links)
             @breadcrumb = new BreadcrumbView(model:@model)
-            @navbar_view = new NavbarView(model: @model)
             @form_view.on 'response:received', @check_user_edit
             @content = $('<div class="span2"></div>')
 
@@ -24,7 +23,6 @@ define 'user_edit_view', ['general_view', 'form_view', 'links_view', 'navbar_vie
 
         render: ->
             @$el.empty()
-            @navbar_view.render().append_to @$el
             @breadcrumb.render().append_to @$el
             @form_view.render().append_to @content
             

@@ -9,6 +9,7 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
             @loginview = null
             if @model.has('login')
                 m = @get_model_for('login')
+                
                 @loginview = new LoginView(model:m)
         render: ->
             @$el.empty()
@@ -53,9 +54,10 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
                     login_form.$el.attr('class', 'nav pull-right')
                     login_form.$el.find('form').attr('class','navbar-form')
                     login_form.$el.find('input[type=text]').attr('class','span2')
-                    login_form.$el.find('input[type=text]').attr('style','margin-top:0px; margin-right:3px')
+                    #login_form.$el.find('input[type=text]').attr('style','margin-top:0px; margin-right:3px')
+                    login_form.$el.find('input[type=text]').attr('style','margin-right:3px')
                     login_form.$el.find('input[type=password]').attr('class','span2')
-                    login_form.$el.find('input[type=password]').attr('style','margin-top:0px;')
+                    #login_form.$el.find('input[type=password]').attr('style','margin-top:0px;')
                     #@container_nav.append login_form.$el.find('form')
                     login_form.append_to login_form_li
                     @container_nav.append login_ul
