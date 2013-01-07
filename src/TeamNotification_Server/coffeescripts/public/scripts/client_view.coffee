@@ -12,7 +12,6 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @router.on 'render', @render_path, @
             @views_factory = new ViewsFactory()
             @footer_view = new FooterView()
-            console.log @model
             @navbar_view = new NavbarView(model:@model)
             Backbone.history.start()
 

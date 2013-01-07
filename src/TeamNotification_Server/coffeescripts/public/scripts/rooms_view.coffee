@@ -5,6 +5,9 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
         id: 'rooms-container'
 
         initialize: ->
+            @container = $("<div/>", {'class':'row-fluid'})
+            @left = $("<div/>", {'class':'span6'})
+            @right = $("<div/>", {'class':'span6'})
             @query_view = new QueryView(model:@model)
             @room_users_view = new RoomMembersView(model:@model)
             @model.on 'change:rooms', @render, @
@@ -18,6 +21,10 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
 
         render: ->
             @$el.empty()
+            @left.empty()
+            @right.empty()
+            @container.empty()
+            
             if @model.has('rooms') and @model.get('rooms').length > 0
                 @rooms = @model.get('rooms')
                 breadcrumb_links = [
@@ -27,11 +34,18 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
                 @model.set('breadcrumb', breadcrumb_links)
                 @breadcrumb_view = new BreadcrumbView(model:@model)
                 @breadcrumb_view.render().append_to @$el
-                @$el.append @get_link('RoomMessages',@model.attributes.links)
+
+                @container.append @left
+                @container.append @right
+                @$el.append @container
+                
+                @right.append """<a href="/github/oauth"><img class="img-polaroid" style="width: 32px; height:32px;" src="/img/github-icon.jpg" />&nbsp;Integrate with github</a></div>"""
+                
+                @left.append @get_link('RoomMessages',@model.attributes.links)
                 @render_room(room) for room in @rooms
                 
-                @$el.append "<h1>Add members</h1>"
-                @query_view.render().append_to @$el
+                @left.append "<h1>Add members</h1>"
+                @query_view.render().append_to @left
                 @room_users_view.render().append_to @$el
             @
 
@@ -58,9 +72,9 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
                 p = $("<p/>")
                 unsubscribe_room_link = generate_unsubscribe_link get_field(room.data,'id'),link.name, p
                 p.append unsubscribe_room_link
-                @$el.append p
+                @left.append p
             else
-                @$el.append("""<p><small> Room key: #{room_key}</small></p>""")
+                @left.append("""<p><small> Room key: #{room_key}</small></p>""")
 
         append_to: (parent) ->
             @$el.appendTo parent

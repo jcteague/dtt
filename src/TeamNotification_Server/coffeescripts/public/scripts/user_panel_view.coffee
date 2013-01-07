@@ -54,7 +54,7 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
                                             <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1"><i class="icon-asterisk"></i><span class="caret"></span></button>
                                             <ul class="dropdown-menu">
                                               <li><a href="#/room/#{room_id}">Manage Room</a></li>
-                                              <li><a href="/github/oauth">Associate Repository</a></li>
+                                              <!-- <li><a href="/github/oauth">Associate Repository</a></li> -->
                                             </ul></div></td>"""
                     else
                         td = $("<td/>")
