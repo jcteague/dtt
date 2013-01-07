@@ -15,6 +15,7 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
             @$el.attr('class', 'row')
             @registerview.empty()
             @left_form.empty()
+            @middle.empty()
             @row.empty()
             if @model.has('root') 
                 @navbar.render().append_to @$el
