@@ -10,7 +10,6 @@ define 'breadcrumb_view', ['backbone', 'config','general_view'], (Backbone, conf
             @$el.empty()
             @$el.innerHTML = ""
             ul = $("""<ul class="breadcrumb"></ul>""")
-            #@ul.empty()
             @$el.append ul
             if @model.has('breadcrumb')
                 breadcrumb_links = @model.get('breadcrumb')

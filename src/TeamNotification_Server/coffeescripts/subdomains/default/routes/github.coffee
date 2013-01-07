@@ -7,6 +7,7 @@ config = require('../../../config')()
 routes_service = require('../../../support/routes_service')
 github_helper = require('../../../support/github_events_helper')
 redis_connector = require('../../../support/redis/redis_gateway')
+add_user_data_to_collection = require('../../../support/routes_service').add_user_data_to_collection
 
 build = routes_service.build
 redis_publisher = redis_connector.open()
@@ -25,7 +26,9 @@ methods.associate_github_repositories = (req, res, next) ->
 
 methods.github_repositories = (req,res) ->
     callback = (collection) ->
-        res.json(collection.to_json())
+        add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
+            res.json(json)
+        #res.json(collection.to_json())
 
     build('github_repositories_collection').for({access_token:req.param("access_token"), user_id:req.user.id} ).fetch_to callback
 

@@ -9,6 +9,7 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
             @loginview = null
             if @model.has('login')
                 m = @get_model_for('login')
+                
                 @loginview = new LoginView(model:m)
         render: ->
             @$el.empty()

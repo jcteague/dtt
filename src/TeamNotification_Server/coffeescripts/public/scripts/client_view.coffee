@@ -1,4 +1,4 @@
-define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'login_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'jquery.ie.cors', 'config', 'footer_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, LoginView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, IECors, config, FooterView) ->
+define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', 'query_view', 'user_edit_view', 'login_view', 'messages_view', 'server_response_view', 'views_factory', 'collection_model', 'jquery.ie.cors', 'config', 'footer_view', 'navbar_view'], (Backbone, ClientRouter, FormView, LinksView, QueryView, UserEditView, LoginView, MessagesView, ServerResponseView, ViewsFactory, CollectionModel, IECors, config, FooterView, NavbarView) ->
 
     class ClientView extends Backbone.View
 
@@ -12,6 +12,8 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @router.on 'render', @render_path, @
             @views_factory = new ViewsFactory()
             @footer_view = new FooterView()
+            console.log @model
+            @navbar_view = new NavbarView(model:@model)
             Backbone.history.start()
 
         display_messages: (messages) ->
@@ -20,6 +22,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             
         render: ->
             @$el.empty()
+            @navbar_view.render().append_to @$el
             if( typeof(@model.attributes.server_messages) != 'undefined')
                 @display_messages @model.attributes.server_messages 
             else

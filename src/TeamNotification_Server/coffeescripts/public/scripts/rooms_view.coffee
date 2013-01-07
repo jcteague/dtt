@@ -1,11 +1,10 @@
-define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 'query_view', 'room_members_view', 'links_view'], (GeneralView, config, BreadcrumbView, NavbarView, QueryView, RoomMembersView, LinksView) ->
+define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 'room_members_view', 'links_view'], (GeneralView, config, BreadcrumbView, QueryView, RoomMembersView, LinksView) ->
 
     class RoomsView extends GeneralView
 
         id: 'rooms-container'
 
         initialize: ->
-            @navbar_view = new NavbarView(model:@model)
             @query_view = new QueryView(model:@model)
             @room_users_view = new RoomMembersView(model:@model)
             @model.on 'change:rooms', @render, @
@@ -19,7 +18,6 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view','navbar_view', 
 
         render: ->
             @$el.empty()
-            @navbar_view.render().append_to @$el
             if @model.has('rooms') and @model.get('rooms').length > 0
                 @rooms = @model.get('rooms')
                 breadcrumb_links = [

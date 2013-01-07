@@ -1,10 +1,9 @@
-define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_view','user_invitations_view','form_view'], (GeneralView, config, NavbarView, BreadcrumbView, UserInvitationsView, FormView) ->
+define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invitations_view','form_view','navbar_view'], (GeneralView, config, BreadcrumbView, UserInvitationsView, FormView, NavbarView) ->
 
     class UserPanelView extends GeneralView
 
         id: 'user-panel-container'
         initialize: ->
-            @navbar = new NavbarView(model:@model)
             breadcrumb_links = [
                 {name:'Home', href:'/user', rel:'active'}
             ]
@@ -31,7 +30,6 @@ define 'user_panel_view', ['general_view', 'config','navbar_view','breadcrumb_vi
                     return false
                 anchor
             @$el.empty()
-            @navbar.render().append_to @$el
             @breadcrumb.render().append_to @$el
             $("#client-content").attr("class", "container")
             add_room_form_row = $("<div class='row span12' style='margin-left:0px;'></div>")
