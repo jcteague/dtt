@@ -50,7 +50,7 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
                     new_row = $("""<tr/>""")
                     new_row.append """<td><h3><a href='#/room/#{room_id}/messages'>#{@get_field('name', room.data)}</a></h3></td>"""
                     if owner_id == @model.get("user").user_id
-                        new_row.append """<td><div class="btn-group">
+                        new_row.append """<td><div class="btn-group pull-right">
                                             <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1"><i class="icon-asterisk"></i><span class="caret"></span></button>
                                             <ul class="dropdown-menu">
                                               <li><a href="#/room/#{room_id}">Manage Room</a></li>
