@@ -43,7 +43,8 @@
       'lang-proto': 'prettify/lang-proto',
       'lang-scala': 'prettify/lang-scala',
       'lang-vhdl': 'prettify/lang-vhdl',
-      'session_mng': 'session_mng'
+      'session_mng': 'session_mng',
+      'audio': 'audiojs/audio.min'
     },
     shim: {
       'prettify-languages': {

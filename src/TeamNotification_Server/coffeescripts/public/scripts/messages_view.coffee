@@ -1,14 +1,15 @@
-define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment', 'config'], (GeneralView, underscore, Prettify, Moment, config) ->
+define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'moment', 'config', 'audio'], (GeneralView, underscore, Prettify, Moment, config, Audio) ->
 
     class MessagesView extends GeneralView
         id: 'messages-container'
         added_code: false
-
+        sound_file_mp3: config.site.url + '/sounds/notification.mp3'
+        sound_file_wav: config.site.url + '/sounds/notification.wav'
         initialize: ->
             @authToken = $.cookie 'authtoken'
             @messages_table = $("<table/>")
             doFocus = true
-            
+
             focus_func = () =>
                 if(doFocus)
                     doFocus = false
@@ -82,7 +83,17 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 $('.chat_message_date').each (idx, element) =>
                     message_date = new Date(@flatten_message(messages[idx]).stamp)
                     element.innerHTML = (parse_date(message_date, newDate))
-
+            as = ''
+                
+            append_message= (message)->
+                m = JSON.parse message
+                if !me.window_focus && m.user_id != me.model.get('user').user_id
+                    if as == ''
+                        as = audiojs.createAll()
+                    as[0].load
+                        mp3: @sound_file_mp3
+                    as[0].play()
+                me.add_message m
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()
@@ -94,10 +105,20 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             if @model.has('messages')
                 url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
-                socket.on 'message', @add_message
+                socket.on 'message', append_message # @add_message
                 render_model()
+                
+            sound_div = $("""<div style='display:none'><audio preload="auto" src="./sounds/notification.mp3"><source src="#{@sound_file_mp3}"></audio></div>""")
+            me.$el.append sound_div
+            
+            $(window).focus () ->
+                me.window_focus = true
+                console.log me.window_focus
+            $(window).blur ()->
+                me.window_focus = false
+                console.log me.window_focus
             @
-
+                
         parse_date = (message_date, curr_date) ->
             if is_today(message_date, curr_date)
                 return moment(message_date).format('h:mm A')
@@ -110,6 +131,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         is_today = (message_date, current_date) ->
             build_string = (date) -> "#{date.getUTCFullYear()}-#{date.getUTCMonth()}-#{date.getUTCDate()}"
             build_string(message_date) == build_string(current_date)
+
 
         render_message: (message) ->
             flattened_message = @flatten_message(message)
@@ -127,9 +149,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         append_to: (parent) ->
             @$el.appendTo parent
 
-        add_message: (message) =>
-            m = JSON.parse message
-
+        add_message: (m) =>
             if $("##{m.stamp}").length  == 1
                 @edit_message $("#message-#{m.stamp}"), m
             else
@@ -151,7 +171,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
         edit_message: (p, message) ->
             parsedBody = JSON.parse(message.body)
             p.attr "class", "new_message"
-            escaped_message = @parsing_links parsedBody.message  #$('<div/>').text(parsedBody.message).html()
+            escaped_message = @parsing_links parsedBody.message
             p[0].innerHTML = escaped_message
 
         read_message_data: (message) ->
@@ -173,14 +193,10 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             if(typeof parsedBody.solution != 'undefined' && parsedBody.solution!='')
                 @added_code = true
-                #p = document.createElement("tr")
-                #$(p).attr 'id',"#{message.stamp}"
-                #p.innerHTML = "<td>#{$name_span.html()} </td><td><pre class='prettyprint linenums'>#{escaped_message}</pre></td><td><b><span class='chat_message_date'>#{date}</span></b></td>"
                 return build_new_row( $name_span.html(), "<pre class='prettyprint linenums'>#{escaped_message}</pre>", date)
             if parsedBody.notification?
                 @last_user_id_that_posted = -1 
                 add_links = (str) ->
                     str.replace(/\{0\}/, "<a target='_blank' href=\"#{parsedBody.repository_url}\">#{parsedBody.repository_name}</a>").replace(/\{1\}/, "<a target='_blank' href=\"#{parsedBody.url}\">Reference</a>")
-                return build_new_row($name_span.html(), add_links(parsedBody.message), date) #add_links("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()}</td><td><span id='message-#{message.stamp}'>#{parsedBody.message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b></td></tr>")
+                return build_new_row($name_span.html(), add_links(parsedBody.message), date)
             return build_new_row($name_span.html(), escaped_message, date)
-            #("<tr id='#{message.stamp}' class='new_message'><td>#{$name_span.html()} </td><td style='width:100%'><span id='message-#{message.stamp}'>#{escaped_message}</span></td><td><b><span class='chat_message_date'>#{date}</span></b><td></tr>")

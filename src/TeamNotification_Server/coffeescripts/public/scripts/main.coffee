@@ -43,6 +43,7 @@ require.config
         'breadcrumb_view':'breadcrumb_view'
         'user_panel_view':'user_panel_view'
         'footer_view': 'footer_view'
+        'audio': 'audiojs/audio.min'
     shim:
         'prettify-languages':
             deps: ['prettify']

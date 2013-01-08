@@ -109,8 +109,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             codeEditor = mce;
             var collection = chatRoomControlService.GetCollection();
             var roomLinks = FormatRooms(collection.rooms);
-            
+
             Resources.Add("rooms", roomLinks);
+            comboRooms.SelectionChanged += OnRoomSelectionChanged;
             if(roomLinks.Count > 0)
                 comboRooms.SelectedIndex = 0;
             
@@ -139,6 +140,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             roomInvitationChannel = "/user/" + userProvider.GetUser().id.ToString() + "/invitations";
             roomInvitationsListener.ListenOnChannel(roomInvitationChannel,RoomInvitationMessage,
                                                     () => { }, () => { });
+
         }
 
         private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
@@ -380,8 +382,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (chatIsEnabled)
             {
-                var value = (Collection.Link) comboRooms.SelectedValue;
-                this.ChangeRoom(value.rel);    
+                //var value = (Collection.Link) comboRooms.SelectedValue;
+               // this.ChangeRoom(value.rel);    
             }
         }
 
