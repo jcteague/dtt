@@ -108,7 +108,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 socket.on 'message', append_message # @add_message
                 render_model()
                 
-            sound_div = $("""<div style='display:block'><audio preload="auto" src="./sounds/notification.mp3"><source src="#{@sound_file_mp3}"></audio></div>""")
+            sound_div = $("""<div style='display:none'><audio preload="auto" src="./sounds/notification.mp3"><source src="#{@sound_file_mp3}"></audio></div>""")
             me.$el.append sound_div
             
             $(window).focus () ->
