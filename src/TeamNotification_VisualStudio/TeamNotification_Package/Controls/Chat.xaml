@@ -39,7 +39,7 @@
 
                 <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" Visibility="Hidden" />
                 <Label Content="Reconnecting..." Height="auto" HorizontalAlignment="Center" Name="lblReconnecting" VerticalAlignment="Center" Width="auto" Foreground="Red" Visibility="Hidden" />
-                <ComboBox Height="auto" Name="comboRooms" Width="auto" Margin="15,0,0,0" ItemsSource="{DynamicResource rooms}" SelectionChanged="OnRoomSelectionChanged">
+                <ComboBox Height="auto" Name="comboRooms" Width="auto" Margin="15,0,0,0" ItemsSource="{DynamicResource rooms}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
