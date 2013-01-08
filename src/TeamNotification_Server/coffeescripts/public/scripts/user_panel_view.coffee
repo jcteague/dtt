@@ -58,7 +58,7 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
                                             </ul></div></td>"""
                     else
                         td = $("<td/>")
-                        btn_group = $('<div class="btn-group"/>')
+                        btn_group = $('<div class="btn-group pull-right"/>')
                         btn_group.append """<button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1"><i class="icon-asterisk"></i><span class="caret"></span></button>"""
                         td.append btn_group
                         ul = $('<ul class="dropdown-menu"/>')
