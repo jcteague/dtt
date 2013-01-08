@@ -115,7 +115,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 me.window_focus = true
                 console.log me.window_focus
             $(window).blur ()->
-                window_focus = false
+                me.window_focus = false
                 console.log me.window_focus
             @
                 
