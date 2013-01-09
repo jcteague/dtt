@@ -37,7 +37,7 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
             @formview.$el.attr('style', 'margin-left:0px')
             @formview.render().append_to add_room_form_row
             @$el.append add_room_form_row
-            add_room_form_row.append """<a href='https://s3.amazonaws.com/yackety-vs-plugin/TeamNotification_Package.vsix' class='btn btn-info inline pull-right' >Download our vs plugin</a>"""
+            add_room_form_row.append """<a href='https://yacketyapp.com/plugin/TeamNotification_Package.vsix' class='btn btn-info inline pull-right' >Download our vs plugin</a>"""
             rooms_row = $("<div class='row'></div>")
             rooms_table = $("""<table/>""", {"class":"table table-striped"})
             rooms_table.append "<tr><th style='width:75%'>Rooms</th><th style='width:25%'></th</tr>"

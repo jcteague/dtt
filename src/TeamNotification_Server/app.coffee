@@ -23,6 +23,8 @@ process.on 'uncaughtException', (err) ->
     app.close()
     process.exit(1)
 
+console.log 'Version: ' + process.version
+
 configure_server_for = (application) ->
 	application.configure ->
 	    application.use(express.cookieParser())
