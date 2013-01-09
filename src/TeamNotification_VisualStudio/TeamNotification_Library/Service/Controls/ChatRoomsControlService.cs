@@ -134,7 +134,7 @@ namespace TeamNotification_Library.Service.Controls
         public void ResetContainer(ChatUIElements messagesContainer)
         {
             messagesContainer.LastStamp = "";
-            messagesContainer.MessagesTable.RowGroups.Clear();
+            messagesContainer.MessagesTable.Dispatcher.Invoke( new Action(()=>messagesContainer.MessagesTable.RowGroups.Clear()));
             messagesContainer.MessagesList.Clear();
         }
 

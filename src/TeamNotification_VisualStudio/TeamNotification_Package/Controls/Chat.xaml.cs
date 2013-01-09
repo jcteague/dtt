@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -29,6 +30,7 @@ using TeamNotification_Library.Service.Providers;
 using DataObject = System.Windows.DataObject;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Process = System.Diagnostics.Process;
+using Thread = System.Threading.Thread;
 using UserControl = System.Windows.Controls.UserControl;
 
 
@@ -301,17 +303,49 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
-            currentChannel = "/room/{0}/messages".FormatUsing(newRoomId);//"chat " + newRoomId);
+            var newThread = new Thread(() => {
+                comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = false ));
+                currentChannel = "/room/{0}/messages".FormatUsing(newRoomId);
+                chatRoomControlService.ResetContainer(GetChatUIElements());
+                lblMessage.Dispatcher.Invoke(new Action(() => {
+                    lblMessage.Content = "Fetching messages...";
+                    lblMessage.Visibility = Visibility.Visible;
+                }));
+                try{
+                    AddMessages(newRoomId);
+                    lblMessage.Dispatcher.Invoke(new Action(() =>
+                    {
+                        lblMessage.Content = "";
+                        lblMessage.Visibility = Visibility.Hidden;
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Dispatcher.Invoke(new Action(() =>
+                    {
+                        lblMessage.Content = "There has been an error while fetching messages...";
+                        lblMessage.Visibility = Visibility.Visible;
+                    }));
+                    
+                }
+                if (subscribedChannels.Contains(currentChannel)) return;
+                                            
+                lblReconnecting.Dispatcher.Invoke(new Action(() => {
+                    lblReconnecting.Visibility = Visibility.Hidden;
+                }));
+                btnReconnect.Dispatcher.Invoke(new Action(() =>
+                {
+                    btnReconnect.Visibility =
+                        Visibility.Hidden;
+                }));
 
-            chatRoomControlService.ResetContainer(GetChatUIElements());
-            AddMessages(newRoomId);
-            
-            if (subscribedChannels.Contains(currentChannel)) return;
-            
-            lblReconnecting.Visibility = Visibility.Hidden;
-            btnReconnect.Visibility = Visibility.Hidden;
-            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived, this.OnReconnectAttemptCallback, this.OnReconnectCallback);
-            subscribedChannels.Add(currentChannel);
+                messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,
+                                                this.OnReconnectAttemptCallback,
+                                                this.OnReconnectCallback);
+                subscribedChannels.Add(currentChannel);
+                comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = true));
+            });
+            newThread.Start();
         }
 
         private void OnReconnectAttemptCallback()

@@ -2,6 +2,7 @@
 {
     public class GlobalConstants
     {
+        public const string Version = "1.0.8";
         public const string PackageName = "YacketyApp";
         public const string PackageDownloadUrl = "plugin/TeamNotification_Package.vsix";
 
