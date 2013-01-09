@@ -25,11 +25,14 @@ define 'chat_room_view', ['general_view','messages_view','form_view','user_rooms
             @room_users_view.render().append_to div2
             @$el.append div2
             div3 = $('<div class="row-fluid">')
+            div3.append("""<span class='inline'><input type='checkbox' id='chk_mute'/><b>Mute</b></span>""")
             @form_view.render().append_to div3
+            #@form_view.$el.append("""<input type='checkbox' id='chk_mute'/> Mute""") 
             div3.find('form').attr('class','well form-inline')
             div3.find('label').attr('style','vertical-align:middle;')
             div3.find('input[type=submit]').attr('class','btn btn-primary btn-large')
-            div3.find('textarea').width('80%')
+            div3.find('textarea').width('85%')
+            
             @$el.append(div3)
 
             set_height = () ->

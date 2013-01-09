@@ -87,7 +87,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 
             append_message= (message)->
                 m = JSON.parse message
-                if !me.window_focus && m.user_id != me.model.get('user').user_id
+                
+                muted = $("input#chk_mute")? && $("input#chk_mute")[0].checked
+                if !me.window_focus && m.user_id != me.model.get('user').user_id && !muted 
                     if as == ''
                         as = audiojs.createAll()
                     as[0].load
@@ -105,7 +107,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             if @model.has('messages')
                 url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
-                socket.on 'message', append_message # @add_message
+                socket.on 'message', append_message
                 render_model()
                 
             sound_div = $("""<div class='sound-div' style='display:none'><audio preload="auto" src="./sounds/notification.mp3"><source src="#{@sound_file_mp3}"></audio></div>""")
@@ -113,10 +115,8 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             $(window).focus () ->
                 me.window_focus = true
-                console.log me.window_focus
             $(window).blur ()->
                 me.window_focus = false
-                console.log me.window_focus
             @
                 
         parse_date = (message_date, curr_date) ->
