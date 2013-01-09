@@ -34,7 +34,8 @@
             <TextBlock VerticalAlignment="Center"  Width="100" Margin="5,0,0,0">
                 <Hyperlink RequestNavigate="feedback_RequestNavigate" NavigateUri="http://yacketyapp.uservoice.com/forums/180731-general">Feedback</Hyperlink>
             </TextBlock>
-        </StackPanel>
+                <CheckBox Name="chkMute" Content="Mute sound" />
+            </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="15,5,5,0" VerticalAlignment="Center" HorizontalAlignment="Right">
 
                 <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" Visibility="Hidden" />

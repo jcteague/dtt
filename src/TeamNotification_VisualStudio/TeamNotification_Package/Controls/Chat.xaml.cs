@@ -221,7 +221,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                     if ((Convert.ToInt32(receivedMessage.user_id) != userProvider.GetUser().id) && (activeWindow != mainWindowHandle))
                     {
                         taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
-                            System.Media.SystemSounds.Beep.Play();
+                            if ((bool) (!chkMute.IsChecked))
+                                System.Media.SystemSounds.Beep.Play();
                             var msg = (receivedMessage.chatMessageBody.message.Length > 8)?receivedMessage.chatMessageBody.message.Remove(8)+"...":receivedMessage.chatMessageBody.message;
                             taskbarNotifierWindow.NotifyContent.Clear();
                             taskbarNotifierWindow.Show();
