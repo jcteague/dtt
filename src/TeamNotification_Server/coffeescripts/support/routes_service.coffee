@@ -18,7 +18,7 @@ add_user_data_to_collection = (user, collection_json) ->
         ]
         collection_json.user = json
         defer.resolve(collection_json)
-    new CollectionActionResolver('user_collection').for(user.id).fetch_to callback
+    new CollectionActionResolver('user_base_collection').for(user.id).fetch_to callback
     defer.promise
 
 generate_confirmation_key = (key) ->

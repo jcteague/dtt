@@ -17,7 +17,7 @@ class UserCollection
         return {
             href: self
             user_id: @data.user_id
-            redis: config.redis
+            #redis: config.redis
             invitations: invitations
             rooms: rooms
             template: template

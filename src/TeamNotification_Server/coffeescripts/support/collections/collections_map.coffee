@@ -14,5 +14,6 @@ mapping =
     github_repositories_collection: 'github_repositories_collection'
     plugin_collection: 'plugin_collection'
     change_password_collection: 'change_password_collection'
+    user_base_collection: 'user_base_collection'
 
 module.exports = mapping

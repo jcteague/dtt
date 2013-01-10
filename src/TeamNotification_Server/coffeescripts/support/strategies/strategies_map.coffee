@@ -3,6 +3,7 @@ mapping =
     'registration_collection': 'null_strategy'
     'change_password_collection': 'change_password_strategy'
     'user_collection':'chat_rooms_by_owner_id_or_member_and_invitations_strategy'
+    'user_base_collection':'chat_rooms_by_owner_id_or_member_and_invitations_strategy'
     'user_edit_collection': 'user_by_id_strategy'
     'user_login_collection': 'user_by_login_strategy'
     'users_collection': 'user_by_email_strategy'
