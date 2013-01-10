@@ -328,8 +328,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                         lblMessage.Content = "There has been an error while fetching messages...";
                         lblMessage.Visibility = Visibility.Visible;
                     }));
-                    
                 }
+                comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = true));
                 if (subscribedChannels.Contains(currentChannel)) return;
                                             
                 lblReconnecting.Dispatcher.Invoke(new Action(() => {
@@ -345,7 +345,6 @@ namespace AvenidaSoftware.TeamNotification_Package
                                                 this.OnReconnectAttemptCallback,
                                                 this.OnReconnectCallback);
                 subscribedChannels.Add(currentChannel);
-                comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = true));
             });
             newThread.Start();
         }
