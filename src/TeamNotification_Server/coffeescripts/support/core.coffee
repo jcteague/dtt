@@ -46,7 +46,10 @@ orm.then (db) ->
 
     _entity.ChatRoom.hasOne('owner', _entity.User, {autoFetch: true})
     _entity.ChatRoom.hasMany('users', _entity.User, 'user', {autoFetch: true})
-   
+    
+    _entity.ChatRoomUser.hasOne('user',_entity.User,'user',{autoFetch:true})
+    _entity.ChatRoomUser.hasOne('room',_entity.ChatRoom,'chat_room',{autoFetch:true})
+    
     _entity.ChatRoomMessage.hasOne('user', _entity.User, 'user', {autoFetch: true})
     _entity.ChatRoomMessage.hasOne('room',_entity.ChatRoom,'room', {autoFetch: true})
     
