@@ -6,7 +6,6 @@ update_messages_names = require('../update_messages_names').update_messages_name
 get_for_success = (req, res) ->
     return () ->
         user = sanitize(req.body)
-        console.log user
         update_messages_names(user.id, user.first_name, user.last_name)
         user_repository.update(user).then (user) ->
             res.json
@@ -22,7 +21,6 @@ get_for_failure = (req, res) ->
         res.json
             success: false
             messages: errors
-
                 
 sanitize = (user_data) ->
     sanitized = 

@@ -12,16 +12,11 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
             format_message = (original, room_messages_key, score)->
                 if original.user_id.toString() == user_id.toString()
                     original.name = new_first_name
-                    console.log 'original'
-                    console.log original
                     stringified = JSON.stringify(original)
-                    console.log 'stringified'
-                    console.log stringified
                     redis_queryer.zremrangebyscore room_messages_key, score, score
                     redis_queryer.zadd room_messages_key, score, stringified
             
             change_room_messages = (chat_rooms)->
-                console.log chat_rooms
                 for chat_room in  chat_rooms
                     room_messages_key = "room:#{chat_room.id}:messages"
                     callback = (err,messages)->
