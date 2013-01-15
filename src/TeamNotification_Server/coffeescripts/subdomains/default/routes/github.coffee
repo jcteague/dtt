@@ -28,8 +28,6 @@ methods.github_repositories = (req,res) ->
     callback = (collection) ->
         add_user_data_to_collection(req.user, collection.to_json()).then (json) ->
             res.json(json)
-        #res.json(collection.to_json())
-
     build('github_repositories_collection').for({access_token:req.param("access_token"), user_id:req.user.id} ).fetch_to callback
 
 methods.receive_github_event = (req,res,next) ->

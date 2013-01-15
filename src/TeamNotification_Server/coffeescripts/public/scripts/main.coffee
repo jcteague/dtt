@@ -44,6 +44,7 @@ require.config
         'user_panel_view':'user_panel_view'
         'footer_view': 'footer_view'
         'audio': 'audiojs/audio.min'
+        'repository_selection_view': 'repository_selection_view'
     shim:
         'prettify-languages':
             deps: ['prettify']

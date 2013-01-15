@@ -14,7 +14,6 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                     redis_queryer.zrem room_messages_key, JSON.stringify(original)
                     original.name = new_first_name
                     stringified = JSON.stringify(original)
-                    #redis_queryer.zremrangebyscore room_messages_key, score, score
                     redis_queryer.zadd room_messages_key, score, stringified
             
             change_room_messages = (chat_rooms)->

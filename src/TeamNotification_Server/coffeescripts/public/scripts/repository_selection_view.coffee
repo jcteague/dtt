@@ -1,16 +1,22 @@
-define 'repository_selection_view', ['general_view','form_template_renderer'], (GeneralView, FormTemplateRenderer) ->
+define 'repository_selection_view', ['general_view','form_view','breadcrumb_view'], (GeneralView, FormView, BreadcrumbView) ->
 
     class RepositorySelectionView extends GeneralView
     
         id: 'repository-selection-container'
         
         initialize: ->
-            @form_template_renderer = new FormTemplateRenderer()
+            breadcrumb_links = [
+                {name:'Home', href:'/user'}
+                {name:'Associate Repositories', href:'', rel:'active'}
+            ]
+            @model.set('breadcrumb', breadcrumb_links)
+            @breadcrumb = new BreadcrumbView(model:@model)
+            @form_view = new FormView(model:@model)
 
         render: ->
             @$el.empty()
-            if @model.has('template')
-                @$el.append(@form_template_renderer.render(@model.attributes))
+            @breadcrumb.render().append_to(@$el)
+            @form_view.render().append_to @$el
             @delegateEvents(@events)
             @
 
