@@ -6,20 +6,22 @@ redis_connector = require('../support/redis/redis_gateway')
 redis_queryer = redis_connector.open()
 
 update_messages_names = (user_id, new_first_name, new_last_name)->
-    user_repository.find(id:user_id).then (users)->        
+    user_repository.find(id:user_id).then (users)->
         user = users[0]
         if(user.first_name != new_first_name || user.last_name != new_last_name)
             format_message = (original, room_messages_key, score)->
                 if original.user_id.toString() == user_id.toString()
+                    redis_queryer.zrem room_messages_key, JSON.stringify(original)
                     original.name = new_first_name
                     stringified = JSON.stringify(original)
-                    redis_queryer.zremrangebyscore room_messages_key, score, score
+                    #redis_queryer.zremrangebyscore room_messages_key, score, score
                     redis_queryer.zadd room_messages_key, score, stringified
             
             change_room_messages = (chat_rooms)->
                 for chat_room in  chat_rooms
                     room_messages_key = "room:#{chat_room.id}:messages"
                     callback = (err,messages)->
+                        console.log messages
                         i = 0
                         score = 0
                         for message in messages
