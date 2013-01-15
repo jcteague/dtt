@@ -187,7 +187,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
             
             @last_user_id_that_posted = message.user_id
             
-            escaped_message = @parsing_links parsedBody.message # $('<div/>').text(parsedBody.message).html()
+            escaped_message = @parsing_links parsedBody.message
             build_new_row = (name, message, time) ->
                 return "<tr class='new_message'><td nowrap='nowrap'>#{name}</td><td style='width:100%'>#{message}</td><td nowrap='nowrap' width='60'><b><span class='chat_message_date'>#{time}</span></b></td></tr>"
             
