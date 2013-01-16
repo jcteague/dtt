@@ -3,7 +3,7 @@
   <Identifier Id="1bafd22f-6d71-4b2f-a1d9-1c30153d9f5a">
     <Name>YacketyApp</Name>
     <Author>Avenida Software</Author>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Description xml:space="preserve">Team Notification</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
