@@ -11,7 +11,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             @server_response_view = new ServerResponseView()
             @router.on 'render', @render_path, @
             @views_factory = new ViewsFactory()
-            @footer_view = new FooterView()
+            #@footer_view = new FooterView()
             @navbar_view = new NavbarView(model:@model)
             Backbone.history.start()
 
@@ -30,7 +30,7 @@ define 'client_view', ['backbone', 'client_router', 'form_view', 'links_view', '
             if $('.prettyprint')?
                 prettyPrint()
                 $('.prettyprint').removeClass('prettyprint')
-            @footer_view.render().append_to $('body')
+            #@footer_view.render().append_to $('body')
             @
 
         subscribe_to_events: ->
