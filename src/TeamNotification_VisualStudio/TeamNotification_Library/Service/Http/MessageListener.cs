@@ -9,7 +9,7 @@ namespace TeamNotification_Library.Service.Http
     public class MessageListener : IListenToMessages<Action<string, byte[]>>
     {
         readonly ISubscribeToPubSub<Action<string, byte[]>> client;
-
+        private string currentChannel = "";
         private MessageReceivedAction onMessageReceivedAction;
         private Action<string, byte[]> onMessageReceivedActionExcecution;
 
@@ -23,7 +23,10 @@ namespace TeamNotification_Library.Service.Http
             onMessageReceivedAction = action;
             onMessageReceivedActionExcecution = (c, bytes) => 
                 onMessageReceivedAction(c, new UTF8Encoding().GetString(bytes));
+            if (!string.IsNullOrEmpty(currentChannel))
+                client.UnSubscribe(channel);
             client.Subscribe(channel, SubscribeResponse, reconnectCallback, onConnectCallback);
+            currentChannel = channel;
         }
 
         public Action<string, byte[]> SubscribeResponse

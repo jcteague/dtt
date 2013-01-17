@@ -14,6 +14,12 @@ namespace TeamNotification_Library.Service.Http
             this.conn = connectionProvider.Get();
         }
 
+        public void UnSubscribe(string channel)
+        {
+            var sub = conn.GetOpenSubscriberChannel();
+            sub.Unsubscribe(channel);
+        }
+
         public void Subscribe(string channel, Action<string, byte[]> callback, Action reconnectCallback = null, Action onConnectCallback = null)
         {
             var sub = conn.GetOpenSubscriberChannel();

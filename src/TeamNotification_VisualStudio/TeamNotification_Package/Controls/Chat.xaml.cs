@@ -75,6 +75,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         private IShowCode codeEditor;
         private string lastStamp;
         private string roomInvitationChannel;
+        private string subscribedChannel = "";
 
         public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> roomInvitationsListener, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
         {
@@ -136,7 +137,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
                                                             var room = "/room/{0}/messages".FormatUsing(e.RoomId);// "chat " + e.RoomId;
-                                                            subscribedChannels.Remove(room);
+                                                            //subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
             roomInvitationChannel = "/user/" + userProvider.GetUser().id.ToString() + "/invitations";
@@ -330,8 +331,8 @@ namespace AvenidaSoftware.TeamNotification_Package
                     }));
                 }
                 comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = true));
-                if (subscribedChannels.Contains(currentChannel)) return;
-                                            
+                //if (subscribedChannels.Contains(currentChannel)) return;
+                if (subscribedChannel == currentChannel) return;                           
                 lblReconnecting.Dispatcher.Invoke(new Action(() => {
                     lblReconnecting.Visibility = Visibility.Hidden;
                 }));
@@ -340,19 +341,19 @@ namespace AvenidaSoftware.TeamNotification_Package
                     btnReconnect.Visibility =
                         Visibility.Hidden;
                 }));
-
                 messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,
                                                 this.OnReconnectAttemptCallback,
                                                 this.OnReconnectCallback);
-                subscribedChannels.Add(currentChannel);
+                subscribedChannel = currentChannel;
+                //subscribedChannels.Add(currentChannel);
             });
             newThread.Start();
         }
 
         private void OnReconnectAttemptCallback()
         {
-            if (subscribedChannels.Contains(currentChannel))
-                subscribedChannels.Remove(currentChannel);
+          //  if (subscribedChannels.Contains(currentChannel))
+           //     subscribedChannels.Remove(currentChannel);
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
                 lblReconnecting.Visibility = Visibility.Visible;
                 lblReconnecting.Opacity = 1.0;
@@ -362,7 +363,7 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             lblReconnecting.Dispatcher.Invoke(new Action(() =>{
                 lblReconnecting.Visibility = Visibility.Hidden;
-                Reconnect(null, null);
+               // Reconnect(null, null);
             }));
         }
 
@@ -417,8 +418,8 @@ namespace AvenidaSoftware.TeamNotification_Package
         {
             if (chatIsEnabled)
             {
-                //var value = (Collection.Link) comboRooms.SelectedValue;
-               // this.ChangeRoom(value.rel);    
+                var value = (Collection.Link) comboRooms.SelectedValue;
+                this.ChangeRoom(value.rel);    
             }
         }
 

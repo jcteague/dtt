@@ -19,6 +19,11 @@ namespace TeamNotification_Library.Service.Http
             socketsStorage = new Dictionary<string, IWrapSocketIOClient>();
         }
 
+        public void UnSubscribe(string channel)
+        {
+            CloseSocketIfExists(channel);
+        }
+
         public void Subscribe(string channel, Action<string, string> messageCallback, Action reconnectCallback, Action onConnectCallback)
         {
             CloseSocketIfExists(channel);
