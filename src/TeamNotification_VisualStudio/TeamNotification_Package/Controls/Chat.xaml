@@ -25,17 +25,17 @@
             <RowDefinition Name="outerGridRowDefinition3" Height="0" />
         </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125" />
+            <ColumnDefinition Width="180" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0,5,0">
             <Button Content="Logout" Height="auto" HorizontalAlignment="Center" Name="btnLogout" VerticalAlignment="Center" Width="60" Click="LogoutUser" />
-            <TextBlock VerticalAlignment="Center"  Width="100" Margin="5,0,0,0">
+            <CheckBox Name="chkMute" Visibility="Visible" VerticalAlignment="Center"  Width="50" Margin="5,0,0,0">Mute</CheckBox>
+            <TextBlock VerticalAlignment="Center"  Width="50" Margin="5,0,0,0">
                 <Hyperlink RequestNavigate="feedback_RequestNavigate" NavigateUri="http://yacketyapp.uservoice.com/forums/180731-general">Feedback</Hyperlink>
             </TextBlock>
-                <CheckBox Name="chkMute" Content="Mute sound" />
-            </StackPanel>
+        </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="15,5,5,0" VerticalAlignment="Center" HorizontalAlignment="Right">
 
                 <Button Content="Reconnect" Height="auto" HorizontalAlignment="Center" Name="btnReconnect" VerticalAlignment="Center" Width="auto" Click="Reconnect" Visibility="Hidden" />
@@ -104,7 +104,7 @@
 <!--                </RichTextBox.Resources>-->
 <!--            </RichTextBox>-->
             <Button Grid.Row="1" Grid.Column="0"  Content="Send" Height="34" Name="btnSendMessageButton" Width="75" Click="SendMessageButtonClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
-        </Grid>
+            </Grid>
         </Grid>
        
     </Grid>

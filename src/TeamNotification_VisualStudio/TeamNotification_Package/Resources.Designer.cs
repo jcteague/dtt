@@ -70,7 +70,7 @@ namespace AvenidaSoftware.TeamNotification_Package {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to YacketyApp - v1.0.12.
+        ///   Looks up a localized string similar to YacketyApp - v1.0.13.
         /// </summary>
         public static string ToolWindowTitle {
             get {
