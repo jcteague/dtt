@@ -36,6 +36,8 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                             if original.user_id.toString() == user_id.toString()
                                 format_message(original,room_messages_key,score).then ()->
                                     do_loop(i+2, count)
+                            else
+                                do_loop(i+2, count)
                             if( i == 0)
                                 loop_deferred.promise
                         do_loop(0,messages.length).then ()->
