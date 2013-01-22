@@ -87,15 +87,16 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 
             append_message= (message)->
                 m = JSON.parse message
-                
-                muted = $("input#chk_mute")? && $("input#chk_mute")[0].checked
-                if !me.window_focus && m.user_id != me.model.get('user').user_id && !muted 
-                    if as == ''
-                        as = audiojs.createAll()
-                    as[0].load
-                        mp3: @sound_file_mp3
-                    as[0].play()
-                me.add_message m
+                console.log m.room_id
+                if me.model.get('room').room_id.toString() == m.room_id.toString()
+                    muted = $("input#chk_mute")? && $("input#chk_mute")[0].checked
+                    if !me.window_focus && m.user_id != me.model.get('user').user_id && !muted
+                        if as == ''
+                            as = audiojs.createAll()
+                        as[0].load
+                            mp3: @sound_file_mp3
+                        as[0].play()
+                    me.add_message m
             render_model = () ->
                 newDate = new Date()
                 me.$el.empty()

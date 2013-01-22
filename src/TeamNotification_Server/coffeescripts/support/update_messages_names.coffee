@@ -25,7 +25,6 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                         return
                     chat_room = chat_rooms[j]
                     room_messages_key = "room:#{chat_room.id}:messages"
-                    console.log room_messages_key
                     callback = (err,messages)->
                         score = 0
                         loop_deferred = Q.defer()
@@ -36,7 +35,6 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                                 original = JSON.parse(messages[i])
                                 score = messages[i+1]
                                 if original.user_id.toString() == user_id.toString()
-                                    console.log messages[i]
                                     format_message(original,room_messages_key,score).then ()->
                                         do_loop(i+2, count)
                                 else
@@ -55,16 +53,13 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
             chat_room_users_repository.find(user_id:user_id).then (room_members)->
                 chat_rooms_array = []
                 if room_members?
-                    console.log 'room_members'
                     for room_member in  room_members
-                        chat_rooms_array.push room_member.chat_room #change_room_messages([room_member.chat_room])
+                        chat_rooms_array.push room_member.chat_room
                 
                 chat_room_repository.find(owner_id:user_id).then (chat_rooms)->
                     if chat_rooms?
                         for chat_room in chat_rooms
                             chat_rooms_array.push(chat_room)
-                        #chat_rooms_array.push.apply(chat_rooms_array, chat_rooms)
-                    console.log chat_rooms_array
                     change_room_messages(chat_rooms_array)
 
 module.exports =
