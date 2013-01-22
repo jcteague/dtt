@@ -65,7 +65,7 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                             chat_rooms_array.push(chat_room)
                         #chat_rooms_array.push.apply(chat_rooms_array, chat_rooms)
                     console.log chat_rooms_array
-                    change_room_messages(chat_rooms)
+                    change_room_messages(chat_rooms_array)
 
 module.exports =
     update_messages_names: update_messages_names
