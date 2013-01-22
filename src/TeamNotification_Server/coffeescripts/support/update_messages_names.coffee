@@ -61,7 +61,10 @@ update_messages_names = (user_id, new_first_name, new_last_name)->
                 
                 chat_room_repository.find(owner_id:user_id).then (chat_rooms)->
                     if chat_rooms?
-                        chat_rooms_array.push.apply(chat_rooms_array, chat_rooms)
+                        for(chat_room in chat_rooms)
+                            chat_rooms_array.push(chat_room)
+                        #chat_rooms_array.push.apply(chat_rooms_array, chat_rooms)
+                    console.log chat_rooms_array
                     change_room_messages(chat_rooms)
 
 module.exports =
