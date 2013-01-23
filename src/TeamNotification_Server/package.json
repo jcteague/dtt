@@ -26,7 +26,8 @@
     "requireindex": "*",
     "connect-xcors": "0.5.x",
     "node-logentries": "0.0.2",
-    "loggr":"1.1.2"
+    "loggr":"1.1.2",
+    "oauth":"0.9.8"
   },
   "devDependencies": {
     "coffee-script": "1.4.x",
