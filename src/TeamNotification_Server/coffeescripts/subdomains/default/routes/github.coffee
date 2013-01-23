@@ -39,7 +39,7 @@ methods.receive_github_event = (req,res,next) ->
             notification = github_helper.get_event_message_object values
 
             if notification?
-                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": room.owner_id, "name":"github", "date":notification.date, stamp:notification.stamp}
+                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": -1, "name":"github", "date":notification.date, stamp:notification.stamp}
                 m = JSON.stringify newMessage
 
                 redis_publisher.publish("chat #{room.id}", m)
