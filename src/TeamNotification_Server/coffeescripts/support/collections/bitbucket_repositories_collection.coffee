@@ -2,8 +2,6 @@ class BitbucketRepositoriesCollection
     
     constructor: (@repositories) ->
     to_json: ->
-        console.log @repositories
-        return
         format_room = (room) ->
             return { label:room.name, value:room.room_key}
         format_repository = (repository) ->
