@@ -9,14 +9,13 @@ class BitbucketRepositoriesCollection
         
         formated_rooms = (format_room(room) for room in @repositories.rooms)
         formated_repositories = (format_repository(repository) for repository in @repositories.repositories)
-        
         return {
-            href: "/bitbucket/repositories/#{@repositories.access_token}"
-            links: [ {"name":"self", "rel": "self", "href": "/bitbucket/repositories/#{@repositories.access_token}"}, {"name":"home", "rel": "home", "href": "/"} ]
+            href: "/bitbucket/repositories/#{@repositories.oauth_token}?oauth_token_secret=#{@repositories.oauth_token_secret}"
+            links: [ {"name":"self", "rel": "self", "href": "/bitbucket/repositories/#{@repositories.oauth_token}"}, {"name":"home", "rel": "home", "href": "/"} ]
             bitbucket_repositories: @repositories.repositories
             #rooms:@repositories.rooms
             template: 
-                href: "/bitbucket/repositories/#{@repositories.access_token}"
+                href: "/bitbucket/repositories/#{@repositories.oauth_token}?oauth_token_secret=#{@repositories.oauth_token_secret}"
                 type: 'repository_selection'
                 data: [
                     {name: 'room_key', label: 'Rooms', value: formated_rooms, type: 'dropdownlist'}
