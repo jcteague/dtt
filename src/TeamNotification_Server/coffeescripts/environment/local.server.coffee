@@ -45,6 +45,9 @@ default_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'https://dtt.local:3001/api/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    bitbucket:
+        secret: "kT2zTu8zhNsdCj3jgSrhVPCnyufRvmu9"
+        key: "Mqe9u2gsrbMchaZrzB"
     plugins:
         visual_studio:
             manifest: visual_studio_plugin_json
@@ -88,6 +91,10 @@ test_settings =
         secret: 'f86f03ae61ed557e0bb97cfbc25c5d0e43f0a350'
         redirect_url: 'https://dtt.local:3001/api/github/auth/callback'
         state: 'zY6KPiIcKuhTYOdoUSX8avKc2mGASfNfHkvP50nAkPo='
+    bitbucket:
+        secret: "kT2zTu8zhNsdCj3jgSrhVPCnyufRvmu9"
+        key: "Mqe9u2gsrbMchaZrzB"
+        
     plugins:
         visual_studio:
             manifest: visual_studio_plugin_json

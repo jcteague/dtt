@@ -27,36 +27,11 @@ build_promise_for = (repository, owner, access_token, post_data) ->
             'Accept': 'application/json'
             'Content-Type': "application/x-www-form-urlencoded"
             'Content-Length': post_data.length
-
     promised_https.request(post_data, options)
 
 get_event_message_object = (event_obj) ->
     event_object_mapper.map event_obj
-
-###
-"supported_events": [
-  "commit_comment",
-  "create",
-  "delete",
-  "download",
-  "follow",
-  "fork",
-  "fork_apply",
-  "gist",
-  "gollum",
-  "issue_comment",
-  "issues",
-  "member",
-  "public",
-  "pull_request",
-  "pull_request_review_comment",
-  "push",
-  "status",
-  "team_add",
-  "watch"
-]
-###
-
+    
 module.exports =
     set_github_repository_events: set_github_repository_events
     get_event_message_object: get_event_message_object

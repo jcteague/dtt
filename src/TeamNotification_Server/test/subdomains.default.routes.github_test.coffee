@@ -151,7 +151,8 @@ describe 'Github', ->
             expected_notification = {a:'property', date:'some date', stamp:15}
             
             rooms = [{id:55,owner_id:99, room_key:room_key}]
-            expected_message = {"body": JSON.stringify(expected_notification), "room_id":rooms[0].id, "user_id": rooms[0].owner_id, "name":"github", "date":expected_notification.date, stamp:expected_notification.stamp}
+            #rooms[0].owner_id
+            expected_message = {"body": JSON.stringify(expected_notification), "room_id":rooms[0].id, "user_id": -1, "name":"github", "date":expected_notification.date, stamp:expected_notification.stamp}
             m = JSON.stringify(expected_message)
             req =
                 param: sinon.stub()
