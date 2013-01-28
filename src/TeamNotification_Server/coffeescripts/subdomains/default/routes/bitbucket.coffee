@@ -19,7 +19,7 @@ methods.associate_bitbucket_repositories = (req, res, next) ->
     if repositories?
         owner = req.body.owner
         room_key = req.body.room_key
-        response = bitbucket_helper.set_bitbucket_repository_events(repositories, owner, room_key, req.param("oauth_token"), req.query.oauth_token_secret)
+        response = bitbucket_helper.set_bitbucket_repository_events(repositories, room_key, req.param("oauth_token"), req.query.oauth_token_secret)
         res.json routes_service.get_server_response(true, ["The webhooks were successfully created"])
     else
         res.json routes_service.get_server_response(false, ["There was an error setting up the webhook"] )

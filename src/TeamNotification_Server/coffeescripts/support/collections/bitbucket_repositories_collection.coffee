@@ -5,7 +5,7 @@ class BitbucketRepositoriesCollection
         format_room = (room) ->
             return { label:room.name, value:room.room_key}
         format_repository = (repository) ->
-            return  {label: repository.name, name:repository.name, value:repository.name }        
+            return  {label: repository.name, name:repository.name, value:repository.url }        
         
         formated_rooms = (format_room(room) for room in @repositories.rooms)
         formated_repositories = (format_repository(repository) for repository in @repositories.repositories)

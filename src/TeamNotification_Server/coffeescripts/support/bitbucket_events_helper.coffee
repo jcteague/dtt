@@ -3,19 +3,22 @@ get_oauth_client = require('./oauth_client_provider').bitbucket_oauth_client
 config = require("../config")()
 promised_https = require('./http/promised_http_requester')
 Q = require('q')
-set_bitbucket_repository_events = (repositories, owner, room_key, oauth_token, oauth_token_secret) ->
+set_bitbucket_repository_events = (repositories_uris, room_key, oauth_token, oauth_token_secret) ->
     post_fields =
-        type: "POST"
         URL:"#{config.site.surl}/bitbucket/events/#{room_key}"
 
     post_data = JSON.stringify(post_fields)
-    repositories_hooks_request = (build_promise_for(repository, owner, oauth_token, oauth_token_secret, post_data) for repository in repositories)
+    repositories_hooks_request = (build_promise_for(repository_uri, oauth_token, oauth_token_secret, post_data) for repository_uri in repositories_uris)
     Q.all repositories_hooks_request
 
-build_promise_for = (repository, owner, oauth_token, oauth_token_secret, post_data) ->
+build_promise_for = (repository_url, oauth_token, oauth_token_secret, post_data) ->
     deferred = Q.defer()
     oa = get_oauth_client()
-    oa.post "https://api.bitbucket.org/1.0/#{owner}/#{repository}/services/", oauth_token, oauth_token_secret, post_data, "JSON", ()->
+    console.log oauth_token, oauth_token_secret
+    console.log "https://api.bitbucket.org#{repository_url}/services/"
+    oa.post "https://api.bitbucket.org#{repository_url}/services/0?type=POST", oauth_token, oauth_token_secret, post_data,"application/x-www-form-urlencoded", (data)->
+        console.log "SeNT"
+        console.log data
         deferred.resolve()
     deferred.promise
 
