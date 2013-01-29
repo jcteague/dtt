@@ -39,14 +39,14 @@ methods.receive_bitbucket_event = (req,res,next)->
 methods.bitbucket_authentication_callback = (req, res)->
     oa = get_oauth_client()
     oa.getOAuthAccessToken req.session.oauth_token, req.session.oauth_token_secret, req.query.oauth_verifier, (error, oauth_access_token, oauth_access_token_secret, results)->
-			    if error? 
-                    console.log('error')
-                    console.log(error)
-                    res.send({success:false, messages:['There was a problem contacting bitbucket']})
-	     		else
-                    req.session.oauth_access_token = oauth_access_token
-                    req.session.oauth_access_token_secret = oauth_access_token_secret
-                    res.redirect "#{config.site.surl}/#/bitbucket/repositories/#{oauth_access_token}?oauth_access_token_secret=#{oauth_access_token_secret}"
+        if error? 
+            console.log('error')
+            console.log(error)
+            res.send({success:false, messages:['There was a problem contacting bitbucket']})
+        else
+            req.session.oauth_access_token = oauth_access_token
+            req.session.oauth_access_token_secret = oauth_access_token_secret
+            res.redirect "#{config.site.surl}/#/bitbucket/repositories/#{oauth_access_token}?oauth_access_token_secret=#{oauth_access_token_secret}"
                     
 methods.bitbucket_redirect = (req, res)->
     oa = get_oauth_client()

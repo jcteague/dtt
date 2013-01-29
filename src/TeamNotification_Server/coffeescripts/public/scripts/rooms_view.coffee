@@ -40,6 +40,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
                 @$el.append @container
                 
                 @right.append """<a href="/github/oauth"><img class="img-polaroid" style="width: 32px; height:32px;" src="/img/github-icon.jpg" />&nbsp;Integrate with github</a></div>"""
+                @right.append """<a href="/bitbucket/oauth"><img class="img-polaroid" style="width: 32px; height:32px;" src="/img/bitbucket-icon.png" />&nbsp;Integrate with bitbucket</a></div>"""
                 
                 @left.append @get_link('RoomMessages',@model.attributes.links)
                 @render_room(room) for room in @rooms
