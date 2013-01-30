@@ -49,7 +49,7 @@ methods.receive_bitbucket_event = (req,res,next)->
                 user:event_obj.user
                 event_type:'push'
                 repository_name:event_obj.repository.name
-                repository_url:"https://bitbucket.org/#{event_obj.repository.absolute_url}"
+                repository_url:"https://bitbucket.org#{event_obj.repository.absolute_url}"
                 content:''
                 message: "Bitbucket notification! User, #{event_obj.user}, just did a push on repository: #{event_obj.repository.name} {0} - {1}"
                 notification:1
