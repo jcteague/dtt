@@ -39,14 +39,26 @@ methods.receive_bitbucket_event = (req,res,next)->
     values = req.body
     console.log values
     res.json values
-###
-    return
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
         if(rooms?)
             room = rooms[0]
             setname = "room:#{room.id}:messages"
-            notification = github_helper.get_event_message_object values
-
+            
+            event_obj = JSON.parse(values.payload)
+            message_date = new Date()            
+            notification = 
+                user:event_obj.user
+                event_type:'push'
+                repository_name:event_obj.repository.name
+                repository_url:event_obj.repository.absolute_url
+                content:''
+                message: "Bitbucket notification! User, #{event_obj.user}, just did a push on repository: #{event_obj.repository.name} {0} - {1}"
+                notification:1
+                source:'Bitbucket notification'
+                url: ''
+                date: message_date,
+                stamp: message_date.getTime()
+    
             if notification?
                 newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": -1, "name":"bitbucket", "date":notification.date, stamp:notification.stamp}
                 m = JSON.stringify newMessage
@@ -61,7 +73,8 @@ methods.receive_bitbucket_event = (req,res,next)->
                         next(new Error(err.code,err.message))
         else
             res.send({success:false,messages:["The requested room does not exist"]})
-###
+
+
 methods.bitbucket_authentication_callback = (req, res)->
     oa = get_oauth_client()
     oa.getOAuthAccessToken req.session.oauth_token, req.session.oauth_token_secret, req.query.oauth_verifier, (error, oauth_access_token, oauth_access_token_secret, results)->
