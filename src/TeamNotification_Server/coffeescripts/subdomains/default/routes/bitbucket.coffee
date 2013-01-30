@@ -38,7 +38,6 @@ methods.receive_bitbucket_event = (req,res,next)->
     
     values = req.body
     console.log values
-    res.json values
     new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
         if(rooms?)
             room = rooms[0]
@@ -58,7 +57,7 @@ methods.receive_bitbucket_event = (req,res,next)->
                 url: ''
                 date: message_date,
                 stamp: message_date.getTime()
-    
+            console.log notification
             if notification?
                 newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": -1, "name":"bitbucket", "date":notification.date, stamp:notification.stamp}
                 m = JSON.stringify newMessage
