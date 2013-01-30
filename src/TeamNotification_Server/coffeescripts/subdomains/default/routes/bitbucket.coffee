@@ -93,4 +93,4 @@ module.exports =
         app.post('/api/bitbucket/repositories/:oauth_token', express.bodyParser(), methods.associate_bitbucket_repositories)
         app.get('/bitbucket/oauth/callback', methods.bitbucket_authentication_callback)
         app.get('/bitbucket/oauth', methods.bitbucket_redirect)
-        app.post('/github/events/:room_key', express.bodyParser(), methods.receive_bitbucket_event )
+        app.post('/bitbucket/events/:room_key', express.bodyParser(), methods.receive_bitbucket_event )
