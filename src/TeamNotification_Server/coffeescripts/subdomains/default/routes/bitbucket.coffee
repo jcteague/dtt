@@ -35,7 +35,33 @@ methods.bitbucket_repositories = (req,res)->
 methods.receive_bitbucket_event = (req,res,next)->
     console.log "Bitbucket event"
     console.log req.params
+    
+    values = req.body
+    console.log values
+    res.json values
+###
+    return
+    new Repository("ChatRoom").find({room_key : req.param('room_key')}).then (rooms) ->
+        if(rooms?)
+            room = rooms[0]
+            setname = "room:#{room.id}:messages"
+            notification = github_helper.get_event_message_object values
 
+            if notification?
+                newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": -1, "name":"bitbucket", "date":notification.date, stamp:notification.stamp}
+                m = JSON.stringify newMessage
+
+                redis_publisher.publish("chat #{room.id}", m)
+                redis_queryer.zadd(setname,notification.stamp, m)
+                room_message = support.entity_factory.create('ChatRoomMessage', newMessage)
+                room_message.save (err,saved_message) ->
+                    if !err
+                        res.send({success:true, newMessage:saved_message})
+                    else
+                        next(new Error(err.code,err.message))
+        else
+            res.send({success:false,messages:["The requested room does not exist"]})
+###
 methods.bitbucket_authentication_callback = (req, res)->
     oa = get_oauth_client()
     oa.getOAuthAccessToken req.session.oauth_token, req.session.oauth_token_secret, req.query.oauth_verifier, (error, oauth_access_token, oauth_access_token_secret, results)->
@@ -67,3 +93,4 @@ module.exports =
         app.post('/api/bitbucket/repositories/:oauth_token', express.bodyParser(), methods.associate_bitbucket_repositories)
         app.get('/bitbucket/oauth/callback', methods.bitbucket_authentication_callback)
         app.get('/bitbucket/oauth', methods.bitbucket_redirect)
+        app.post('/github/events/:room_key', express.bodyParser(), methods.receive_bitbucket_event )

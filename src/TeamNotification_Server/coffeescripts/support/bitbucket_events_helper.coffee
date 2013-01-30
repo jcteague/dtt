@@ -22,13 +22,13 @@ build_promise_for = (repository_url, oauth_token, oauth_token_secret, post_data)
         console.log data
         deferred.resolve()
     
-    console.log "https://api.bitbucket.org#{repository_url}/services/0?type=POST"
+    console.log "https://api.bitbucket.org#{repository_url}/services?type=POST"
     console.log "oauth_token"
     console.log oauth_token
     console.log "oauth_token_secret"
     console.log oauth_token_secret
     #oa.getProtectedResource "https://api.bitbucket.org#{repository_url}/services/0?type=POST", "POST", oauth_token, oauth_token_secret, post_service_callback
-    oa.post "https://api.bitbucket.org#{repository_url}/services/0?type=POST", oauth_token, oauth_token_secret, post_data,"application/x-www-form-urlencoded", (data)->
+    oa.post "https://api.bitbucket.org#{repository_url}/services?type=POST", oauth_token, oauth_token_secret, post_data,"application/x-www-form-urlencoded", (data)->
         console.log "SeNT"
         console.log data
         deferred.resolve()
