@@ -70,7 +70,6 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string currentChannel { get; set; }
 
         private bool chatIsEnabled;
-        private List<string> subscribedChannels;
 
         private IShowCode codeEditor;
         private string lastStamp;
@@ -97,7 +96,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.roomInvitationsListener = roomInvitationsListener;
             this.userProvider = userProvider;
             this.dteHandlerCreator = dteHandlerCreator;
-            this.subscribedChannels = new List<string>();
             this.messagesList = new Dictionary<string, TableRowGroup>();
 
             this.taskbarNotifierWindow = new TaskbarNotifierWindow(dteStore.dte)
@@ -136,7 +134,8 @@ namespace AvenidaSoftware.TeamNotification_Package
             this.socketIOEvents.Clear();
             this.socketIOEvents.SocketWasDisconnected += (s, e) =>
                                                         {
-                                                            var room = "/room/{0}/messages".FormatUsing(e.RoomId);// "chat " + e.RoomId;
+                                                            currentChannel = "";
+                                                            //var room = "/room/{0}/messages".FormatUsing(e.RoomId);// "chat " + e.RoomId;
                                                             //subscribedChannels.Remove(room);
                                                             Dispatcher.Invoke(new Action(() => btnReconnect.Visibility = Visibility.Visible));
                                                         };
@@ -306,9 +305,9 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
+            currentChannel = "/api/room/{0}/messages".FormatUsing(newRoomId);
             var newThread = new Thread(() => {
                 comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = false ));
-                currentChannel = "/room/{0}/messages".FormatUsing(newRoomId);
                 chatRoomControlService.ResetContainer(GetChatUIElements());
                 lblMessage.Dispatcher.Invoke(new Action(() => {
                     lblMessage.Content = "Fetching messages...";
@@ -331,23 +330,22 @@ namespace AvenidaSoftware.TeamNotification_Package
                     }));
                 }
                 comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = true));
-                //if (subscribedChannels.Contains(currentChannel)) return;
-                if (subscribedChannel == currentChannel) return;                           
-                lblReconnecting.Dispatcher.Invoke(new Action(() => {
-                    lblReconnecting.Visibility = Visibility.Hidden;
-                }));
-                btnReconnect.Dispatcher.Invoke(new Action(() =>
-                {
-                    btnReconnect.Visibility =
-                        Visibility.Hidden;
-                }));
-                messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,
-                                                this.OnReconnectAttemptCallback,
-                                                this.OnReconnectCallback);
-                subscribedChannel = currentChannel;
                 //subscribedChannels.Add(currentChannel);
             });
             newThread.Start();
+            if (subscribedChannel == currentChannel)
+                return;
+            lblReconnecting.Dispatcher.Invoke(new Action(() =>{
+                lblReconnecting.Visibility = Visibility.Hidden;
+            }));
+            btnReconnect.Dispatcher.Invoke(new Action(() =>{
+                btnReconnect.Visibility =
+                    Visibility.Hidden;
+            }));
+            messageListener.ListenOnChannel(currentChannel, ChatMessageArrived,
+                                            this.OnReconnectAttemptCallback,
+                                            this.OnReconnectCallback);
+            subscribedChannel = currentChannel;
         }
 
         private void OnReconnectAttemptCallback()
