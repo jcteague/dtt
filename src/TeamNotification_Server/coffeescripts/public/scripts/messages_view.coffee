@@ -105,8 +105,7 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
                 me.$el.scrollTop(me.$el.prop('scrollHeight'))
 
             if @model.has('messages')
-#                url = "#{config.api.url}#{@model.get('href')}"
-                url = "#{config.api.url}" #{@model.get('href')}"
+                url = "#{config.api.url}#{@model.get('href')}"
                 socket = new window.io.connect(url)
                 socket.on 'message', append_message
                 render_model()
