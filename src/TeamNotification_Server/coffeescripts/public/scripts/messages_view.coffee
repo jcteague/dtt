@@ -106,9 +106,9 @@ define 'messages_view', ['general_view', 'underscore', 'prettify-languages', 'mo
 
             if @model.has('messages')
 #                url = "#{config.api.url}#{@model.get('href')}"
-                url = "#{config.api.surl}" #{@model.get('href')}"
+                url = "#{config.api.url}" #{@model.get('href')}"
                 socket = new window.io.connect(url)
-                socket.on 'message', append_messages
+                socket.on 'message', append_message
                 render_model()
                 
             sound_div = $("""<div class='sound-div' style='display:none'><audio preload="auto" src="./sounds/notification.mp3"><source src="#{@sound_file_mp3}"></audio></div>""")
