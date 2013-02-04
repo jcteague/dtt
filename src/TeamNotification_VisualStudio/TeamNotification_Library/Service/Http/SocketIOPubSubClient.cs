@@ -16,7 +16,7 @@ namespace TeamNotification_Library.Service.Http
         public SocketIOPubSubClient(ICreateInstances<IWrapSocketIOClient> socketIOClientFactory)
         {
             this.socketIOClientFactory = socketIOClientFactory;
-            socketsStorage = new Dictionary<string, IWrapSocketIOClient>();
+            this.socketsStorage = new Dictionary<string, IWrapSocketIOClient>();
         }
 
         public void UnSubscribe(string channel)
@@ -30,8 +30,11 @@ namespace TeamNotification_Library.Service.Http
             var socketNamespace = channel;// channel.Split(' ').Length <= 1 ? channel : "/room/{0}/messages".FormatUsing(channel.Split(' ')[1]);
             var socket = socketIOClientFactory.GetInstance();
             var roomSocket = socket.Connect(socketNamespace, reconnectCallback, onConnectCallback);
-            roomSocket.On("message", (data) => messageCallback(channel, data.MessageText));
-            StoreSocket(channel, socket);
+            
+            roomSocket.On("message", (data) => 
+                messageCallback(channel, data.MessageText)
+            );
+            StoreSocket(channel, ref socket);
         }
         private void CloseSocketIfExists(string channel)
         {
@@ -39,7 +42,7 @@ namespace TeamNotification_Library.Service.Http
                 socketsStorage[channel].Close();
         }
 
-        private void StoreSocket(string channel, IWrapSocketIOClient socket)
+        private void StoreSocket(string channel, ref IWrapSocketIOClient socket)
         {
             socketsStorage[channel] = socket;
         }

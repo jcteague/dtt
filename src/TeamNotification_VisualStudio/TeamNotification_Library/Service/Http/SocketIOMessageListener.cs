@@ -17,8 +17,9 @@ namespace TeamNotification_Library.Service.Http
 
         public void ListenOnChannel(string channel, MessageReceivedAction action, Action reconnectCallback, Action onConnectCallback)
         {
-            SubscribeResponse = (c, payload) => action(c, payload);
-            client.Subscribe(channel, SubscribeResponse, reconnectCallback, onConnectCallback);
+//            SubscribeResponse = (c, payload) => action(c, payload);
+//            client.Subscribe(channel, SubscribeResponse, reconnectCallback, onConnectCallback);
+            client.Subscribe(channel, (c, payload) => action(c, payload), reconnectCallback, onConnectCallback);
         }
 
         public Action<string, string> SubscribeResponse { get; private set; }
