@@ -11,7 +11,11 @@ methods.setup_message_transmission = (io, listener_name, redis_subscriber) ->
             console.log channel
             console.log listener_name
             if(channel == listener_name)
+                console.log message
+                console.log 'namespace_io'
+                console.log namespace_io
                 namespace_io.send(message)
+                console.log "Message sent"
         redis_subscriber.on "disconnect", (channel, message) ->
             console.log 'Disconnected'
             console.log channel
