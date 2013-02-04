@@ -2,10 +2,15 @@ methods = {}
 list_of_listeners = {}
 
 methods.setup_message_transmission = (io, listener_name, redis_subscriber) ->
+    console.log 'io'
+    console.log io
+    
     namespace_io = io.of(listener_name)
     room_channel = listener_name
     if (redis_subscriber?)
+        
         redis_subscriber.subscribe(room_channel)
+        
         redis_subscriber.on "message", (channel, message) ->
             console.log 'Message Received'
             console.log channel
@@ -16,6 +21,7 @@ methods.setup_message_transmission = (io, listener_name, redis_subscriber) ->
                 console.log namespace_io
                 namespace_io.send(message)
                 console.log "Message sent"
+                
         redis_subscriber.on "disconnect", (channel, message) ->
             console.log 'Disconnected'
             console.log channel
@@ -23,6 +29,8 @@ methods.setup_message_transmission = (io, listener_name, redis_subscriber) ->
             console.log "Disconnected from listener #{channel}"
 
 methods.set_socket_events = (io, listener_name, redis_subscriber = null) ->
+    console.log 'listener_name'
+    console.log listener_name
     unless methods.is_listener_registered(listener_name)
         list_of_listeners[listener_name] = true
         methods.setup_message_transmission(io, listener_name, redis_subscriber)
