@@ -305,7 +305,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void ChangeRoom(string newRoomId)
         {
-            currentChannel = "/api/room/{0}/messages".FormatUsing(newRoomId);
+            currentChannel = "/room/{0}/messages".FormatUsing(newRoomId);
             var newThread = new Thread(() => {
                 comboRooms.Dispatcher.Invoke(new Action(() => comboRooms.IsEnabled = false ));
                 chatRoomControlService.ResetContainer(GetChatUIElements());
