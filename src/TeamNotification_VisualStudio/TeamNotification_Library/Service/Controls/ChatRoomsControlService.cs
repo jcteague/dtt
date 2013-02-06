@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using TeamNotification_Library.Configuration;
 using TeamNotification_Library.Models;
 using TeamNotification_Library.Models.UI;
@@ -172,7 +173,14 @@ namespace TeamNotification_Library.Service.Controls
         public ChatRoomInvitation AddInvitedRoom(ChatUIElements messagesContainer, string invitationData)
         {
             var chatRoomInvitation = jsonSerializer.Deserialize<ChatRoomInvitation>(invitationData);
-            messagesContainer.ComboRooms.Dispatcher.Invoke(new Action(()=> ((List<Collection.Link>)messagesContainer.ComboRooms.ItemsSource).Add(new Collection.Link {name = chatRoomInvitation.chat_room_name, rel = chatRoomInvitation.chat_room_id})));
+
+            messagesContainer.ComboRooms.Dispatcher.Invoke(new Action(() =>
+            {
+                var itemsSource = (List<Collection.Link>)messagesContainer.ComboRooms.ItemsSource;
+                itemsSource.Add(new Collection.Link { name = chatRoomInvitation.chat_room_name, rel = chatRoomInvitation.chat_room_id });
+                messagesContainer.ComboRooms.ItemsSource = itemsSource;
+                messagesContainer.ComboRooms.Items.Refresh();
+            }));
             return chatRoomInvitation;
         }
         private Collection.Messages ChatMessageModelToCollectionMessage(ChatMessageModel chatMessageModel)

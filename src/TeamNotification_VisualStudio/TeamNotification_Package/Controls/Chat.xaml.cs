@@ -196,8 +196,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (channel == roomInvitationChannel)
             {
                 logger.TryOrLog(() =>{
-                    var invitedRoom = chatRoomControlService.AddInvitedRoom(GetChatUIElements(),  payload); 
-                    taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>{
+                    var invitedRoom = chatRoomControlService.AddInvitedRoom(GetChatUIElements(), payload);
+                    taskbarNotifierWindow.Dispatcher.Invoke(new Action(() =>
+                    {
                         var msg = invitedRoom.user.first_name + " added you to room " + invitedRoom.chat_room_name;
                         taskbarNotifierWindow.NotifyContent.Clear();
                         taskbarNotifierWindow.Show();
