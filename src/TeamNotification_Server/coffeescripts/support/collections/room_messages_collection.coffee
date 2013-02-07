@@ -32,7 +32,7 @@ class RoomMessagesCollection
         parsed_room_id = parseInt(room_id, 10)
         return {
             href: "/room/#{room_id}/messages"
-            redis: config.redis
+            #redis: config.redis
             links:[
                 {"name": "self", "rel": "RoomMessages", 'href':"/room/#{room_id}/messages"}
                 {"name": "Room", "rel": "Room", 'href':"/room/#{room_id}"}
