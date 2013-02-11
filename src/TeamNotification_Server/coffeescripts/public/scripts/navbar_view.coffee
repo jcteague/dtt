@@ -11,6 +11,8 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
                 m = @get_model_for('login')
                 
                 @loginview = new LoginView(model:m)
+                @loginview.on 'messages:display', (messages) =>
+                    @trigger 'messages:display', messages
         render: ->
             @$el.empty()
             @items.empty()

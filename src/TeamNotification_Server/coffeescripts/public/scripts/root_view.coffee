@@ -9,6 +9,8 @@ define 'root_view', ['general_view','config','navbar_view','breadcrumb_view','fo
         row: $("""<div class='row'></div>""")
         initialize: ->
             @navbar_view = new NavbarView(model:@model)
+            @navbar_view.on 'messages:display', (messages) =>
+                @trigger 'messages:display', messages
             @breadcrumb = new BreadcrumbView(model:@model)
         render: ->
             @$el.empty()
