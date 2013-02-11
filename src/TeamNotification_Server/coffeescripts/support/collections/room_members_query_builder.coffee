@@ -5,7 +5,7 @@ class RoomMembersCollectionBuilder
         return [{
           "href" : "/users/query"
           "rel" : "users"
-          "prompt" : "Enter search string"
+          "prompt" : "Type email to send invitation" #"Enter search string"
           "type" : "autocomplete"
           "submit": @href
           "data" :[{"name" : "email", "value" : ""}]

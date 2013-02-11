@@ -45,7 +45,7 @@ define 'rooms_view', ['general_view','config', 'breadcrumb_view', 'query_view', 
                 @left.append @get_link('RoomMessages',@model.attributes.links)
                 @render_room(room) for room in @rooms
                 
-                @left.append "<h1>Add members</h1>"
+                #@left.append "Add members"
                 @query_view.render().append_to @left
                 @room_users_view.render().append_to @$el
             @

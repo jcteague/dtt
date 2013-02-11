@@ -13,11 +13,11 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
 
         autocomplete: (template) ->
             entity = template.rel
-            input = $('<input>',{"type":"text","name":template.data[0].name,"class":"search-query"})
+            input = $('<input>',{"type":"text","name":template.data[0].name,"class":"search-query", 'placeholder':template.prompt})
             submit = $('<input>', {"type":"submit", "class": "btn btn-primary"})
 
-            label = $('<label>', {"for":template.data[0].name})
-            label.text(template.prompt)
+#            label = $('<label>', {"for":template.data[0].name})
+#            label.text(template.prompt)
 
             build_item = (item) ->
                 data = item.data
@@ -60,7 +60,7 @@ define 'query_renderer', ['jquery', 'jquery.autocomplete', 'underscore', 'config
             if typeof template.query_class != 'undefined'
                 query_class = template.query_class
                 
-            $('<form>', {action: template.submit, "class":query_class}).append(label, input, submit)
+            $('<form>', {action: template.submit, "class":query_class}).append(input, submit)
 
         generator_selector: (field) =>
             @autocomplete if field is 'autocomplete'
