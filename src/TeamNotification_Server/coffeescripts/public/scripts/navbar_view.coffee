@@ -24,7 +24,7 @@ define 'navbar_view', ['general_view','jquery','login_view', 'cookie'], (General
             @items.append '<li><a class="brand" href="/#/">Yackety</a></li>'
             if @model.has('user')
                 user = @model.get('user')
-                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b>#{@get_field('name',user.data)}</b><b class="caret"></b></a>""")
+                link = $("""<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class='icon-user'></i><b>#{@get_field('name',user.data)}</b><b class="caret"></b></a>""")
                 dropdownmenu = $("""<ul class="dropdown-menu"><li>#{@get_link('UserEdit', user.links)}</li></ul>""")
                 nav = $("""<ul class="nav pull-right"></ul>""")
                 lidropdown = $("""<li class="dropdown"></li>""")

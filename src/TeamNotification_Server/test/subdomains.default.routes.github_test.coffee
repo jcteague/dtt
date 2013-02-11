@@ -177,7 +177,7 @@ describe 'Github', ->
                 done()
             
             it "should save the message to redis", (done) ->
-                expect(client_mock.publish.calledWith("chat 55", m)).to.eql(true)
+                expect(client_mock.publish.calledWith("/api/room/55/messages", m)).to.eql(true)
                 done()
 
             it "should save the message to postgres", (done) ->
