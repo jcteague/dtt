@@ -12,6 +12,8 @@ define 'repository_selection_view', ['general_view','form_view','breadcrumb_view
             @model.set('breadcrumb', breadcrumb_links)
             @breadcrumb = new BreadcrumbView(model:@model)
             @form_view = new FormView(model:@model)
+            @form_view.on 'messages:display', (messages) =>
+                @trigger 'messages:display', messages
 
         render: ->
             @$el.empty()

@@ -21,7 +21,7 @@ class GithubRepositoriesCollection
                 data: [
                     {name: 'room_key', label: 'Rooms', value: formated_rooms, type: 'dropdownlist'}
                     {name: 'repositories', label: 'Repositories', value: formated_repositories, type: 'dropdownlist', multiple:true}
-                    {name: 'owner', label: '', value: @github_repositories.repositories[0].owner.login, type: 'hidden'}
+                    {name: 'owner', label: '', value: @github_repositories.repositories[0].owner.login unless @github_repositories.repositories.length == 0, type: 'hidden'}
                 ]
         }
 
