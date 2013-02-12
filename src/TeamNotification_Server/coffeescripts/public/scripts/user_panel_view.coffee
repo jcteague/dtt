@@ -43,7 +43,6 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
             paginator.append paginator_ul
             rooms_tables = []
             rooms_tables.push $("""<table/>""", {"class":"table table-striped page-1 rooms-table"})
-            console.log rooms_tables 
             rooms_tables[0].append "<tr><th style='width:75%'>Rooms</th><th style='width:25%'></th</tr>"
             if @model.has('rooms')
                 rooms = @model.get('rooms')
@@ -76,8 +75,6 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
                         link = generate_unsubscribe_link(room_id,room_name,new_row)
                         ul.append link
                         new_row.append td
-                    console.log pages_count
-                    console.log rooms_tables
                     rooms_tables[pages_count-1].append new_row
                     rooms_count = rooms_count + 1
             else
@@ -87,8 +84,6 @@ define 'user_panel_view', ['general_view', 'config','breadcrumb_view','user_invi
             for room_table in rooms_tables
                 paginator_li = $("<li><a href='#' onclick='return false;'>#{pages_count}</a></li>")
                 $(paginator_li.find('a')[0]).bind 'click', (event)->
-                    console.log 'here'
-                    console.log event.srcElement.innerHTML
                     $('.rooms-table').each (index, value)->
                         $(value).hide()
                     

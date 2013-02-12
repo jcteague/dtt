@@ -8,8 +8,8 @@ get_repositories = (oauth_access_token, oauth_access_token_secret)->
     deferred = Q.defer()
     oa = get_oauth_client()
     get_repositories_callback = (error, data, response)->
-        console.log data
-        deferred.resolve({success:true, repositories:JSON.parse(data).repositories})
+        d = JSON.parse(data)
+        deferred.resolve({success:true, repositories:d.repositories})
     oa.getProtectedResource "https://api.bitbucket.org/1.0/user", "GET", oauth_access_token, oauth_access_token_secret, get_repositories_callback
     deferred.promise
 
