@@ -23,6 +23,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
         public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
             var link = new Hyperlink(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString()))) { IsEnabled = true, CommandParameter = chatMessage };
+            link.ToolTip = "Paste this code on file {0} \\ {1}, at line {2}".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString());
             link.Click += codePasteEvents.OnCodePasteClick;
             var paragraph = new Paragraph(link);
             var box = syntaxHighlightBoxFactory.Get(chatMessage.chatMessageBody.message, chatMessage.chatMessageBody.programminglanguage);
