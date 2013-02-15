@@ -13,6 +13,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using AvenidaSoftware.TeamNotification_Package.Controls;
 using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using SocketIOClient.Messages;
 using TeamNotification_Library.Extensions;
@@ -75,10 +77,11 @@ namespace AvenidaSoftware.TeamNotification_Package
         private string lastStamp;
         private string roomInvitationChannel;
         private string subscribedChannel = "";
-
+        private CommandBarEvents commandBarEvents;
         public Chat(IProvideUser userProvider, IListenToMessages<Action<string, string>> roomInvitationsListener, IListenToMessages<Action<string, string>> messageListener, IServiceChatRoomsControl chatRoomControlService, IStoreGlobalState applicationGlobalState, ICreateDteHandler dteHandlerCreator, IStoreDTE dteStore, IHandleCodePaste codePasteEvents, IHandleToolWindowEvents toolWindowEvents, IHandleUserAccountEvents userAccountEvents, IHandleVisualStudioClipboard clipboardHandler, IHandleSocketIOEvents socketIOEvents, ILog logger, IHandleMixedEditorEvents mixedEditorEvents, IHandleUIEvents userInterfaceEvents)//, IHandleChatEvents chatEventsHandler)
         {
             chatIsEnabled = true;
+            
             //chatEvents = chatEventsHandler;
             dteStore.dte = ((DTE)Package.GetGlobalService(typeof(DTE)));
             this.dteStore = dteStore;
@@ -124,6 +127,7 @@ namespace AvenidaSoftware.TeamNotification_Package
 
             this.codePasteEvents.Clear();
             this.codePasteEvents.CodePasteWasClicked += PasteCode;
+            this.codePasteEvents.CodeQuotedWasClicked += GoToCode;
 
             this.toolWindowEvents.Clear();
             this.toolWindowEvents.ToolWindowWasDocked += OnToolWindowWasDocked;
@@ -143,7 +147,22 @@ namespace AvenidaSoftware.TeamNotification_Package
             roomInvitationsListener.ListenOnChannel(roomInvitationChannel,RoomInvitationMessage,
                                                     () => { }, () => { });
 
+
+            //var applicationObject = (DTE2)dteStore.dte.Application;
+            //var commandBars = ((CommandBars)applicationObject.CommandBars)["Code Window"];
+            //var popup = commandBars.Controls.Add(MsoControlType.msoControlButton,
+            //            System.Reflection.Missing.Value,
+            //            System.Reflection.Missing.Value, 1, true);
+            //popup.Caption = "Quote on yacketyapp";
+            //commandBarEvents = (CommandBarEvents)(applicationObject.Events.get_CommandBarEvents(popup));
+            //commandBarEvents.Click +=  new _dispCommandBarControlEvents_ClickEventHandler(quoteLines);
         }
+
+        //protected void quoteLines(object commandbarcontrol, ref bool handled, ref bool canceldefault)
+        //{
+
+        //    MessageBox.Show("Lol");
+        //}
 
         private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
         {
@@ -265,6 +284,30 @@ namespace AvenidaSoftware.TeamNotification_Package
             messageTextBox.Clear();
             messageTextBox.Resources.Clear();
             //chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.GetTextEditorMessages(), roomId));
+        }
+
+        private void GoToCode(object sender, EventArgs args)
+        {
+            var message = GetMessageBodyFromLink(sender);
+            var dteHandler = dteHandlerCreator.Get(dteStore);
+
+            if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.chatMessageBody.solution)
+            {
+                var document = dteHandler.OpenFile(message.chatMessageBody.project, message.chatMessageBody.document);
+                if (document != null && document.Lines >= message.chatMessageBody.line)
+                {   
+                    //var textDocument = document.TextDocument;
+                    document.TextDocument.Selection.GotoLine(message.chatMessageBody.line, true);
+                }
+                else
+                {
+                    CustomMessageBox.Show("The specified file does not exist.");
+                }
+            }
+            else
+            {
+                CustomMessageBox.Show("You need to have the appropriate solution open in order to paste the code.");
+            }
         }
 
         private void PasteCode(object sender, EventArgs args)
