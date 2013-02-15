@@ -147,22 +147,7 @@ namespace AvenidaSoftware.TeamNotification_Package
             roomInvitationsListener.ListenOnChannel(roomInvitationChannel,RoomInvitationMessage,
                                                     () => { }, () => { });
 
-
-            //var applicationObject = (DTE2)dteStore.dte.Application;
-            //var commandBars = ((CommandBars)applicationObject.CommandBars)["Code Window"];
-            //var popup = commandBars.Controls.Add(MsoControlType.msoControlButton,
-            //            System.Reflection.Missing.Value,
-            //            System.Reflection.Missing.Value, 1, true);
-            //popup.Caption = "Quote on yacketyapp";
-            //commandBarEvents = (CommandBarEvents)(applicationObject.Events.get_CommandBarEvents(popup));
-            //commandBarEvents.Click +=  new _dispCommandBarControlEvents_ClickEventHandler(quoteLines);
         }
-
-        //protected void quoteLines(object commandbarcontrol, ref bool handled, ref bool canceldefault)
-        //{
-
-        //    MessageBox.Show("Lol");
-        //}
 
         private void MixedEditorDataWasPasted(object sender, DataWasPasted e)
         {
@@ -283,7 +268,6 @@ namespace AvenidaSoftware.TeamNotification_Package
             chatRoomControlService.SendMessages(messageTextBox.GetTextEditorMessages(), roomId);
             messageTextBox.Clear();
             messageTextBox.Resources.Clear();
-            //chatEvents.OnSendMessageRequested(this, new SendMessageWasRequested(messageTextBox.GetTextEditorMessages(), roomId));
         }
 
         private void GoToCode(object sender, EventArgs args)
@@ -294,10 +278,9 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (dteHandler != null && dteHandler.CurrentSolution.IsOpen && dteHandler.CurrentSolution.FileName == message.chatMessageBody.solution)
             {
                 var document = dteHandler.OpenFile(message.chatMessageBody.project, message.chatMessageBody.document);
-                if (document != null && document.Lines >= message.chatMessageBody.line)
-                {   
-                    //var textDocument = document.TextDocument;
-                    document.TextDocument.Selection.GotoLine(message.chatMessageBody.line, true);
+                if (document != null)
+                {
+                    if (document.Lines >= message.chatMessageBody.line) document.TextDocument.Selection.GotoLine(message.chatMessageBody.line, true);
                 }
                 else
                 {

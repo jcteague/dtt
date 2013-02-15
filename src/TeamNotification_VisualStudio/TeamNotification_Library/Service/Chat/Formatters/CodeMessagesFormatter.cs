@@ -22,7 +22,7 @@ namespace TeamNotification_Library.Service.Chat.Formatters
 
         public Paragraph GetFormattedElement(ChatMessageModel chatMessage)
         {
-            var title = new Bold(new Run("{0} \\ {1} - Line: {2}".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString())));
+            var title = new Bold(new Run("{0} \\ {1} - Line: {2} ".FormatUsing(chatMessage.chatMessageBody.project, chatMessage.chatMessageBody.document, chatMessage.chatMessageBody.line.ToString())));
             var pasteCodeLink = new Hyperlink(new Run("Paste into file")) { IsEnabled = true, CommandParameter = chatMessage };
             var gotoFileLink = new Hyperlink(new Run("Go to line")) { IsEnabled = true, CommandParameter = chatMessage };
             
@@ -30,7 +30,6 @@ namespace TeamNotification_Library.Service.Chat.Formatters
             pasteCodeLink.Click += codePasteEvents.OnCodePasteClick;
             gotoFileLink.Click += codePasteEvents.OnCodeQuotedClick;
             var paragraph = new Paragraph(title);
-            paragraph.Inlines.Add(new LineBreak());
             paragraph.Inlines.Add(pasteCodeLink);
             paragraph.Inlines.Add(new Run(" - "));
             paragraph.Inlines.Add(gotoFileLink);
