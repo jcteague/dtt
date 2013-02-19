@@ -60,7 +60,7 @@ namespace TeamNotification_Library.UI.Avalon
                 newTextMessageContent = newTextMessageContent.Trim();
                 if(!newTextMessageContent.IsNullOrWhiteSpace())
                 {
-                    messages.Add(new ChatMessageBody {message=newTextMessageContent} );
+                    messages.Add(new ChatMessageBody {message=newTextMessageContent, source = "vs plugin"} );
                     newTextMessageContent = string.Empty;
                 }
                 var codestart = i;

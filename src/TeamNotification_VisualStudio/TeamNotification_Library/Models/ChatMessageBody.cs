@@ -24,6 +24,8 @@ namespace TeamNotification_Library.Models
         public string stamp { get; set; }
 
         public string message { get; set; }
+        
+        public string source { get; set; }
 
         public string notification { get; set; }
         

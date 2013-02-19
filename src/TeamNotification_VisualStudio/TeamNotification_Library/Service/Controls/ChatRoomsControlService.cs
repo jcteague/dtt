@@ -161,7 +161,7 @@ namespace TeamNotification_Library.Service.Controls
         public ChatMessageModel AddReceivedMessage(ChatUIElements messagesContainer, ScrollViewer scrollviewer, string messageData)
         {
             var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(messageData);
-
+            
             var rowGroup = chatMessagesService.AppendMessage(messagesContainer, scrollviewer, chatMessageModel);
             var collectionMessage = ChatMessageModelToCollectionMessage(chatMessageModel);
 

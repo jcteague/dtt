@@ -218,6 +218,10 @@ namespace AvenidaSoftware.TeamNotification_Package
             if (channel == currentChannel)
             {
                 logger.TryOrLog(() => {
+                    ISerializeJSON jsonSerializer = new JSONSerializer();
+                    var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(payload);
+                        
+                    if(userProvider.GetUser().id == Convert.ToInt32(chatMessageModel.user_id)) return;
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
 
@@ -264,8 +268,12 @@ namespace AvenidaSoftware.TeamNotification_Package
 
         private void SendMessage()
         {
+            ISerializeJSON jsonSerializer = new JSONSerializer();
             applicationGlobalState.IsEditingCode = false;
-            chatRoomControlService.SendMessages(messageTextBox.GetTextEditorMessages(), roomId);
+            var messagesToSend = messageTextBox.GetTextEditorMessages();
+            chatRoomControlService.SendMessages(messagesToSend, roomId);
+            foreach(var message in messagesToSend)
+                chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, jsonSerializer.Serialize(new ChatMessageModel { body = jsonSerializer.Serialize(message), chatMessageBody = message, user_id = userProvider.GetUser().id.ToString(), username = userProvider.GetUser().first_name, date = DateTime.Now.ToString()}));
             messageTextBox.Clear();
             messageTextBox.Resources.Clear();
         }
