@@ -49,6 +49,7 @@ context.for.integration_test(authenticate:false) (browser) ->
                 browser.
                     visit("#{config.site.surl}/#/forgot_password").
                     then(-> 
+                        console.log browser.html()
                         browser.fill('email', 'foo@bar.com')
                     ).
                     then(-> browser.pressButton('input[type=submit]')).

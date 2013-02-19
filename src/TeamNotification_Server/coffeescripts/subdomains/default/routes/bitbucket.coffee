@@ -53,10 +53,11 @@ methods.receive_bitbucket_event = (req,res,next)->
                 content:''
                 message: "Bitbucket notification! User, #{event_obj.user}, just did a push on repository: #{event_obj.repository.name} {0} - {1}"
                 notification:1
-                source:'Bitbucket notification'
+                #source:'Bitbucket notification'
                 url: ''
                 date: message_date,
                 stamp: message_date.getTime()
+                source: "web"
             console.log notification
             if notification?
                 newMessage = {"body": JSON.stringify(notification), "room_id":room.id, "user_id": -1, "name":"bitbucket", "date":notification.date, stamp:notification.stamp}
