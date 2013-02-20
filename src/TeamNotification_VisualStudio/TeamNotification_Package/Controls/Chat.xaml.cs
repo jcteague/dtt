@@ -221,7 +221,7 @@ namespace AvenidaSoftware.TeamNotification_Package
                     ISerializeJSON jsonSerializer = new JSONSerializer();
                     var chatMessageModel = jsonSerializer.Deserialize<ChatMessageModel>(payload);
                         
-                    if(userProvider.GetUser().id == Convert.ToInt32(chatMessageModel.user_id)) return;
+                    if(userProvider.GetUser().id == Convert.ToInt32(chatMessageModel.user_id) && chatMessageModel.chatMessageBody.source=="vs plugin") return;
 
                     var receivedMessage = chatRoomControlService.AddReceivedMessage(GetChatUIElements(), messageScroll, payload);
 
