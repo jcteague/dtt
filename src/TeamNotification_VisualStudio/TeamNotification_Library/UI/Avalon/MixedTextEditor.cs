@@ -79,7 +79,8 @@ namespace TeamNotification_Library.UI.Avalon
                         project = (content.Values.ElementAt(codestart) as MixedEditorLineData).Project,
                         document = (content.Values.ElementAt(codestart) as MixedEditorLineData).Document,
                         line = (content.Values.ElementAt(codestart) as MixedEditorLineData).Line,
-                        column = (content.Values.ElementAt(codestart) as MixedEditorLineData).Column
+                        column = (content.Values.ElementAt(codestart) as MixedEditorLineData).Column,
+                        source = "vs plugin"
                     });
                     newTextMessageContent = string.Empty;
                 }
