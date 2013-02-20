@@ -149,8 +149,8 @@ methods.post_room_message = (req, res, next) ->
             message_stamp =  message_date.getTime()
             values.stamp = message_stamp
             values.date = message_date
-
-        values.source = "Web client"
+        
+        values.source = "Web client" unless values?
         message_body = JSON.stringify(values)
         newMessage = {"body": message_body, "room_id":room_id, "user_id": req.user.id, "name":req.user.name, "date":message_date, stamp:message_stamp}
         m = JSON.stringify newMessage
