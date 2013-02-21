@@ -35,19 +35,9 @@ define 'login_view', ['general_view', 'base64',  'form_view','links_view', 'cook
             @$el.empty()
             if @model.has('links')
                 links = @model.get('links')
-                #console.log links
-                
-                @$el.append """<div id="form-container" class='inline'><form action="/user/login" class="navbar-form form-inline"><input type="text" name="username" class="span2" placeholder="Email">
-                <span class='inline input-append' style='margin-right:3px'><input style='margin-top:5px' id="login_password" type="password" name="login_password" class="span2" placeholder="Password"><span style='margin-top:5px' class='add-on'><a href='##{links[1].href}' title='Forgot password?'>?</a></span></span><input type="submit" class="btn btn-primary"></form></div>"""
-                
-                #forgot_password_link = @get_link "forgot_password", links #"""<a href='##{links[1].href}' style='display:inline;'> #{links[1].name}?</a>"""
-                #console.log forgot_password_link
-                #@form_view.render().append_to @$el
-                #login_form = @form_view.render() 
-                #login_form.$el.attr "class", 'input-append'
-                #login_form.append_to @$el
-                #$(@$el.find('input[name=login_password]')[0]).wrap("<div id='password-wrapper' class='inline input-append'/>")
-                #$('#password-wrapper').append "<span class='add-on'>?</span>"
-               # $(@form_view.$el[0]).find('form').append forgot_password_link
+                @form_view.render().append_to @$el
+                $(@$el.find('input[name=login_password]')[0]).wrap "<span id='password-wrapper' class='inline input-append' style='padding-top:5px'/>"
+                $(@$el.find('input[name=login_password]')[0]).attr('style', 'margin-top:5px')
+                $($(@$el.find('input[name=login_password]')[0]).parent()).append "<span style='margin-top:5px; margin-right:2px' class='add-on'><a href='##{links[1].href}' title='Forgot password?'>?</a></span>"
             @
             
