@@ -22,7 +22,6 @@ methods.get_user = (req, res) ->
     get_user_collection(req, res, user_id)
 
 methods.get_logged_user = (req, res) ->
-    console.log req.user
     if(req.user == false)
         methods.login(req, res)
     get_user_collection(req, res, req.user.id)
@@ -132,9 +131,9 @@ module.exports =
         app.get('/api/user/invitations', methods.get_user_invitations)
         app.get('/api/users/query', methods.get_users)
         app.get('/api/user/login', methods.login)
+        app.get('/api/user/confirm/:confirmation_key', methods.confirm)
         app.post('/api/user/login',express.bodyParser(), methods.authenticate)
         app.get('/api/user', methods.get_logged_user)
-        app.get('/api/user/confirm/:confirmation_key', methods.confirm)
         app.get('/api/user/:id', socket_middleware(io), valid_user_middleware(), methods.get_user)
         app.get('/api/user/:id/edit', valid_user_middleware(), methods.get_user_edit)
         app.post('/api/user/:id/edit', valid_user_middleware(), methods.post_user_edit)

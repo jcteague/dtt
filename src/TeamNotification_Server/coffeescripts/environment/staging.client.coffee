@@ -1,7 +1,7 @@
 define 'config', [], ->
 
     settings =
-        whitelist: ['/user/login','/reset_password','/forgot_password','/registration']
+        whitelist: ['/user/login','/reset_password','/forgot_password','/registration', '/user/confirm/']
         site:
             host: 'stagingdtt.local'
             port: 443

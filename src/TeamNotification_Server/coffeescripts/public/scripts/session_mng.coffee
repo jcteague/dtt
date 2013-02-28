@@ -7,6 +7,7 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
             if( relevant == '/' || relevant =='')
                 return true
             for white_path in Config.whitelist
+                console.log white_path
                 if( relevant.indexOf(white_path) == 0 )
                     return true
             return false
@@ -15,9 +16,11 @@ define 'session_mng', ['config', 'jquery', 'cookie'], (Config, jquery, cookie) -
     check_cookie = () ->
         if $.cookie('authtoken') == null || $.cookie('authtoken') == ''
             if(!is_white_path(window.location.href))
+                #console.log window.location.href
                 window.location = '#/'
-        else if(is_white_path(window.location.href))
+        else 
             if(is_white_path(window.location.href))
+                #console.log 'to User'
                 window.location = '#/user'
                 
     $( ()->
