@@ -78,7 +78,7 @@ context.for.integration_test(browsers: 2) (browsers...) ->
                         done()
 
                     it 'should contain not more than fifty elements at a time', (done) ->
-                        expect(browser.queryAll('#messages-container p').length).to.be.lessThan(51)
+                        expect(browser.queryAll('#messages-container table tr').length).to.be.lessThan(51)
                         done()
 
             describe 'When a user visits the #/room/:id/messages page', ->

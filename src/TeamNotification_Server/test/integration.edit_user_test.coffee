@@ -17,6 +17,7 @@ users =
         {
             id: 2
             first_name: "'ed2'"
+            last_name: "'wub'"
             email: "'ed@es.com'"
             password: "'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'"
             enabled: 1
@@ -38,20 +39,19 @@ context.for.integration_test() (browser) ->
                     then(done, done)
 
             it 'should contain all the inputs for the user values', (done) ->
+                console.log("The page:", browser.html())
                 expect(browser.html('input[name=first_name]')).to.not.be.empty()
                 expect(browser.html('input[name=last_name]')).to.not.be.empty()
                 expect(browser.html('input[name=email]')).to.not.be.empty()
                 expect(browser.html('input[name=password]')).to.not.be.empty()
                 expect(browser.html('input[name=confirm_password]')).to.not.be.empty()
-                expect(browser.html('input[type=submit]')).to.not.be.empty()
+                #expect(browser.html('input[type=submit]')).to.not.be.empty()
                 done()
 
 
-        ###
         describe 'When a user visits the #/user/:id/edit page and fills the form with valid user data', ->
 
             beforeEach (done) ->
-                #browser.visit('http://dtt.local:3000/#/user/1/edit').
                 browser.visit("#{config.site.surl}/#/user/1/edit").
                     then(-> 
                         browser.
@@ -64,32 +64,31 @@ context.for.integration_test() (browser) ->
                     then(done, done)
 
             it 'should redirect the user', (done) ->
-                expect(browser.redirected).to.equal true
+                expect(browser.location.href).to.equal "#{config.site.surl}/#/user/1"
                 done()
 
         describe 'When a user visits the client#/user/:id/edit page and fills the form with valid user data leaving the password empty', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/user/1/edit').
-                    then(-> 
+                browser.visit("#{config.site.surl}/#/user/1/edit").
+                    then( -> 
                         browser.
                             fill('first_name', 'foo').
                             fill('last_name', 'bar').
                             fill('email', 'foo@bar.com').
                             fill('password', '').
                             fill('confirm_password', '')).
-                    then(-> browser.pressButton('input[type=submit]')).
+                    then( -> browser.pressButton('input[type=submit]')).
                     then(done, done)
 
             it 'should redirect the user', (done) ->
-                # For some strange reason the request is not done when the password is empty
-                #expect(browser.redirected).to.equal true
+                expect(browser.location.href).to.equal "#{config.site.surl}/#/user/1"
                 done()
 
         describe 'When a user visits the client#/user/:id/edit page and fills the form with invalid user data', ->
 
             beforeEach (done) ->
-                browser.visit('http://dtt.local:3000/#/user/1/edit').
+                browser.visit("#{config.site.surl}/#/user/1/edit").
                     then(-> 
                         browser.
                             fill('first_name', '').
@@ -103,4 +102,3 @@ context.for.integration_test() (browser) ->
             it 'should show invalid inputs message', (done) ->
                 expect(browser.queryAll('#form-container label.error').length).to.equal 5
                 done()
-        ###

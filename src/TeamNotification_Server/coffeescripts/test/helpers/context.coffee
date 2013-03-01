@@ -44,7 +44,7 @@ integration_test = (options) ->
     opt = _.extend(default_options, options)
     console.log opt
     return (block) ->
-        browsers = (new Browser() for i in [0...opt.browsers])
+        browsers = (new Browser({waitFor:0.7}) for i in [0...opt.browsers])
 
         beforeEach (done) ->
             for browser in browsers
